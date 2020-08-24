@@ -3,20 +3,52 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="description" content="">
+        <meta name="description" content="A place to explore userstyles.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Index {{ .Site.Params.TitleSeparator }} {{ .Title }}</title>
-        <style type="text/css" media="screen">
-            body { color: #bbb; background: #333 }
-        </style>
+        <link rel="stylesheet" href="{{ .Site.BaseURL }}/main.css" type="text/css"/>
     </head>
     <body>
-        <h1>Hello from Hugo</h1>
+
+        <header>
+            <h1>{{ .Site.Title }}</h1>
+            <h3>A new site to explore userstyles, currently in <i>very early</i> alpha. Contributions are welcome.</h3>
+            <hr />
+        </header>
+
+        <main>
+            <div class="grid flex rwrap mn">
+                {{/* range sort site.RegularPages "value" "name" */}}
+                {{ range site.RegularPages | sort }}
+                    <article class="col m1 mb2">
+                        <img src="{{ .Params.preview }}"
+                            alt="{{ .Params.name }} screenshot"/>
+                        <h3>{{ .Params.name }}
+                            <span style = "opacity: 0.7"> by {{ .Params.author }}</span>
+                        </h3>
+                        <p>{{ .Params.info }}</p>
+                        <span>
+                            <a href="{{ .Params.install }}">Install</a> ·
+                            <a href="{{ .Params.home }}">Source</a> ·
+                            <a href="{{ .Permalink }}">Details</a>
+                        </span>
+                        <hr class="mt1"/>
+                    </article>
+                {{ end }}
+            </div>
+        </main>
 
         {{ if .Site.Params.debug }}
             <hr />
             <h3>{{ with .Page }} {{ . }} {{ end }}</h3>
             <pre>{{- .Site | jsonify (dict "indent" "    ") -}}</pre>
         {{ end }}
+
+        <footer class="tac pb1">
+            <hr class='mb2'/>
+            <span>Made by <a href="{{ .Site.Author.link }}">{{ .Site.Author.name }}</a>.</span>
+            <span>Powered by <a href="https://gohugo.io">Hugo</a>.</span>
+            <span>Website <a href="https://github.com/vednoc/userstyles.world">source code</a>.</span>
+        </footer>
     </body>
 </html>

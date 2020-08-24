@@ -4,4 +4,8 @@ title = "UserStyles.World"
 
 [params]
     titleSeparator = "—"
-    debug = true
+    debug = false
+
+[author]
+  name = "vednoc"
+  link = "https://www.github.com/vednoc"
