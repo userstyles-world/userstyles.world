@@ -4,3 +4,4 @@ title = "UserStyles.World"
 
 [params]
     titleSeparator = "—"
+    debug = true
