@@ -46,11 +46,6 @@
             <pre>{{- .Site | jsonify (dict "indent" "    ") -}}</pre>
         {{ end }}
 
-        <footer class="tac pb1">
-            <hr class='mb2'/>
-            <span>Made by <a href="{{ .Site.Author.link }}">{{ .Site.Author.name }}</a>.</span>
-            <span>Powered by <a href="https://gohugo.io">Hugo</a>.</span>
-            <span>Website <a href="https://github.com/vednoc/userstyles.world">source code</a>.</span>
-        </footer>
+        {{ partial "footer.html" }}
     </body>
 </html>
