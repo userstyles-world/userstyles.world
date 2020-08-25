@@ -21,8 +21,10 @@
                 {{/* range sort site.RegularPages "value" "name" */}}
                 {{ range site.RegularPages | sort }}
                     <article class="col m1 mb2">
-                        <img src="{{ .Params.preview }}"
-                            alt="{{ .Params.name }} screenshot"/>
+                        <a href="{{ .URL }}">
+                            <img src="{{ .Params.preview }}"
+                                 alt="{{ .Params.name }} screenshot"/>
+                        </a>
                         <h3>{{ .Params.name }}
                             <span style = "opacity: 0.7"> by {{ .Params.author }}</span>
                         </h3>
