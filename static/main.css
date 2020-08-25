@@ -1,20 +1,36 @@
 *, *::before, &::after { box-sizing: border-box }
-a { color: #55aaff }
+
+:root {
+    --fg-1: #bbb;
+    --fg-2: #999;
+    --fg-3: #555;
+    --bg-1: #000;
+    --bg-2: #111;
+    --bg-3: #222;
+    --ac-1: #5af;
+    --br-1: 1rem;
+    --br-2: 0.66rem;
+    --br-3: 0.33rem;
+}
+
+a { color: var(--ac-1) }
 h1 { font-size: 2.5em }
 img { width: 100% }
-.col { flex-basis: calc(50% - 2rem) }
+.col { flex-basis: calc(50% - 4rem) }
 .flex { display: flex }
 .rwrap { flex-flow: row wrap }
+.cwrap { flex-flow: column wrap }
 .p1 { padding: 1rem }
 .pb1 { padding-bottom: 1rem }
 .pt1 { padding-top: 1rem }
+.ma { margin: auto }
 .m1 { margin: 1rem }
 .mt1 { margin-top: 1rem }
 .mb1 { margin-bottom: 1rem }
 .mb2 { margin-bottom: 2rem }
 .mn { margin: 0 -1rem }
 .tac { text-align: center }
-hr { border: none; border-top: 1px solid #444  }
+hr { border: none; border-top: 1px solid var(--bg-3)  }
 
 body {
     color: #bbb;
