@@ -1,7 +1,11 @@
 <html lang="en">
     <head>
         {{ partial "head.html" }}
-        <title>Index {{ .Site.Params.TitleSeparator }} {{ .Title }}</title>
+        <title>
+            {{ if .IsPage }}{{ .Params.name }}{{ end }}
+            {{ .Site.Params.TitleSeparator }}
+            {{ .Site.Title }}
+        </title>
     </head>
     <body>
         <nav class="tac pb1 pt1">

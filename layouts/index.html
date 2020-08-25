@@ -2,7 +2,9 @@
 <html lang="en">
     <head>
         {{ partial "head.html" }}
-        <title>Index {{ .Site.Params.TitleSeparator }} {{ .Title }}</title>
+        <title>
+            {{ .Title }}{{ .Site.Params.TitleSeparator }}{{ .Site.Title }}
+        </title>
     </head>
     <body>
 

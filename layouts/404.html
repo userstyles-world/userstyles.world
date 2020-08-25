@@ -1,7 +1,11 @@
 <html>
     <head>
         {{ partial "head.html" }}
-        <title>Not found</title>
+        <title>
+            {{ if not .IsPage }}Not found{{ end }}
+            {{ .Site.Params.TitleSeparator }}
+            {{ .Site.Title }}
+        </title>
     </head>
     <body>
         <main>
