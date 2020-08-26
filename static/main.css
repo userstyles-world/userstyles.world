@@ -33,9 +33,11 @@ img { width: 100% }
 .tac { text-align: center }
 hr { border: none; border-top: 1px solid var(--bg-3)  }
 
+.fg2 { color: var(--fg-2) }
+
 body {
-    color: #bbb;
-    background: #000;
+    color: var(--fg-1);
+    background: var(--bg-1);
     font-family: sans-serif;
 }
 
