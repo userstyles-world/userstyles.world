@@ -1,5 +1,6 @@
 ---
 name: {{ replace .Name "-" " " | title }}
+date: {{ .Date }}
 author:
 info:
 license:
@@ -9,3 +10,6 @@ preview:
 tags:
     -
 ---
+
+<!-- Put extra information about the userstyle below this comment. Standard
+Markdown syntax will be rendered as proper HTML. -->
