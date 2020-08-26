@@ -2,7 +2,7 @@
 
 :root {
     --fg-1: #bbb;
-    --fg-2: #999;
+    --fg-2: #888;
     --fg-3: #555;
     --bg-1: #000;
     --bg-2: #111;
@@ -11,6 +11,18 @@
     --br-1: 1rem;
     --br-2: 0.66rem;
     --br-3: 0.33rem;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --fg-1: #000;
+        --fg-2: #444;
+        --fg-3: #666;
+        --bg-1: #eee;
+        --bg-2: #ddd;
+        --bg-3: #aaa;
+        --ac-1: #17a;
+    }
 }
 
 a { color: var(--ac-1) }
