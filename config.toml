@@ -1,9 +1,11 @@
 baseURL = "https://userstyles.world/"
 languageCode = "en-us"
 title = "UserStyles.World"
+enableGitInfo = true
 
 [params]
     titleSeparator = " — "
+    source = "https://github.com/vednoc/userstyles.world"
     debug = false
 
 [author]

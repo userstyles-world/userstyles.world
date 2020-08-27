@@ -35,6 +35,8 @@
                 {{ if .Content }}
                     <p>{{ .Content }}</p>
                 {{ end }}
+
+                {{ partial "page_updated.html" . }}
             </article>
         </div>
 

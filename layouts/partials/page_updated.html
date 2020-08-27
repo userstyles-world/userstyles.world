@@ -1,0 +1,9 @@
+{{ with .GitInfo }}
+    <hr class="pt1"/>
+    <p class="tac">Last updated in
+        <a href="{{- site.Params.Source }}/commit/{{ .Hash -}}">
+            {{- .AbbreviatedHash -}}
+        </a>
+        ({{ .Subject }})
+    </p>
+{{ end }}
