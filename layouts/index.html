@@ -11,7 +11,10 @@
 
         <header>
             <hr />
-            {{ .Content }}
+            <div class="card mt1 mb1">
+                <span class="tac">{{ .Content }}</span>
+                {{ partial "footer.html" }}
+            </div>
         </header>
 
         <main>
