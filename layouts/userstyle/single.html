@@ -26,15 +26,17 @@
                 <p class="pt1">License: {{ .Params.license }}</p>
                 <p class="pt1">
                     <a href="{{ .Params.install }}">Install</a> ·
-                    <a href="{{ .Params.home }}">Source</a> ·
-                    <a href="{{ .Permalink }}">Details</a>
+                    <a href="{{ .Params.home }}">Source</a>
                 </p>
 
                 {{ if .Content }}
                     <p>{{ .Content }}</p>
                 {{ end }}
 
-                {{ partial "page_updated.html" . }}
+                {{/* TODO: Seems like there is a problem with the way Vercel
+                     clones the repository. This works fine locally. Maybe write
+                     a shell script to handle building the website? */}}
+                {{/* partial "page_updated.html" . */}}
             </article>
         </div>
 
