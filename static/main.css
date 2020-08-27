@@ -36,13 +36,16 @@ img { width: 100% }
 .pb1 { padding-bottom: 1rem }
 .pt1 { padding-top: 1rem }
 .ma { margin: auto }
+.my0 { margin-top: 0; margin-bottom: 0 }
 .m1 { margin: 1rem }
 .mt1 { margin-top: 1rem }
 .mb1 { margin-bottom: 1rem }
 .mb2 { margin-bottom: 2rem }
+.mla { margin-left: auto }
 .mn { margin: 0 -0.5rem }
 .gap { margin: 0.5rem }
 .tac { text-align: center }
+.lsn { list-style-type: none; padding-left: 0px }
 hr { border: none; border-top: 1px solid var(--bg-3)  }
 
 .fg2 { color: var(--fg-2) }
@@ -61,6 +64,24 @@ body > * {
 @media screen and (max-width: 640px) {
     .col { flex-basis: 100% }
     h1 { font-size: 2rem }
+}
+
+nav ul li:not(:first-child) {
+    margin-left: 0.5rem;
+}
+
+.btn {
+    padding: 0.5rem 0.6rem;
+    border-radius: var(--br-3);
+}
+
+.link {
+    border: none;
+    background: none;
+}
+
+.btn:hover, .btn:focus {
+    background-color: var(--bg-2);
 }
 
 .card {

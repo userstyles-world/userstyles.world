@@ -7,14 +7,15 @@
         </title>
     </head>
     <body>
+        {{ partial "nav.html" }}
 
         <header>
-            {{ .Content }}
             <hr />
+            {{ .Content }}
         </header>
 
         <main>
-            <div class="grid flex rwrap mn">
+            <div class="grid flex rwrap mn mt2">
                 {{ range sort .Site.RegularPages "value" "name" }}
                     <article class="card col gap">
                         <a href="{{ .URL }}">
