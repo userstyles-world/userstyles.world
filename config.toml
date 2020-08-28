@@ -9,5 +9,5 @@ enableGitInfo = true
     debug = false
 
 [author]
-  name = "vednoc"
-  link = "https://www.github.com/vednoc"
+    name = "vednoc"
+    link = "https://www.github.com/vednoc"

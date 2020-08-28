@@ -21,7 +21,7 @@
             <div class="grid flex rwrap mn mt2">
                 {{ range sort .Site.RegularPages "value" "name" }}
                     <article class="card col gap">
-                        <a href="{{ .URL }}">
+                        <a href="{{ .RelPermalink }}">
                             <img src="{{ .Params.preview }}"
                                  alt="{{ .Params.name }} screenshot"/>
                         </a>
@@ -32,7 +32,7 @@
                         <span>
                             <a href="{{ .Params.install }}">Install</a> ·
                             <a href="{{ .Params.home }}">Source</a> ·
-                            <a href="{{ .URL }}">Details</a>
+                            <a href="{{ .RelPermalink }}">Details</a>
                         </span>
                     </article>
                 {{ end }}
