@@ -1,52 +1,62 @@
-<html lang="en">
-    <head>
-        {{ partial "head.html" }}
-        <title>
-            {{ if .IsPage }}{{ .Params.name }}{{ end }}
-            {{ .Site.Params.TitleSeparator }}
-            {{ .Site.Title }}
-        </title>
-    </head>
-    <body>
-        {{ partial "nav.html" }}
+{{ define "title" }}
+    {{ if .IsPage }}{{ .Params.name }}{{ end }}
+    {{ .Site.Params.TitleSeparator }}
+    {{ .Site.Title }}
+{{ end }}
 
-        <main>
-            <hr class="mb2" />
+{{ define "main" }}
+    <p>
+        TAGS:
+        <ul>
+            {{ range .Params.tags }}
+                <li>
+                    <a href="/tags/{{ . | urlize }}">{{ . }}</a>
+                            -ss {{ $.Site.Title }}
+                </li>
+            {{ end }}
+        </ul>
+    </p>
 
-            <article class="details col mb2">
-                <h1 class="tac">{{ .Params.name }}
-                    <span class="fg2"> by {{ .Params.author }}</span>
-                </h1>
-                <img src="{{ .Params.preview }}"
-                    alt="{{ .Params.name }} screenshot"/>
-                <p class="pt1">{{ .Params.info }}</p>
-                <p class="pt1">Tagged with:
-                    {{- range .Params.tags }} {{ . }}{{ end -}}
-                </p>
-                <p class="pt1">License: {{ .Params.license }}</p>
-                <p class="pt1">
-                    <a href="{{ .Params.install }}">Install</a> ·
-                    <a href="{{ .Params.home }}">Source</a>
-                </p>
-
-                {{ if .Content }}
-                    <p>{{ .Content }}</p>
-                {{ end }}
-
-                {{/* TODO: Seems like there is a problem with the way Vercel
-                     clones the repository. This works fine locally. Maybe write
-                     a shell script to handle building the website? */}}
-                {{/* partial "page_updated.html" . */}}
-            </article>
-        </div>
-
-        {{ if .Site.Params.debug }}
+    <article class="details col mt1 mb2">
+        <h1 class="tac">{{ .Params.name }}
+            <span class="fg2"> by {{ .Params.author }}</span>
+        </h1>
+        <img src="{{ .Params.preview }}"
+            alt="{{ .Params.name }} screenshot"/>
+        <section class="md ma l">
+            <h3 class="pt1">Info</h3>
+            <p>{{ .Params.info }}</p>
+            <h3 class="pt1">Tags</h3>
+            <p>(WIP)
+                {{- range .Params.tags }} #{{ . }}{{ end -}}
+            </p>
+            <h3 class="pt1">License</h3> 
+            <p>{{ .Params.license }}</p>
+            <h3 class="pt1">Links</h3>
+            <p>
+                <a href="{{ .Params.install }}">Install</a> ·
+                <a href="{{ .Params.home }}">Source</a>
+            </p>
             <hr />
-            <h3>{{ with .Page }} {{ . }} {{ end }}</h3>
-            <pre>{{- .Site | jsonify (dict "indent" "    ") -}}</pre>
-            <pre>{{- .Site.Params | jsonify (dict "indent" "    ") -}}</pre>
-        {{ end }}
+            <p>
+                {{ with .Content }}
+                    {{ . }}
+                {{ else }}
+                    No extra information available.
+                {{ end }}
+            </p>
+        </section>
 
-        {{ partial "footer.html" }}
-    </body>
-</html>
+        {{/* TODO: Seems like there is a problem with the way Vercel
+                clones the repository. This works fine locally. Maybe write
+                a shell script to handle building the website? */}}
+        {{/* partial "page_updated.html" . */}}
+    </article>
+
+    {{ if .Site.Params.debug }}
+        <hr />
+        <h3>{{ with .Page }} {{ . }} {{ end }}</h3>
+        <pre>{{- .Site | jsonify (dict "indent" "    ") -}}</pre>
+        <pre>{{- .Site.Params | jsonify (dict "indent" "    ") -}}</pre>
+    {{ end }}
+{{ end }}

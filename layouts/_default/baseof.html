@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {{- partial "head.html" . -}}
+        <title>
+            {{- block "title" . }}
+            {{- .Title }}{{ .Site.Params.TitleSeparator }}{{ .Site.Title -}}
+            {{ end -}}
+        </title>
+    </head>
+    <body>
+        <div class="app">
+            {{- partial "nav.html" . -}}
+            {{- block "main" . }}{{ end -}}
+            {{- partial "footer.html" . -}}
+        </div>
+    </body>
+</html>

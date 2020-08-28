@@ -1,50 +1,40 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        {{ partial "head.html" }}
-        <title>
-            {{ .Title }}{{ .Site.Params.TitleSeparator }}{{ .Site.Title }}
-        </title>
-    </head>
-    <body>
-        {{ partial "nav.html" }}
+{{ define "title" }}
+    {{ .Title }}{{ .Site.Params.TitleSeparator }}{{ .Site.Title }}
+{{ end }}
 
-        <header>
-            <hr />
-            <div class="card mt1 mb1">
-                <span class="tac">{{ .Content }}</span>
-                {{ partial "footer.html" }}
-            </div>
-        </header>
+{{ define "main" }}
+    <header>
+        <div class="card mt1 mb1">
+            <span class="tac">{{ .Content }}</span>
+            {{ partial "footer.html" . }}
+        </div>
+    </header>
 
-        <main>
-            <div class="grid flex rwrap mn mt2">
-                {{ range sort .Site.RegularPages "value" "name" }}
-                    <article class="card col gap">
-                        <a href="{{ .RelPermalink }}">
-                            <img src="{{ .Params.preview }}"
-                                 alt="{{ .Params.name }} screenshot"/>
-                        </a>
-                        <h3>{{ .Params.name }}
-                            <span class="fg2"> by {{ .Params.author }}</span>
-                        </h3>
-                        <p>{{ .Params.info }}</p>
-                        <span>
-                            <a href="{{ .Params.install }}">Install</a> ·
-                            <a href="{{ .Params.home }}">Source</a> ·
-                            <a href="{{ .RelPermalink }}">Details</a>
-                        </span>
-                    </article>
-                {{ end }}
-            </div>
-        </main>
+    <main>
+        <div class="grid flex rwrap mn mt2">
+            {{ range sort .Site.RegularPages "value" "name" }}
+                <article class="card col gap">
+                    <a href="{{ .RelPermalink }}">
+                        <img src="{{ .Params.preview }}"
+                                alt="{{ .Params.name }} screenshot"/>
+                    </a>
+                    <h3>{{ .Params.name }}
+                        <span class="fg2"> by {{ .Params.author }}</span>
+                    </h3>
+                    <p>{{ .Params.info }}</p>
+                    <span>
+                        <a href="{{ .Params.install }}">Install</a> ·
+                        <a href="{{ .Params.home }}">Source</a> ·
+                        <a href="{{ .RelPermalink }}">Details</a>
+                    </span>
+                </article>
+            {{ end }}
+        </div>
+    </main>
 
-        {{ if .Site.Params.debug }}
-            <hr />
-            <h3>{{ with .Page }} {{ . }} {{ end }}</h3>
-            <pre>{{- .Site | jsonify (dict "indent" "    ") -}}</pre>
-        {{ end }}
-
-        {{ partial "footer.html" }}
-    </body>
-</html>
+    {{ if .Site.Params.debug }}
+        <hr />
+        <h3>{{ with .Page }} {{ . }} {{ end }}</h3>
+        <pre>{{- .Site | jsonify (dict "indent" "    ") -}}</pre>
+    {{ end }}
+{{ end }}
