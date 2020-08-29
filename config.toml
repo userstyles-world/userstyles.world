@@ -3,6 +3,9 @@ languageCode = "en-us"
 title = "UserStyles.World"
 enableGitInfo = true
 
+[outputs]
+    home = [ "HTML", "RSS", "JSON" ]
+
 [params]
     titleSeparator = " — "
     source = "https://github.com/vednoc/userstyles.world"
