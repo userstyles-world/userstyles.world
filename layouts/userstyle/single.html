@@ -5,18 +5,6 @@
 {{ end }}
 
 {{ define "main" }}
-    <p>
-        TAGS:
-        <ul>
-            {{ range .Params.tags }}
-                <li>
-                    <a href="/tags/{{ . | urlize }}">{{ . }}</a>
-                            -ss {{ $.Site.Title }}
-                </li>
-            {{ end }}
-        </ul>
-    </p>
-
     <article class="details col mt1 mb2">
         <h1 class="tac">{{ .Params.name }}
             <span class="fg2"> by {{ .Params.author }}</span>
@@ -24,7 +12,7 @@
         <img src="{{ .Params.preview }}"
             alt="{{ .Params.name }} screenshot"/>
         <section class="md ma l">
-            <h3 class="pt1">Info</h3>
+            <h3 class="pt1">Description</h3>
             <p>{{ .Params.info }}</p>
             <h3 class="pt1">Tags</h3>
             <p>(WIP)
@@ -33,11 +21,11 @@
             <h3 class="pt1">License</h3> 
             <p>{{ .Params.license }}</p>
             <h3 class="pt1">Links</h3>
-            <p>
-                <a href="{{ .Params.install }}">Install</a> ·
-                <a href="{{ .Params.home }}">Source</a>
+            <p class="pb1">
+                <a href="{{ .Params.install }}">Install link</a> ·
+                <a href="{{ .Params.home }}">Source code</a>
             </p>
-            <hr />
+            <hr/>
             <p>
                 {{ with .Content }}
                     {{ . }}

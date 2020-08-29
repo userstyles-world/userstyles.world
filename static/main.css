@@ -11,6 +11,7 @@
     --br-1: 1rem;
     --br-2: 0.66rem;
     --br-3: 0.33rem;
+    --sh-1: 0 4px 8px #3335;
 }
 
 @media (prefers-color-scheme: light) {
@@ -47,6 +48,7 @@ img { width: 100% }
 .tac { text-align: center }
 .lsn { list-style-type: none; padding-left: 0px }
 hr { border: none; border-top: 1px solid var(--bg-3)  }
+.l { max-width: 40rem }
 
 .fg2 { color: var(--fg-2) }
 
@@ -106,4 +108,6 @@ nav ul li:not(:first-child) {
 
 .details img {
     border-radius: var(--br-2);
+    background-color: var(--bg-3);
+    box-shadow: var(--sh-1);
 }
