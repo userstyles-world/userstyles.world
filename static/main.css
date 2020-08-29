@@ -111,3 +111,21 @@ nav ul li:not(:first-child) {
     background-color: var(--bg-3);
     box-shadow: var(--sh-1);
 }
+
+main {
+    transition: 0.3s ease-in-out
+}
+
+.md h2, .md h3 {
+    padding-top: 1rem
+}
+
+.md p {
+    line-height: 1.5;
+}
+
+.md code {
+    padding: 0.2rem;
+    border-radius: var(--br-3);
+    background-color: var(--bg-3);
+}
