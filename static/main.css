@@ -4,14 +4,14 @@
     --fg-1: #bbb;
     --fg-2: #888;
     --fg-3: #555;
-    --bg-1: #000;
-    --bg-2: #111;
-    --bg-3: #222;
-    --ac-1: #5af;
+    --bg-1: #000000;
+    --bg-2: #1c1c1c;
+    --bg-3: #3b3b3b;
+    --ac-1: #679CD0;
     --br-1: 1rem;
     --br-2: 0.66rem;
     --br-3: 0.33rem;
-    --sh-1: 0 4px 8px #3335;
+    --sh-1: 0 4px 8px #3333;
 }
 
 @media (prefers-color-scheme: light) {
@@ -22,7 +22,7 @@
         --bg-1: #eee;
         --bg-2: #ddd;
         --bg-3: #aaa;
-        --ac-1: #17a;
+        --ac-1: #0B5560;
     }
 }
 
