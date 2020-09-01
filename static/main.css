@@ -101,6 +101,15 @@ nav ul li:not(:first-child) {
     object-position: top center;
 }
 
+.split {
+    padding: 0.5rem;
+    flex-basis: 50%;
+}
+
+.split:first-child {
+    box-shadow: 1px 0 var(--bg-3)
+}
+
 .details {
     padding: 1rem;
     border-radius: var(--br-1);

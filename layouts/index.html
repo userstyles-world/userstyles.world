@@ -22,11 +22,10 @@
                         <span class="fg2"> by {{ .Params.author }}</span>
                     </h3>
                     <p>{{ .Params.info }}</p>
-                    <span>
-                        <a href="{{ .Params.install }}">Install</a> ·
-                        <a href="{{ .Params.home }}">Source</a> ·
-                        <a href="{{ .RelPermalink }}">Details</a>
-                    </span>
+                    <div class="flex">
+                        <a class="split tac" href="{{ .Params.install }}">Install</a>
+                        <a class="split tac" href="{{ .RelPermalink }}">Details</a>
+                    </div>
                 </article>
             {{ end }}
         </div>
