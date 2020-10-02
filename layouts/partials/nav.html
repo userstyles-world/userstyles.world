@@ -1,12 +1,12 @@
 <nav>
-    <div class="flex pt1 pb1 mn">
-        <a class="btn" href="/">Home</a>
-        <a class="btn" href="/docs">Docs</a>
-        <ul class="flex lsn mla my0">
-            <li class="flex">
-                <a class="btn" href="{{ site.Params.Source }}">Contribute</a>
-            </li>
-        </ul>
+    <div class="">
+        <div class="flex mb1">
+            <a class="btn {{ if eq .Page.RelPermalink "/" }}active{{ end }}"
+                href="/">Home</a>
+            <a class="btn {{ if eq .Page.RelPermalink "/docs/" }}active{{ end }}"
+                href="/docs">Documentation</a>
+            <a class="btn" href="{{ site.Params.Source }}">Source code</a>
+        </div>
     </div>
     <hr />
 </nav>

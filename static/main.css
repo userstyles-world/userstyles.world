@@ -34,7 +34,7 @@
     }
 }
 
-a { color: var(--ac-1) }
+a { color: var(--ac-1); text-decoration: none }
 h1 { font-size: 2.5em }
 img { width: 100% }
 .col { flex-basis: calc(50% - 3rem) }
@@ -51,6 +51,7 @@ img { width: 100% }
 .mb1 { margin-bottom: 1rem }
 .mb2 { margin-bottom: 2rem }
 .mla { margin-left: auto }
+.ml2 { margin-left: 2rem }
 .mn { margin: 0 -0.5rem }
 .gap { margin: 0.5rem }
 .tac { text-align: center }
@@ -78,12 +79,13 @@ body > * {
     h1 { font-size: 2rem }
 }
 
-nav ul li:not(:first-child) {
-    margin-left: 0.5rem;
+nav > div a:not(:last-child) {
+    margin-right: 1rem;
+    text-decoration: none;
 }
 
 .btn {
-    padding: 0.5rem 0.6rem;
+    padding: 0.6rem 0.8rem;
     border-radius: var(--br-3);
 }
 
@@ -94,6 +96,11 @@ nav ul li:not(:first-child) {
 
 .btn:hover, .btn:focus {
     background-color: var(--bg-2);
+}
+
+.btn.active {
+    color: var(--fg-1);
+    background-color: var(--bg-3);
 }
 
 .card {
