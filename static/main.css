@@ -64,7 +64,7 @@ body {
     margin: 1rem;
     color: var(--fg-1);
     background: var(--bg-1);
-    font-family: sans-serif;
+    font-family: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Droid Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 body > * {
