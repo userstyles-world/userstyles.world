@@ -34,10 +34,12 @@
     }
 }
 
+@import 'ui/cards';
+
 a { color: var(--ac-1); text-decoration: none }
 h1 { font-size: 2.5em }
 img { width: 100% }
-.col { flex-basis: calc(50% - 3rem) }
+.col { flex-basis: calc(50% - 1rem) }
 .flex { display: flex }
 .rwrap { flex-flow: row wrap }
 .cwrap { flex-flow: column wrap }
@@ -101,29 +103,6 @@ nav > div a:not(:last-child) {
 .btn.active {
     color: var(--fg-1);
     background-color: var(--bg-3);
-}
-
-.card {
-    padding: 1rem;
-    border-radius: var(--br-1);
-    background-color: var(--bg-2);
-}
-
-.card img {
-    border-radius: var(--br-3);
-    min-height: 15rem;
-    max-height: 15rem;
-    object-fit: cover;
-    object-position: top center;
-}
-
-.split {
-    padding: 0.5rem;
-    flex-basis: 50%;
-}
-
-.split:first-child {
-    box-shadow: 1px 0 var(--bg-3)
 }
 
 .details {

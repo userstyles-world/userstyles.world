@@ -1,0 +1,21 @@
+.card {
+    padding: 1rem;
+    border-radius: var(--br-2);
+    background-color: var(--bg-2);
+
+    img {
+        border-radius: var(--br-3);
+        min-height: 15rem;
+        max-height: 15rem;
+        object-fit: cover;
+        object-position: top center;
+    }
+
+    .split {
+        padding: 0.5rem;
+        flex-basis: 50%;
+        &:first-child {
+            box-shadow: 1px 0 var(--bg-3)
+        }
+    }
+}
