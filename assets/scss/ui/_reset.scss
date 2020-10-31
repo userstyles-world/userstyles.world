@@ -1,0 +1,10 @@
+html {
+    scrollbar-color: var(--bg-5) var(--bg-2);
+    @at-root {
+        ::-webkit-scrollbar {
+            width: 12px;
+            &-thumb { background-color: var(--bg-5) }
+            &-track { background-color: var(--bg-2) }
+        }
+    }
+}
