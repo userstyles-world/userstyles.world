@@ -1,39 +1,6 @@
 *, *::before, *::after { box-sizing: border-box }
 
-:root {
-    --fg-1: #cccccc;
-    --fg-2: #b8b8b8;
-    --fg-3: #a3a3a3;
-    --fg-4: #8f8f8f;
-    --fg-5: #707070;
-    --bg-1: #141414;
-    --bg-2: #1f1f1f;
-    --bg-3: #292929;
-    --bg-4: #333333;
-    --bg-5: #3d3d3d;
-    --ac-1: #679CD0;
-    --br-1: 1rem;
-    --br-2: 0.66rem;
-    --br-3: 0.33rem;
-    --sh-1: 0 4px 8px #3333;
-}
-
-@media (prefers-color-scheme: light) {
-    :root {
-        --bg-1: #cccccc;
-        --bg-2: #b8b8b8;
-        --bg-3: #a3a3a3;
-        --bg-4: #8f8f8f;
-        --bg-5: #707070;
-        --fg-1: #141414;
-        --fg-2: #1f1f1f;
-        --fg-3: #292929;
-        --fg-4: #333333;
-        --fg-5: #3d3d3d;
-        --ac-1: #0B5560;
-    }
-}
-
+@import 'ui/vars';
 @import 'ui/reset';
 @import 'ui/cards';
 
