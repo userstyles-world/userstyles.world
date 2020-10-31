@@ -1,21 +1,54 @@
 .card {
-    padding: 1rem;
+    padding: 0.5rem 0.5rem 0 0.5rem;
     border-radius: var(--br-2);
     background-color: var(--bg-2);
+    transition: transform 0.2s linear;
 
-    img {
-        border-radius: var(--br-3);
-        min-height: 15rem;
-        max-height: 15rem;
-        object-fit: cover;
-        object-position: top center;
+    &:hover {
+        transform: translateY(-0.5rem)
     }
 
-    .split {
-        padding: 0.5rem;
-        flex-basis: 50%;
-        &:first-child {
-            box-shadow: 1px 0 var(--bg-3)
+    figure {
+        margin: 0;
+        padding-top: 56.25%;
+        position: relative;
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-radius: var(--br-3);
+        }
+
+        &::before,
+        &::after {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            content: '';
+            position: absolute;
+            text-align: center;
+            line-height: 15rem;
+            font-size: 1.6rem;
+            transition: all 0.3s ease-in-out;
+            color: var(--fg-1);
+            opacity: 0;
+        }
+
+        &::after {
+            content: 'Click to see details';
+        }
+
+        &:hover {
+            &::before {
+                opacity: 0.9;
+                border-radius: var(--br-3);
+                background-color: var(--bg-3);
+            }
+            &::after { opacity: 1 }
         }
     }
 }

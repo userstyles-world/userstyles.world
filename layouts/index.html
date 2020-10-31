@@ -13,20 +13,18 @@
     <main>
         <div class="grid flex rwrap mn mt2">
             {{ range sort .Site.RegularPages "value" "name" }}
-                <article class="card col gap">
+                <div class="card col gap">
                     <a href="{{ .RelPermalink }}">
-                        <img src="{{ .Params.preview }}"
-                                alt="{{ .Params.name }} screenshot"/>
+                        <figure>
+                            <img src="{{ .Params.preview }}"
+                                 alt="{{ .Params.name }} screenshot"/>
+                        </figure>
                     </a>
-                    <h3>{{ .Params.name }}
-                        <span class="fg2"> by {{ .Params.author }}</span>
+                    <h3 class="mb0 tac">
+                        {{- .Params.name -}}
+                        <span class="fg4"> by {{ .Params.author -}}</span>
                     </h3>
-                    <p>{{ .Params.info }}</p>
-                    <div class="flex">
-                        <a class="split tac" href="{{ .Params.install }}">Install</a>
-                        <a class="split tac" href="{{ .RelPermalink }}">Details</a>
-                    </div>
-                </article>
+                </div>
             {{ end }}
         </div>
     </main>
