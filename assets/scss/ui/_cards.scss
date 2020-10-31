@@ -2,10 +2,13 @@
     padding: 0.5rem 0.5rem 0 0.5rem;
     border-radius: var(--br-2);
     background-color: var(--bg-2);
-    transition: transform 0.2s linear;
 
-    &:hover {
-        transform: translateY(-0.5rem)
+    &.animate {
+        transition: transform 0.2s linear;
+
+        &:hover {
+            transform: translateY(-0.5rem)
+        }
     }
 
     figure {
@@ -31,7 +34,6 @@
             content: '';
             position: absolute;
             text-align: center;
-            line-height: 15rem;
             font-size: 1.6rem;
             transition: all 0.3s ease-in-out;
             color: var(--fg-1);
@@ -40,6 +42,8 @@
 
         &::after {
             content: 'Click to see details';
+            top: calc(50% - 0.8rem);
+            bottom: unset;
         }
 
         &:hover {

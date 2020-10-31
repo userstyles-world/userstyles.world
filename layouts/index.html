@@ -13,7 +13,7 @@
     <main>
         <div class="grid flex rwrap mn mt2">
             {{ range sort .Site.RegularPages "value" "name" }}
-                <div class="card col gap">
+                <div class="card col gap animate">
                     <a href="{{ .RelPermalink }}">
                         <figure>
                             <img src="{{ .Params.preview }}"
