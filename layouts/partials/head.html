@@ -1,4 +1,7 @@
-{{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+{{- $options := (dict "targetPath" "css/main.css" "outputStyle" "compressed") -}}
+{{- $css := resources.Get "scss/main.scss" | toCSS $options | minify -}}
+{{- $css := $css | resources.Fingerprint -}}
+
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="description" content="A place to explore userstyles.">
