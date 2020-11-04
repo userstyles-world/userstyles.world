@@ -6,6 +6,7 @@ license: CC-BY-SA-4.0 License
 home: https://github.com/StylishThemes/StackOverflow-Dark
 install: https://github.com/StylishThemes/StackOverflow-Dark/raw/master/stackoverflow-dark.user.css
 preview: https://user-images.githubusercontent.com/18245694/91909356-50f5ba00-ecad-11ea-8a77-9069d5aa7cc9.png
+thumbnail: https://user-images.githubusercontent.com/18245694/98142361-fdc7ff80-1ec7-11eb-9caa-093857ed54eb.png
 tags:
     - stack-overflow
     - dark

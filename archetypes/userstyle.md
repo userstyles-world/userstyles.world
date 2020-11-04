@@ -6,7 +6,8 @@ info:
 license:
 link:
 install:
-preview:
+preview: <!-- Use 16x9 format; either 1280x720 or 1920x1080 resolution. -->
+thumbnail: <!-- A 460x260px image used as a thumbnail. -->
 tags:
     -
 ---
