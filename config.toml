@@ -1,6 +1,6 @@
 baseURL = "https://userstyles.world/"
 languageCode = "en-us"
-title = "UserStyles.World"
+title = "UserStyles.world"
 enableGitInfo = true
 
 [outputs]
