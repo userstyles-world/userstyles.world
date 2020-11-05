@@ -40,6 +40,10 @@
             opacity: 0;
         }
 
+        &::before {
+            background-color: var(--bg-1);
+        }
+
         &::after {
             content: 'Click to see details';
             top: calc(50% - 0.8rem);
@@ -48,11 +52,15 @@
 
         &:hover {
             &::before {
-                opacity: 0.9;
+                opacity: 0.85;
                 border-radius: var(--br-3);
                 background-color: var(--bg-3);
+                transition-delay: 0.3s;
             }
-            &::after { opacity: 1 }
+            &::after {
+                opacity: 1;
+                transition-delay: 0.3s;
+            }
         }
     }
 }
