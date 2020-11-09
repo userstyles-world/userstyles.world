@@ -2,6 +2,7 @@ baseURL = "https://userstyles.world/"
 languageCode = "en-us"
 title = "UserStyles.world"
 enableGitInfo = true
+enableRobotsTXT = true
 
 [outputs]
     home = [ "HTML", "RSS", "JSON" ]
