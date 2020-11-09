@@ -1,6 +1,7 @@
 baseURL = "https://userstyles.world/"
 languageCode = "en-us"
 title = "UserStyles.world"
+theme = "userstyles"
 enableGitInfo = true
 enableRobotsTXT = true
 
