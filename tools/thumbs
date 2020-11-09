@@ -12,6 +12,26 @@ scrape() {
     log "Done!"
 }
 
+download() {
+    log "Downloading images..."
+
+    mkdir -p data-images
+
+    while read -r line; do
+        # Remove `https://` then replace all `/` with `_` so that the downloaded
+        # image can be saved in the data-images directory.
+        # TODO: Implement a comparsion to avoid re-downloading images.
+        sanitized=$( printf "%s" "$line" | sed -e 's/https\?:\/\///g; s/\//_/g' )
+
+        curl -# \
+            -o "data-images/$sanitized" \
+            -L "$line"
+    done < "$data"
+
+    log "Done!"
+}
+
 case "$1" in
     g|rg|grep|scrape) scrape "$@" ;;
+    d|dl|download) download "$@" ;;
 esac
