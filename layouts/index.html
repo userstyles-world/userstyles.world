@@ -12,7 +12,7 @@
 
     <main>
         <div class="grid flex rwrap mx:n my:n">
-            {{ range sort .Site.RegularPages "value" "name" }}
+            {{ range where site.Pages "Section" "userstyle" }}
                 <div class="card col gap animate">
                     <a href="{{ .RelPermalink }}">
                         <figure>
