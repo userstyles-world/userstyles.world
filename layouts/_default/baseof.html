@@ -9,6 +9,7 @@
         </title>
     </head>
     <body>
+        {{- partial "utils/template_info.html" . -}}
         <div class="app">
             {{- partial "nav.html" . -}}
             {{- block "main" . }}{{ end -}}
