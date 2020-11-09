@@ -1,0 +1,17 @@
+#!/bin/sh
+
+data="data-thumbs.txt"
+
+log() { printf "%s\n" "$@"; }
+
+scrape() {
+    log "Scraping images..."
+
+    grep -h "preview" ../content/userstyle/*md | awk '{ print $2 }' > "$data"
+
+    log "Done!"
+}
+
+case "$1" in
+    g|rg|grep|scrape) scrape "$@" ;;
+esac
