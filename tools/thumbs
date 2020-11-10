@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 data="data-thumbs.txt"
 
@@ -53,9 +53,20 @@ clean() {
     log "Done!"
 }
 
+all() {
+    scrape
+    log ""
+    download
+    log ""
+    resize
+}
+
 case "$1" in
+    h|help) printf "See the source code.\n" ;;
     g|rg|grep|scrape) scrape "$@" ;;
     d|dl|download) download "$@" ;;
     r|resize) resize "$@" ;;
     c|clean) clean "$@" ;;
+    a|all) all "$@" ;;
+    *) printf "Invalid option: %s\n" "$*" ;;
 esac
