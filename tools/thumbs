@@ -45,8 +45,17 @@ resize() {
     log "Done!"
 }
 
+clean() {
+    log "Cleaning files..."
+
+    rm -r data-images data-thumbs "$data"
+
+    log "Done!"
+}
+
 case "$1" in
     g|rg|grep|scrape) scrape "$@" ;;
     d|dl|download) download "$@" ;;
     r|resize) resize "$@" ;;
+    c|clean) clean "$@" ;;
 esac
