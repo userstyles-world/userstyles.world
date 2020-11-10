@@ -31,7 +31,22 @@ download() {
     log "Done!"
 }
 
+resize() {
+    log "Making thumbnails..."
+
+    mkdir -p data-thumbs
+
+    for f in data-images/*png; do
+        output=${f##data-images/}
+        printf "I: %s\nO: %s\n\n" "$f" "data-thumbs/$output"
+        convert "$f" -resize 460x260 "data-thumbs/$output"
+    done
+
+    log "Done!"
+}
+
 case "$1" in
     g|rg|grep|scrape) scrape "$@" ;;
     d|dl|download) download "$@" ;;
+    r|resize) resize "$@" ;;
 esac
