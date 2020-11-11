@@ -33,7 +33,7 @@
         {{ else }}
             <h1>{{ .Title }} userstyles</h1>
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
-            <div class="grid flex">
+            <div class="grid flex rwrap mx:n my:n">
                 {{- range .RegularPages -}}
                     <div class="card col gap animate">
                         <a href="{{ .RelPermalink }}">
