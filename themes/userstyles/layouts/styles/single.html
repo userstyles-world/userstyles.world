@@ -10,15 +10,15 @@
             <span class="fg2"> by {{ .Params.author }}</span>
         </h1>
         <img src="{{ .Params.preview }}"
-            alt="{{ .Params.name }} screenshot"/>
-        <section class="md ma l">
+             alt="{{ .Params.name }} screenshot"/>
+        <section class="md ma">
             <h3 class="pt1">Description</h3>
             <p>{{ .Params.info }}</p>
             <h3 class="pt1">Tags</h3>
             <p>(WIP)
                 {{- range .Params.tags }} #{{ . }}{{ end -}}
             </p>
-            <h3 class="pt1">License</h3> 
+            <h3 class="pt1">License</h3>
             <p>{{ .Params.license }}</p>
             <h3 class="pt1">Links</h3>
             <p class="pb1">
@@ -35,9 +35,10 @@
             </p>
         </section>
 
-        {{/* TODO: Seems like there is a problem with the way Vercel
-                clones the repository. This works fine locally. Maybe write
-                a shell script to handle building the website? */}}
+        {{/* TODO: Figure out how to add "page updated" partial.
+             Seems like there is a problem with the way Vercel clones the
+             repository. This works fine locally. Maybe write a shell script
+             to handle cloning and deploying the website? */}}
         {{/* partial "page_updated.html" . */}}
     </article>
 
