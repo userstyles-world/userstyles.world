@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-data="data-thumbs.txt"
+data="data-links"
+images="data-images"
+thumbs="data-thumbs"
 
 log() { printf "%s\n" "$@"; }
 
@@ -15,17 +17,17 @@ scrape() {
 download() {
     log "Downloading images..."
 
-    mkdir -p data-images
+    mkdir -p "$images"
 
     while read -r line; do
         # Remove `https://` then replace all `/` with `_` so that the downloaded
-        # image can be saved in the data-images directory.
-        # TODO: Implement a comparsion to avoid re-downloading images.
-        sanitized=$( printf "%s" "$line" | sed -e 's/https\?:\/\///g; s/\//_/g' )
+        # image can be saved in the `$images` directory.
+        escaped=$( printf "%s" "$line" | sed -e 's/https\?:\/\///g; s/\//_/g' )
 
-        curl -# \
-            -o "data-images/$sanitized" \
-            -L "$line"
+        # TODO: Implement a comparsion to avoid re-downloading images.
+
+        # Download the images.
+        curl -# -o "$images/$escaped" -L "$line"
     done < "$data"
 
     log "Done!"
@@ -34,12 +36,12 @@ download() {
 resize() {
     log "Making thumbnails..."
 
-    mkdir -p data-thumbs
+    mkdir -p "$thumbs"
 
-    for f in data-images/*png; do
-        output=${f##data-images/}
-        printf "I: %s\nO: %s\n\n" "$f" "data-thumbs/$output"
-        convert "$f" -resize 460x260 "data-thumbs/$output"
+    for f in "$images"/*png; do
+        output=${f##"$images/"}
+        printf "I: %s\nO: %s\n\n" "$f" "$thumbs/$output"
+        convert "$f" -resize 460x260 "$thumbs/$output"
     done
 
     log "Done!"
@@ -48,7 +50,7 @@ resize() {
 clean() {
     log "Cleaning files..."
 
-    rm -r data-images data-thumbs "$data"
+    rm -r "$images" "$thumbs" "$data"
 
     log "Done!"
 }
