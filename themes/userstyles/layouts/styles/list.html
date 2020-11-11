@@ -1,0 +1,54 @@
+{{ define "main" }}
+    <main>
+        {{ if site.Params.Debug }}
+            <pre class="pt1 pb1">
+                {{- range .Pages -}}
+                    {{- . -}}<br>
+                {{- end -}}
+            </pre>
+            <hr>
+        {{ end }}
+        {{/* Renders sections for "/styles/". */}}
+        {{ if (eq .Parent.Path "_index.md") }}
+            <h1>{{ .Title }}</h1>
+            {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
+            <div class="grid flex rwrap mx:n my:n">
+                {{- range .Sections -}}
+                <div class="card col gap">
+                    {{ $count := len (.RegularPages) }}
+                    <a href="{{ .RelPermalink }}">
+                        <h3>{{ .Title }}</h3>
+                        <p class="fg4">
+                            {{- if eq $count 1 -}}
+                            {{ $count }} userstyle
+                            {{- else -}}
+                            {{ $count }} userstyles
+                            {{- end -}}
+                        </p>
+                    </a>
+                </div>
+                {{- end -}}
+            </div>
+        {{/* Renders pages under "/styles/<userstyle>" section. */}}
+        {{ else }}
+            <h1>{{ .Title }} userstyles</h1>
+            {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
+            <div class="grid flex rwrap mx:n my:n">
+                {{- range .RegularPages -}}
+                    <div class="card col gap animate">
+                        <a href="{{ .RelPermalink }}">
+                            <figure>
+                                <img src="{{ .Params.thumbnail }}"
+                                     alt="{{ .Params.name }} screenshot"/>
+                            </figure>
+                            <h3 class="mb0 tac">
+                                {{- .Params.name -}}
+                                <span class="fg4"> by {{ .Params.author -}}</span>
+                            </h3>
+                        </a>
+                    </div>
+                {{- end -}}
+            </div>
+        {{ end }}
+    </main>
+{{ end }}
