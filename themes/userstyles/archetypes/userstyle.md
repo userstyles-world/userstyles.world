@@ -4,7 +4,7 @@ date: {{ .Date }}
 author:
 info:
 license:
-link:
+home:
 install:
 preview: <!-- Use 16x9 format; either 1280x720 or 1920x1080 resolution. -->
 thumbnail: <!-- A 460x260px image used as a thumbnail. -->
