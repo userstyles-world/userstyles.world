@@ -61,6 +61,11 @@ all() {
     resize
 }
 
+if [ "$#" -eq 0 ]; then
+    all
+    exit 0
+fi
+
 case "$1" in
     h|help) printf "See the source code.\n" ;;
     g|rg|grep|scrape) scrape "$@" ;;
