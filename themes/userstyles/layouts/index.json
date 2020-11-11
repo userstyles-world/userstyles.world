@@ -1,11 +1,10 @@
 {{ define "response" -}}
+    {{- $styles := where site.RegularPages "Section" "styles" -}}
+    {{- $length := (sub (len $styles) 1) -}}
     {
-        {{- range where $.Site.AllPages "Section" "userstyle" -}}
-        {{ $lenPages := (sub (len .Pages) 1) }}
-        {{- range $k, $v := .Pages }}
-            "{{ .Params.name }}": "{{ .Params.install }}"
-            {{-  if not (eq $k $lenPages) }},{{ end -}}
-        {{- end }}
-        {{- end }}
+        {{- range $k, $v := $styles }}
+        "{{ .Params.name }}": "{{ .Params.install }}"
+        {{- if not (eq $k $length) }},{{ end -}}
+        {{ end }}
     }
 {{- end }}
