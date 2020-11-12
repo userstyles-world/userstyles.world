@@ -9,7 +9,7 @@ log() { printf "%s\n" "$@"; }
 scrape() {
     log "Scraping images..."
 
-    grep -h "preview" ../content/userstyle/*md | awk '{ print $2 }' > "$data"
+    grep -h "preview" ../content/styles/**/*md | awk '{ print $2 }' > "$data"
 
     log "Done!"
 }
