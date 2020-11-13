@@ -4,7 +4,7 @@
 
 {{ define "main" }}
     <header>
-        <div class="card mt1 mb1">
+        <div class="card mt:m bd:o">
             <span class="tac">{{ .Content }}</span>
             {{ partial "footer.html" . }}
         </div>
@@ -20,10 +20,10 @@
                                  alt="{{ .Params.name }} screenshot"/>
                         </figure>
                     </a>
-                    <h3 class="mb0 tac">
-                        {{- .Params.name -}}
-                        <span class="fg4"> by {{ .Params.author -}}</span>
-                    </h3>
+                    <div class="flex cwrap px:m bd:t">
+                        <h3 class="my:0 pt:m">{{- .Params.name -}}</h3>
+                        <p class="my:0 pb:m">by {{ .Params.author -}}</p>
+                    </div>
                 </div>
             {{ end }}
         </div>

@@ -1,25 +1,44 @@
 .b {
     &d {
         &\:o { border: 1px solid var(--bg-3) }
+        &\:t { border-top: 1px solid var(--bg-3) }
     }
 }
 
 .m {
+    &x {
+        &\:r { margin-left: -0.5rem; margin-right: -0.5rem }
+    }
+
     &y {
-        &\:n { margin-top: -0.5rem; margin-bottom: -0.5rem; }
+        &\:0 { margin-top: 0rem; margin-bottom: 0rem }
+    }
+
+    &t {
+        &\:m { margin-top: 1rem }
     }
 
 .p {
 
     &x {
-        &\:n { margin-left: -0.5rem; margin-right: -0.5rem; }
+        &\:m { padding-left: 1rem; padding-right: 1rem }
     }
 
     &y {
         &\:m { padding-top: 1rem; padding-bottom: 1rem }
+    }
+
+    &t {
+        &\:m { padding-top: 1rem }
+    }
+
+    &b {
+        &\:m { padding-bottom: 1rem}
     }
 }
 
 .t {
     &a\:c { text-align: center }
 }
+
+.gap { margin: 0 0.5rem 1rem .5rem }
