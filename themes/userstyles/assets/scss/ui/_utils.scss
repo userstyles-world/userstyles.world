@@ -5,6 +5,10 @@
     }
 }
 
+.f {
+    &g\:3 { color: var(--fg-4) }
+}
+
 .m {
     &x {
         &\:r { margin-left: -0.5rem; margin-right: -0.5rem }

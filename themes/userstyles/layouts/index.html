@@ -13,18 +13,7 @@
     <main>
         <div class="grid flex rwrap mx:r mt:m">
             {{ range where site.RegularPages "Section" "styles" }}
-                <div class="card col gap animate bd:o">
-                    <a href="{{ .RelPermalink }}">
-                        <figure>
-                            <img src="{{ .Params.thumbnail }}"
-                                 alt="{{ .Params.name }} screenshot"/>
-                        </figure>
-                    </a>
-                    <div class="flex cwrap px:m bd:t">
-                        <h3 class="my:0 pt:m">{{- .Params.name -}}</h3>
-                        <p class="my:0 pb:m">by {{ .Params.author -}}</p>
-                    </div>
-                </div>
+                {{- partial "style_card.html" . -}}
             {{ end }}
         </div>
     </main>
