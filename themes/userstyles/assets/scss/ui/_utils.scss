@@ -19,8 +19,14 @@
     }
 
     &t {
+        &\:0 { margin-top: 0rem }
         &\:m { margin-top: 1rem }
     }
+
+    &b {
+        &\:0 { margin-bottom: 0rem }
+    }
+}
 
 .p {
 

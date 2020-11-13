@@ -12,21 +12,20 @@
         {{ if (eq .Parent.Path "_index.md") }}
             <h1>{{ .Title }}</h1>
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
-            <div class="grid flex rwrap mx:n my:n">
+            <div class="grid flex rwrap mx:r mt:n">
                 {{- range .Sections -}}
-                <div class="card col gap">
-                    {{ $count := len (.RegularPages) }}
-                    <a href="{{ .RelPermalink }}">
-                        <h3>{{ .Title }}</h3>
-                        <p class="fg4">
-                            {{- if eq $count 1 -}}
-                            {{ $count }} userstyle
-                            {{- else -}}
-                            {{ $count }} userstyles
-                            {{- end -}}
-                        </p>
-                    </a>
-                </div>
+                {{- $count := len (.RegularPages) -}}
+                <a href="{{ .RelPermalink }}"
+                   class="card animate col gap mb:0 px:m">
+                    <h3 class="mb:0">{{ .Title }}</h3>
+                    <p class="fg:3 mt:0">
+                        {{- if eq $count 1 -}}
+                        {{ $count }} userstyle
+                        {{- else -}}
+                        {{ $count }} userstyles
+                        {{- end -}}
+                    </p>
+                </a>
                 {{- end -}}
             </div>
         {{/* Renders pages under "/styles/<userstyle>" section. */}}
