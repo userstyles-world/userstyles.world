@@ -11,9 +11,9 @@
     </header>
 
     <main>
-        <div class="grid flex rwrap mx:n my:n">
+        <div class="grid flex rwrap mx:r mt:m">
             {{ range where site.RegularPages "Section" "styles" }}
-                <div class="card col gap animate">
+                <div class="card col gap animate bd:o">
                     <a href="{{ .RelPermalink }}">
                         <figure>
                             <img src="{{ .Params.thumbnail }}"

@@ -1,8 +1,25 @@
+.b {
+    &d {
+        &\:o { border: 1px solid var(--bg-3) }
+    }
+}
+
 .m {
     &y {
         &\:n { margin-top: -0.5rem; margin-bottom: -0.5rem; }
     }
+
+.p {
+
     &x {
         &\:n { margin-left: -0.5rem; margin-right: -0.5rem; }
     }
+
+    &y {
+        &\:m { padding-top: 1rem; padding-bottom: 1rem }
+    }
+}
+
+.t {
+    &a\:c { text-align: center }
 }
