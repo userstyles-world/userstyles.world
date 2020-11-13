@@ -12,23 +12,8 @@ img { width: 100% }
 .flex { display: flex }
 .rwrap { flex-flow: row wrap }
 .cwrap { flex-flow: column wrap }
-.p1 { padding: 1rem }
-.pb1 { padding-bottom: 1rem }
-.pt1 { padding-top: 1rem }
-.ma { margin: auto }
-.my0 { margin-top: 0; margin-bottom: 0 }
-.m1 { margin: 1rem }
-.mt1 { margin-top: 1rem }
-.mb1 { margin-bottom: 1rem }
-.mb2 { margin-bottom: 2rem }
-.mla { margin-left: auto }
-.ml2 { margin-left: 2rem }
-.mn { margin: 0 -0.5rem }
-.gap { margin: 0.5rem }
-.tac { text-align: center }
 .lsn { list-style-type: none; padding-left: 0px }
 hr { border: none; border-top: 1px solid var(--bg-5)  }
-.l { max-width: 40rem }
 
 .fg4 { color: var(--fg-4) }
 
