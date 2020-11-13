@@ -63,4 +63,9 @@
             }
         }
     }
+    .preview-img {
+        &::after {
+            content: 'Install';
+        }
+    }
 }
