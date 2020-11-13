@@ -51,4 +51,5 @@
     &a\:c { text-align: center }
 }
 
+.col { flex-basis: calc(100% / 3 - 1rem) }
 .gap { margin: 0 0.5rem 1rem .5rem }
