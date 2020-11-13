@@ -7,7 +7,7 @@
         transition: transform 0.2s linear;
 
         &:hover {
-            transform: translateY(-0.5rem)
+            transform: translateY(-0.25rem)
         }
     }
 
@@ -41,6 +41,7 @@
         }
 
         &::before {
+            border-radius: var(--br-3);
             background-color: var(--bg-1);
         }
 
@@ -53,13 +54,12 @@
         &:hover {
             &::before {
                 opacity: 0.85;
-                border-radius: var(--br-3);
                 background-color: var(--bg-3);
-                transition-delay: 0.3s;
+                transition-delay: 0.4s;
             }
             &::after {
                 opacity: 1;
-                transition-delay: 0.3s;
+                transition-delay: 0.4s;
             }
         }
     }
