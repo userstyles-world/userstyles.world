@@ -9,8 +9,13 @@
         <h1 class="tac">{{ .Params.name }}
             <span class="fg2"> by {{ .Params.author }}</span>
         </h1>
-        <img src="{{ .Params.preview }}"
-             alt="{{ .Params.name }} screenshot"/>
+        <div class="card col gap animate ">
+            <a href="{{ .Params.install }}">
+                <figure class="preview-img">
+                    <img src="{{ .Params.preview }}" alt="{{ .Params.install }}">
+                </figure>
+            </a>
+        </div>
         <section class="md ma">
             <h3 class="pt1">Description</h3>
             <p>{{ .Params.info }}</p>
