@@ -60,3 +60,7 @@
 
 .col { flex-basis: calc(100% / 3 - 1rem) }
 .gap { margin: 0 0.5rem 1rem .5rem }
+.flex { display: flex }
+.rwrap { flex-flow: row wrap }
+.cwrap { flex-flow: column wrap }
+.lsn { list-style-type: none; padding-left: 0px }

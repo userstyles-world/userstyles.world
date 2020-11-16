@@ -74,6 +74,7 @@
             }
         }
     }
+
     .preview-img {
         &::after {
             content: 'Install';
@@ -88,4 +89,9 @@
     @media screen and (max-width: 480px) {
         .col { flex-basis: 100% }
     }
+}
+
+.details img {
+    border-radius: var(--br-2);
+    background-color: var(--bg-3);
 }

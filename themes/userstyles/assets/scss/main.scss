@@ -6,31 +6,4 @@
 @import 'ui/utils';
 @import 'ui/cards';
 @import 'ui/mdown';
-
-.flex { display: flex }
-.rwrap { flex-flow: row wrap }
-.cwrap { flex-flow: column wrap }
-.lsn { list-style-type: none; padding-left: 0px }
-
-.details img {
-    border-radius: var(--br-2);
-    background-color: var(--bg-3);
-}
-
-main {
-    transition: 0.3s ease-in-out
-}
-
-main > aside {
-    flex-basis: 100%;
-}
-
-main > aside + div {
-    border-left: 1px solid var(--bg-3);
-    padding-left: 1rem;
-}
-
-.sticky {
-    position: sticky;
-    top: 1rem;
-}
+@import 'ui/docs';
