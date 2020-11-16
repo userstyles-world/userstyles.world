@@ -3,11 +3,6 @@ main {
 
     > aside {
         flex-basis: 100%;
-
-        + div {
-            border-left: 1px solid var(--bg-3);
-            padding-left: 1rem;
-        }
     }
 }
 
