@@ -13,7 +13,8 @@ nav {
 .btn {
     padding: 0.6rem 0.8rem;
     border-radius: var(--br-3);
-    border: 1px solid transparent;
+    transition: 0.2s ease-in-out;
+    border: 1px solid var(--bg-3);
     color: var(--fg-4);
     outline: none;
 
