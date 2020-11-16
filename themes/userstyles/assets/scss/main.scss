@@ -5,27 +5,10 @@
 @import 'ui/utils';
 @import 'ui/cards';
 
-a { color: var(--ac-1); text-decoration: none }
-h1 { font-size: 2.5em }
-img { width: 100% }
 .flex { display: flex }
 .rwrap { flex-flow: row wrap }
 .cwrap { flex-flow: column wrap }
 .lsn { list-style-type: none; padding-left: 0px }
-hr { border: none; border-top: 1px solid var(--bg-3)  }
-
-body {
-    margin: 1rem 1rem 0;
-    color: var(--fg-1);
-    background: var(--bg-1);
-    line-height: 1.5;
-    font-family: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Droid Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
-
-body > * {
-    margin: 0 auto;
-    max-width: 60rem;
-}
 
 @media screen and (max-width: 640px) {
     .col { flex-basis: 100% }
