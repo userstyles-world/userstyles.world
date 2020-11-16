@@ -1,0 +1,23 @@
+.md {
+    h2,  h3 {
+        padding-top: 1rem
+    }
+
+    p {
+        line-height: 1.5;
+    }
+
+    code {
+        padding: 0em 0.2em;
+        display: inline-flex;
+        font-size: 125%;
+        border-radius: var(--br-3);
+        background-color: var(--bg-3);
+
+        &::before,
+        &::after {
+            content: '`';
+            color: var(--fg-5);
+        }
+    }
+}
