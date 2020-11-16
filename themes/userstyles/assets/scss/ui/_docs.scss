@@ -1,0 +1,12 @@
+main {
+    transition: 0.3s ease-in-out;
+
+    > aside {
+        flex-basis: 100%;
+    }
+}
+
+.sticky {
+    position: sticky;
+    top: 1rem;
+}

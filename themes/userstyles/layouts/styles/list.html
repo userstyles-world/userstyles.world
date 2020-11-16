@@ -10,43 +10,31 @@
         {{ end }}
         {{/* Renders sections for "/styles/". */}}
         {{ if (eq .Parent.Path "_index.md") }}
-            <h1>{{ .Title }}</h1>
+            <h1 class="ta:c">{{ .Title }}</h1>
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
-            <div class="grid flex rwrap mx:n my:n">
+            <div class="grid flex rwrap mx:r mt:n">
                 {{- range .Sections -}}
-                <div class="card col gap">
-                    {{ $count := len (.RegularPages) }}
-                    <a href="{{ .RelPermalink }}">
-                        <h3>{{ .Title }}</h3>
-                        <p class="fg4">
-                            {{- if eq $count 1 -}}
-                            {{ $count }} userstyle
-                            {{- else -}}
-                            {{ $count }} userstyles
-                            {{- end -}}
-                        </p>
-                    </a>
-                </div>
+                {{- $count := len (.RegularPages) -}}
+                <a href="{{ .RelPermalink }}"
+                   class="card animate col gap mb:0 px:m bd:o">
+                    <h3 class="fg:1 mb:0">{{ .Title }}</h3>
+                    <p class="fg:4 mt:0">
+                        {{- if eq $count 1 -}}
+                        {{ $count }} userstyle
+                        {{- else -}}
+                        {{ $count }} userstyles
+                        {{- end -}}
+                    </p>
+                </a>
                 {{- end -}}
             </div>
         {{/* Renders pages under "/styles/<userstyle>" section. */}}
         {{ else }}
             <h1>{{ .Title }} userstyles</h1>
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
-            <div class="grid flex rwrap mx:n my:n">
+            <div class="grid flex rwrap mx:r mt:m">
                 {{- range .RegularPages -}}
-                    <div class="card col gap animate">
-                        <a href="{{ .RelPermalink }}">
-                            <figure>
-                                <img src="{{ .Params.thumbnail }}"
-                                     alt="{{ .Params.name }} screenshot"/>
-                            </figure>
-                            <h3 class="mb0 tac">
-                                {{- .Params.name -}}
-                                <span class="fg4"> by {{ .Params.author -}}</span>
-                            </h3>
-                        </a>
-                    </div>
+                    {{- partial "style_card.html" . -}}
                 {{- end -}}
             </div>
         {{ end }}

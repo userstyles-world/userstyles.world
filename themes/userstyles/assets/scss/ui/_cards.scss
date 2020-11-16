@@ -1,13 +1,24 @@
 .card {
-    padding: 0.5rem 0.5rem 0 0.5rem;
-    border-radius: var(--br-2);
+    border-radius: var(--br-3);
     background-color: var(--bg-2);
+
+    &.col {
+        figure {
+            &::before, img {
+                border-radius: var(--br-3) var(--br-3) 0 0;
+            }
+            /// Overlay the image on top of borders.
+            @media (prefers-color-scheme: light) {
+                margin: -1px;
+            }
+        }
+    }
 
     &.animate {
         transition: transform 0.2s linear;
 
         &:hover {
-            transform: translateY(-0.5rem)
+            transform: translateY(-0.25rem)
         }
     }
 
@@ -41,6 +52,7 @@
         }
 
         &::before {
+            border-radius: var(--br-3);
             background-color: var(--bg-1);
         }
 
@@ -53,19 +65,33 @@
         &:hover {
             &::before {
                 opacity: 0.85;
-                border-radius: var(--br-3);
                 background-color: var(--bg-3);
-                transition-delay: 0.3s;
+                transition-delay: 0.4s;
             }
             &::after {
                 opacity: 1;
-                transition-delay: 0.3s;
+                transition-delay: 0.4s;
             }
         }
     }
+
     .preview-img {
         &::after {
             content: 'Install';
         }
     }
+}
+
+.grid {
+    @media screen and (max-width: 640px) {
+        .col { flex-basis: calc(100% / 2 - 1rem) }
+    }
+    @media screen and (max-width: 480px) {
+        .col { flex-basis: 100% }
+    }
+}
+
+.details img {
+    border-radius: var(--br-2);
+    background-color: var(--bg-3);
 }

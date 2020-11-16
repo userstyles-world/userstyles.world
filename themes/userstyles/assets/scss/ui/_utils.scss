@@ -1,8 +1,67 @@
-.m {
-    &y {
-        &\:n { margin-top: -0.5rem; margin-bottom: -0.5rem; }
-    }
-    &x {
-        &\:n { margin-left: -0.5rem; margin-right: -0.5rem; }
+.b {
+    &d {
+        &\:o { border: 1px solid var(--bg-3) }
+        &\:t { border-top: 1px solid var(--bg-3) }
+        &\:b { border-bottom: 1px solid var(--bg-3) }
     }
 }
+
+.f {
+    &g\:4 { color: var(--fg-4) }
+    &g\:1 { color: var(--fg-1) }
+}
+
+.m {
+    &x {
+        &\:r { margin-left: -0.5rem; margin-right: -0.5rem }
+        &\:m { margin-left: 1rem; margin-right: 1rem }
+    }
+
+    &y {
+        &\:0 { margin-top: 0rem; margin-bottom: 0rem }
+    }
+
+    &t {
+        &\:0 { margin-top: 0rem }
+        &\:m { margin-top: 1rem }
+    }
+
+    &b {
+        &\:0 { margin-bottom: 0rem }
+        &\:m { margin-bottom: 1rem }
+    }
+
+    &l {
+        &\:a { margin-left: auto }
+    }
+}
+
+.p {
+
+    &x {
+        &\:m { padding-left: 1rem; padding-right: 1rem }
+    }
+
+    &y {
+        &\:m { padding-top: 1rem; padding-bottom: 1rem }
+    }
+
+    &t {
+        &\:m { padding-top: 1rem }
+    }
+
+    &b {
+        &\:m { padding-bottom: 1rem}
+    }
+}
+
+.t {
+    &a\:c { text-align: center }
+}
+
+.col { flex-basis: calc(100% / 3 - 1rem) }
+.gap { margin: 0 0.5rem 1rem .5rem }
+.flex { display: flex }
+.rwrap { flex-flow: row wrap }
+.cwrap { flex-flow: column wrap }
+.lsn { list-style-type: none; padding-left: 0px }

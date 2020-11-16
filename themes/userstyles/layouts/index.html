@@ -4,27 +4,16 @@
 
 {{ define "main" }}
     <header>
-        <div class="card mt1 mb1">
-            <span class="tac">{{ .Content }}</span>
+        <div class="card mt:m bd:o">
+            <span class="ta:c">{{ .Content }}</span>
             {{ partial "footer.html" . }}
         </div>
     </header>
 
     <main>
-        <div class="grid flex rwrap mx:n my:n">
+        <div class="grid flex rwrap mx:r mt:m">
             {{ range where site.RegularPages "Section" "styles" }}
-                <div class="card col gap animate">
-                    <a href="{{ .RelPermalink }}">
-                        <figure>
-                            <img src="{{ .Params.thumbnail }}"
-                                 alt="{{ .Params.name }} screenshot"/>
-                        </figure>
-                    </a>
-                    <h3 class="mb0 tac">
-                        {{- .Params.name -}}
-                        <span class="fg4"> by {{ .Params.author -}}</span>
-                    </h3>
-                </div>
+                {{- partial "style_card.html" . -}}
             {{ end }}
         </div>
     </main>

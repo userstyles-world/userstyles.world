@@ -1,5 +1,29 @@
 html {
     scrollbar-color: var(--bg-5) var(--bg-2);
+
+    body {
+        color: var(--fg-1);
+        background: var(--bg-1);
+        line-height: 1.5;
+        font-family: var(--font-sans), var(--font-emoji);
+
+        > * {
+            margin: 0 auto;
+            max-width: 60rem;
+        }
+    }
+
+    a {
+        color: var(--ac-1);
+        text-decoration: none;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid var(--bg-3)
+    }
+    h1 { font-size: 2.5em }
+    img { width: 100% }
+
     @at-root {
         ::-webkit-scrollbar {
             width: 12px;

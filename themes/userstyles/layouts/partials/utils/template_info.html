@@ -1,16 +1,17 @@
 {{ if site.Params.Debug }}
-    <style type="text/css">
-        mark {
-            color: #fff;
-            border-radius: 0.25rem;
-            background-color: #5f53;
-        }
-    </style>
-    <p>
-        Kind:[ <mark>{{ .Kind }}</mark> ] —
-        Type:[ <mark>{{ .Type }}</mark> ] —
-        Page:[ <mark>{{ .Page }}</mark> ] —
-        List:[ <mark>{{ .Section }}</mark> ]
-    </p>
-    <hr class="mt1 mb1">
+    <div class="mb:m bd:b">
+        <style type="text/css">
+            mark {
+                color: #fff;
+                border-radius: 0.25rem;
+                background-color: #5f53;
+            }
+        </style>
+        <p>
+            Kind:[ <mark>{{ .Kind }}</mark> ] —
+            Type:[ <mark>{{ .Type }}</mark> ] —
+            Page:[ <mark>{{ .Page }}</mark> ] —
+            List:[ <mark>{{ .Section }}</mark> ]
+        </p>
+    </div>
 {{ end }}

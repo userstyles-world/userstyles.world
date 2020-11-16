@@ -1,18 +1,18 @@
 {{ define "main" }}
-    <main class="flex">
+    <main class="flex cwrap">
+        <header>
+            <h1 class="ta:c">{{ .Title }}</h1>
+            {{ with .Params.Desc }}
+                <p class="ta:c"><i>{{ . }}</i></p>
+            {{ end }}
+        </header>
         <aside>
-            <div class="wrapper sticky">
-            <p>Table of Contents</p>
-            {{ .TableOfContents }}
+            <div class="wrapper sticky pb:m">
+                <p>Table of Contents</p>
+                {{ .TableOfContents }}
             </div>
         </aside>
-        <div class="md pt1">
-            <header>
-                <h1 class="tac">{{ .Title }}</h1>
-                {{ with .Params.Desc }}
-                    <p class="tac"><i>{{ . }}</i></p>
-                {{ end }}
-            </header>
+        <div class="md bd:t">
             {{ .Content }}
         </div>
     </main>
