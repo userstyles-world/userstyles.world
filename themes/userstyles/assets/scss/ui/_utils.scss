@@ -2,6 +2,7 @@
     &d {
         &\:o { border: 1px solid var(--bg-3) }
         &\:t { border-top: 1px solid var(--bg-3) }
+        &\:b { border-bottom: 1px solid var(--bg-3) }
     }
 }
 
@@ -12,6 +13,7 @@
 .m {
     &x {
         &\:r { margin-left: -0.5rem; margin-right: -0.5rem }
+        &\:m { margin-left: 1rem; margin-right: 1rem }
     }
 
     &y {
@@ -25,6 +27,10 @@
 
     &b {
         &\:0 { margin-bottom: 0rem }
+    }
+
+    &l {
+        &\:a { margin-left: auto }
     }
 }
 

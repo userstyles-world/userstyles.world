@@ -1,14 +1,13 @@
 <nav>
-    <div class="">
-        <div class="flex mb1">
+    <div>
+        <div class="flex pb:m bd:b">
             <a class="btn {{ if eq .Page.RelPermalink "/" }}active{{ end }}"
                 href="/">Home</a>
             <a class="btn {{ if eq .Page.RelPermalink "/styles/" }}active{{ end }}"
                 href="/styles">Styles 🆕</a>
             <a class="btn {{ if eq .Page.RelPermalink "/docs/" }}active{{ end }}"
                 href="/docs">Documentation</a>
-            <a class="btn" href="{{ site.Params.Source }}">Source code</a>
+            <a class="btn ml:a" href="{{ site.Params.Source }}">Source code</a>
         </div>
     </div>
-    <hr />
 </nav>
