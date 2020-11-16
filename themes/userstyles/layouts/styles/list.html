@@ -10,14 +10,14 @@
         {{ end }}
         {{/* Renders sections for "/styles/". */}}
         {{ if (eq .Parent.Path "_index.md") }}
-            <h1>{{ .Title }}</h1>
+            <h1 class="ta:c">{{ .Title }}</h1>
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
             <div class="grid flex rwrap mx:r mt:n">
                 {{- range .Sections -}}
                 {{- $count := len (.RegularPages) -}}
                 <a href="{{ .RelPermalink }}"
                    class="card animate col gap mb:0 px:m bd:o">
-                    <h3 class="mb:0">{{ .Title }}</h3>
+                    <h3 class="fg:1 mb:0">{{ .Title }}</h3>
                     <p class="fg:4 mt:0">
                         {{- if eq $count 1 -}}
                         {{ $count }} userstyle
