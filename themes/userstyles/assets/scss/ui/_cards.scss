@@ -80,3 +80,12 @@
         }
     }
 }
+
+.grid {
+    @media screen and (max-width: 640px) {
+        .col { flex-basis: calc(100% / 2 - 1rem) }
+    }
+    @media screen and (max-width: 480px) {
+        .col { flex-basis: 100% }
+    }
+}

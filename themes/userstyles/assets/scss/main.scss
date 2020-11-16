@@ -10,11 +10,6 @@
 .cwrap { flex-flow: column wrap }
 .lsn { list-style-type: none; padding-left: 0px }
 
-@media screen and (max-width: 640px) {
-    .col { flex-basis: 100% }
-    h1 { font-size: 2rem }
-}
-
 nav > div a:not(:last-child) {
     margin-right: 1rem;
     text-decoration: none;
