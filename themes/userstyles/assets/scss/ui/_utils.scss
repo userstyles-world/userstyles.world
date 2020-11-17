@@ -9,6 +9,8 @@
 .f {
     &g\:4 { color: var(--fg-4) }
     &g\:1 { color: var(--fg-1) }
+    &\:h3 { font-size: 1.125em }
+    &\:b { font-weight: bold }
 }
 
 .m {

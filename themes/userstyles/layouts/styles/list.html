@@ -16,9 +16,9 @@
                 {{- range .Sections -}}
                 {{- $count := len (.RegularPages) -}}
                 <a href="{{ .RelPermalink }}"
-                   class="card animate col gap mb:0 px:m bd:o">
-                    <h3 class="fg:1 mb:0">{{ .Title }}</h3>
-                    <p class="fg:4 mt:0">
+                   class="card animate col gap mb:0 px:m py:m bd:o">
+                    <span class="f:h3 f:b fg:1 my:m">{{ .Title }}</span>
+                    <p class="fg:4 my:0">
                         {{- if eq $count 1 -}}
                         {{ $count }} userstyle
                         {{- else -}}
