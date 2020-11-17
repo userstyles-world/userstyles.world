@@ -6,7 +6,7 @@ license: MIT License
 home: https://github.com/AbhayAysola/userstyles
 install: https://github.com/AbhayAysola/userstyles/raw/main/Better-Spotify.user.styl
 preview: https://user-images.githubusercontent.com/67417765/98918597-d25e9980-24f3-11eb-9da9-0bc3d02e6e91.png
-thumbnail: https://user-images.githubusercontent.com/18245694/98964586-48b9c680-2509-11eb-850e-d0c54b89773a.png
+thumbnail: https://user-images.githubusercontent.com/18245694/99352579-2a562100-28a3-11eb-86aa-54f039bc6fc1.png
 tags:
     - spotify
 ---

@@ -41,7 +41,7 @@ resize() {
     for f in "$images"/*png; do
         output=${f##"$images/"}
         printf "I: %s\nO: %s\n\n" "$f" "$thumbs/$output"
-        convert "$f" -resize 460x260 "$thumbs/$output"
+        convert "$f" -resize 309x173 "$thumbs/$output"
     done
 
     log "Done!"

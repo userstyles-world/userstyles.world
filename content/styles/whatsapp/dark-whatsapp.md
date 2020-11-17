@@ -6,7 +6,7 @@ license: MIT License
 home: https://github.com/vednoc/dark-whatsapp
 install: https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/wa.user.styl
 preview: https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/images/preview.png
-thumbnail: https://user-images.githubusercontent.com/18245694/98142341-f99be200-1ec7-11eb-897a-a597c24345a9.png
+thumbnail: https://user-images.githubusercontent.com/18245694/99352056-3c838f80-28a2-11eb-8bda-06a8c807dcb2.png
 tags:
     - whatsapp
     - dark
