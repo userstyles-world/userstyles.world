@@ -14,7 +14,7 @@
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
             <div class="grid flex rwrap mx:r mt:n">
                 {{- range .Sections -}}
-                {{- $count := len (.RegularPages) -}}
+                {{- $count := len .RegularPages -}}
                 <a href="{{ .RelPermalink }}"
                    class="card animate col gap mb:0 px:m py:m bd:o">
                     <span class="f:h3 f:b fg:1 my:m">{{ .Title }}</span>
@@ -30,7 +30,7 @@
             </div>
         {{/* Renders pages under "/styles/<userstyle>" section. */}}
         {{ else }}
-            <h1>{{ .Title }} userstyles</h1>
+            <h1 class="ta:c">{{ .Title }} userstyles</h1>
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
             <div class="grid flex rwrap mx:r mt:m">
                 {{- range .RegularPages -}}
