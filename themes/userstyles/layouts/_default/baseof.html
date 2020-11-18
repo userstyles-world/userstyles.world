@@ -15,5 +15,7 @@
             {{- block "main" . }}{{ end -}}
             {{- partial "footer.html" . -}}
         </div>
+        {{- $js := resources.Get "js/main.js" | js.Build "main.js" | fingerprint -}}
+        <script src="{{ $js.RelPermalink }}"></script>
     </body>
 </html>

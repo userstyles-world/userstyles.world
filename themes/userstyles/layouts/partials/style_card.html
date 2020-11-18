@@ -1,8 +1,12 @@
 <div class="card col gap animate bd:o">
     <a href="{{ .RelPermalink }}">
         <figure>
+            <img data-src="{{ .Params.thumbnail }}"
+                 alt="{{ .Params.name }} screenshot"/>
+            <noscript>
             <img src="{{ .Params.thumbnail }}"
                  alt="{{ .Params.name }} screenshot"/>
+            </noscript>
         </figure>
     </a>
     <div class="flex cwrap px:m bd:t">

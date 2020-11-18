@@ -12,7 +12,12 @@
         <div class="card animate">
             <a href="{{ .Params.install }}">
                 <figure class="preview-img">
-                    <img src="{{ .Params.preview }}" alt="{{ .Params.install }}">
+                    <img data-src="{{ .Params.preview }}"
+                         alt="{{ .Params.install }}">
+                    <noscript>
+                        <img src="{{ .Params.preview }}"
+                             alt="{{ .Params.install }}">
+                    </noscript>
                 </figure>
             </a>
         </div>
