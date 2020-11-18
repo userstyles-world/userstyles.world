@@ -1,5 +1,6 @@
 a { color: var(--ac-1); text-decoration: none }
 h1 { font-size: 2.5em }
+h2 { font-size: 2em }
 img { width: 100% }
 hr { border: none; border-top: 1px solid var(--bg-3)  }
 
@@ -38,6 +39,24 @@ nav {
         color: var(--fg-1);
         border-color: var(--bg-5);
         background-color: var(--bg-3);
+    }
+
+    &.primary {
+        color: var(--inverse);
+        border-color: var(--ac-3);
+        background-color: var(--ac-5);
+
+        &:hover {
+            border-color: var(--ac-3);
+            background-color: var(--ac-4);
+        }
+
+        &:not(.active):focus {
+            color: var(--inverse);
+            border-color: var(--ac-3);
+            background-color: var(--ac-4);
+            box-shadow: 0 0 0 0.25rem var(--ac-5);
+        }
     }
 }
 

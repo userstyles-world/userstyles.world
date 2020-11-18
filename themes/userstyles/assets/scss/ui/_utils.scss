@@ -8,6 +8,7 @@
 
 .f {
     &g\:4 { color: var(--fg-4) }
+    &g\:3 { color: var(--fg-3) }
     &g\:1 { color: var(--fg-1) }
     &\:h3 { font-size: 1.125em }
     &\:b { font-weight: bold }
@@ -16,6 +17,7 @@
 .m {
     &x {
         &\:r { margin-left: -0.5rem; margin-right: -0.5rem }
+        &\:s { margin-left: 0.5rem; margin-right: 0.5rem }
         &\:m { margin-left: 1rem; margin-right: 1rem }
     }
 

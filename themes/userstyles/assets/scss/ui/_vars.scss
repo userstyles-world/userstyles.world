@@ -1,3 +1,6 @@
+$dark-ac-1:  #679CD0;
+$light-ac-1: #0b459b;
+
 :root {
     --font-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --font-sans: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Droid Sans", sans-serif;
@@ -15,7 +18,11 @@
     --bg-3: #292929;
     --bg-4: #333333;
     --bg-5: #3d3d3d;
-    --ac-1: #679CD0;
+    --ac-1: #{ $dark-ac-1 };
+    --ac-3: #{ darken($dark-ac-1, 20%) };
+    --ac-4: #{ darken($dark-ac-1, 32%) };
+    --ac-5: #{ darken($dark-ac-1, 44%) };
+    --inverse: #ffffff;
 }
 
 @media (prefers-color-scheme: light) {
@@ -30,6 +37,10 @@
         --fg-3: #333333;
         --fg-4: #444444;
         --fg-5: #555555;
-        --ac-1: #0B459B;
+        --ac-1: #{ $light-ac-1 };
+        --ac-3: #{ lighten($light-ac-1, 32%) };
+        --ac-4: #{ lighten($light-ac-1, 40%) };
+        --ac-5: #{ lighten($light-ac-1, 48%) };
+        --inverse: #000000;
     }
 }

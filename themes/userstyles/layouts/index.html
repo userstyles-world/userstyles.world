@@ -3,14 +3,16 @@
 {{ end }}
 
 {{ define "main" }}
-    <header>
-        <div class="card mt:m bd:o">
-            <span class="ta:c">{{ .Content }}</span>
-            {{ partial "footer.html" . }}
-        </div>
+    <header class="hero flex cwrap">
+        <section class="md ta:c">{{ .Content }}</section>
+        <span class="flex">
+            <a class="btn primary mx:s" href="/styles/">Explore userstyles</a>
+            <a class="btn mx:s" href="/docs/">Get involved</a>
+        </span>
     </header>
 
     <main>
+        <h2 class="ta:c fg:3">Featured userstyles</h2>
         <div class="grid flex rwrap mx:r mt:m">
             {{ range where site.RegularPages "Section" "styles" }}
                 {{- partial "style_card.html" . -}}
