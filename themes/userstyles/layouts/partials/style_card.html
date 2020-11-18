@@ -10,7 +10,19 @@
         </figure>
     </a>
     <div class="flex cwrap px:m bd:t">
-        <span class="f:h3 f:b my:0 pt:m">{{- .Params.name -}}</span>
+        {{- if in .Params.home "github" -}}
+            {{ $home := .Params.home }}
+            {{ $api := replaceRE "https://([.a-z]+)" "https://api.$1/repos" $home }}
+            {{ $payload := getJSON $api }}
+            <div class="flex">
+                <span class="f:h3 f:b my:0 pt:m">{{- .Params.name -}}</span>
+                {{- if in .Params.home "github" -}}
+                    <span class="ml:a pt:m">{{ $payload.stargazers_count }} ⭐</span>
+                {{- end -}}
+            </div>
+        {{- else -}}
+            <span class="f:h3 f:b my:0 pt:m">{{- .Params.name -}}</span>
+        {{- end -}}
         <p class="fg:4 my:0 pb:m">by {{ .Params.author -}}</p>
     </div>
 </div>
