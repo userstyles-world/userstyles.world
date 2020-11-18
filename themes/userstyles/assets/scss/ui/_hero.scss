@@ -12,4 +12,9 @@
         max-width: 28em;
         font-size: 1.3em;
     }
+
+    @media (max-width: 600px) {
+        h1 { font-size: 2.6em }
+        p { font-size: 1.2em }
+    }
 }
