@@ -10,7 +10,14 @@
         {{ end }}
         {{/* Renders sections for "/styles/". */}}
         {{ if (eq .Parent.Path "_index.md") }}
-            <h1 class="ta:c">{{ .Title }}</h1>
+            <header class="pb:m ta:c">
+                {{- $styles := len (where site.RegularPages "Section" "styles") -}}
+                <h1 class="mb:m">{{ .Title }}</h1>
+                <p>
+                    There are <b>{{ $styles }}</b> userstyles in total.
+                    <a href="/docs/">Add yours?</a>
+                </p>
+            </header>
             {{ if site.Params.Debug }}<mark>{{ . }}</mark>{{ end }}
             <div class="grid flex rwrap mx:r mt:n">
                 {{- range .Sections -}}
