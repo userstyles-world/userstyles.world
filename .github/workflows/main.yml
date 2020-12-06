@@ -9,4 +9,4 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Ping Vercel's redeploy hook
-                run: curl -X GET ${{ secrets.vercel_redeploy }}
+              run: curl -X GET ${{ secrets.vercel_redeploy }}
