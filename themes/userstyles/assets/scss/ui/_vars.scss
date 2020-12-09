@@ -1,5 +1,49 @@
-$dark-ac-1:  #679CD0;
-$light-ac-1: #0b459b;
+/// Dark mode colors.
+$bg-dark:  #101010;
+$fg-dark:  #dddddd;
+$ac-dark:  #679CD0;
+
+/// Light mode colors.
+$bg-light: #dddddd;
+$fg-light: #101010;
+$ac-light: #0b459b;
+
+$mode: (
+    "dark": (
+        "bg-1": lighten($bg-dark,  0%),
+        "bg-2": lighten($bg-dark,  5%),
+        "bg-3": lighten($bg-dark, 10%),
+        "bg-4": lighten($bg-dark, 15%),
+        "bg-5": lighten($bg-dark, 20%),
+        "fg-1": darken($fg-dark,  0%),
+        "fg-2": darken($fg-dark,  8%),
+        "fg-3": darken($fg-dark, 16%),
+        "fg-4": darken($fg-dark, 24%),
+        "fg-5": darken($fg-dark, 32%),
+        "ac-1": darken($ac-dark,  0%),
+        "ac-2": darken($ac-dark, 16%),
+        "ac-3": darken($ac-dark, 24%),
+        "ac-4": darken($ac-dark, 32%),
+        "ac-5": darken($ac-dark, 40%),
+    ),
+    "light": (
+        "bg-1": darken($bg-light,  0%),
+        "bg-2": darken($bg-light,  5%),
+        "bg-3": darken($bg-light, 10%),
+        "bg-4": darken($bg-light, 20%),
+        "bg-5": darken($bg-light, 30%),
+        "fg-1": lighten($fg-light,  0%),
+        "fg-2": lighten($fg-light,  8%),
+        "fg-3": lighten($fg-light, 16%),
+        "fg-4": lighten($fg-light, 24%),
+        "fg-5": lighten($fg-light, 32%),
+        "ac-1": lighten($ac-light,  0%),
+        "ac-2": lighten($ac-light, 16%),
+        "ac-3": lighten($ac-light, 24%),
+        "ac-4": lighten($ac-light, 32%),
+        "ac-5": lighten($ac-light, 40%),
+    ),
+);
 
 :root {
     --font-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -7,40 +51,16 @@ $light-ac-1: #0b459b;
     --br-1: 1rem;
     --br-2: 0.66rem;
     --br-3: 0.33rem;
-    --sh-1: 0 4px 8px #3333;
-    --fg-1: #cccccc;
-    --fg-2: #b8b8b8;
-    --fg-3: #a3a3a3;
-    --fg-4: #8f8f8f;
-    --fg-5: #707070;
-    --bg-1: #141414;
-    --bg-2: #1f1f1f;
-    --bg-3: #292929;
-    --bg-4: #333333;
-    --bg-5: #3d3d3d;
-    --ac-1: #{ $dark-ac-1 };
-    --ac-3: #{ darken($dark-ac-1, 20%) };
-    --ac-4: #{ darken($dark-ac-1, 32%) };
-    --ac-5: #{ darken($dark-ac-1, 44%) };
     --inverse: #ffffff;
+    @each $key, $val in map-get($mode, "dark") {
+        --#{$key}: #{$val};
+    }
 }
 
 @media (prefers-color-scheme: light) {
     :root {
-        --bg-1: #cccccc;
-        --bg-2: #b8b8b8;
-        --bg-3: #a3a3a3;
-        --bg-4: #8f8f8f;
-        --bg-5: #707070;
-        --fg-1: #141414;
-        --fg-2: #1f1f1f;
-        --fg-3: #333333;
-        --fg-4: #444444;
-        --fg-5: #555555;
-        --ac-1: #{ $light-ac-1 };
-        --ac-3: #{ lighten($light-ac-1, 32%) };
-        --ac-4: #{ lighten($light-ac-1, 40%) };
-        --ac-5: #{ lighten($light-ac-1, 48%) };
-        --inverse: #000000;
+        @each $key, $val in map-get($mode, "light") {
+            --#{$key}: #{$val};
+        }
     }
 }
