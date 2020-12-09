@@ -1,5 +1,5 @@
-<div class="card col gap animate bd:o">
-    <a href="{{ .RelPermalink }}">
+<a class="card col gap animate bd:o" href="{{ .RelPermalink }}">
+    <div class="thumbnail">
         <figure>
             <img data-src="{{ .Params.thumbnail }}"
                  alt="{{ .Params.name }} screenshot"/>
@@ -8,8 +8,8 @@
                      alt="{{ .Params.name }} screenshot"/>
             </noscript>
         </figure>
-    </a>
-    <div class="flex cwrap px:m bd:t">
+    </div>
+    <div class="flex cwrap px:m bd:t fg:1">
         {{- if in .Params.home "github" -}}
             {{ $home := .Params.home }}
             {{ $api := replaceRE "https://([.a-z]+)" "https://api.$1/repos" $home }}
@@ -25,4 +25,4 @@
         {{- end -}}
         <p class="fg:4 my:0 pb:m">by {{ .Params.author -}}</p>
     </div>
-</div>
+</a>
