@@ -15,8 +15,9 @@ nav {
     $t: color, border-color, background-color;
     padding: 0.6rem 0.8rem;
     border-radius: var(--br-3);
-    transition: $t 0.2s ease-in-out;
+    transition: $t 0.15s ease-in-out;
     border: 1px solid var(--bg-3);
+    background-color: var(--bg-2);
     color: var(--fg-4);
     outline: none;
 
@@ -24,37 +25,33 @@ nav {
 
     &:hover {
         color: var(--fg-3);
-        border-color: var(--bg-3);
-        background-color: var(--bg-2);
+        background-color: var(--bg-3);
     }
 
     &:not(.active):focus {
         color: var(--fg-2);
         border-color: var(--bg-4);
-        background-color: var(--bg-3);
         box-shadow: 0 0 0 0.25rem var(--bg-2);
     }
 
     &.active {
         color: var(--fg-1);
         border-color: var(--bg-5);
-        background-color: var(--bg-3);
+        background-color: var(--bg-4);
     }
 
     &.primary {
         color: var(--inverse);
         border-color: var(--ac-3);
-        background-color: var(--ac-5);
+        background-color: var(--ac-4);
 
         &:hover {
-            border-color: var(--ac-3);
-            background-color: var(--ac-4);
+            background-color: var(--ac-3);
         }
 
         &:not(.active):focus {
             color: var(--inverse);
-            border-color: var(--ac-3);
-            background-color: var(--ac-4);
+            border-color: var(--ac-2);
             box-shadow: 0 0 0 0.25rem var(--ac-5);
         }
     }
