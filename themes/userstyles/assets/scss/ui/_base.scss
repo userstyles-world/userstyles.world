@@ -1,4 +1,8 @@
-a { color: var(--ac-1); text-decoration: none }
+a {
+    color: var(--ac-1);
+    text-decoration: none;
+    &:not([class]):hover { text-decoration: underline }
+}
 h1 { font-size: 2.5em }
 h2 { font-size: 2em }
 img { width: 100% }
