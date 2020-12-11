@@ -18,13 +18,13 @@ nav {
     transition: $t 0.15s ease-in-out;
     border: 1px solid var(--bg-3);
     background-color: var(--bg-2);
-    color: var(--fg-4);
+    color: var(--fg-3);
     outline: none;
 
     ::-moz-focus-inner { outline: none }
 
     &:hover {
-        color: var(--fg-3);
+        color: var(--fg-2);
         background-color: var(--bg-3);
     }
 
