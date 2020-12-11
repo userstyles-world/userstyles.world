@@ -69,3 +69,8 @@
 .rwrap { flex-flow: row wrap }
 .cwrap { flex-flow: column wrap }
 .lsn { list-style-type: none; padding-left: 0px }
+.sticky {
+    top: 0;
+    z-index: 9;
+    position: sticky;
+}

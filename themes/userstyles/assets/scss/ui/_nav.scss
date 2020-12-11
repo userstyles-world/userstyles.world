@@ -1,0 +1,11 @@
+nav {
+    background-color: var(--bg-1);
+}
+
+@supports (backdrop-filter: blur()) or (-webkit-backdrop-filter: blur()) {
+    nav {
+        backdrop-filter: blur(4px) saturate(150%);
+        -webkit-backdrop-filter: blur(4px) saturate(150%);
+        background-color: var(--bg-t);
+    }
+}
