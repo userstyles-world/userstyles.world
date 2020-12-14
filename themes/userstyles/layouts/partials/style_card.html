@@ -20,6 +20,14 @@
                     <span class="ml:a pt:m">{{ $payload.stargazers_count }} ⭐</span>
                 {{- end -}}
             </div>
+        {{- else if in .Params.home "gitlab" -}}
+            {{ $id := .Params.id }}
+            {{ $api := printf "https://gitlab.com/api/v4/projects/%d" $id }}
+            {{ $payload := getJSON $api }}
+            <div class="flex">
+                <span class="f:h3 f:b my:0 pt:m">{{ .Params.name }}</span>
+                <span class="ml:a pt:m">{{ $payload.star_count }} ⭐</span>
+            </div>
         {{- else -}}
             <span class="f:h3 f:b my:0 pt:m">{{- .Params.name -}}</span>
         {{- end -}}
