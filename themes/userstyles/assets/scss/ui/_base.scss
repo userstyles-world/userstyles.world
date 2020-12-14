@@ -16,10 +16,12 @@ nav {
 }
 
 .btn {
-    $t: color, border-color, background-color;
+    $x: color 0.5s ease-in-out;
+    $y: border-color 0.5s ease-in-out;
+    $z: background-color 0.5s ease-in-out;
     padding: 0.6rem 0.8rem;
     border-radius: var(--br-3);
-    transition: $t 0.15s ease-in-out;
+    transition: $x, $y, $z;
     border: 1px solid var(--bg-3);
     background-color: var(--bg-2);
     color: var(--fg-3);
