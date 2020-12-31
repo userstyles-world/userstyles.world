@@ -1,7 +1,4 @@
-.vercel
-
 public/
 cache/
-resources/_gen
-
-tools/data*
+data/
+tmp/
