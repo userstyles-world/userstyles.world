@@ -1,6 +1,10 @@
 package main
 
 import (
+	"log"
+
+	"userstyles.world/config"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
 )
@@ -17,5 +21,5 @@ func main() {
 		})
 	})
 
-	app.Listen(":3000")
+	log.Fatal(app.Listen(config.PORT))
 }
