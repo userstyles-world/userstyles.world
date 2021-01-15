@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ .Title }}</title>
+    </head>
+    <body>
+        <h1>Register</h1>
+        <form method="post" id="test" action="/register">
+            <input type="text" name="username" value="{{ .Username }}" placeholder="username">
+            <input type="text" name="email" value="{{ .Email }}" placeholder="email">
+            <input type="password" name="password" value="{{ .Password }}" placeholder="password">
+            <button type="submit">send</button>
+        </form>
+    </body>
+</html>
