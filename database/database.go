@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"userstyles.world/config"
+	"userstyles.world/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -28,4 +29,9 @@ func Connect() {
 func Migrate(tables ...interface{}) error {
 	fmt.Println("Migrated database tables.")
 	return DB.AutoMigrate(tables...)
+}
+
+func Prepare() {
+	type user models.User
+	Migrate(&user{})
 }
