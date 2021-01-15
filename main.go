@@ -4,12 +4,15 @@ import (
 	"log"
 
 	"userstyles.world/config"
+	"userstyles.world/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
 )
 
 func main() {
+	database.Connect()
+
 	app := fiber.New(fiber.Config{
 		Views: html.New("./views", ".html"),
 	})

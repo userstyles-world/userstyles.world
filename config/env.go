@@ -7,6 +7,7 @@ import (
 
 var (
 	PORT = getEnv("PORT", ":3000")
+	DB   = getEnv("DB", "dev.db")
 )
 
 func getEnv(name, fallback string) string {
