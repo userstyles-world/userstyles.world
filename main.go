@@ -9,12 +9,15 @@ import (
 	"userstyles.world/models"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/template/html"
 )
 
 func main() {
 	database.Connect()
 	database.Prepare()
+
+	var store = session.New()
 
 	app := fiber.New(fiber.Config{
 		Views: html.New("./views", ".html"),
@@ -84,7 +87,30 @@ func main() {
 			})
 		}
 
-		return c.Redirect("/", fiber.StatusFound)
+		sess, err := store.Get(c)
+		if err != nil {
+			log.Println(err)
+		}
+		defer sess.Save()
+
+		sess.Set("name", user.Username)
+		sess.Set("email", user.Email)
+
+		log.Println("Session:", sess.Get("name"), sess.Get("email"))
+		return c.Redirect("/account", fiber.StatusFound)
+	})
+
+	app.Get("/account", func(c *fiber.Ctx) error {
+		sess, err := store.Get(c)
+		if err != nil {
+			log.Println(err)
+		}
+
+		return c.Render("account", fiber.Map{
+			"Name":  sess.Get("name"),
+			"Title": "UserStyles.world",
+			"Body":  "Hello, World!",
+		})
 	})
 
 	log.Fatal(app.Listen(config.PORT))
