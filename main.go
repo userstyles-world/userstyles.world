@@ -57,5 +57,35 @@ func main() {
 		return c.Redirect("/login", fiber.StatusFound)
 	})
 
+	app.Get("/login", func(c *fiber.Ctx) error {
+		return c.Render("login", fiber.Map{
+			"Title": "UserStyles.world",
+			"Body":  "Hello, World!",
+		})
+	})
+
+	app.Post("/login", func(c *fiber.Ctx) error {
+		form := models.User{
+			Email:    c.FormValue("email"),
+			Password: c.FormValue("password"),
+		}
+
+		user, err := models.FindUserByEmail(database.DB, form.Email)
+		if err != nil {
+			log.Fatalf("Error finding user: %v", err)
+		}
+
+		match := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(form.Password))
+		if match != nil {
+			log.Println("Failed to match hash for user:", user.Email)
+			c.SendStatus(fiber.StatusUnauthorized)
+			return c.Render("login", fiber.Map{
+				"Error": "Invalid login credentials",
+			})
+		}
+
+		return c.Redirect("/", fiber.StatusFound)
+	})
+
 	log.Fatal(app.Listen(config.PORT))
 }
