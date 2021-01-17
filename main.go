@@ -49,13 +49,20 @@ func main() {
 			log.Println(err)
 		}
 
-		database.DB.Create(&models.User{
+		regErr := database.DB.Create(&models.User{
 			Username: u.Username,
 			Password: string(hash),
 			Email:    u.Email,
 		})
 
-		log.Printf("%+v\n", u)
+		if regErr != nil {
+			log.Printf("Failed to register %s, error: %s", u.Email, regErr.Error)
+
+			c.SendStatus(fiber.StatusSeeOther)
+			return c.Render("register", fiber.Map{
+				"Error": "Failed to register. Make sure your credentials are valid.",
+			})
+		}
 
 		return c.Redirect("/login", fiber.StatusFound)
 	})
@@ -77,7 +84,7 @@ func main() {
 		if err != nil {
 			log.Printf("Failed to find %s, error: %s", form.Email, err)
 
-			c.SendStatus(fiber.StatusUnauthorized)
+			c.SendStatus(fiber.StatusSeeOther)
 			return c.Render("login", fiber.Map{
 				"Error": "Invalid credentials.",
 			})
