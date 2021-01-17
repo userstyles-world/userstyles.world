@@ -46,7 +46,7 @@ func main() {
 
 		hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), 14)
 		if err != nil {
-			log.Panic(err)
+			log.Println(err)
 		}
 
 		database.DB.Create(&models.User{
@@ -75,7 +75,12 @@ func main() {
 
 		user, err := models.FindUserByEmail(database.DB, form.Email)
 		if err != nil {
-			log.Fatalf("Error finding user: %v", err)
+			log.Printf("Failed to find %s, error: %s", form.Email, err)
+
+			c.SendStatus(fiber.StatusUnauthorized)
+			return c.Render("login", fiber.Map{
+				"Error": "Invalid credentials.",
+			})
 		}
 
 		match := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(form.Password))
@@ -83,7 +88,7 @@ func main() {
 			log.Println("Failed to match hash for user:", user.Email)
 			c.SendStatus(fiber.StatusUnauthorized)
 			return c.Render("login", fiber.Map{
-				"Error": "Invalid login credentials",
+				"Error": "Invalid credentials.",
 			})
 		}
 

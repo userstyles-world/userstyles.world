@@ -21,7 +21,7 @@ func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 	}
 
 	if user.ID == 0 {
-		return user, errors.New("User not found.")
+		return nil, errors.New("User not found.")
 	}
 
 	return user, nil
