@@ -112,6 +112,16 @@ func main() {
 		return c.Redirect("/account", fiber.StatusFound)
 	})
 
+	app.Get("/logout", func(c *fiber.Ctx) error {
+		sess, err := store.Get(c)
+		if err != nil {
+			log.Println(err)
+		}
+		sess.Destroy()
+
+		return c.Redirect("/login", fiber.StatusFound)
+	})
+
 	app.Get("/account", func(c *fiber.Ctx) error {
 		sess, err := store.Get(c)
 		if err != nil {
