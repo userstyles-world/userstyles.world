@@ -68,6 +68,16 @@ func main() {
 	})
 
 	app.Get("/login", func(c *fiber.Ctx) error {
+		s, err := store.Get(c)
+		if err != nil {
+			log.Println(err)
+		}
+
+		if s.Fresh() == false {
+			log.Printf("User %s has set session, redirecting.", s.Get("email"))
+			c.Redirect("/account", fiber.StatusFound)
+		}
+
 		return c.Render("login", fiber.Map{
 			"Title": "UserStyles.world",
 			"Body":  "Hello, World!",
