@@ -3,6 +3,7 @@ module userstyles.world
 go 1.15
 
 require (
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/gofiber/fiber/v2 v2.3.3
 	github.com/gofiber/template v1.6.6
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9

@@ -3,6 +3,7 @@ package user
 import (
 	"log"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 
@@ -22,6 +23,14 @@ func RegisterPost(c *fiber.Ctx) error {
 		Username: c.FormValue("username"),
 		Password: c.FormValue("password"),
 		Email:    c.FormValue("email"),
+	}
+
+	if err := validator.New().Struct(u); err != nil {
+		errors := err.(validator.ValidationErrors)
+		log.Println("Validation errors:", errors)
+		return c.Render("register", fiber.Map{
+			"Errors": errors,
+		})
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), 14)

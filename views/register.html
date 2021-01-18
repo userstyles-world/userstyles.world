@@ -9,6 +9,17 @@
     </head>
     <body>
         <h1>Register</h1>
+        {{ if .Error }}
+            <p style="color: red">{{ .Error }}</p>
+        {{ end }}
+        {{ if .Errors }}
+            <p style="color: red">Validation failed</p>
+            <ul>
+                {{ range .Errors }}
+                    <li>{{ . }}</li>
+                {{ end }}
+            </ul>
+        {{ end }}
         <form method="post" id="test" action="/register">
             <input type="text" name="username" value="{{ .Username }}" placeholder="username">
             <input type="text" name="email" value="{{ .Email }}" placeholder="email">
