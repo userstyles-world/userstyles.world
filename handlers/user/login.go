@@ -3,6 +3,7 @@ package user
 import (
 	"log"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"golang.org/x/crypto/bcrypt"
@@ -34,6 +35,14 @@ func LoginPost(c *fiber.Ctx) error {
 	form := models.User{
 		Email:    c.FormValue("email"),
 		Password: c.FormValue("password"),
+	}
+
+	if err := validator.New().StructExcept(form, "Username"); err != nil {
+		errors := err.(validator.ValidationErrors)
+		log.Println("Validation errors:", errors)
+		return c.Render("login", fiber.Map{
+			"Errors": errors,
+		})
 	}
 
 	user, err := models.FindUserByEmail(database.DB, form.Email)

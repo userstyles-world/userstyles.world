@@ -12,6 +12,14 @@
         {{ if .Error }}
             <p style="color: red">{{ .Error }}</p>
         {{ end }}
+        {{ if .Errors }}
+            <p style="color: red">Validation failed</p>
+            <ul>
+                {{ range .Errors }}
+                    <li>{{ . }}</li>
+                {{ end }}
+            </ul>
+        {{ end }}
         <form method="post" id="test" action="/login">
             <input type="text" name="email" placeholder="email">
             <input type="password" name="password" placeholder="password">
