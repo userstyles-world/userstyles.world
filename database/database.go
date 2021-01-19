@@ -1,7 +1,7 @@
 package database
 
 import (
-	"fmt"
+	"log"
 
 	"userstyles.world/config"
 	"userstyles.world/models"
@@ -18,20 +18,22 @@ func Connect() {
 	db, err := gorm.Open(sqlite.Open(config.DB), &gorm.Config{})
 
 	if err != nil {
-		fmt.Println("Failed to connect database.")
+		log.Println("Failed to connect database.")
 		panic(err)
 	}
 
 	DB = db
-	fmt.Println("Database connected.")
+	log.Println("Database successfully connected.")
 }
 
 func Migrate(tables ...interface{}) error {
-	fmt.Println("Migrated database tables.")
+	log.Println("Migrating database tables.")
 	return DB.AutoMigrate(tables...)
 }
 
-func Prepare() {
+func Initialize() {
 	type user models.User
+
+	Connect()
 	Migrate(&user{})
 }

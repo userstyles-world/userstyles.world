@@ -6,8 +6,6 @@ import (
 )
 
 func main() {
-	database.Connect()
-	database.Prepare()
+	database.Initialize()
 	handlers.Initialize()
-
 }
