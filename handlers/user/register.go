@@ -44,7 +44,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		Email:    u.Email,
 	})
 
-	if regErr != nil {
+	if regErr.Error != nil {
 		log.Printf("Failed to register %s, error: %s", u.Email, regErr.Error)
 
 		c.SendStatus(fiber.StatusSeeOther)
