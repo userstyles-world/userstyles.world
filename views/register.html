@@ -1,30 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ .Title }}</title>
+        {{ template "partials/head" . }}
     </head>
     <body>
-        <h1>Register</h1>
-        {{ if .Error }}
-            <p style="color: red">{{ .Error }}</p>
-        {{ end }}
-        {{ if .Errors }}
-            <p style="color: red">Validation failed</p>
-            <ul>
-                {{ range .Errors }}
-                    <li>{{ . }}</li>
+        {{ template "partials/nav" . }}
+        <main>
+            <div class="wrapper py:l">
+                <section class="ta:c">
+                    <h1>Register</h1>
+                    <p>Tip: Logging in uses your e-mail address, not username.</p>
+                </section>
+
+                {{ if or .Error .Errors }}
+                    <section class="err limit">
+                        {{ if .Error }}
+                            <p>{{ .Error }}</p>
+                        {{ end }}
+
+                        {{ if .Errors }}
+                            <p>Validation failed!</p>
+                            <ul>
+                                {{ range .Errors }}
+                                    <li>{{ . }}</li>
+                                {{ end }}
+                            </ul>
+                        {{ end }}
+                    </section>
                 {{ end }}
-            </ul>
-        {{ end }}
-        <form method="post" id="test" action="/register">
-            <input type="text" name="username" value="{{ .Username }}" placeholder="username">
-            <input type="text" name="email" value="{{ .Email }}" placeholder="email">
-            <input type="password" name="password" value="{{ .Password }}" placeholder="password">
-            <button type="submit">send</button>
-        </form>
+
+                <section class="ta:c">
+                    <form method="post" action="/register">
+                        <label for="username">Username</label>
+                        <input
+                            type="text" name="username"
+                            placeholder="e.g. username (5–20 characters)">
+                        <label for="email">E-mail</label>
+                        <input
+                            type="text" name="email"
+                            placeholder="e.g. username@example.org">
+                        <label for="password">Password</label>
+                        <input
+                            type="password" name="password"
+                            placeholder="(8–32 characters)">
+                        <button class="flex btn primary" type="submit">Register</button>
+                    </form>
+                    <i class="fg:3">Already have an account?
+                        Continue to <a href="/login">login page</a>.
+                    </i>
+                </section>
+            </div>
+        </main>
     </body>
 </html>

@@ -1,4 +1,7 @@
-* { box-sizing: border-box }
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
 
 html {
     scrollbar-color: var(--bg-5) var(--bg-2);
@@ -11,8 +14,14 @@ html {
         font-family: var(--font-sans), var(--font-emoji);
 
         > * > .wrapper {
-            margin: 0 auto;
+            width: 100%;
+            margin: auto;
             max-width: 60rem;
+        }
+
+        > main {
+            display: flex;
+            min-height: calc(100vh - 57px);
         }
     }
 
@@ -33,5 +42,45 @@ html {
             &-thumb { background-color: var(--bg-5) }
             &-track { background-color: var(--bg-2) }
         }
+    }
+}
+
+input,
+button {
+    padding: 0.5rem;
+    color: var(--fg-1);
+    background: var(--bg-1);
+    border: 1px solid var(--bg-4);
+    border-radius: var(--br-3);
+
+    &:hover {
+        border-color: var(--bg-5);
+    }
+
+    &:focus {
+        border-color: var(--ac-3);
+        outline-color: transparent;
+        box-shadow: 0 0 0 0.2rem var(--ac-5);
+    }
+
+    &:-moz-focusring {
+        outline: 1px solid transparent;
+    }
+}
+
+form {
+    margin: 1rem auto;
+    padding: 1rem;
+    max-width: 480px;
+    border: 1px solid var(--bg-4);
+    background-color: var(--bg-2);
+    border-radius: var(--br-3);
+
+    label { display: flex }
+
+    input {
+        width: 100%;
+        display: flex;
+        margin: 0.5rem 0 1.5rem;
     }
 }
