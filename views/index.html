@@ -1,13 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ .Title }}</title>
+        {{ template "partials/head" . }}
     </head>
     <body>
-        <h1>{{ .Body }}</h1>
+        {{ template "partials/nav" . }}
+        <main>
+            <div class="wrapper">
+                <section class="hero md flex f-col">
+                    <h1>UserStyles.world</h1>
+                    <p>A free and open-source, modern, community-driven alternative to <code>userstyles.org</code>. For the community, by the community.</p>
+                    <span class="flex">
+                        <a class="btn primary mx:s" href="/explore">Explore userstyles</a>
+                        <a class="btn mx:s" href="/register">Create an account</a>
+                    </span>
+                </section>
+            </div>
+        </main>
     </body>
 </html>

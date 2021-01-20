@@ -8,13 +8,6 @@ h2 { font-size: 2em }
 img { width: 100% }
 hr { border: none; border-top: 1px solid var(--bg-3)  }
 
-nav {
-    > div a:not(:last-child) {
-        margin-right: 1rem;
-        text-decoration: none;
-    }
-}
-
 .btn {
     $x: color 0.5s ease-in-out;
     $y: border-color 0.5s ease-in-out;

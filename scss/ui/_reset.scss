@@ -1,13 +1,16 @@
+* { box-sizing: border-box }
+
 html {
     scrollbar-color: var(--bg-5) var(--bg-2);
 
     body {
+        margin: 0;
         color: var(--fg-1);
         background: var(--bg-1);
         line-height: 1.5;
         font-family: var(--font-sans), var(--font-emoji);
 
-        > * {
+        > * > .wrapper {
             margin: 0 auto;
             max-width: 60rem;
         }

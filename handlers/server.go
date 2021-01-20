@@ -15,6 +15,8 @@ func Initialize() {
 		Views: html.New("./views", ".html"),
 	})
 
+	app.Static("/", "./static")
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Render("index", fiber.Map{
 			"Title": "UserStyles.world",

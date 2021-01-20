@@ -44,6 +44,7 @@
 
     &x {
         &\:m { padding-left: 1rem; padding-right: 1rem }
+        &\:0 { padding-left: 0rem; padding-right: 0rem }
     }
 
     &y {
@@ -67,6 +68,7 @@
 .col { flex-basis: calc(100% / 3 - 1rem) }
 .gap { margin: 0 0.5rem 1rem .5rem }
 .flex { display: flex }
+.f-col { flex-direction: column }
 .rwrap { flex-flow: row wrap }
 .cwrap { flex-flow: column wrap }
 .lsn { list-style-type: none; padding-left: 0px }

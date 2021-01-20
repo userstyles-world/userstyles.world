@@ -1,7 +1,19 @@
 nav {
-    background-color: var(--bg-1);
+    border-bottom: 1px solid var(--bg-5);
+    background-color: var(--bg-2);
+
+    a:not(:last-child) {
+        margin-right: 1rem;
+        text-decoration: none;
+    }
+
+    ul {
+        list-style: none;
+        li:not(:last-child) > a { margin-right: 1rem }
+    }
 }
 
+/*
 @supports (backdrop-filter: blur()) or (-webkit-backdrop-filter: blur()) {
     nav {
         backdrop-filter: blur(4px) saturate(150%);
@@ -9,3 +21,4 @@ nav {
         background-color: var(--bg-t);
     }
 }
+*/
