@@ -2,9 +2,11 @@ nav {
     border-bottom: 1px solid var(--bg-5);
     background-color: var(--bg-2);
 
-    a:not(:last-child) {
-        margin-right: 1rem;
+    a {
+        color: var(--fg-1);
         text-decoration: none;
+
+        &:not(:last-child) { margin-right: 1rem }
     }
 
     ul {

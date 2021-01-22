@@ -2,8 +2,13 @@
     <div class="wrapper flex py:m">
         <a href="/">Home</a>
         <ul class="flex my:0 ml:a px:0">
-            <li><a href="/register">Register</a></li>
-            <li><a href="/login">Login</a></li>
+            {{ if .Name }}
+                <li><a href="/account">Account</a></li>
+                <li><a href="/logout">Logout</a></li>
+            {{ else }}
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login">Login</a></li>
+            {{ end }}
         </ul>
     </div>
 </nav>
