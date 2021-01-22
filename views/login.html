@@ -1,29 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ .Title }}</title>
+        {{ template "partials/head" . }}
     </head>
     <body>
-        <h1>Login</h1>
-        {{ if .Error }}
-            <p style="color: red">{{ .Error }}</p>
-        {{ end }}
-        {{ if .Errors }}
-            <p style="color: red">Validation failed</p>
-            <ul>
-                {{ range .Errors }}
-                    <li>{{ . }}</li>
+        {{ template "partials/nav" . }}
+        <main>
+            <div class="wrapper py:l">
+                <section class="ta:c">
+                    <h1>Login</h1>
+                    <p>Note: Logging in using usernames is disabled.</p>
+                </section>
+
+                {{ if or .Error .Errors }}
+                    <section class="err limit">
+                        {{ if .Error }}
+                            <p>{{ .Error }}</p>
+                        {{ end }}
+
+                        {{ if .Errors }}
+                            <p>Validation failed!</p>
+                            <ul>
+                                {{ range .Errors }}
+                                    <li>{{ . }}</li>
+                                {{ end }}
+                            </ul>
+                        {{ end }}
+                    </section>
                 {{ end }}
-            </ul>
-        {{ end }}
-        <form method="post" id="test" action="/login">
-            <input type="text" name="email" placeholder="email">
-            <input type="password" name="password" placeholder="password">
-            <button type="submit">Login</button>
-        </form>
+
+                <section class="ta:c">
+                    <form method="post" action="/login">
+                        <label for="email">E-mail</label>
+                        <input
+                            type="text" name="email"
+                            placeholder="Your e-mail">
+                        <label for="password">Password</label>
+                        <input
+                            type="password" name="password"
+                            placeholder="Your password">
+                        <!-- <span class="flex" style="align-items: center">
+                             <button class="flex btn primary" type="submit">Login</button>
+                             <a class="ml:a" href="/recover">Forgot your password?</a>
+                             </span> -->
+                        <button class="flex btn primary" type="submit">Login</button>
+                    </form>
+                    <i class="fg:3">Don't have an account?
+                        Continue to <a href="/register">register page</a>.
+                    </i>
+                </section>
+            </div>
+        </main>
     </body>
 </html>
