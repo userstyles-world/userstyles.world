@@ -1,16 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ .Title }}</title>
+        {{ template "partials/head" . }}
     </head>
     <body>
-        <h1>Account</h1>
-        {{ if .Name }}
-            <p>Hi, {{ .Name }}.</p>
-        {{ end }}
+        {{ template "partials/nav" . }}
+        <main>
+            <div class="wrapper py:l">
+                <section class="">
+                    {{ if .Name }}
+                        <h1>Hi, {{ .Name }}!</h1>
+                        <p>This is your dashboard. More features will be added later!</p>
+                    {{ end }}
+                </section>
+                <section class="mt:m">
+                    <h2>Userstyles</h2>
+                    <mark>TODO</mark>
+                </section>
+            </div>
+        </main>
     </body>
 </html>
