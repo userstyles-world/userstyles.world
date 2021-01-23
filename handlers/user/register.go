@@ -13,8 +13,7 @@ import (
 
 func RegisterGet(c *fiber.Ctx) error {
 	return c.Render("register", fiber.Map{
-		"Title": "UserStyles.world",
-		"Body":  "Hello, World!",
+		"Title": "Register",
 	})
 }
 
@@ -28,7 +27,9 @@ func RegisterPost(c *fiber.Ctx) error {
 	if err := validator.New().Struct(u); err != nil {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
+
 		return c.Render("register", fiber.Map{
+			"Title":  "Register failed",
 			"Errors": errors,
 		})
 	}
@@ -49,6 +50,7 @@ func RegisterPost(c *fiber.Ctx) error {
 
 		c.SendStatus(fiber.StatusSeeOther)
 		return c.Render("register", fiber.Map{
+			"Title": "Register failed",
 			"Error": "Failed to register. Make sure your credentials are valid.",
 		})
 	}

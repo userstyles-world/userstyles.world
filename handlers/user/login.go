@@ -26,8 +26,7 @@ func LoginGet(c *fiber.Ctx) error {
 	}
 
 	return c.Render("login", fiber.Map{
-		"Title": "UserStyles.world",
-		"Body":  "Hello, World!",
+		"Title": "Login",
 	})
 }
 
@@ -40,7 +39,9 @@ func LoginPost(c *fiber.Ctx) error {
 	if err := validator.New().StructExcept(form, "Username"); err != nil {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
+
 		return c.Render("login", fiber.Map{
+			"Title":  "Login failed",
 			"Errors": errors,
 		})
 	}
@@ -51,6 +52,7 @@ func LoginPost(c *fiber.Ctx) error {
 
 		c.SendStatus(fiber.StatusSeeOther)
 		return c.Render("login", fiber.Map{
+			"Title": "Login failed",
 			"Error": "Invalid credentials.",
 		})
 	}
@@ -60,6 +62,7 @@ func LoginPost(c *fiber.Ctx) error {
 		log.Println("Failed to match hash for user:", user.Email)
 		c.SendStatus(fiber.StatusUnauthorized)
 		return c.Render("login", fiber.Map{
+			"Title": "Login failed",
 			"Error": "Invalid credentials.",
 		})
 	}

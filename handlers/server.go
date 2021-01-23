@@ -19,8 +19,7 @@ func Initialize() {
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Render("index", fiber.Map{
-			"Title": "UserStyles.world",
-			"Body":  "Hello, World!",
+			"Title": "Home",
 		})
 	})
 
