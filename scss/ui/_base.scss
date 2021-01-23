@@ -57,6 +57,13 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
 }
 
 .link {
+    padding: 0;
     border: none;
     background: none;
+
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    &:focus { box-shadow: none }
 }

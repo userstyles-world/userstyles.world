@@ -50,6 +50,7 @@ html {
 input,
 button {
     padding: 0.5rem;
+    font-size: inherit;
     color: var(--fg-1);
     background: var(--bg-1);
     border: 1px solid var(--bg-4);

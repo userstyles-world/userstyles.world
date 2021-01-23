@@ -27,7 +27,7 @@ func Initialize() {
 	app.Get("/login", user.LoginGet)
 	app.Post("/login", user.LoginPost)
 
-	app.Get("/logout", user.Logout)
+	app.Post("/logout", user.Logout)
 	app.Get("/account", user.Account)
 
 	app.Get("/register", user.RegisterGet)

@@ -72,6 +72,7 @@
 .rwrap { flex-flow: row wrap }
 .cwrap { flex-flow: column wrap }
 .lsn { list-style-type: none; padding-left: 0px }
+.unset { all: unset !important }
 .limit { max-width: 480px }
 .sticky {
     top: 0;
