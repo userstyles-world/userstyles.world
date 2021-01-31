@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/template/html"
 
 	"userstyles.world/config"
+	"userstyles.world/handlers/core"
 	"userstyles.world/handlers/user"
 )
 
@@ -17,11 +18,7 @@ func Initialize() {
 
 	app.Static("/", "./static")
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Render("index", fiber.Map{
-			"Title": "Home",
-		})
-	})
+	app.Get("/", core.Home)
 
 	app.Get("/login", user.LoginGet)
 	app.Post("/login", user.LoginPost)
