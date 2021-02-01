@@ -29,5 +29,7 @@ func Initialize() {
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
 
+	app.Use(core.NotFound)
+
 	log.Fatal(app.Listen(config.PORT))
 }
