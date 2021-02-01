@@ -5,14 +5,16 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
 	"golang.org/x/crypto/bcrypt"
 
 	"userstyles.world/database"
+	"userstyles.world/handlers/sessions"
 	"userstyles.world/models"
 )
 
-var store = session.New()
+var (
+	store = sessions.GetStore()
+)
 
 func LoginGet(c *fiber.Ctx) error {
 	s, err := store.Get(c)
