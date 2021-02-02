@@ -1,16 +1,12 @@
 package user
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
+	"userstyles.world/handlers/sessions"
 )
 
 func Account(c *fiber.Ctx) error {
-	s, err := store.Get(c)
-	if err != nil {
-		log.Println(err)
-	}
+	s := sessions.State(c)
 
 	if s.Fresh() == true {
 		c.Status(fiber.StatusFound)

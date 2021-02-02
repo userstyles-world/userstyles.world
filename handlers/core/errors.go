@@ -1,16 +1,12 @@
 package core
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
+	"userstyles.world/handlers/sessions"
 )
 
 func NotFound(c *fiber.Ctx) error {
-	s, err := store.Get(c)
-	if err != nil {
-		log.Println(err)
-	}
+	s := sessions.State(c)
 
 	return c.Render("404", fiber.Map{
 		"Name":  s.Get("name"),

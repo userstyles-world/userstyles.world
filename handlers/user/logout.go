@@ -1,17 +1,13 @@
 package user
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
+	"userstyles.world/handlers/sessions"
 )
 
 func Logout(c *fiber.Ctx) error {
-	sess, err := store.Get(c)
-	if err != nil {
-		log.Println(err)
-	}
-	sess.Destroy()
+	s := sessions.State(c)
+	s.Destroy()
 
 	return c.Redirect("/login", fiber.StatusFound)
 }

@@ -12,15 +12,8 @@ import (
 	"userstyles.world/models"
 )
 
-var (
-	store = sessions.GetStore()
-)
-
 func LoginGet(c *fiber.Ctx) error {
-	s, err := store.Get(c)
-	if err != nil {
-		log.Println(err)
-	}
+	s := sessions.State(c)
 
 	if s.Fresh() == false {
 		log.Printf("User %s has set session, redirecting.", s.Get("email"))
@@ -69,15 +62,12 @@ func LoginPost(c *fiber.Ctx) error {
 		})
 	}
 
-	sess, err := store.Get(c)
-	if err != nil {
-		log.Println(err)
-	}
-	defer sess.Save()
+	s := sessions.State(c)
+	defer s.Save()
 
-	sess.Set("name", user.Username)
-	sess.Set("email", user.Email)
+	s.Set("name", user.Username)
+	s.Set("email", user.Email)
 
-	log.Println("Session:", sess.Get("name"), sess.Get("email"))
+	log.Println("Session:", s.Get("name"), s.Get("email"))
 	return c.Redirect("/account", fiber.StatusFound)
 }

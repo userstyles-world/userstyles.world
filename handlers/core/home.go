@@ -8,17 +8,10 @@ import (
 	"userstyles.world/handlers/sessions"
 )
 
-var (
-	store = sessions.GetStore()
-)
-
 func Home(c *fiber.Ctx) error {
-	s, err := store.Get(c)
-	if err != nil {
-		log.Println(err)
-	}
+	s := sessions.State(c)
 
-	log.Println(s, err, s.Get("name"))
+	log.Println(s, s.Get("name"))
 
 	return c.Render("index", fiber.Map{
 		"Name":  s.Get("name"),
