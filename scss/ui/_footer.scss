@@ -1,5 +1,11 @@
 footer {
     border-top: 1px solid var(--bg-4);
     background-color: var(--bg-2);
+
+    a {
+        color: var(--fg-1);
+        text-decoration: none;
+    }
+
     .wrapper { justify-content: space-between }
 }
