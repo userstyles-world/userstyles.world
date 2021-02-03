@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/template/html"
 
 	"userstyles.world/config"
@@ -28,6 +29,8 @@ func Initialize() {
 
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
+
+	app.Get("/monitor", monitor.New())
 
 	app.Use(core.NotFound)
 
