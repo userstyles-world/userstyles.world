@@ -5,10 +5,10 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 
 	"userstyles.world/database"
 	"userstyles.world/models"
+	"userstyles.world/utils"
 )
 
 func RegisterGet(c *fiber.Ctx) error {
@@ -34,14 +34,10 @@ func RegisterPost(c *fiber.Ctx) error {
 		})
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), 14)
-	if err != nil {
-		log.Println(err)
-	}
-
+	password := utils.GenerateHashedPassword(u.Password)
 	regErr := database.DB.Create(&models.User{
 		Username: u.Username,
-		Password: string(hash),
+		Password: password,
 		Email:    u.Email,
 	})
 
