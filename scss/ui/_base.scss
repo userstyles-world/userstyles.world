@@ -2,7 +2,17 @@ a {
     color: var(--ac-1);
     text-decoration: none;
     &:not([class]):hover { text-decoration: underline }
+
+    // Special styles for JS functionality and external links.
+    &::after {
+        font-size: smaller;
+        vertical-align: super;
+        color: var(--fg-3);
+        &[href^='http'] { content: '[🔗]' }
+        &[href^='java'] { content: '{JS}' }
+    }
 }
+
 h1 { font-size: 2.5em }
 h2 { font-size: 2em }
 img { width: 100% }
