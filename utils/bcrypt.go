@@ -14,3 +14,12 @@ func GenerateHashedPassword(pw string) string {
 
 	return string(hash)
 }
+
+func CompareHashedPassword(user, form string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(user), []byte(form))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -5,11 +5,11 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 
 	"userstyles.world/database"
 	"userstyles.world/handlers/sessions"
 	"userstyles.world/models"
+	"userstyles.world/utils"
 )
 
 func LoginGet(c *fiber.Ctx) error {
@@ -52,9 +52,10 @@ func LoginPost(c *fiber.Ctx) error {
 		})
 	}
 
-	match := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(form.Password))
+	match := utils.CompareHashedPassword(user.Password, form.Password)
 	if match != nil {
-		log.Println("Failed to match hash for user:", user.Email)
+		log.Printf("Failed to match hash for user: %#+v\n", user.Email)
+
 		c.SendStatus(fiber.StatusUnauthorized)
 		return c.Render("login", fiber.Map{
 			"Title": "Login failed",
