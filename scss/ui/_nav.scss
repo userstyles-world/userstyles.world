@@ -9,6 +9,8 @@ nav {
         &:not(:last-child) { margin-right: 1rem }
     }
 
+    del { margin-right: 1rem }
+
     ul {
         list-style: none;
         li:not(:last-child) > a { margin-right: 1rem }

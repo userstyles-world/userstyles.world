@@ -3,14 +3,16 @@
     <div class="wrapper flex py:m">
         <a href="/">Home</a>
         <ul class="flex my:0 ml:a px:0">
+            <li><del class="fg:4" href="/explore">Explore</del></li>
+            <li><del class="fg:4" href="/search">Search</del></li>
             {{ if .Name }}
                 <li><a href="/account">Account</a></li>
                 <li><form class="unset" method="post" action="/logout">
-                    <button class="link" type="submit">Logout</button>
+                    <button class="link" type="submit">Sign out</button>
                 </form></li>
             {{ else }}
                 <li><a href="/register">Register</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/login">Sign in</a></li>
             {{ end }}
         </ul>
     </div>
