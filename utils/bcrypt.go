@@ -2,12 +2,25 @@ package utils
 
 import (
 	"log"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
+	"userstyles.world/config"
 )
 
+var salt = getSalt()
+
+func getSalt() int {
+	salt, err := strconv.Atoi(config.SALT)
+	if err != nil {
+		log.Fatalln("Failed to convert SALT env variable, err:", err)
+	}
+
+	return salt
+}
+
 func GenerateHashedPassword(pw string) string {
-	hash, err := bcrypt.GenerateFromPassword([]byte(pw), 14)
+	hash, err := bcrypt.GenerateFromPassword([]byte(pw), salt)
 	if err != nil {
 		log.Println(err)
 	}
