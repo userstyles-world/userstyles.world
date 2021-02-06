@@ -33,14 +33,17 @@
                     <form method="post" action="/register">
                         <label for="username">Username</label>
                         <input
+                            required pattern="^[a-zA-Z0-9]{5,20}$"
                             type="text" name="username"
                             placeholder="e.g. username (5–20 characters)">
                         <label for="email">E-mail</label>
                         <input
+                            required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                             type="text" name="email"
                             placeholder="e.g. username@example.org">
                         <label for="password">Password</label>
                         <input
+                            required pattern="^[\S]{8,32}$"
                             type="password" name="password"
                             placeholder="(8–32 characters)">
                         <button class="flex btn primary" type="submit">Register</button>
