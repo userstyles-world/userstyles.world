@@ -17,7 +17,7 @@ func RegisterGet(c *fiber.Ctx) error {
 
 	if s.Fresh() == false {
 		log.Printf("User %s has set session, redirecting.", s.Get("email"))
-		c.Redirect("/account", fiber.StatusFound)
+		c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
 	return c.Render("register", fiber.Map{
@@ -52,12 +52,12 @@ func RegisterPost(c *fiber.Ctx) error {
 	if regErr.Error != nil {
 		log.Printf("Failed to register %s, error: %s", u.Email, regErr.Error)
 
-		c.SendStatus(fiber.StatusSeeOther)
+		c.SendStatus(fiber.StatusInternalServerError)
 		return c.Render("register", fiber.Map{
 			"Title": "Register failed",
 			"Error": "Failed to register. Make sure your credentials are valid.",
 		})
 	}
 
-	return c.Redirect("/login", fiber.StatusFound)
+	return c.Redirect("/login", fiber.StatusSeeOther)
 }

@@ -9,5 +9,5 @@ func Logout(c *fiber.Ctx) error {
 	s := sessions.State(c)
 	s.Destroy()
 
-	return c.Redirect("/login", fiber.StatusFound)
+	return c.Redirect("/login", fiber.StatusSeeOther)
 }

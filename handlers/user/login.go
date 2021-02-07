@@ -17,7 +17,7 @@ func LoginGet(c *fiber.Ctx) error {
 
 	if s.Fresh() == false {
 		log.Printf("User %s has set session, redirecting.", s.Get("email"))
-		c.Redirect("/account", fiber.StatusFound)
+		c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
 	return c.Render("login", fiber.Map{
@@ -45,7 +45,7 @@ func LoginPost(c *fiber.Ctx) error {
 	if err != nil {
 		log.Printf("Failed to find %s, error: %s", form.Email, err)
 
-		c.SendStatus(fiber.StatusSeeOther)
+		c.SendStatus(fiber.StatusUnauthorized)
 		return c.Render("login", fiber.Map{
 			"Title": "Login failed",
 			"Error": "Invalid credentials.",
@@ -56,7 +56,7 @@ func LoginPost(c *fiber.Ctx) error {
 	if match != nil {
 		log.Printf("Failed to match hash for user: %#+v\n", user.Email)
 
-		c.SendStatus(fiber.StatusUnauthorized)
+		c.SendStatus(fiber.StatusInternalServerError)
 		return c.Render("login", fiber.Map{
 			"Title": "Login failed",
 			"Error": "Invalid credentials.",
@@ -68,7 +68,7 @@ func LoginPost(c *fiber.Ctx) error {
 
 	s.Set("name", user.Username)
 	s.Set("email", user.Email)
-
 	log.Println("Session:", s.Get("name"), s.Get("email"))
-	return c.Redirect("/account", fiber.StatusFound)
+
+	return c.Redirect("/account", fiber.StatusSeeOther)
 }
