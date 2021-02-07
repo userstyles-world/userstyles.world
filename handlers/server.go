@@ -9,6 +9,7 @@ import (
 
 	"userstyles.world/config"
 	"userstyles.world/handlers/core"
+	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
 )
 
@@ -29,6 +30,8 @@ func Initialize() {
 
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
+
+	app.Get("/explore", style.GetExplore)
 
 	app.Get("/monitor", monitor.New())
 
