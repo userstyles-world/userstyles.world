@@ -1,8 +1,6 @@
 package style
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
@@ -26,5 +24,8 @@ func GetExplore(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.SendString(fmt.Sprintf("%#+v", q))
+	return c.Render("explore", fiber.Map{
+		"Title":  "Explore",
+		"Styles": q,
+	})
 }
