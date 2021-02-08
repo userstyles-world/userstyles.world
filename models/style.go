@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"log"
 
 	"gorm.io/gorm"
 )
@@ -33,4 +32,22 @@ type APIStyle struct {
 	Category    string
 	UserID      uint
 	Username    string
+}
+
+func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
+	t := &Style{}
+	q := &[]APIStyle{}
+	err := db.
+		Debug().
+		Model(t).
+		Select("styles.*, u.username").
+		Joins("join users u on u.id = styles.user_id").
+		Find(q).
+		Error
+
+	if err != nil {
+		return nil, errors.New("Styles not found.")
+	}
+
+	return q, nil
 }
