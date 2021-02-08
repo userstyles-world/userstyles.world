@@ -4,10 +4,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
+	"userstyles.world/handlers/sessions"
 	"userstyles.world/models"
 )
 
 func GetExplore(c *fiber.Ctx) error {
+	s := sessions.State(c)
+	u := s.Get("name")
 
 	data, err := models.GetAllStyles(database.DB)
 	if err != nil {
@@ -17,8 +20,8 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	return c.Render("explore", fiber.Map{
-		// "Name":   u,
 		"Title":  "Explore",
+		"Name":   u,
 		"Styles": data,
 	})
 }
