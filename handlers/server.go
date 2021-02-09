@@ -32,6 +32,7 @@ func Initialize() {
 	app.Post("/register", user.RegisterPost)
 
 	app.Get("/explore", style.GetExplore)
+	app.Get("/style/:id", style.GetStyle)
 
 	app.Get("/monitor", monitor.New())
 
