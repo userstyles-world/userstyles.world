@@ -15,27 +15,10 @@
 
                 <section class="md mt:l">
                     {{ if .Styles }}
-                        {{  template "utils/debug_styles" . }}
+                        {{ template "utils/debug_styles" . }}
                         <div class="grid flex rwrap mx:r mt:m">
                             {{ range .Styles }}
-                                <a
-                                    class="card col gap animate bd:o"
-                                    href="/styles/{{ .ID }}">
-                                    <div class="thumbnail">
-                                        <figure>
-                                            <img data-src="{{ .Preview }}"
-                                                 alt="{{ .Name }} screenshot"/>
-                                            <noscript>
-                                                <img src="{{ .Preview }}"
-                                                     alt="{{ .Name }} screenshot"/>
-                                            </noscript>
-                                        </figure>
-                                    </div>
-                                    <div class="flex cwrap px:m bd:t fg:1">
-                                        <span class="f:h3 f:b my:0 pt:m">{{- .Name -}}</span>
-                                        <p class="fg:4 my:0 pb:m">by {{ .Username -}}</p>
-                                    </div>
-                                </a>
+                                {{ template "partials/style_card" . }}
                             {{ end }}
                         </div>
                     {{ end }}
