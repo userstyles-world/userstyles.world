@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                <section class="details">
+                    <h1 class="ta:c">{{ .Style.Name -}}
+                        <span class="fg:4"> by {{ .Style.Username }}</span>
+                    </h1>
+                    <div class="card animate mt:l">
+                        <a href="#">
+                            <figure class="preview-img">
+                                <img data-src="{{ .Style.Preview }}"
+                                     alt="{{ .Style.Name }} screenshot">
+                                <noscript>
+                                    <img src="{{ .Style.Preview }}"
+                                         alt="{{ .Style.Name }} screenshot">
+                                </noscript>
+                            </figure>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>
