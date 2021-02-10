@@ -51,3 +51,22 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 
 	return q, nil
 }
+
+// Using ID as a string is fine in this case.
+func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
+	t := &Style{}
+	q := &APIStyle{}
+	err := db.
+		Debug().
+		Model(t).
+		Select("styles.*,  u.username").
+		Joins("join users u on u.id = styles.user_id").
+		Find(q, "styles.id = ?", id).
+		Error
+
+	if err != nil {
+		return nil, errors.New("Style not found.")
+	}
+
+	return q, nil
+}

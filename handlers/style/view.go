@@ -4,20 +4,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
+	"userstyles.world/handlers/sessions"
 	"userstyles.world/models"
 )
 
 func GetStyle(c *fiber.Ctx) error {
-	t := &models.Style{}
-	q := &models.APIStyle{}
-	err := database.DB.
-		Debug().
-		Model(t).
-		Select("styles.*,  u.username").
-		Joins("join users u on u.id = styles.user_id").
-		Find(q, "styles.id = ?", c.Params("id")).
-		Error
+	s := sessions.State(c)
+	u := s.Get("name")
 
+	data, err := models.GetStyleByID(database.DB, c.Params("id"))
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -25,7 +20,8 @@ func GetStyle(c *fiber.Ctx) error {
 	}
 
 	return c.Render("style", fiber.Map{
-		"Title": q.Name,
-		"Style": q,
+		"Title": data.Name,
+		"Name":  u,
+		"Style": data,
 	})
 }
