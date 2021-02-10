@@ -32,7 +32,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		Email:    c.FormValue("email"),
 	}
 
-	if err := validator.New().Struct(u); err != nil {
+	if err := utils.Validate().Struct(u); err != nil {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 

@@ -31,7 +31,7 @@ func LoginPost(c *fiber.Ctx) error {
 		Password: c.FormValue("password"),
 	}
 
-	if err := validator.New().StructExcept(form, "Username"); err != nil {
+	if err := utils.Validate().StructExcept(form, "Username"); err != nil {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 
