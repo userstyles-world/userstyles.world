@@ -64,7 +64,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 		Find(q, "styles.id = ?", id).
 		Error
 
-	if err != nil {
+	if err != nil || q.ID == 0 {
 		return nil, errors.New("Style not found.")
 	}
 
