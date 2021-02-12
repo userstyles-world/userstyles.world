@@ -3,8 +3,8 @@
     <div class="wrapper flex py:m">
         <a href="/">Home</a>
         <ul class="flex my:0 ml:a px:0">
-            <li><del class="fg:4" href="/explore">Explore</del></li>
             <li><del class="fg:4" href="/search">Search</del></li>
+            <li><a href="/explore">Explore</a></li>
             {{ if .Name }}
                 <li><a href="/account">Account</a></li>
                 <li><form class="unset" method="post" action="/logout">
