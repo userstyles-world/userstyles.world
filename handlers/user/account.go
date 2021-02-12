@@ -10,6 +10,7 @@ import (
 
 func Account(c *fiber.Ctx) error {
 	s := sessions.State(c)
+	u := sessions.User(c)
 
 	if s.Fresh() == true {
 		c.Status(fiber.StatusFound)
@@ -20,15 +21,15 @@ func Account(c *fiber.Ctx) error {
 		})
 	}
 
-	styles, err := models.GetStylesByUser(database.DB, s.Get("name").(string))
+	styles, err := models.GetStylesByUser(database.DB, u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
-			"Name":  s.Get("name"),
+			"Name":  u.Username,
 			"Title": "Server error",
 		})
 	}
 	return c.Render("account", fiber.Map{
-		"Name":   s.Get("name"),
+		"Name":   u.Username,
 		"Title":  "Account",
 		"Styles": styles,
 	})
