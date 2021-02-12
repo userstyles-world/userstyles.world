@@ -8,16 +8,17 @@
         <main>
             <div class="wrapper py:l">
                 <section class="">
-                    {{ if .Name }}
-                        <h1>Hi, {{ .Name }}!</h1>
-                        <p>This is your dashboard. More features will be added later!</p>
-                    {{ end }}
+                    <h1>Hi, {{ .Name }}!</h1>
+                    <p>This is your dashboard. More features will be added later!</p>
                 </section>
                 <section class="mt:m">
                     <h2>Userstyles</h2>
-                    <mark>TODO</mark>
+                    <pre>{{ printf "%T" .Styles }} -> {{ len .Styles }}</pre>
+                    {{ template "utils/debug_styles" . }}
                 </section>
             </div>
         </main>
+
+        {{ template "partials/footer" . }}
     </body>
 </html>
