@@ -5,6 +5,7 @@
     </head>
     <body>
         {{ template "partials/nav" . }}
+
         <main>
             <div class="wrapper py:l">
                 <section class="hero md flex f-col ta:c">
@@ -15,6 +16,17 @@
                         <a class="btn mx:s" href="/register">Create an account</a>
                     </span>
                 </section>
+
+                {{ if .Styles }}
+                    <section class="mt:l">
+                        {{ template "utils/debug_styles" . }}
+                        <div class="grid flex rwrap mx:r mt:m">
+                            {{ range .Styles }}
+                                {{ template "partials/style_card" . }}
+                            {{ end }}
+                        </div>
+                    </section>
+                {{ end }}
             </div>
         </main>
 
