@@ -11,7 +11,7 @@ import (
 func Home(c *fiber.Ctx) error {
 	u := sessions.User(c)
 
-	styles, err := models.GetStyles(database.DB)
+	styles, err := models.GetAllStyles(database.DB)
 	if err != nil {
 		return c.Render("index", fiber.Map{
 			"Title":  "Home",

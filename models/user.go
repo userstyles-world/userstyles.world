@@ -13,6 +13,12 @@ type User struct {
 	Password   string `gorm:"not null"        validate:"required,min=8,max=32"`
 }
 
+type APIUser struct {
+	Username string
+	Email    string
+	ID       uint
+}
+
 func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 	user := new(User)
 
