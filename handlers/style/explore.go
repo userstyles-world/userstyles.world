@@ -9,8 +9,7 @@ import (
 )
 
 func GetExplore(c *fiber.Ctx) error {
-	s := sessions.State(c)
-	u := s.Get("name")
+	u := sessions.User(c)
 
 	data, err := models.GetAllStyles(database.DB)
 	if err != nil {
@@ -21,7 +20,7 @@ func GetExplore(c *fiber.Ctx) error {
 
 	return c.Render("explore", fiber.Map{
 		"Title":  "Explore",
-		"Name":   u,
+		"User":   u,
 		"Styles": data,
 	})
 }

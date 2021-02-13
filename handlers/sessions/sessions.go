@@ -25,13 +25,16 @@ func State(c *fiber.Ctx) *session.Session {
 
 func User(c *fiber.Ctx) *models.APIUser {
 	s := State(c)
+	u := &models.APIUser{}
+
+	if s.Get("name") == nil {
+		return u
+	}
 
 	// Type assertion will convert interface{} to other types.
-	u := &models.APIUser{
-		Username: s.Get("name").(string),
-		Email:    s.Get("email").(string),
-		ID:       s.Get("id").(uint),
-	}
+	u.Username = s.Get("name").(string)
+	u.Email = s.Get("email").(string)
+	u.ID = s.Get("id").(uint)
 
 	return u
 }

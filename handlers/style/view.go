@@ -9,8 +9,7 @@ import (
 )
 
 func GetStyle(c *fiber.Ctx) error {
-	s := sessions.State(c)
-	u := s.Get("name")
+	u := sessions.User(c)
 
 	data, err := models.GetStyleByID(database.DB, c.Params("id"))
 	if err != nil {
@@ -21,7 +20,7 @@ func GetStyle(c *fiber.Ctx) error {
 
 	return c.Render("style", fiber.Map{
 		"Title": data.Name,
-		"Name":  u,
+		"User":  u,
 		"Style": data,
 	})
 }

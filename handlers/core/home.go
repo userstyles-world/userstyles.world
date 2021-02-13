@@ -9,20 +9,20 @@ import (
 )
 
 func Home(c *fiber.Ctx) error {
-	s := sessions.State(c)
+	u := sessions.User(c)
 
 	styles, err := models.GetStyles(database.DB)
 	if err != nil {
 		return c.Render("index", fiber.Map{
-			"Name":  s.Get("name"),
-			"Title": "Home",
+			"Title":  "Home",
+			"User":   u,
 			"Styles": nil,
 		})
 	}
 
 	return c.Render("index", fiber.Map{
-		"Name":  s.Get("name"),
-		"Title": "Home",
+		"Title":  "Home",
+		"User":   u,
 		"Styles": styles,
 	})
 }

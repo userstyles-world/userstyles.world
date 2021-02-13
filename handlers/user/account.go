@@ -24,13 +24,13 @@ func Account(c *fiber.Ctx) error {
 	styles, err := models.GetStylesByUser(database.DB, u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
-			"Name":  u.Username,
 			"Title": "Server error",
+			"User":  u,
 		})
 	}
 	return c.Render("account", fiber.Map{
-		"Name":   u.Username,
 		"Title":  "Account",
+		"User":   u,
 		"Styles": styles,
 	})
 }

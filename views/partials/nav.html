@@ -5,7 +5,7 @@
         <ul class="flex my:0 ml:a px:0">
             <li><del class="fg:4" href="/search">Search</del></li>
             <li><a href="/explore">Explore</a></li>
-            {{ if .Name }}
+            {{ if .User.Username }}
                 <li><a href="/account">Account</a></li>
                 <li><form class="unset" method="post" action="/logout">
                     <button class="link" type="submit">Sign out</button>
