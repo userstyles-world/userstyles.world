@@ -70,3 +70,21 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 
 	return q, nil
 }
+
+func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
+	t := &Style{}
+	q := &[]APIStyle{}
+	err := db.
+		Debug().
+		Model(t).
+		Select("styles.*,  u.username").
+		Joins("join users u on u.id = styles.user_id").
+		Find(q, "u.username = ?", username).
+		Error
+
+	if err != nil {
+		return nil, errors.New("Style not found.")
+	}
+
+	return q, nil
+}

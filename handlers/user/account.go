@@ -28,6 +28,7 @@ func Account(c *fiber.Ctx) error {
 			"User":  u,
 		})
 	}
+
 	return c.Render("account", fiber.Map{
 		"Title":  "Account",
 		"User":   u,
