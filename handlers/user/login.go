@@ -66,6 +66,8 @@ func LoginPost(c *fiber.Ctx) error {
 	s := sessions.State(c)
 	defer s.Save()
 
+	// Set session data.
+	s.Set("id", user.ID)
 	s.Set("name", user.Username)
 	s.Set("email", user.Email)
 	log.Println("Session:", s.Get("name"), s.Get("email"))
