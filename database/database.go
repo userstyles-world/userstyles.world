@@ -3,19 +3,17 @@ package database
 import (
 	"log"
 
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+
 	"userstyles.world/config"
 	"userstyles.world/models"
 	"userstyles.world/utils"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 var (
-	DB *gorm.DB
-)
-
-type (
+	DB    *gorm.DB
 	user  models.User
 	style models.Style
 )
@@ -46,16 +44,16 @@ func Initialize() {
 		defer Seed()
 	}
 
-	Migrate(&user{}, &style{})
+	Migrate(&user, &style)
 }
 
 func DropTables() {
-	DB.Migrator().DropTable(&user{})
-	DB.Migrator().DropTable(&style{})
+	DB.Migrator().DropTable(&user)
+	DB.Migrator().DropTable(&style)
 }
 
 func Seed() {
-	users := []user{
+	users := []models.User{
 		{
 			Username: "vednoc",
 			Email:    "vednoc@usw.local",
@@ -73,7 +71,7 @@ func Seed() {
 		},
 	}
 
-	styles := []style{
+	styles := []models.Style{
 		{
 			UserID:   1,
 			Name:     "Dark-GitHub",
