@@ -5,7 +5,7 @@ a {
 
     // Special styles for JS functionality and external links.
     &::after {
-        font-size: smaller;
+        font-size: 0.7rem;
         vertical-align: super;
         color: var(--fg-3);
         &[href^='http'] { content: '[🔗]' }
