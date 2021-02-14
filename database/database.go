@@ -2,6 +2,8 @@ package database
 
 import (
 	"log"
+	"os"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -19,7 +21,18 @@ var (
 )
 
 func Connect() {
-	db, err := gorm.Open(sqlite.Open(config.DB), &gorm.Config{})
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold: time.Second,
+			LogLevel:      logger.Info,
+			Colorful:      false,
+		},
+	)
+
+	db, err := gorm.Open(sqlite.Open(config.DB), &gorm.Config{
+		Logger: newLogger,
+	})
 
 	if err != nil {
 		log.Println("Failed to connect database.")
