@@ -7,11 +7,19 @@
         {{ template "partials/nav" . }}
         <main>
             <div class="wrapper py:l">
-                <section class="">
+                <section class="welcome">
                     <h1>Hi, {{ .User.Username }}!</h1>
                     <p>This is your dashboard. More features will be added later!</p>
                 </section>
-                <section class="mt:m">
+
+                <section class="settings mt:l">
+                    <h2>Settings</h2>
+                    <p>ID: {{ .User.ID }}</p>
+                    <p>Username: {{ .User.Username }}</p>
+                    <p>Email: {{ .User.Email }}</p>
+                </section>
+
+                <section class="styles mt:l">
                     <h2>Userstyles</h2>
                     {{ if ne (len .Styles) 0 }}
                         {{/* template "utils/debug_styles" . */}}
