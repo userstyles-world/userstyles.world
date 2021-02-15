@@ -13,8 +13,16 @@
                 </section>
                 <section class="mt:m">
                     <h2>Userstyles</h2>
-                    <pre>{{ printf "%T" .Styles }} -> {{ len .Styles }}</pre>
-                    {{ template "utils/debug_styles" . }}
+                    {{ if ne (len .Styles) 0 }}
+                        {{/* template "utils/debug_styles" . */}}
+                        <div class="grid  flex rwrap mx:r mt:m">
+                            {{ range .Styles }}
+                                {{ template "partials/style_card" . }}
+                            {{ end }}
+                        </div>
+                    {{ else }}
+                        <p>No styles found.</p>
+                    {{ end }}
                 </section>
             </div>
         </main>
