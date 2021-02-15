@@ -6,10 +6,10 @@ import (
 )
 
 func NotFound(c *fiber.Ctx) error {
-	s := sessions.State(c)
+	u := sessions.User(c)
 
 	return c.Render("err", fiber.Map{
-		"Name":  s.Get("name"),
+		"User":  u,
 		"Title": "Page not found",
 	})
 }
