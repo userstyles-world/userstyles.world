@@ -1,4 +1,4 @@
-<a class="card col gap animate bd:o" href="/styles/{{ .ID }}">
+<a class="card col gap animate bd:o" href="/style/{{ .ID }}">
     <div class="thumbnail">
         <figure>
             <img data-src="{{ .Preview }}"
@@ -9,8 +9,8 @@
             </noscript>
         </figure>
     </div>
-    <div class="flex cwrap px:m bd:t fg:1">
-        <span class="f:h3 f:b my:0 pt:m">{{- .Name -}}</span>
-        <p class="fg:4 my:0 pb:m">by {{ .Username -}}</p>
+    <div class="flex cwrap px:m bd:t fg:1 py:m">
+        <span class="f:h3 f:b my:0">{{- .Name -}}</span>
+        <span class="fg:4 my:0">by {{ .Username -}}</span>
     </div>
 </a>
