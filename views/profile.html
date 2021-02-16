@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                <section class="welcome">
+                    <h1>{{ .Name }}</h1>
+                </section>
+
+                <section class="styles mt:l">
+                    <h2>Userstyles</h2>
+                    {{ if ne (len .Styles) 0 }}
+                        {{/* template "utils/debug_styles" . */}}
+                        <div class="grid  flex rwrap mx:r mt:m">
+                            {{ range .Styles }}
+                                {{ template "partials/style_card" . }}
+                            {{ end }}
+                        </div>
+                    {{ else }}
+                        <p>No styles found.</p>
+                    {{ end }}
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>

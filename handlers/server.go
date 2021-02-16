@@ -31,6 +31,8 @@ func Initialize() {
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
 
+	app.Get("/user/:name", user.Profile)
+
 	app.Get("/explore", style.GetExplore)
 	app.Get("/style/:id", style.GetStyle)
 
