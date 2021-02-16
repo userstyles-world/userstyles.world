@@ -12,13 +12,7 @@ func Profile(c *fiber.Ctx) error {
 	u := sessions.User(c)
 	p := c.Params("name")
 
-	user := new(models.User)
-	err := database.DB.
-		Debug().
-		Where("username = ?", p).
-		First(&user).
-		Error
-
+	_, err := models.FindUserByName(database.DB, p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "User not found",

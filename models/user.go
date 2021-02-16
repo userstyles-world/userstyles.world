@@ -32,3 +32,23 @@ func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 
 	return user, nil
 }
+
+func FindUserByName(db *gorm.DB, name string) (*User, error) {
+	user := new(User)
+
+	err := db.
+		Debug().
+		Where("username = ?", name).
+		First(&user).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	if user.ID == 0 {
+		return nil, errors.New("User not found.")
+	}
+
+	return user, nil
+}
