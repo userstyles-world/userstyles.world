@@ -15,7 +15,8 @@ import (
 
 func Initialize() {
 	app := fiber.New(fiber.Config{
-		Views: html.New("./views", ".html"),
+		Views:                 html.New("./views", ".html"),
+		DisableStartupMessage: true,
 	})
 
 	app.Static("/", "./static")
