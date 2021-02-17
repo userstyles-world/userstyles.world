@@ -28,6 +28,15 @@ func Profile(c *fiber.Ctx) error {
 		})
 	}
 
+	// Render Account template if current user matches active session.
+	if u.Username == p {
+		return c.Render("account", fiber.Map{
+			"Title":  "Account",
+			"User":   u,
+			"Styles": styles,
+		})
+	}
+
 	return c.Render("profile", fiber.Map{
 		"Title":  "Profile",
 		"User":   u,
