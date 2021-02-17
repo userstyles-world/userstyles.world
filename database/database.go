@@ -53,16 +53,15 @@ func Initialize() {
 
 	// Generate data for development.
 	if config.DB == "dev.db" {
-		DropTables()
+		Drop(&user, &style)
 		defer Seed()
 	}
 
 	Migrate(&user, &style)
 }
 
-func DropTables() {
-	DB.Migrator().DropTable(&user)
-	DB.Migrator().DropTable(&style)
+func Drop(dst ...interface{}) error {
+	return DB.Migrator().DropTable(dst...)
 }
 
 func Seed() {
