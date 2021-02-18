@@ -6,9 +6,10 @@ import (
 )
 
 var (
-	PORT = getEnv("PORT", ":3000")
-	DB   = getEnv("DB", "dev.db")
-	SALT = getEnv("SALT", "10")
+	PORT     = getEnv("PORT", ":3000")
+	DB       = getEnv("DB", "dev.db")
+	DB_DEBUG = getEnv("DB_DEBUG", "silent")
+	SALT     = getEnv("SALT", "10")
 )
 
 func getEnv(name, fallback string) string {
