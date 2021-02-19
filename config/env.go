@@ -9,6 +9,7 @@ var (
 	PORT     = getEnv("PORT", ":3000")
 	DB       = getEnv("DB", "dev.db")
 	DB_DEBUG = getEnv("DB_DEBUG", "silent")
+	DB_COLOR = getEnv("DB_COLOR", "false")
 	SALT     = getEnv("SALT", "10")
 )
 

@@ -26,7 +26,7 @@ func Connect() {
 		logger.Config{
 			SlowThreshold: time.Second,
 			LogLevel:      utils.DatabaseLogLevel(DB),
-			Colorful:      false,
+			Colorful:      utils.DatabaseColorful(DB),
 		},
 	)
 
