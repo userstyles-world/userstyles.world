@@ -87,19 +87,25 @@ func Seed() {
 		{
 			UserID:   1,
 			Name:     "Dark-GitHub",
-			Preview:  "https://user-images.githubusercontent.com/18245694/102144636-23044200-3e66-11eb-8d4b-e104de055f07.png",
+			Preview:  "https://user-images.githubusercontent.com/18245694/102033688-57232880-3dbc-11eb-8131-2eb21239160d.png",
+			Code:     "https://raw.githubusercontent.com/vednoc/dark-github/main/github.user.styl",
+			Homepage: "https://github.com/vednoc/dark-github",
 			Featured: true,
 		},
 		{
 			UserID:   1,
 			Name:     "Dark-GitLab",
-			Preview:  "https://user-images.githubusercontent.com/18245694/99352060-3d1c2600-28a2-11eb-8ab8-b22aea43f330.png",
+			Preview:  "https://gitlab.com/vednoc/dark-gitlab/-/raw/master/images/preview.png",
+			Code:     "https://gitlab.com/vednoc/dark-gitlab/raw/master/gitlab.user.styl",
+			Homepage: "https://gitlab.com/vednoc/dark-gitlab",
 			Featured: true,
 		},
 		{
 			UserID:   1,
 			Name:     "Dark-WhatsApp",
-			Preview:  "https://user-images.githubusercontent.com/18245694/99352056-3c838f80-28a2-11eb-8bda-06a8c807dcb2.png",
+			Preview:  "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/images/preview.png",
+			Code:     "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/wa.user.styl",
+			Homepage: "https://github.com/vednoc/dark-whatsapp",
 			Featured: true,
 		},
 		{

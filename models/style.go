@@ -15,6 +15,7 @@ type Style struct {
 	Description string
 	Code        string
 	Preview     string
+	Homepage    string
 	Archived    bool   `gorm:"default:false"`
 	Featured    bool   `gorm:"default:false"`
 	Category    string `gorm:"not null"`
@@ -27,6 +28,7 @@ type APIStyle struct {
 	Description string
 	Code        string
 	Preview     string
+	Homepage    string
 	Archived    bool
 	Featured    bool
 	Category    string
