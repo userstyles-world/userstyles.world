@@ -12,22 +12,7 @@
                     <p>Tip: Logging in uses your e-mail address, not username.</p>
                 </section>
 
-                {{ if or .Error .Errors }}
-                    <section class="err limit">
-                        {{ if .Error }}
-                            <p>{{ .Error }}</p>
-                        {{ end }}
-
-                        {{ if .Errors }}
-                            <p>Validation failed!</p>
-                            <ul>
-                                {{ range .Errors }}
-                                    <li>{{ . }}</li>
-                                {{ end }}
-                            </ul>
-                        {{ end }}
-                    </section>
-                {{ end }}
+                {{ template "partials/alert" . }}
 
                 <section class="ta:c">
                     <form method="post" action="/register">
