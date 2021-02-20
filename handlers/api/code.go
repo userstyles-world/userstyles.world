@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"log"
+	"regexp"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -25,6 +26,17 @@ func GetStyleSource(c *fiber.Ctx) error {
 	if err != nil {
 		log.Printf("Problem with style id %s, err: %v", id, err)
 		return c.JSON(fiber.Map{"data": "style not found"})
+	}
+
+	// Check if source code is a link.
+	r, err := regexp.Compile(`^https?://.*\.user\.(css|styl|less)$`)
+	if err != nil {
+		return c.JSON(fiber.Map{"data": "internal server error"})
+	}
+
+	// Redirect to external userstyle.
+	if r.MatchString(q.Code) {
+		return c.Redirect(q.Code, fiber.StatusTemporaryRedirect)
 	}
 
 	c.Set("Content-Type", "text/css")
