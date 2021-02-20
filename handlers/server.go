@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/template/html"
 
 	"userstyles.world/config"
+	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
@@ -37,6 +38,8 @@ func Initialize() {
 
 	app.Get("/explore", style.GetExplore)
 	app.Get("/style/:id", style.GetStyle)
+
+	app.Get("/api/style/:id.user.css", api.GetStyleSource)
 
 	// Good luck landing on this route. (=
 	app.Get("/monitor", core.Monitor)
