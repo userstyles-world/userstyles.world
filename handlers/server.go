@@ -39,6 +39,7 @@ func Initialize() {
 	app.Get("/explore", style.GetExplore)
 	app.Get("/style/:id", style.GetStyle)
 	app.Get("/add", style.StyleCreateGet)
+	app.Post("/add", style.StyleCreatePost)
 
 	app.Get("/api/style/:id.user.css", api.GetStyleSource)
 
