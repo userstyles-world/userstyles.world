@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                <section class="mt:m ta:c">
+                    <h1>Add userstyle</h1>
+                    <p>Here you can add your UserCSS userstyle</p>
+                </section>
+
+                <section class="ta:c">
+                    <form class="full" method="post" action="/add">
+                        <label for="name">Name</label>
+                        <input
+                            type="text" name="name"
+                            placeholder="e.g. UserStyles.world tweaks">
+
+                        <label for="summary">Summary</label>
+                        <input
+                            type="text" name="summary"
+                            placeholder="e.g. Tweaks for UserStyles.world">
+
+                        <label for="description">Description</label>
+                        <input
+                            type="text" name="description"
+                            placeholder="e.g. This userstyle tweaks some things on USw">
+
+                        <label for="description">Homepage</label>
+                        <input
+                            type="text" name="description"
+                            placeholder="Link to userstyle's project home, bug tracker, etc.">
+
+                        <label for="preview">Preview image</label>
+                        <input
+                            type="text" name="preview"
+                            placeholder="Link to userstyle's preview image">
+
+                        <label for="code">Source code</label>
+                        <textarea
+                            type="text" name="code"
+                            placeholder="{{ printf "* {\n    color: red !important \n}" }}"
+                        ></textarea>
+
+                        <button class="flex btn primary" type="submit">Add userstyle</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>
