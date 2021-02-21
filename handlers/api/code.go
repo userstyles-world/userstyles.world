@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,17 +13,8 @@ import (
 func GetStyleSource(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	t, q := new(models.Style), new(models.APIStyle)
-	err := database.DB.
-		Debug().
-		Model(t).
-		Select("styles.*, u.username").
-		Joins("join users u on u.id = styles.user_id").
-		First(q, "styles.id = ?", id).
-		Error
-
+	style, err := models.GetStyleSourceCodeAPI(database.DB, id)
 	if err != nil {
-		log.Printf("Problem with style id %s, err: %v", id, err)
 		return c.JSON(fiber.Map{"data": "style not found"})
 	}
 
@@ -35,10 +25,11 @@ func GetStyleSource(c *fiber.Ctx) error {
 	}
 
 	// Redirect to external userstyle.
-	if r.MatchString(q.Code) {
-		return c.Redirect(q.Code, fiber.StatusTemporaryRedirect)
+	if r.MatchString(style.Code) {
+		// TODO: Add validation for external userstyle.
+		return c.Redirect(style.Code, fiber.StatusTemporaryRedirect)
 	}
 
 	c.Set("Content-Type", "text/css")
-	return c.SendString(fmt.Sprintf("%s", q.Code))
+	return c.SendString(fmt.Sprintf("%s", style.Code))
 }

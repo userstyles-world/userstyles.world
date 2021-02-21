@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -86,6 +87,24 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 
 	if err != nil {
 		return nil, errors.New("Style not found.")
+	}
+
+	return q, nil
+}
+
+func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
+	t, q := new(Style), new(APIStyle)
+	err := db.
+		Debug().
+		Model(t).
+		Select("styles.*, u.username").
+		Joins("join users u on u.id = styles.user_id").
+		First(q, "styles.id = ?", id).
+		Error
+
+	if err != nil {
+		log.Printf("Problem with style id %s, err: %v", id, err)
+		return q, err
 	}
 
 	return q, nil
