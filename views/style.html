@@ -8,21 +8,41 @@
 
         <main>
             <div class="wrapper py:l">
-                <section class="details">
-                    <h1 class="ta:c">{{ .Style.Name -}}
-                        <span class="fg:4"> by {{ .Style.Username }}</span>
-                    </h1>
+                <section class="preview">
                     <div class="card animate mt:l">
-                        <a href="#">
-                            <figure class="preview-img">
-                                <img data-src="{{ .Style.Preview }}"
-                                     alt="{{ .Style.Name }} screenshot">
-                                <noscript>
-                                    <img src="{{ .Style.Preview }}"
-                                         alt="{{ .Style.Name }} screenshot">
-                                </noscript>
-                            </figure>
-                        </a>
+                        <figure class="preview-img">
+                            <img data-src="{{ .Style.Preview }}"
+                                    alt="{{ .Style.Name }} screenshot">
+                            <noscript>
+                                <img src="{{ .Style.Preview }}"
+                                        alt="{{ .Style.Name }} screenshot">
+                            </noscript>
+                        </figure>
+                    </div>
+                </section>
+
+                <section class="mt:m">
+                    <div class="header flex ai:c">
+                        <h1 class="mr:a">{{ .Style.Name -}}</h1>
+                            {{ if .Style.Homepage }}
+                                <a
+                                    target="_blank"
+                                    rel="noopener"
+                                    href="{{ .Style.Homepage }}"
+                                    class="btn"
+                                >Project homepage</a>
+                            {{ end }}
+                            <a
+                                target="_blank"
+                                rel="noopener"
+                                href="/api/style/{{ .Style.ID }}.user.css"
+                                class="btn primary ml:m"
+                            >Install userstyle</a>
+                    </div>
+
+                    <div class="code">
+                        <h2>Source code</h2>
+                        <pre><code>{{ printf "%s" .Style.Code }}</code></pre>
                     </div>
                 </section>
             </div>

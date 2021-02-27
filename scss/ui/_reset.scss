@@ -47,6 +47,9 @@ html {
     }
 }
 
+h2, h3 { margin: 1em 0 0.5em }
+section > p { margin-bottom: 0.5em }
+
 input,
 button {
     padding: 0.5rem;
@@ -94,6 +97,16 @@ textarea {
     }
 }
 
+pre {
+    padding: 0.5rem;
+    overflow: scroll;
+    resize: vertical;
+    border: 1px solid var(--bg-4);
+    background-color: var(--bg-2);
+    border-radius: var(--br-3);
+    min-height: 20rem;
+    height: 20rem;
+}
 
 form {
     margin: 1rem auto;
