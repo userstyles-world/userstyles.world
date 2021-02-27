@@ -32,3 +32,14 @@ func DatabaseColorful(db *gorm.DB) bool {
 		return false
 	}
 }
+
+func DatabaseDropTables(db *gorm.DB) bool {
+	switch config.DB_DROP {
+	case "true", "yes", "1":
+		return true
+	case "false", "no", "0":
+		return false
+	default:
+		return false
+	}
+}

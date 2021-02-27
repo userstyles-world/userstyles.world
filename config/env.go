@@ -10,6 +10,7 @@ var (
 	DB       = getEnv("DB", "dev.db")
 	DB_DEBUG = getEnv("DB_DEBUG", "silent")
 	DB_COLOR = getEnv("DB_COLOR", "false")
+	DB_DROP  = getEnv("DB_DROP", "false")
 	SALT     = getEnv("SALT", "10")
 )
 
