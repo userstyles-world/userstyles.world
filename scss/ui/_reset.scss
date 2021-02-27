@@ -71,6 +71,30 @@ button {
     }
 }
 
+textarea {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 300px;
+    font-family: var(--font-mono);
+    color: var(--fg-1);
+    border: 1px solid var(--bg-4);
+    background-color: var(--bg-1);
+    border-radius: var(--br-3);
+
+    &:focus {
+        border-color: var(--ac-3);
+        outline-color: transparent;
+        box-shadow: 0 0 0 0.2rem var(--ac-5);
+    }
+
+    &:-moz-focusring {
+        outline: 1px solid transparent;
+    }
+}
+
+
 form {
     margin: 1rem auto;
     padding: 1rem;
