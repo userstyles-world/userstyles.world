@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+
+log() { printf "%s\n" "$@"; }
+invalid() { printf "Invalid option: %s\n" "$*"; }
+check_air() {
+    if ! command -v air >/dev/null; then
+        log "Missing `air`; install it with `go get -u github.com/cosmtrek/air`"
+        exit
+    fi
+}
+
+prod() {
+    log "prod"
+    cd .. && env \
+        PORT=":${2:-3001}" \
+        DB="${3:-prod.db}" \
+        ./userstyles.world
+}
+
+drop() {
+    log "drop"
+    check_air
+    cd .. && env \
+        DB_DROP="1" \
+        DB_DEBUG="${2:-silent}" \
+        air
+}
+
+dev() {
+    log "dev"
+    check_air
+    cd .. && env \
+        DB_DROP="${3:-false}" \
+        DB_DEBUG="${2:-silent}" \
+        air
+}
+
+case "$1" in
+    prod) prod "$@" ;;
+    drop) drop "$@" ;;
+    dev) dev "$@" ;;
+    *) invalid "$@";;
+esac
