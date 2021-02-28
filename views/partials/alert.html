@@ -8,7 +8,12 @@
             <p>Validation failed!</p>
             <ul>
                 {{ range .Errors }}
-                    <li>{{ . }}</li>
+                    {{/* Workaround for UserCSS parser's errors. */}}
+                    {{ with .Code }}
+                        <li>{{ . }}</li>
+                    {{ else }}
+                        <li>{{ . }}</li>
+                    {{ end }}
                 {{ end }}
             </ul>
         {{ end }}
