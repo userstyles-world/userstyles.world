@@ -1,9 +1,11 @@
 package style
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/database"
 	"userstyles.world/handlers/sessions"
@@ -45,6 +47,17 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		Preview:     c.FormValue("preview"),
 		Code:        c.FormValue("code"),
 		UserID:      u.ID,
+	}
+
+	uc := usercss.ParseFromString(c.FormValue("code"))
+	valid, errs := usercss.BasicMetadataValidation(uc)
+	if !valid {
+		return c.Render("add", fiber.Map{
+			"Title":  "Add userstyle",
+			"User":   u,
+			"Style":  s,
+			"Errors": errs,
+		})
 	}
 
 	err := database.DB.

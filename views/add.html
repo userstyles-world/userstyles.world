@@ -13,6 +13,13 @@
                     <p>Here you can add your UserCSS userstyle</p>
                 </section>
 
+                <section class="alert">
+                    <style type="text/css">
+                        .alert > .limit { max-width: 100% }
+                    </style>
+                    {{ template "partials/alert" . }}
+                </section>
+
                 <section class="ta:c">
                     <form class="full" method="post" action="/add">
                         <label for="name">Name</label>
