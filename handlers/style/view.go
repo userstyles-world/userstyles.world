@@ -15,6 +15,7 @@ func GetStyle(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
+			"User":  u,
 		})
 	}
 

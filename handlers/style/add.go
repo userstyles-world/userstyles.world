@@ -25,7 +25,7 @@ func StyleCreateGet(c *fiber.Ctx) error {
 
 	return c.Render("add", fiber.Map{
 		"Title": "Add userstyle",
-		"Name":  u,
+		"User":  u,
 	})
 }
 

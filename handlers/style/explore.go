@@ -15,6 +15,7 @@ func GetExplore(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Styles not found",
+			"User":  u,
 		})
 	}
 
