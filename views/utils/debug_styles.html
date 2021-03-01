@@ -1,7 +1,5 @@
 
 <div class="debug">
     <h3>Styles debug</h3>
-    <pre style="overflow-x: scroll">
-        {{- range .Styles }}<span>{{ printf "\n%#+v" . }}</span>{{ end -}}
-    </pre>
+    <pre>{{- range .Styles }}{{ printf "\n%#+v" . }}{{ end -}}</pre>
 </div>
