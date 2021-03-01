@@ -24,11 +24,13 @@
                     <form class="full" method="post" action="/add">
                         <label for="name">Name</label>
                         <input
+                            required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
                             type="text" name="name" value="{{ .Style.Name }}"
                             placeholder="e.g. UserStyles.world tweaks">
 
                         <label for="summary">Summary</label>
                         <input
+                            required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,128}$"
                             type="text" name="summary" value="{{ .Style.Summary }}"
                             placeholder="e.g. Tweaks for UserStyles.world">
 
@@ -39,13 +41,15 @@
 
                         <label for="homepage">Homepage</label>
                         <input
+                            required pattern="^https?:\/\/.*$"
                             type="text" name="homepage" value="{{ .Style.Homepage }}"
                             placeholder="Link to userstyle's project home, bug tracker, etc.">
 
                         <label for="preview">Preview image</label>
                         <input
+                            required pattern="^https?:\/\/.*\.(jpe?g|png|webp)$"
                             type="text" name="preview" value="{{ .Style.Preview }}"
-                            placeholder="Link to userstyle's preview image">
+                            placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
 
                         <label for="category">Category</label>
                         <input
