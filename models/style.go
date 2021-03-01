@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"log"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -24,6 +25,8 @@ type Style struct {
 
 type APIStyle struct {
 	ID          uint
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	Name        string
 	Summary     string
 	Description string

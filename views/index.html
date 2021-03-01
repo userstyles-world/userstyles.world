@@ -19,7 +19,7 @@
 
                 {{ if .Styles }}
                     <section class="mt:l">
-                        {{ template "utils/debug_styles" . }}
+                        {{/* template "utils/debug_styles" . */}}
                         <div class="grid flex rwrap mx:r mt:m">
                             {{ range .Styles }}
                                 {{ template "partials/style_card" . }}

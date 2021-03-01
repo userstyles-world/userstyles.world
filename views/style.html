@@ -40,6 +40,15 @@
                             >Install userstyle</a>
                     </div>
 
+                    <section class="details">
+                        <h2>Details</h2>
+                        <p>Author: <a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
+                        <p>{{- printf "Created: %v" (.Style.CreatedAt.Format "2006-02-01 15:04:05") -}}</p>
+                        <p>{{- printf "Updated: %v" (.Style.UpdatedAt.Format "2006-02-01 15:04:05") -}}</p>
+                        {{ if .Style.Summary }}<p>Summary:<br>{{ .Style.Summary }}</p>{{ end }}
+                        {{ if .Style.Description }}<p>Description:<br>{{ .Style.Description }}</p>{{ end }}
+                    </section>
+
                     <div class="code">
                         <h2>Source code</h2>
                         <pre><code>{{ printf "%s" .Style.Code }}</code></pre>
