@@ -38,6 +38,7 @@ func Initialize() {
 
 	app.Get("/explore", style.GetExplore)
 	app.Get("/style/:id", style.GetStyle)
+	app.Post("/style/:id", style.DeleteByID)
 	app.Get("/add", style.StyleCreateGet)
 	app.Post("/add", style.StyleCreatePost)
 

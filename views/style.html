@@ -24,6 +24,11 @@
                 <section class="mt:m">
                     <div class="header flex ai:c">
                         <h1 class="mr:a">{{ .Style.Name -}}</h1>
+                            {{ if eq .User.ID .Style.UserID }}
+                                <form class="unset" method="post" action="/style/{{ .Style.ID }}">
+                                    <button class="btn mr:m" type="submit">Delete</button>
+                                </form>
+                            {{ end }}
                             {{ if .Style.Homepage }}
                                 <a
                                     target="_blank"
