@@ -78,9 +78,17 @@
     }
 
     .preview-img {
-        &::after {
-            content: 'Install';
-        }
+        &::before, &::after { content: unset }
+    }
+}
+
+// TODO: Figure out how to deal with responsive design.
+.preview + section .header {
+    @media screen and (max-width: 640px) {
+        flex-wrap: wrap;
+        h1 { width: 100%; text-align: center }
+        *:nth-child(2) { margin-left: auto !important }
+        *:last-of-type { margin-right: auto }
     }
 }
 

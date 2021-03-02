@@ -89,6 +89,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     border-radius: var(--br-3);
 
     ul { padding-left: 1.5rem }
+    p:last-child { margin-bottom: 0 }
 
     @media (prefers-color-scheme: light) {
         $red: lighten(red, 0);
