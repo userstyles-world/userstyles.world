@@ -2,6 +2,14 @@
 
 log() { printf "%s\n" "$@"; }
 invalid() { printf "Invalid option: %s\n" "$*"; }
+
+check_cmd() {
+    if ! command -v "$1" >/dev/null; then
+        log "Missing '$1'!"
+        return 1
+    fi
+}
+
 check_air() {
     if ! command -v air >/dev/null; then
         log "Missing 'air'! Install it with 'go get -u github.com/cosmtrek/air'"
@@ -25,6 +33,19 @@ prod() {
         ./userstyles.world
 }
 
+sass() {
+    log "sass"
+    check_cmd sassc
+    [ $? = 1 ] && exit
+    check_cmd inotifywait
+    [ $? = 1 ] && exit
+
+    check_dir
+    while inotifywait -r -e close_write scss; do
+        sassc --style compressed ./scss/main.scss ./static/css/main.css
+    done
+}
+
 drop() {
     log "drop"
     check_air
@@ -44,6 +65,7 @@ dev() {
 
 case "$1" in
     prod) prod "$@" ;;
+    sass) sass "$@" ;;
     drop) drop "$@" ;;
     dev)  dev  "$@" ;;
     *) invalid "$@" ;;
