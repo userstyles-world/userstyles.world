@@ -83,10 +83,10 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		valid, errs := usercss.BasicMetadataValidation(form)
 		if !valid {
 			return c.Render("add", fiber.Map{
-				"Title":  "Add userstyle",
-				"User":   u,
-				"Style":  s,
-				"Errors": errs,
+				"Title": "Add userstyle",
+				"User":  u,
+				"Style": s,
+				"UCSS":  errs,
 			})
 		}
 	}
