@@ -4,15 +4,23 @@ log() { printf "%s\n" "$@"; }
 invalid() { printf "Invalid option: %s\n" "$*"; }
 check_air() {
     if ! command -v air >/dev/null; then
-        log "Missing 'air'! install it with 'go get -u github.com/cosmtrek/air'"
+        log "Missing 'air'! Install it with 'go get -u github.com/cosmtrek/air'"
         exit
+    fi
+}
+
+check_dir() {
+    pwd="$(pwd)"
+    pwd="${pwd/*\/}"
+    if [ $pwd = "tools" ]; then
+        cd ..
     fi
 }
 
 prod() {
     log "prod"
-    cd .. && env \
-        PORT=":${2:-3001}" \
+    check_dir
+    env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
         ./userstyles.world
 }
@@ -20,8 +28,7 @@ prod() {
 drop() {
     log "drop"
     check_air
-    cd .. && env \
-        DB_DROP="1" \
+    env DB_DROP="1" \
         DB_DEBUG="${2:-silent}" \
         air
 }
@@ -29,15 +36,15 @@ drop() {
 dev() {
     log "dev"
     check_air
-    cd .. && env \
+    check_dir
+    env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
-        DB_DEBUG="${2:-silent}" \
         air
 }
 
 case "$1" in
     prod) prod "$@" ;;
     drop) drop "$@" ;;
-    dev) dev "$@" ;;
-    *) invalid "$@";;
+    dev)  dev  "$@" ;;
+    *) invalid "$@" ;;
 esac
