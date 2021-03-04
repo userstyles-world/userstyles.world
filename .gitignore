@@ -1,4 +1,5 @@
 public/
 cache/
 data/
+*.db
 tmp/
