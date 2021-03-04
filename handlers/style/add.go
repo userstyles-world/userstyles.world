@@ -61,19 +61,19 @@ func StyleCreatePost(c *fiber.Ctx) error {
 
 	// Redirect to external userstyle.
 	if r.MatchString(s.Code) {
-		// TODO: Add validation for external userstyle.
 		ext, err := usercss.ParseFromURL(s.Code)
 		if err != nil {
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to fetch external userstyle",
+				"User":  u,
 			})
 		}
 
 		// Check if external userstyle is valid.
-		valid, _ := usercss.BasicMetadataValidation(ext)
-		if !valid {
+		if valid, _ := usercss.BasicMetadataValidation(ext); !valid {
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to validate external userstyle",
+				"User":  u,
 			})
 		}
 
