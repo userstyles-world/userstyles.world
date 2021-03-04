@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                <section class="ta:c">
+                    <h1>Import userstyle</h1>
+                    <p class="fg:3">For UserStyles.org users, find your userstyle in <a href="https://33kk.github.io/uso-archive/">USo-archive</a>.</p>
+                </section>
+
+                <section class="ta:c">
+                    <form class="full" method="post" action="/import">
+                        <label for="import">Import URL</label>
+                        <input
+                            type="text" name="import"
+                            required pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
+                            placeholder="Path to external userstyle's install URL">
+
+                        <label for="preview">Preview image</label>
+                        <input
+                            type="text" name="preview"
+                            required pattern="^https?:\/\/.*\.(jpe?g|png|webp)$"
+                            placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
+
+                        <label for="category">Category</label>
+                        <input
+                            required
+                            type="text" name="category"
+                            placeholder="e.g userstyles.world">
+
+                        <button class="flex btn primary" type="submit">Import userstyle</button>
+                    </form>
+                    <i class="fg:3"><a href="https://github.com/vednoc/go-usercss-parser">UserCSS parser</a> will set most of metadata for you, but your input is required for missing fields.</i>
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>
