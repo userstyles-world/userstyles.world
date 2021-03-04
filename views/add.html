@@ -35,9 +35,10 @@
                             placeholder="e.g. Tweaks for UserStyles.world">
 
                         <label for="description">Description</label>
-                        <input
-                            type="text" name="description" value="{{ .Style.Description }}"
-                            placeholder="e.g. This userstyle tweaks some things on USw">
+                        <textarea
+                            type="text" name="description"
+                            placeholder="e.g. This userstyle tweaks some things on USw"
+                        >{{ .Style.Description }}</textarea>
 
                         <label for="homepage">Homepage</label>
                         <input
