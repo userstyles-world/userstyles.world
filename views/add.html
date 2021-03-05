@@ -1,3 +1,9 @@
+{{ $method := "" }}
+{{- if eq .Method "add" -}}
+    {{ $method = "add" }}
+{{ else }}
+    {{ $method = "edit" }}
+{{ end }}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,7 +15,7 @@
         <main>
             <div class="wrapper py:l">
                 <section class="mt:m ta:c">
-                    <h1>Add userstyle</h1>
+                    <h1>{{ .Title }}</h1>
                     <p>Here you can add your UserCSS userstyle</p>
                 </section>
 
@@ -21,7 +27,7 @@
                 </section>
 
                 <section class="">
-                    <form class="full" method="post" action="/add">
+                    <form class="full" method="post" action="/{{ $method }}">
                         <label for="name">Name</label>
                         <input
                             required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
@@ -64,7 +70,7 @@
                             placeholder="{{ printf "* {\n    color: red !important \n}" }}"
                         >{{ .Style.Code }}</textarea>
 
-                        <button class="flex btn primary" type="submit">Add userstyle</button>
+                        <button class="flex btn primary" type="submit">{{ .Title }}</button>
                     </form>
                 </section>
             </div>

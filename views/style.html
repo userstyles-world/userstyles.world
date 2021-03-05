@@ -28,6 +28,10 @@
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}">
                                     <button class="btn" type="submit">Delete</button>
                                 </form>
+                                <a
+                                    href="/edit/{{ .Style.ID }}"
+                                    class="btn ml:m"
+                                >Edit</a>
                             {{ end }}
                             {{ if .Style.Homepage }}
                                 <a
