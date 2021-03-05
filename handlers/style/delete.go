@@ -12,6 +12,7 @@ import (
 
 func DeleteByID(c *fiber.Ctx) error {
 	u := sessions.User(c)
+	p := c.Params("id")
 
 	if sessions.State(c).Fresh() == true {
 		c.Status(fiber.StatusUnauthorized)
@@ -21,10 +22,17 @@ func DeleteByID(c *fiber.Ctx) error {
 		})
 	}
 
+	if _, err := models.GetStyleByID(database.DB, p); err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Style not found",
+			"User":  u,
+		})
+	}
+
 	t := new(models.Style)
 	err := database.DB.
 		Debug().
-		Delete(t, "styles.id = ?", c.Params("id")).
+		Delete(t, "styles.id = ?", p).
 		Error
 
 	if err != nil {
