@@ -87,7 +87,9 @@ textarea {
     background-color: var(--bg-1);
     border-radius: var(--br-3);
 
-    &:focus {
+    &[readonly] { background-color: var(--bg-2) }
+
+    &:focus:not([readonly]) {
         border-color: var(--ac-3);
         outline-color: transparent;
         box-shadow: 0 0 0 0.2rem var(--ac-5);
