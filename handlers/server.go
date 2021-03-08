@@ -4,8 +4,10 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/template/html"
+	"github.com/markbates/pkger"
 
 	"userstyles.world/config"
 	"userstyles.world/handlers/api"
@@ -16,12 +18,12 @@ import (
 )
 
 func Initialize() {
+	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
+
 	app := fiber.New(fiber.Config{
-		Views:                 html.New("./views", ".html"),
+		Views:                 engine,
 		DisableStartupMessage: true,
 	})
-
-	app.Static("/", "./static")
 
 	app.Get("/", core.Home)
 
@@ -52,6 +54,9 @@ func Initialize() {
 	app.Get("/monitor", core.Monitor)
 	app.Get(utils.MonitorURL, monitor.New())
 
+	app.Use("/", filesystem.New(filesystem.Config{
+		Root: pkger.Dir("/static"),
+	}))
 	app.Use(core.NotFound)
 
 	log.Fatal(app.Listen(config.PORT))
