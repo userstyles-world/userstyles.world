@@ -4,6 +4,28 @@
 {{ else }}
     {{ $method = printf "edit/%d" .Style.ID }}
 {{ end }}
+
+{{- $code := "" -}}
+{{- if .Style.Code -}}
+    {{- $code = .Style.Code -}}
+{{- else -}}
+    {{- $code = `/* ==UserStyle==
+@name           Example
+@namespace      example.com
+@version        1.0.0
+@description    A new userstyle
+@author         Me
+==/UserStyle== */
+
+@-moz-document domain("example.com") {
+    /**
+        Your code goes here!
+        More info in the official documentation at Stylus' wiki:
+        https://github.com/openstyles/stylus/wiki/Writing-UserCSS
+    */
+}` -}}
+{{- end -}}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -68,7 +90,7 @@
                         <textarea
                             type="text" name="code"
                             placeholder="{{ printf "* {\n    color: red !important \n}" }}"
-                        >{{ .Style.Code }}</textarea>
+                        >{{ $code }}</textarea>
 
                         <button class="flex btn primary" type="submit">{{ .Title }}</button>
                     </form>
