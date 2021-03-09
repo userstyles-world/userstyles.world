@@ -21,6 +21,7 @@ type Style struct {
 	Archived    bool   `gorm:"default:false"`
 	Featured    bool   `gorm:"default:false"`
 	Category    string `gorm:"not null"`
+	Original    string
 }
 
 type APIStyle struct {
@@ -36,6 +37,7 @@ type APIStyle struct {
 	Archived    bool
 	Featured    bool
 	Category    string
+	Original    string
 	UserID      uint
 	Username    string
 }

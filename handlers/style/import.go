@@ -72,6 +72,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 		Homepage:    uc.HomepageURL,
 		Preview:     c.FormValue("preview"),
 		Category:    c.FormValue("category"),
+		Original:    r,
 	}
 
 	err = database.DB.

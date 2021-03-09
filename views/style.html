@@ -12,6 +12,9 @@
                     <h1 class="mb:m">{{ .Style.Name -}}
                         <span class="fg:4"> by {{ .Style.Username }}</span>
                     </h1>
+                    {{ if .Style.Original -}}
+                        <p class="mb:m">Imported from {{ .Style.Original }}</p>
+                    {{- end }}
                     <div class="card">
                         <figure class="preview-img">
                             <img data-src="{{ .Style.Preview }}"
