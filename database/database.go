@@ -68,14 +68,16 @@ func Drop(dst ...interface{}) error {
 func Seed() {
 	users := []models.User{
 		{
-			Username: "vednoc",
-			Email:    "vednoc@usw.local",
-			Password: utils.GenerateHashedPassword("vednoc123"),
+			Username:  "vednoc",
+			Email:     "vednoc@usw.local",
+			Biography: "Something goes here.",
+			Password:  utils.GenerateHashedPassword("vednoc123"),
 		},
 		{
-			Username: "john",
-			Email:    "john@usw.local",
-			Password: utils.GenerateHashedPassword("johnjohn"),
+			Username:  "john",
+			Email:     "john@usw.local",
+			Biography: "Something.",
+			Password:  utils.GenerateHashedPassword("johnjohn"),
 		},
 		{
 			Username: "jane",
@@ -88,25 +90,31 @@ func Seed() {
 		{
 			UserID:   1,
 			Name:     "Dark-GitHub",
+			Summary:  "Customizable dark theme for GitHub.",
 			Preview:  "https://user-images.githubusercontent.com/18245694/102033688-57232880-3dbc-11eb-8131-2eb21239160d.png",
 			Code:     "https://raw.githubusercontent.com/vednoc/dark-github/main/github.user.styl",
 			Homepage: "https://github.com/vednoc/dark-github",
+			Category: "github.com",
 			Featured: true,
 		},
 		{
 			UserID:   1,
 			Name:     "Dark-GitLab",
+			Summary:  "Customizable dark theme for GitLab.",
 			Preview:  "https://gitlab.com/vednoc/dark-gitlab/-/raw/master/images/preview.png",
 			Code:     "https://gitlab.com/vednoc/dark-gitlab/raw/master/gitlab.user.styl",
 			Homepage: "https://gitlab.com/vednoc/dark-gitlab",
+			Category: "gitlab.com",
 			Featured: true,
 		},
 		{
 			UserID:   1,
 			Name:     "Dark-WhatsApp",
+			Summary:  "Customizable dark theme for WhatsApp.",
 			Preview:  "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/images/preview.png",
 			Code:     "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/wa.user.styl",
 			Homepage: "https://github.com/vednoc/dark-whatsapp",
+			Category: "web.whatsapp.com",
 			Featured: true,
 		},
 		{
