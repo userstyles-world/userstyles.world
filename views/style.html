@@ -27,9 +27,10 @@
                     </div>
                 </section>
 
-                <section class="mt:m">
+                <section class="mt:l">
                     <div class="header flex mb:m ai:c">
                         <h2 class="my:0">Details</h2>
+                        <span class="ml:a">
                             {{ if eq .User.ID .Style.UserID }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}">
                                     <button class="btn" type="submit">Delete</button>
@@ -53,18 +54,19 @@
                                 href="/api/style/{{ .Style.ID }}.user.css"
                                 class="btn primary ml:m"
                             >Install userstyle</a>
+                        </span>
                     </div>
 
-                    <section class="details">
+                    <div class="details">
                         <p>Author: <a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
                         <p>{{- printf "Created: %v" (.Style.CreatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         <p>{{- printf "Updated: %v" (.Style.UpdatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         {{ if .Style.Summary }}<p>Summary:<br>{{ .Style.Summary }}</p>{{ end }}
                         {{ if .Style.Description }}<p>Description:<br>{{ .Style.Description }}</p>{{ end }}
-                    </section>
+                    </div>
 
-                    <div class="code">
-                        <h2>Source code</h2>
+                    <div class="code mt:l">
+                        <h2 class="mt:0 mb:m">Source code</h2>
                         <textarea readonly>{{ printf "%s" .Style.Code }}</textarea>
                     </div>
                 </section>
