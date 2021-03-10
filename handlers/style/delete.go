@@ -22,15 +22,24 @@ func DeleteByID(c *fiber.Ctx) error {
 		})
 	}
 
-	if _, err := models.GetStyleByID(database.DB, p); err != nil {
+	s, err := models.GetStyleByID(database.DB, p)
+	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
 			"User":  u,
 		})
 	}
 
+	// Check if logged-in user matches style author.
+	if u.ID != s.UserID {
+		return c.Render("err", fiber.Map{
+			"Title": "Users don't match",
+			"User":  u,
+		})
+	}
+
 	t := new(models.Style)
-	err := database.DB.
+	err = database.DB.
 		Debug().
 		Delete(t, "styles.id = ?", p).
 		Error
