@@ -20,6 +20,7 @@
                 {{ if .Styles }}
                     <section class="mt:l">
                         {{/* template "utils/debug_styles" . */}}
+                        <h2 class="ta:c fg:3">Featured userstyles</h2>
                         <div class="grid flex rwrap mx:r mt:m">
                             {{ range .Styles }}
                                 {{ template "partials/style_card" . }}
