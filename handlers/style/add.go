@@ -93,11 +93,7 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		}
 	}
 
-	err = database.DB.
-		Debug().
-		Create(&s).
-		Error
-
+	s, err = models.CreateStyle(database.DB, s)
 	if err != nil {
 		log.Println("Style creation failed, err:", err)
 		return c.Render("err", fiber.Map{

@@ -110,6 +110,19 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 	return q, nil
 }
 
+func CreateStyle(db *gorm.DB, s Style) (Style, error) {
+	err := db.
+		Debug().
+		Create(&s).
+		Error
+
+	if err != nil {
+		return s, err
+	}
+
+	return s, nil
+}
+
 func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
 	err := db.
