@@ -1,6 +1,7 @@
 package style
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 
@@ -105,5 +106,5 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Redirect("/account", fiber.StatusSeeOther)
+	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
 }
