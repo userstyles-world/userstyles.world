@@ -43,10 +43,8 @@ type APIStyle struct {
 }
 
 func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
-	t := &Style{}
-	q := &[]APIStyle{}
+	t, q := new(Style), new([]APIStyle)
 	err := db.
-		Debug().
 		Model(t).
 		Select("styles.id, styles.name, styles.preview, u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -79,8 +77,7 @@ func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
 
 // Using ID as a string is fine in this case.
 func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
-	t := &Style{}
-	q := &APIStyle{}
+	t, q := new(Style), new(APIStyle)
 	err := db.
 		Debug().
 		Model(t).
@@ -97,8 +94,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 }
 
 func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
-	t := &Style{}
-	q := &[]APIStyle{}
+	t, q := new(Style), new([]APIStyle)
 	err := db.
 		Debug().
 		Model(t).
