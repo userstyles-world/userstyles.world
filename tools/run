@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 log() { printf "%s\n" "$@"; }
+
 invalid() { printf "Invalid option: %s\n" "$*"; }
 
 check_cmd() {
@@ -30,6 +31,7 @@ prod() {
     check_dir
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
+        SALT="${4:15}" \
         ./userstyles.world
 }
 
@@ -50,6 +52,7 @@ drop() {
     log "drop"
     check_air
     env DB_DROP="1" \
+        DB_COLOR="true" \
         DB_DEBUG="${2:-silent}" \
         air
 }
@@ -60,6 +63,7 @@ dev() {
     check_dir
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
+        DB_COLOR="true" \
         air
 }
 
