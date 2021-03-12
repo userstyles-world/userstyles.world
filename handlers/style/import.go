@@ -1,6 +1,7 @@
 package style
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -64,7 +65,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 		})
 	}
 
-	style := &models.Style{
+	s := models.Style{
 		UserID:      u.ID,
 		Name:        uc.Name,
 		Code:        uc.SourceCode,
@@ -75,11 +76,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 		Original:    r,
 	}
 
-	err = database.DB.
-		Debug().
-		Create(style).
-		Error
-
+	s, err = models.CreateStyle(database.DB, s)
 	if err != nil {
 		log.Println("Style import failed, err:", err)
 		return c.Render("err", fiber.Map{
@@ -88,5 +85,5 @@ func StyleImportPost(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Redirect("/account", fiber.StatusSeeOther)
+	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
 }
