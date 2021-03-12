@@ -11,8 +11,10 @@
                 <section class="preview">
                     <div class="card">
                         <figure class="preview-img">
-                            <img data-src="{{ .Style.Preview }}"
-                                    alt="{{ .Style.Name }} screenshot">
+                            <img src="{{ .Style.Preview }}"
+                                    alt="{{ .Style.Name }} screenshot"
+                                    loading="lazy"
+                                    >
                             <noscript>
                                 <img src="{{ .Style.Preview }}"
                                         alt="{{ .Style.Name }} screenshot">

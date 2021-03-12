@@ -7,7 +7,7 @@
             &::before, img {
                 border-radius: var(--br-3) var(--br-3) 0 0;
             }
-            /// Overlay the image on top of borders.
+            // Overlay the image on top of borders.
             @media (prefers-color-scheme: light) {
                 margin: -1px;
             }
