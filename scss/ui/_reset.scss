@@ -137,5 +137,8 @@ form {
         }
     }
 
-    > button { cursor: pointer }
+    > button {
+        cursor: pointer;
+        line-height: initial;
+    }
 }
