@@ -11,21 +11,17 @@ var (
 	v            = validator.New()
 )
 
+func InitializeValidator() {
+	v.RegisterValidation("username", usernameValidation)
+	v.RegisterAlias("Username", "username")
+}
+
 func usernameValidation(fl validator.FieldLevel) bool {
 	regex := regexp.MustCompile(usernameRule)
 	valid := regex.Match([]byte(fl.Field().String()))
-
 	return valid
 }
 
-func registerValidations(v *validator.Validate) *validator.Validate {
-	v.RegisterValidation("username", usernameValidation)
-	return v
-}
-
 func Validate() *validator.Validate {
-	v := validator.New()
-	v.RegisterValidation("username", usernameValidation)
-
 	return v
 }
