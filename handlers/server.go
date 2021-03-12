@@ -49,6 +49,7 @@ func Initialize() {
 	app.Post("/edit/:id", style.StyleEditPost)
 
 	app.Get("/api/style/:id.user.css", api.GetStyleSource)
+	app.Get("/api/style/:id", api.GetStyleDetails)
 
 	// Good luck landing on this route. (=
 	app.Get("/monitor", core.Monitor)
