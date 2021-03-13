@@ -55,6 +55,12 @@ func Initialize() {
 	app.Get("/monitor", core.Monitor)
 	app.Get(utils.MonitorURL, monitor.New())
 
+	// Allows assets to be reloaded in dev mode.
+	// That means, they're not embedded into executable file.
+	if config.DB == "dev.db" {
+		app.Static("/", "/static")
+	}
+
 	app.Use("/", filesystem.New(filesystem.Config{
 		Root: pkger.Dir("/static"),
 	}))
