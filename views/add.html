@@ -70,18 +70,19 @@
 
                         <label for="homepage">Homepage</label>
                         <input
-                            required pattern="^https?:\/\/.*$"
+                            pattern="^https?:\/\/.*$"
                             type="text" name="homepage" value="{{ .Style.Homepage }}"
                             placeholder="Link to userstyle's project home, bug tracker, etc.">
 
                         <label for="preview">Preview image</label>
                         <input
-                            required pattern="^https?:\/\/.*\.(jpe?g|png|webp)$"
+                            pattern="^https?:\/\/.*\.(jpe?g|png|webp)$"
                             type="text" name="preview" value="{{ .Style.Preview }}"
                             placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
 
                         <label for="category">Category</label>
                         <input
+                            required
                             type="text" name="category" value="{{ .Style.Category }}"
                             placeholder="e.g userstyles.world">
 
