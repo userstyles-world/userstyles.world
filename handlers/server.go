@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/template/html"
@@ -54,6 +56,10 @@ func Initialize() {
 	// Good luck landing on this route. (=
 	app.Get("/monitor", core.Monitor)
 	app.Get(utils.MonitorURL, monitor.New())
+
+	app.Use(cache.New(cache.Config{
+		Expiration: 5 * time.Minute,
+	}))
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.
