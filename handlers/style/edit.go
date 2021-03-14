@@ -18,7 +18,7 @@ func StyleEditGet(c *fiber.Ctx) error {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("login", fiber.Map{
 			"Title": "Login is required",
-			"Error": "You must log in to add new userstyle.",
+			"Error": "You must log in to edit a userstyle.",
 		})
 	}
 
@@ -26,6 +26,14 @@ func StyleEditGet(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
+			"User":  u,
+		})
+	}
+
+	// Check if logged-in user matches style author.
+	if u.ID != s.UserID {
+		return c.Render("err", fiber.Map{
+			"Title": "User and style author don't match",
 			"User":  u,
 		})
 	}
@@ -41,6 +49,14 @@ func StyleEditGet(c *fiber.Ctx) error {
 func StyleEditPost(c *fiber.Ctx) error {
 	u, p := sessions.User(c), c.Params("id")
 	t := new(models.Style)
+
+	if sessions.State(c).Fresh() == true {
+		c.Status(fiber.StatusUnauthorized)
+		return c.Render("login", fiber.Map{
+			"Title": "Login is required",
+			"Error": "You must log in to edit a userstyle.",
+		})
+	}
 
 	q := models.Style{
 		Name:        c.FormValue("name"),
