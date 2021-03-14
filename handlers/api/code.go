@@ -5,6 +5,7 @@ import (
 	"regexp"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/database"
 	"userstyles.world/models"
@@ -26,7 +27,21 @@ func GetStyleSource(c *fiber.Ctx) error {
 
 	// Redirect to external userstyle.
 	if r.MatchString(style.Code) {
-		// TODO: Add validation for external userstyle.
+		uc, err := usercss.ParseFromURL(style.Code)
+		if err != nil {
+			return c.JSON(fiber.Map{
+				"data": "failed to fetch external userstyle",
+			})
+		}
+
+		// Check if external userstyle is valid.
+		valid, _ := usercss.BasicMetadataValidation(uc)
+		if !valid {
+			return c.JSON(fiber.Map{
+				"data": "falied to validate external userstyle",
+			})
+		}
+
 		return c.Redirect(style.Code, fiber.StatusTemporaryRedirect)
 	}
 
