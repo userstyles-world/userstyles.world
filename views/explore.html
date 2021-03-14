@@ -14,13 +14,15 @@
                 </section>
 
                 <section class="mt:l">
-                    {{ if .Styles }}
+                    {{ if gt (len .Styles) 1 }}
                         {{/* template "utils/debug_styles" . */}}
                         <div class="grid flex rwrap mx:r mt:m">
                             {{ range .Styles }}
                                 {{ template "partials/style_card" . }}
                             {{ end }}
                         </div>
+                    {{ else }}
+                        <p class="ta:c">No userstyles found.</p>
                     {{ end }}
                 </section>
             </div>

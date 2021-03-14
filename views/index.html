@@ -19,10 +19,10 @@
                     </section>
                 {{ end }}
 
-                {{ if .Styles }}
+                {{ if ge (len .Styles) 1 }}
                     <section class="mt:l">
-                        {{/* template "utils/debug_styles" . */}}
                         <h2 class="ta:c fg:3">Featured userstyles</h2>
+                        {{/* template "utils/debug_styles" . */}}
                         <div class="grid flex rwrap mx:r mt:m">
                             {{ range .Styles }}
                                 {{ template "partials/style_card" . }}
