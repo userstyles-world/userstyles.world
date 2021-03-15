@@ -12,8 +12,8 @@ func Account(c *fiber.Ctx) error {
 	s := sessions.State(c)
 	u := sessions.User(c)
 
-	if !s.Fresh() {
-		c.Status(fiber.StatusFound)
+	if s.Fresh() {
+		c.Status(fiber.StatusUnauthorized)
 
 		return c.Render("login", fiber.Map{
 			"Title": "Login is required",
