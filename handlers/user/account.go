@@ -9,12 +9,10 @@ import (
 )
 
 func Account(c *fiber.Ctx) error {
-	s := sessions.State(c)
 	u := sessions.User(c)
 
-	if s.Fresh() {
+	if sessions.State(c).Fresh() {
 		c.Status(fiber.StatusUnauthorized)
-
 		return c.Render("login", fiber.Map{
 			"Title": "Login is required",
 			"Error": "You must log in to see account page.",

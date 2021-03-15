@@ -13,10 +13,8 @@ import (
 )
 
 func LoginGet(c *fiber.Ctx) error {
-	s := sessions.State(c)
-
-	if !s.Fresh() {
-		log.Printf("User %s has set session, redirecting.", s.Get("email"))
+	if !sessions.State(c).Fresh() {
+		log.Printf("User %d has set session, redirecting.", sessions.User(c).ID)
 		c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
