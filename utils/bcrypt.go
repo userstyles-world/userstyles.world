@@ -10,10 +10,7 @@ import (
 	"userstyles.world/config"
 )
 
-var (
-	salt       = getSalt()
-	MonitorURL = RandomString(64)
-)
+var salt = getSalt()
 
 func getSalt() int {
 	salt, err := strconv.Atoi(config.SALT)
