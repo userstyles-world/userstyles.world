@@ -44,8 +44,8 @@ func StyleCreatePost(c *fiber.Ctx) error {
 
 	s := models.Style{
 		Name:        c.FormValue("name"),
-		Summary:     c.FormValue("summary"),
 		Description: c.FormValue("description"),
+		Notes:       c.FormValue("notes"),
 		Homepage:    c.FormValue("homepage"),
 		Category:    c.FormValue("category"),
 		Preview:     c.FormValue("preview"),

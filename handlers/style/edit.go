@@ -60,8 +60,8 @@ func StyleEditPost(c *fiber.Ctx) error {
 
 	q := models.Style{
 		Name:        c.FormValue("name"),
-		Summary:     c.FormValue("summary"),
 		Description: c.FormValue("description"),
+		Notes:       c.FormValue("notes"),
 		Code:        c.FormValue("code"),
 		Preview:     c.FormValue("preview"),
 		Homepage:    c.FormValue("homepage"),

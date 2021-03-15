@@ -64,8 +64,8 @@
                         <p>{{- printf "Created: %v" (.Style.CreatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         <p>{{- printf "Updated: %v" (.Style.UpdatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         {{ if .Style.Category }}<p>Category: {{ .Style.Category }}</p>{{ end }}
-                        {{ if .Style.Summary }}<p>Summary:<br>{{ .Style.Summary }}</p>{{ end }}
                         {{ if .Style.Description }}<p>Description:<br>{{ .Style.Description }}</p>{{ end }}
+                        {{ if .Style.Notes }}<p>Notes:<br>{{ .Style.Notes }}</p>{{ end }}
                     </div>
 
                     <div class="code mt:l">

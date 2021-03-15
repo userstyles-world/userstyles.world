@@ -13,8 +13,8 @@ type Style struct {
 	UserID      uint
 	User        User `gorm:"foreignKey:ID"`
 	Name        string
-	Summary     string
 	Description string
+	Notes       string
 	Code        string
 	Preview     string
 	Homepage    string
@@ -29,8 +29,8 @@ type APIStyle struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	Name        string
-	Summary     string
 	Description string
+	Notes       string
 	Code        string
 	Preview     string
 	Homepage    string
