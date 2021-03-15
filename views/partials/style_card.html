@@ -1,8 +1,10 @@
 <a class="card col gap animate bd:o" href="/style/{{ .ID }}">
     <div class="thumbnail">
         <figure>
-            <img data-src="{{ .Preview }}"
-                 alt="{{ .Name }} screenshot"/>
+            <img src="{{ .Preview }}"
+                 alt="{{ .Name }} screenshot"
+                 loading="lazy"
+                 />
             <noscript>
                 <img src="{{ .Preview }}"
                      alt="{{ .Name }} screenshot"/>

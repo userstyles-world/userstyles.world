@@ -36,9 +36,10 @@ func RegisterPost(c *fiber.Ctx) error {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 
+		c.SendStatus(fiber.StatusInternalServerError)
 		return c.Render("register", fiber.Map{
-			"Title":  "Register failed",
-			"Errors": errors,
+			"Title": "Register failed",
+			"Error": "Failed to register. Make sure you've correct inputs.",
 		})
 	}
 
