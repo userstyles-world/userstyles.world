@@ -2,10 +2,15 @@ package handlers
 
 import (
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/template/html"
+	"github.com/markbates/pkger"
 
 	"userstyles.world/config"
 	"userstyles.world/handlers/api"
@@ -16,12 +21,12 @@ import (
 )
 
 func Initialize() {
+	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
+
 	app := fiber.New(fiber.Config{
-		Views:                 html.New("./views", ".html"),
+		Views:                 engine,
 		DisableStartupMessage: true,
 	})
-
-	app.Static("/", "./static")
 
 	app.Get("/", core.Home)
 
@@ -41,13 +46,33 @@ func Initialize() {
 	app.Post("/style/:id", style.DeleteByID)
 	app.Get("/add", style.StyleCreateGet)
 	app.Post("/add", style.StyleCreatePost)
+	app.Get("/import", style.StyleImportGet)
+	app.Post("/import", style.StyleImportPost)
+	app.Get("/edit/:id", style.StyleEditGet)
+	app.Post("/edit/:id", style.StyleEditPost)
 
 	app.Get("/api/style/:id.user.css", api.GetStyleSource)
+	app.Get("/api/style/:id", api.GetStyleDetails)
+	app.Get("/api/styles", api.GetStyleIndex)
 
 	// Good luck landing on this route. (=
 	app.Get("/monitor", core.Monitor)
 	app.Get(utils.MonitorURL, monitor.New())
 
+	app.Use(limiter.New())
+	app.Use(cache.New(cache.Config{
+		Expiration: 5 * time.Minute,
+	}))
+
+	// Allows assets to be reloaded in dev mode.
+	// That means, they're not embedded into executable file.
+	if config.DB == "dev.db" {
+		app.Static("/", "/static")
+	}
+
+	app.Use("/", filesystem.New(filesystem.Config{
+		Root: pkger.Dir("/static"),
+	}))
 	app.Use(core.NotFound)
 
 	log.Fatal(app.Listen(config.PORT))

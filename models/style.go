@@ -21,6 +21,7 @@ type Style struct {
 	Archived    bool   `gorm:"default:false"`
 	Featured    bool   `gorm:"default:false"`
 	Category    string `gorm:"not null"`
+	Original    string
 }
 
 type APIStyle struct {
@@ -36,15 +37,14 @@ type APIStyle struct {
 	Archived    bool
 	Featured    bool
 	Category    string
+	Original    string
 	UserID      uint
 	Username    string
 }
 
 func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
-	t := &Style{}
-	q := &[]APIStyle{}
+	t, q := new(Style), new([]APIStyle)
 	err := db.
-		Debug().
 		Model(t).
 		Select("styles.id, styles.name, styles.preview, u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -58,10 +58,26 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 	return q, nil
 }
 
+func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
+	t, q := new(Style), new([]APIStyle)
+	err := db.
+		Debug().
+		Model(t).
+		Joins("join users u on u.id = styles.user_id").
+		Select("styles.id, styles.name, styles.preview, u.username").
+		Find(q, "styles.featured = ?", true).
+		Error
+
+	if err != nil {
+		return nil, errors.New("No featured styles.")
+	}
+
+	return q, nil
+}
+
 // Using ID as a string is fine in this case.
 func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
-	t := &Style{}
-	q := &APIStyle{}
+	t, q := new(Style), new(APIStyle)
 	err := db.
 		Debug().
 		Model(t).
@@ -78,8 +94,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 }
 
 func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
-	t := &Style{}
-	q := &[]APIStyle{}
+	t, q := new(Style), new([]APIStyle)
 	err := db.
 		Debug().
 		Model(t).
@@ -93,6 +108,19 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 	}
 
 	return q, nil
+}
+
+func CreateStyle(db *gorm.DB, s Style) (Style, error) {
+	err := db.
+		Debug().
+		Create(&s).
+		Error
+
+	if err != nil {
+		return s, err
+	}
+
+	return s, nil
 }
 
 func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {

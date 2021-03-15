@@ -1,6 +1,7 @@
 package style
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 
@@ -24,8 +25,9 @@ func StyleCreateGet(c *fiber.Ctx) error {
 	}
 
 	return c.Render("add", fiber.Map{
-		"Title": "Add userstyle",
-		"User":  u,
+		"Title":  "Add userstyle",
+		"User":   u,
+		"Method": "add",
 	})
 }
 
@@ -61,19 +63,19 @@ func StyleCreatePost(c *fiber.Ctx) error {
 
 	// Redirect to external userstyle.
 	if r.MatchString(s.Code) {
-		// TODO: Add validation for external userstyle.
 		ext, err := usercss.ParseFromURL(s.Code)
 		if err != nil {
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to fetch external userstyle",
+				"User":  u,
 			})
 		}
 
 		// Check if external userstyle is valid.
-		valid, _ := usercss.BasicMetadataValidation(ext)
-		if !valid {
+		if valid, _ := usercss.BasicMetadataValidation(ext); !valid {
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to validate external userstyle",
+				"User":  u,
 			})
 		}
 
@@ -83,19 +85,15 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		valid, errs := usercss.BasicMetadataValidation(form)
 		if !valid {
 			return c.Render("add", fiber.Map{
-				"Title":  "Add userstyle",
-				"User":   u,
-				"Style":  s,
-				"Errors": errs,
+				"Title": "Add userstyle",
+				"User":  u,
+				"Style": s,
+				"UCSS":  errs,
 			})
 		}
 	}
 
-	err = database.DB.
-		Debug().
-		Create(&s).
-		Error
-
+	s, err = models.CreateStyle(database.DB, s)
 	if err != nil {
 		log.Println("Style creation failed, err:", err)
 		return c.Render("err", fiber.Map{
@@ -104,5 +102,5 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Redirect("/account", fiber.StatusSeeOther)
+	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
 }

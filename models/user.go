@@ -11,12 +11,14 @@ type User struct {
 	Username   string `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
 	Email      string `gorm:"unique;not null" validate:"required,email"`
 	Password   string `gorm:"not null"        validate:"required,min=8,max=32"`
+	Biography  string
 }
 
 type APIUser struct {
-	Username string
-	Email    string
-	ID       uint
+	Username  string
+	Email     string
+	ID        uint
+	Biography string
 }
 
 func FindUserByEmail(db *gorm.DB, email string) (*User, error) {

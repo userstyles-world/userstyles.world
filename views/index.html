@@ -8,17 +8,20 @@
 
         <main>
             <div class="wrapper py:l">
-                <section class="hero md flex f-col ta:c">
-                    <h1>UserStyles.world</h1>
-                    <p>A free and open-source, community-driven, modern alternative to <code>userstyles.org</code>. For the community, by the community.</p>
-                    <span class="flex mt:m">
-                        <a class="btn primary mx:s" href="/explore">Explore userstyles</a>
-                        <a class="btn mx:s" href="/register">Create an account</a>
-                    </span>
-                </section>
+                {{ if not .User.ID }}
+                    <section class="hero md flex f-col ta:c">
+                        <h1>UserStyles.world</h1>
+                        <p>A free and open-source, community-driven, modern alternative to <code>userstyles.org</code>. For the community, by the community.</p>
+                        <span class="flex mt:m">
+                            <a class="btn primary mx:s" href="/explore">Explore userstyles</a>
+                            <a class="btn mx:s" href="/register">Create an account</a>
+                        </span>
+                    </section>
+                {{ end }}
 
-                {{ if .Styles }}
+                {{ if ge (len .Styles) 1 }}
                     <section class="mt:l">
+                        <h2 class="ta:c fg:3">Featured userstyles</h2>
                         {{/* template "utils/debug_styles" . */}}
                         <div class="grid flex rwrap mx:r mt:m">
                             {{ range .Styles }}

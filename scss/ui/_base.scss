@@ -10,6 +10,7 @@ a {
         color: var(--fg-3);
         &[href^='http'] { content: '[\01F517]' }
         &[href^='java'] { content: '{JS}' }
+        &[href^='mail'] { content: '[📧]' }
     }
 }
 

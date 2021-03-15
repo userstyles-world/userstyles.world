@@ -9,6 +9,12 @@
         <main>
             <div class="wrapper py:l">
                 <section class="preview">
+                    <h1 class="mb:m">{{ .Style.Name -}}
+                        <span class="fg:4"> by {{ .Style.Username }}</span>
+                    </h1>
+                    {{ if .Style.Original -}}
+                        <p class="mb:m">Imported from {{ .Style.Original }}</p>
+                    {{- end }}
                     <div class="card">
                         <figure class="preview-img">
                             <img src="{{ .Style.Preview }}"
@@ -23,42 +29,48 @@
                     </div>
                 </section>
 
-                <section class="mt:m">
-                    <div class="header flex ai:c">
-                        <h1 class="mr:a">{{ .Style.Name -}}</h1>
+                <section class="mt:l">
+                    <div class="header flex mb:m ai:c">
+                        <h2 class="my:0">Details</h2>
+                        <span class="ml:a">
                             {{ if eq .User.ID .Style.UserID }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}">
                                     <button class="btn" type="submit">Delete</button>
                                 </form>
+                                <a
+                                    href="/edit/{{ .Style.ID }}"
+                                    class="btn ml:s"
+                                >Edit</a>
                             {{ end }}
                             {{ if .Style.Homepage }}
                                 <a
                                     target="_blank"
                                     rel="noopener"
                                     href="{{ .Style.Homepage }}"
-                                    class="btn ml:m"
+                                    class="btn ml:s"
                                 >Project homepage</a>
                             {{ end }}
                             <a
                                 target="_blank"
                                 rel="noopener"
                                 href="/api/style/{{ .Style.ID }}.user.css"
-                                class="btn primary ml:m"
+                                class="btn primary ml:s"
                             >Install userstyle</a>
+                        </span>
                     </div>
 
-                    <section class="details">
-                        <h2>Details</h2>
+                    <div class="details">
                         <p>Author: <a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
                         <p>{{- printf "Created: %v" (.Style.CreatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         <p>{{- printf "Updated: %v" (.Style.UpdatedAt.Format "2006-02-01 15:04:05") -}}</p>
+                        {{ if .Style.Category }}<p>Category: {{ .Style.Category }}</p>{{ end }}
                         {{ if .Style.Summary }}<p>Summary:<br>{{ .Style.Summary }}</p>{{ end }}
                         {{ if .Style.Description }}<p>Description:<br>{{ .Style.Description }}</p>{{ end }}
-                    </section>
+                    </div>
 
-                    <div class="code">
-                        <h2>Source code</h2>
-                        <pre><code>{{ printf "%s" .Style.Code }}</code></pre>
+                    <div class="code mt:l">
+                        <h2 class="mt:0 mb:m">Source code</h2>
+                        <textarea readonly>{{ printf "%s" .Style.Code }}</textarea>
                     </div>
                 </section>
             </div>

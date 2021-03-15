@@ -1,4 +1,4 @@
-{{ if or .Error .Errors }}
+{{ if or .Error .Errors .UCSS }}
     <section class="err limit">
         {{ if .Error }}
             <p>{{ .Error }}</p>
@@ -8,12 +8,17 @@
             <p>Validation failed!</p>
             <ul>
                 {{ range .Errors }}
-                    {{/* Workaround for UserCSS parser's errors. */}}
-                    {{ with .Code }}
-                        <li>{{ . }}</li>
-                    {{ else }}
-                        <li>{{ . }}</li>
-                    {{ end }}
+                    <li>{{ . }}</li>
+                {{ end }}
+            </ul>
+        {{ end }}
+
+        {{/* Workaround for UserCSS parser's errors. */}}
+        {{ if .UCSS }}
+            <p>Failed to validate userstyle fields!</p>
+            <ul>
+                {{ range .UCSS }}
+                    <li>@{{ .Code }}</li>
                 {{ end }}
             </ul>
         {{ end }}

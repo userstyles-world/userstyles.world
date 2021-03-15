@@ -12,6 +12,7 @@ import (
 
 func DeleteByID(c *fiber.Ctx) error {
 	u := sessions.User(c)
+	p := c.Params("id")
 
 	if sessions.State(c).Fresh() == true {
 		c.Status(fiber.StatusUnauthorized)
@@ -21,10 +22,26 @@ func DeleteByID(c *fiber.Ctx) error {
 		})
 	}
 
+	s, err := models.GetStyleByID(database.DB, p)
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Style not found",
+			"User":  u,
+		})
+	}
+
+	// Check if logged-in user matches style author.
+	if u.ID != s.UserID {
+		return c.Render("err", fiber.Map{
+			"Title": "Users don't match",
+			"User":  u,
+		})
+	}
+
 	t := new(models.Style)
-	err := database.DB.
+	err = database.DB.
 		Debug().
-		Delete(t, "styles.id = ?", c.Params("id")).
+		Delete(t, "styles.id = ?", p).
 		Error
 
 	if err != nil {

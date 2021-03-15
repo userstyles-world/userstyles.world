@@ -1,3 +1,31 @@
+{{ $method := "" }}
+{{- if eq .Method "add" -}}
+    {{ $method = "add" }}
+{{ else }}
+    {{ $method = printf "edit/%d" .Style.ID }}
+{{ end }}
+
+{{- $code := "" -}}
+{{- if .Style.Code -}}
+    {{- $code = .Style.Code -}}
+{{- else -}}
+    {{- $code = `/* ==UserStyle==
+@name           Example
+@namespace      example.com
+@version        1.0.0
+@description    A new userstyle
+@author         Me
+==/UserStyle== */
+
+@-moz-document domain("example.com") {
+    /**
+        Your code goes here!
+        More info in the official documentation at Stylus' wiki:
+        https://github.com/openstyles/stylus/wiki/Writing-UserCSS
+    */
+}` -}}
+{{- end -}}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,8 +37,8 @@
         <main>
             <div class="wrapper py:l">
                 <section class="mt:m ta:c">
-                    <h1>Add userstyle</h1>
-                    <p>Here you can add your UserCSS userstyle</p>
+                    <h1>{{ .Title }}</h1>
+                    <p class="fg:3">If your UserCSS userstyle is hosted somewhere else, you can add it via <a href="/import">import page</a>.</p>
                 </section>
 
                 <section class="alert">
@@ -21,7 +49,7 @@
                 </section>
 
                 <section class="">
-                    <form class="full" method="post" action="/add">
+                    <form class="full" method="post" action="/{{ $method }}">
                         <label for="name">Name</label>
                         <input
                             required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
@@ -35,24 +63,26 @@
                             placeholder="e.g. Tweaks for UserStyles.world">
 
                         <label for="description">Description</label>
-                        <input
-                            type="text" name="description" value="{{ .Style.Description }}"
-                            placeholder="e.g. This userstyle tweaks some things on USw">
+                        <textarea
+                            type="text" name="description"
+                            placeholder="e.g. This userstyle tweaks some things on USw"
+                        >{{ .Style.Description }}</textarea>
 
                         <label for="homepage">Homepage</label>
                         <input
-                            required pattern="^https?:\/\/.*$"
+                            pattern="^https?:\/\/.*$"
                             type="text" name="homepage" value="{{ .Style.Homepage }}"
                             placeholder="Link to userstyle's project home, bug tracker, etc.">
 
                         <label for="preview">Preview image</label>
                         <input
-                            required pattern="^https?:\/\/.*\.(jpe?g|png|webp)$"
+                            pattern="^https?:\/\/.*\.(jpe?g|png|webp)$"
                             type="text" name="preview" value="{{ .Style.Preview }}"
                             placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
 
                         <label for="category">Category</label>
                         <input
+                            required
                             type="text" name="category" value="{{ .Style.Category }}"
                             placeholder="e.g userstyles.world">
 
@@ -61,9 +91,9 @@
                         <textarea
                             type="text" name="code"
                             placeholder="{{ printf "* {\n    color: red !important \n}" }}"
-                        >{{ .Style.Code }}</textarea>
+                        >{{ $code }}</textarea>
 
-                        <button class="flex btn primary" type="submit">Add userstyle</button>
+                        <button class="flex btn primary" type="submit">{{ .Title }}</button>
                     </form>
                 </section>
             </div>
