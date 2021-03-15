@@ -14,7 +14,7 @@ func StyleEditGet(c *fiber.Ctx) error {
 	u := sessions.User(c)
 	p := c.Params("id")
 
-	if sessions.State(c).Fresh() == true {
+	if sessions.State(c).Fresh() {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("login", fiber.Map{
 			"Title": "Login is required",
@@ -50,7 +50,7 @@ func StyleEditPost(c *fiber.Ctx) error {
 	u, p := sessions.User(c), c.Params("id")
 	t := new(models.Style)
 
-	if sessions.State(c).Fresh() == true {
+	if sessions.State(c).Fresh() {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("login", fiber.Map{
 			"Title": "Login is required",

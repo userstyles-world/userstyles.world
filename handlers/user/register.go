@@ -15,7 +15,7 @@ import (
 func RegisterGet(c *fiber.Ctx) error {
 	s := sessions.State(c)
 
-	if s.Fresh() == false {
+	if !s.Fresh() {
 		log.Printf("User %s has set session, redirecting.", s.Get("email"))
 		c.Redirect("/account", fiber.StatusSeeOther)
 	}

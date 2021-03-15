@@ -12,7 +12,7 @@ func Account(c *fiber.Ctx) error {
 	s := sessions.State(c)
 	u := sessions.User(c)
 
-	if s.Fresh() == true {
+	if !s.Fresh() {
 		c.Status(fiber.StatusFound)
 
 		return c.Render("login", fiber.Map{

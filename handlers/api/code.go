@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"regexp"
 
 	"github.com/gofiber/fiber/v2"
@@ -46,5 +45,5 @@ func GetStyleSource(c *fiber.Ctx) error {
 	}
 
 	c.Set("Content-Type", "text/css")
-	return c.SendString(fmt.Sprintf("%s", style.Code))
+	return c.SendString(style.Code)
 }
