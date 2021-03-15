@@ -13,7 +13,7 @@
                     <p class="fg:3">For UserStyles.org users, find your userstyle in <a href="https://33kk.github.io/uso-archive/">USo-archive</a>.</p>
                 </section>
 
-                <section class="ta:c">
+                <section>
                     <form class="full" method="post" action="/import">
                         <label for="import">Import URL</label>
                         <input
@@ -22,9 +22,10 @@
                             placeholder="Path to external userstyle's install URL">
 
                         <label for="preview">Preview image</label>
+                        <i class="fg:3">Images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
                         <input
                             type="text" name="preview"
-                            required pattern="^https?:\/\/.*\.(jpe?g|png|webp)$"
+                            pattern="^https:\/\/(www\.)?((user-images|raw)\.githubusercontent\.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
                             placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
 
                         <label for="category">Category</label>
