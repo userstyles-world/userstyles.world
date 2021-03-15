@@ -3,4 +3,3 @@ cache/
 data/
 *.db
 tmp/
-dev.db
