@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/template/html"
 	"github.com/markbates/pkger"
 
@@ -17,7 +16,6 @@ import (
 	"userstyles.world/handlers/core"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
-	"userstyles.world/utils"
 )
 
 func Initialize() {
@@ -55,9 +53,7 @@ func Initialize() {
 	app.Get("/api/style/:id", api.GetStyleDetails)
 	app.Get("/api/styles", api.GetStyleIndex)
 
-	// Good luck landing on this route. (=
 	app.Get("/monitor", core.Monitor)
-	app.Get(utils.MonitorURL, monitor.New())
 
 	app.Use(limiter.New())
 	app.Use(cache.New(cache.Config{
