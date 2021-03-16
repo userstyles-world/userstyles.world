@@ -19,5 +19,6 @@ func Monitor(c *fiber.Ctx) error {
 
 	return c.Render("err", fiber.Map{
 		"Title": "Page not found",
+		"User":  u,
 	})
 }
