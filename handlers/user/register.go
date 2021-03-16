@@ -14,7 +14,7 @@ import (
 
 func RegisterGet(c *fiber.Ctx) error {
 	if !sessions.State(c).Fresh() {
-		log.Printf("User %s has set session, redirecting.", sessions.User(c).ID)
+		log.Printf("User %d has set session, redirecting.", sessions.User(c).ID)
 		c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
