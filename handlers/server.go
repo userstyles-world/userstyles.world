@@ -55,7 +55,9 @@ func Initialize() {
 
 	app.Get("/monitor", core.Monitor)
 
-	app.Use(limiter.New())
+	app.Use(limiter.New(limiter.Config{
+		Max: 20,
+	}))
 	app.Use(cache.New(cache.Config{
 		Expiration: 5 * time.Minute,
 	}))
