@@ -1,8 +1,11 @@
-{{ $method := "" }}
+{{- $btn := "" -}}
+{{- $method := "" -}}
 {{- if eq .Method "add" -}}
     {{ $method = "add" }}
+    {{ $btn = "Add userstyle" }}
 {{ else }}
     {{ $method = printf "edit/%d" .Style.ID }}
+    {{ $btn = "Save changes" }}
 {{ end }}
 
 {{- $code := "" -}}
@@ -94,7 +97,7 @@
                             placeholder="{{ printf "* {\n    color: red !important \n}" }}"
                         >{{ $code }}</textarea>
 
-                        <button class="flex btn primary" type="submit">{{ .Title }}</button>
+                        <button class="flex btn primary" type="submit">{{ $btn }}</button>
                     </form>
                 </section>
             </div>
