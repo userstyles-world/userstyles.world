@@ -61,7 +61,7 @@
 
                         <label for="description">Description</label>
                         <textarea
-                            required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,128}$"
+                            required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
                             type="text" name="description"
                             placeholder="e.g. Tweaks for UserStyles.world"
                         >{{ .Style.Description }}</textarea>
