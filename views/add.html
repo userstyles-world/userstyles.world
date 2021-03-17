@@ -60,10 +60,11 @@
                             placeholder="e.g. UserStyles.world tweaks">
 
                         <label for="description">Description</label>
-                        <input
+                        <textarea
                             required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,128}$"
-                            type="text" name="description" value="{{ .Style.Description }}"
-                            placeholder="e.g. Tweaks for UserStyles.world">
+                            type="text" name="description"
+                            placeholder="e.g. Tweaks for UserStyles.world"
+                        >{{ .Style.Description }}</textarea>
 
                         <label for="notes">Notes</label>
                         <textarea
