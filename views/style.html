@@ -63,13 +63,13 @@
                         {{ if .Style.Description }}
                             <div class="mt:m">
                                 <h3>Description:</h3>
-                                <p>{{ .Style.Description }}</p>
+                                <textarea readonly class="raw" rows="10">{{ .Style.Description }}</textarea>
                             </div>
                         {{ end }}
                         {{ if .Style.Notes }}
                             <div class="mt:m">
                                 <h3>Notes:</h3>
-                                <p>{{ .Style.Notes }}</p>
+                                <textarea readonly class="raw" rows="10">{{ .Style.Notes }}</textarea>
                             </div>
                         {{ end }}
                     </div>
