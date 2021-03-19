@@ -33,6 +33,7 @@ func Initialize() {
 
 	app.Post("/logout", user.Logout)
 	app.Get("/account", user.Account)
+	app.Post("/account", user.EditAccount)
 
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
