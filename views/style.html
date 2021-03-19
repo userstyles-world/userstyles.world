@@ -60,18 +60,22 @@
                         <p>{{- printf "Created: %v" (.Style.CreatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         <p>{{- printf "Updated: %v" (.Style.UpdatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         {{ if .Style.Category }}<p>Category: {{ .Style.Category }}</p>{{ end }}
-                        {{ if .Style.Description }}
-                            <div class="mt:m">
-                                <h3>Description:</h3>
+                        <div class="mt:m">
+                            <h3>Description:</h3>
+                            {{ if .Style.Description }}
                                 <textarea readonly class="raw" rows="10">{{ .Style.Description }}</textarea>
-                            </div>
-                        {{ end }}
-                        {{ if .Style.Notes }}
-                            <div class="mt:m">
-                                <h3>Notes:</h3>
+                            {{ else }}
+                                <i>Userstyle doesn't have description.</i>
+                            {{ end }}
+                        </div>
+                        <div class="mt:m">
+                            <h3>Notes:</h3>
+                            {{ if .Style.Notes }}
                                 <textarea readonly class="raw" rows="10">{{ .Style.Notes }}</textarea>
-                            </div>
-                        {{ end }}
+                            {{ else }}
+                                <i>Userstyle doesn't have notes.</i>
+                            {{ end }}
+                        </div>
                     </div>
 
                     <div class="code mt:l">
