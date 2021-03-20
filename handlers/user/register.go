@@ -7,17 +7,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
 
 func RegisterGet(c *fiber.Ctx) error {
-	if !sessions.State(c).Fresh() {
-		log.Printf("User %d has set session, redirecting.", sessions.User(c).ID)
-		c.Redirect("/account", fiber.StatusSeeOther)
-	}
-
 	return c.Render("register", fiber.Map{
 		"Title": "Register",
 	})

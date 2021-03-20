@@ -4,12 +4,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
 
 func GetStyle(c *fiber.Ctx) error {
-	u := sessions.User(c)
+	u := jwt.User(c)
 
 	data, err := models.GetStyleByID(database.DB, c.Params("id"))
 	if err != nil {
