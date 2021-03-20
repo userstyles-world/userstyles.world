@@ -47,6 +47,7 @@ func StyleEditPost(c *fiber.Ctx) error {
 		Description: c.FormValue("description"),
 		Notes:       c.FormValue("notes"),
 		Code:        c.FormValue("code"),
+		License:     c.FormValue("license", "No License"),
 		Preview:     c.FormValue("preview"),
 		Homepage:    c.FormValue("homepage"),
 		Category:    c.FormValue("category"),

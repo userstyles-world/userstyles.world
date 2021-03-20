@@ -34,6 +34,7 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		Category:    c.FormValue("category"),
 		Preview:     c.FormValue("preview"),
 		Code:        c.FormValue("code"),
+		License:     c.FormValue("license", "No License"),
 		UserID:      u.ID,
 	}
 

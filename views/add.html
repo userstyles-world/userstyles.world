@@ -85,6 +85,12 @@
                             type="text" name="preview" value="{{ .Style.Preview }}"
                             placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
 
+                        <label for="license">License</label>
+                        <i class="fg:3">If left empty, the style uses <a href="https://choosealicense.com/no-permission/">No License</a> by default.</i>
+                        <input
+                            type="text" name="license" value="{{ .Style.License }}"
+                            placeholder="e.g CC Zero">
+
                         <label for="category">Category</label>
                         <input
                             required

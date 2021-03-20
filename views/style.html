@@ -59,6 +59,7 @@
                         <p>Author: <a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
                         <p>{{- printf "Created: %v" (.Style.CreatedAt.Format "2006-02-01 15:04:05") -}}</p>
                         <p>{{- printf "Updated: %v" (.Style.UpdatedAt.Format "2006-02-01 15:04:05") -}}</p>
+                        <p>License: {{ .Style.License }}</p>
                         {{ if .Style.Category }}<p>Category: {{ .Style.Category }}</p>{{ end }}
                         <div class="mt:m">
                             <h3>Description:</h3>

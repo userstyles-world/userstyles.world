@@ -18,6 +18,7 @@ type Style struct {
 	Description string
 	Notes       string
 	Code        string
+	License     string
 	Preview     string
 	Homepage    string
 	Archived    bool   `gorm:"default:false"`
@@ -34,6 +35,7 @@ type APIStyle struct {
 	Description string
 	Notes       string
 	Code        string
+	License     string
 	Preview     string
 	Homepage    string
 	Archived    bool

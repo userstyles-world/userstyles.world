@@ -54,6 +54,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 		Name:        uc.Name,
 		Code:        uc.SourceCode,
+		License:     uc.License,
 		Description: uc.Description,
 		Homepage:    uc.HomepageURL,
 		Preview:     c.FormValue("preview"),
