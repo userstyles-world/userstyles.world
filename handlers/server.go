@@ -27,13 +27,14 @@ func Initialize() {
 		DisableStartupMessage: true,
 	})
 
+	app.Use(cache.New(cache.Config{
+		Expiration:   5 * time.Minute,
+		CacheControl: true,
+	}))
 	app.Use(compress.New())
 	if config.DB != "dev.db" {
 		app.Use(limiter.New())
 	}
-	app.Use(cache.New(cache.Config{
-		Expiration: 5 * time.Minute,
-	}))
 
 	app.Get("/", core.Home)
 
