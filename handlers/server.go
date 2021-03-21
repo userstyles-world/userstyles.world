@@ -26,7 +26,14 @@ func Initialize() {
 		Views:                 engine,
 		DisableStartupMessage: true,
 	})
+
 	app.Use(compress.New())
+	if config.DB != "dev.db" {
+		app.Use(limiter.New())
+	}
+	app.Use(cache.New(cache.Config{
+		Expiration: 5 * time.Minute,
+	}))
 
 	app.Get("/", core.Home)
 
@@ -56,11 +63,6 @@ func Initialize() {
 	app.Get("/api/styles", api.GetStyleIndex)
 
 	app.Get("/monitor", core.Monitor)
-
-	app.Use(limiter.New())
-	app.Use(cache.New(cache.Config{
-		Expiration: 5 * time.Minute,
-	}))
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.
