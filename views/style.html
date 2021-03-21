@@ -56,11 +56,11 @@
                     </div>
 
                     <div class="details">
-                        <p>Author: <a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
-                        <p>{{- printf "Created: %v" (.Style.CreatedAt.Format "2006-02-01 15:04:05") -}}</p>
-                        <p>{{- printf "Updated: %v" (.Style.UpdatedAt.Format "2006-02-01 15:04:05") -}}</p>
-                        <p>License: {{ .Style.License }}</p>
-                        {{ if .Style.Category }}<p>Category: {{ .Style.Category }}</p>{{ end }}
+                        <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
+                        <p><span class="minw">License</span>{{ .Style.License }}</p>
+                        <p><span class="minw">Created at</span>{{- .Style.CreatedAt.Format "2006-02-01 15:04:05" -}}</p>
+                        <p><span class="minw">Updated at</span>{{- .Style.UpdatedAt.Format "2006-02-01 15:04:05" -}}</p>
+                        <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
                         <div class="mt:m">
                             <h3>Description:</h3>
                             {{ if .Style.Description }}
