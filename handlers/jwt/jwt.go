@@ -15,14 +15,25 @@ var Protected = jwtware.New(jwtware.Config{
 	SigningMethod: "HS512",
 	SigningKey:    []byte(config.JWT_SIGNING_KEY),
 	TokenLookup:   "cookie:" + fiber.HeaderAuthorization,
-	ErrorHandler:  loginRequired,
+	ErrorHandler: func(c *fiber.Ctx, e error) error {
+		if c.Path() == "/login" {
+			return c.Next()
+		}
+		c.Status(fiber.StatusUnauthorized)
+		return c.Render("login", fiber.Map{
+			"Title": "Login is required",
+			"Error": "You must log in to do this action.",
+		})
+	},
 })
 
 var NoLoggedInUsers = jwtware.New(jwtware.Config{
 	SigningMethod: "HS512",
 	SigningKey:    []byte(config.JWT_SIGNING_KEY),
 	TokenLookup:   "cookie:" + fiber.HeaderAuthorization,
-	ErrorHandler:  loginRequired,
+	ErrorHandler: func(c *fiber.Ctx, e error) error {
+		return c.Next()
+	},
 	SuccessHandler: func(c *fiber.Ctx) error {
 		log.Printf("User %d has set valid JWT Token, redirecting.", User(c).ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
@@ -37,17 +48,6 @@ var Everyone = jwtware.New(jwtware.Config{
 		return c.Next()
 	},
 })
-
-func loginRequired(c *fiber.Ctx, e error) error {
-	if c.Route().Path == "/login" {
-		return c.Next()
-	}
-	c.Status(fiber.StatusUnauthorized)
-	return c.Render("login", fiber.Map{
-		"Title": "Login is required",
-		"Error": "You must log in to do this action.",
-	})
-}
 
 func MapClaim(c *fiber.Ctx) jwt.MapClaims {
 	user, ok := c.Locals("user").(*jwt.Token)
