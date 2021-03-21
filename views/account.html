@@ -24,11 +24,11 @@
 
                 <section class="settings mt:l">
                     <h2>Information</h2>
-                    <p>ID: {{ .User.ID }}</p>
-                    <p>Username: {{ .User.Username }}</p>
-                    <p>Email: {{ .User.Email }}</p>
-                    <br>
-                    <h2>Biography</h2>
+                    <p><span class="minw">ID:</span>{{ .User.ID }}</p>
+                    <p><span class="minw">Username:</span>{{ .User.Username }}</p>
+                    <p><span class="minw">Email:</span>{{ .User.Email }}</p>
+
+                    <h2 class="mt:l">Biography</h2>
                     <p>Biography: {{ .Params.Biography }}</p>
                     <form class="full" method="post" action="/account">
                         <label for="name">Biography</label>
