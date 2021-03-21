@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"userstyles.world/config"
 )
 
 type Style struct {
@@ -42,9 +44,21 @@ type APIStyle struct {
 	Username    string
 }
 
+func getDBSession(db *gorm.DB) (tx *gorm.DB) {
+	if config.DB_DEBUG == "info" {
+		return db.Session(&gorm.Session{
+			Logger: db.Logger.LogMode(logger.Info),
+		})
+	} else {
+		return db.Session(&gorm.Session{
+			Logger: db.Logger.LogMode(logger.Silent),
+		})
+	}
+}
+
 func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
-	err := db.
+	err := getDBSession(db).
 		Model(t).
 		Select("styles.id, styles.name, styles.preview, u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -60,8 +74,7 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 
 func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
-	err := db.
-		Debug().
+	err := getDBSession(db).
 		Model(t).
 		Joins("join users u on u.id = styles.user_id").
 		Select("styles.id, styles.name, styles.preview, u.username").
@@ -78,8 +91,7 @@ func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
 // Using ID as a string is fine in this case.
 func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
-	err := db.
-		Debug().
+	err := getDBSession(db).
 		Model(t).
 		Select("styles.*,  u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -95,8 +107,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 
 func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
-	err := db.
-		Debug().
+	err := getDBSession(db).
 		Model(t).
 		Select("styles.id, styles.name, styles.preview, u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -111,8 +122,7 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 }
 
 func CreateStyle(db *gorm.DB, s Style) (Style, error) {
-	err := db.
-		Debug().
+	err := getDBSession(db).
 		Create(&s).
 		Error
 
@@ -125,8 +135,7 @@ func CreateStyle(db *gorm.DB, s Style) (Style, error) {
 
 func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
-	err := db.
-		Debug().
+	err := getDBSession(db).
 		Model(t).
 		Select("styles.*, u.username").
 		Joins("join users u on u.id = styles.user_id").
