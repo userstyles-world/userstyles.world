@@ -6,15 +6,13 @@ invalid() { printf "Invalid option: %s\n" "$*"; }
 
 check_cmd() {
     if ! command -v "$1" >/dev/null; then
-        log "Missing '$1'!"
+        log "Missing $1!"
+        case "$1" in
+            air) log "Install it with 'go get -u github.com/cosmtrek/air'" ;;
+            sassc) log "Install 'sassc' with your package manager" ;;
+            inotify*) log "Install 'notify-tools' with your package manager" ;;
+        esac
         return 1
-    fi
-}
-
-check_air() {
-    if ! command -v air >/dev/null; then
-        log "Missing 'air'! Install it with 'go get -u github.com/cosmtrek/air'"
-        exit
     fi
 }
 
@@ -48,7 +46,7 @@ sass() {
 
 drop() {
     log "drop"
-    check_air
+    check_cmd air
     env DB_DROP="1" \
         DB_COLOR="true" \
         DB_DEBUG="${2:-silent}" \
@@ -57,7 +55,7 @@ drop() {
 
 dev() {
     log "dev"
-    check_air
+    check_cmd air
     check_dir
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
