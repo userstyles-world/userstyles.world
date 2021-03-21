@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/template/html"
@@ -25,6 +26,7 @@ func Initialize() {
 		Views:                 engine,
 		DisableStartupMessage: true,
 	})
+	app.Use(compress.New())
 
 	app.Get("/", core.Home)
 
