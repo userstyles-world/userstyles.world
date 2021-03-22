@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"html/template"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,6 +10,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/template/html"
 	"github.com/markbates/pkger"
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday/v2"
 
 	"userstyles.world/config"
 	"userstyles.world/handlers/api"
@@ -20,6 +23,13 @@ import (
 
 func Initialize() {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
+
+	// TODO: Refactor this in a separate package.
+	engine.AddFunc("Markdown", func(s string) template.HTML {
+		gen := blackfriday.Run([]byte(s))
+		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
+		return template.HTML(out)
+	})
 
 	app := fiber.New(fiber.Config{
 		Views:                 engine,

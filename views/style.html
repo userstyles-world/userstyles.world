@@ -62,17 +62,17 @@
                         <p><span class="minw">Updated at</span>{{- .Style.UpdatedAt.Format "2006-02-01 15:04:05" -}}</p>
                         <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
                         <div class="mt:m">
-                            <h3>Description:</h3>
+                            <h3>Description</h3>
                             {{ if .Style.Description }}
-                                <textarea readonly class="raw" rows="10">{{ .Style.Description }}</textarea>
+                                <div class="md">{{ .Style.Description | Markdown }}</div>
                             {{ else }}
                                 <i>Userstyle doesn't have description.</i>
                             {{ end }}
                         </div>
                         <div class="mt:m">
-                            <h3>Notes:</h3>
+                            <h3>Notes</h3>
                             {{ if .Style.Notes }}
-                                <textarea readonly class="raw" rows="10">{{ .Style.Notes }}</textarea>
+                                <div class="md">{{ .Style.Notes | Markdown }}</div>
                             {{ else }}
                                 <i>Userstyle doesn't have notes.</i>
                             {{ end }}
