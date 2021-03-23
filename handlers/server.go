@@ -43,6 +43,7 @@ func Initialize() {
 
 	app.Post("/logout", jwt.Protected, user.Logout)
 	app.Get("/account", jwt.Protected, user.Account)
+	app.Post("/account", jwt.Protected, user.EditAccount)
 
 	app.Get("/register", jwt.NoLoggedInUsers, user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
