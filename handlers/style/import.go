@@ -11,6 +11,7 @@ import (
 	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/utils"
 )
 
 func StyleImportGet(c *fiber.Ctx) error {
@@ -25,6 +26,7 @@ func StyleImportGet(c *fiber.Ctx) error {
 func StyleImportPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	r := c.FormValue("import")
+	uc := new(usercss.UserCSS)
 
 	// Check if someone tries submitting local userstyle.
 	if strings.Contains(r, "file:///") {
@@ -34,20 +36,29 @@ func StyleImportPost(c *fiber.Ctx) error {
 		})
 	}
 
-	// Get userstyle.
-	uc, err := usercss.ParseFromURL(r)
-	if err != nil {
-		log.Println("ParsingFromURL err:", err)
-		return c.Render("err", fiber.Map{
-			"Title": "Failed to fetch external userstyle",
-			"User":  u,
-		})
-	}
-	if valid, _ := usercss.BasicMetadataValidation(uc); !valid {
-		return c.Render("err", fiber.Map{
-			"Title": "Failed to validate external userstyle",
-			"User":  u,
-		})
+	// Check if userstyle is imported from USo-archive.
+	if strings.HasPrefix(r, utils.ArchiveURL) {
+		// TODO: Implement.
+		_ = utils.ImportFromArchive(r)
+	} else {
+		// Get userstyle.
+		style, err := usercss.ParseFromURL(r)
+		if err != nil {
+			log.Println("ParsingFromURL err:", err)
+			return c.Render("err", fiber.Map{
+				"Title": "Failed to fetch external userstyle",
+				"User":  u,
+			})
+		}
+		if valid, _ := usercss.BasicMetadataValidation(style); !valid {
+			return c.Render("err", fiber.Map{
+				"Title": "Failed to validate external userstyle",
+				"User":  u,
+			})
+		}
+
+		// Move style content to outer scope.
+		uc = style
 	}
 
 	s := models.Style{
@@ -62,7 +73,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 		Original:    r,
 	}
 
-	s, err = models.CreateStyle(database.DB, s)
+	s, err := models.CreateStyle(database.DB, s)
 	if err != nil {
 		log.Println("Style import failed, err:", err)
 		return c.Render("err", fiber.Map{
