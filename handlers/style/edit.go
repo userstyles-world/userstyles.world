@@ -6,21 +6,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
 
 func StyleEditGet(c *fiber.Ctx) error {
-	u := sessions.User(c)
+	u := jwt.User(c)
 	p := c.Params("id")
-
-	if sessions.State(c).Fresh() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to edit a userstyle.",
-		})
-	}
 
 	s, err := models.GetStyleByID(database.DB, p)
 	if err != nil {
@@ -47,16 +39,8 @@ func StyleEditGet(c *fiber.Ctx) error {
 }
 
 func StyleEditPost(c *fiber.Ctx) error {
-	u, p := sessions.User(c), c.Params("id")
+	u, p := jwt.User(c), c.Params("id")
 	t := new(models.Style)
-
-	if sessions.State(c).Fresh() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to edit a userstyle.",
-		})
-	}
 
 	q := models.Style{
 		Name:        c.FormValue("name"),

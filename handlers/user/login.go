@@ -2,22 +2,18 @@ package user
 
 import (
 	"log"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
+	"userstyles.world/config"
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
 
 func LoginGet(c *fiber.Ctx) error {
-	if !sessions.State(c).Fresh() {
-		log.Printf("User %d has set session, redirecting.", sessions.User(c).ID)
-		c.Redirect("/account", fiber.StatusSeeOther)
-	}
-
 	return c.Render("login", fiber.Map{
 		"Title": "Login",
 	})
@@ -61,14 +57,26 @@ func LoginPost(c *fiber.Ctx) error {
 		})
 	}
 
-	s := sessions.State(c)
-	defer s.Save()
+	t, err := utils.NewJWTToken().
+		SetClaim("id", user.ID).
+		SetClaim("name", user.Username).
+		SetClaim("email", user.Email).
+		SetExpiration(time.Hour * 24 * 14).
+		GetSignedString()
 
-	// Set session data.
-	s.Set("id", user.ID)
-	s.Set("name", user.Username)
-	s.Set("email", user.Email)
-	log.Println("Session:", s.Get("name"), s.Get("email"))
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     fiber.HeaderAuthorization,
+		Value:    t,
+		Path:     "/",
+		Expires:  time.Now().Add(time.Hour * 24 * 14),
+		Secure:   config.DB != "dev.db",
+		HTTPOnly: true,
+		SameSite: "strict",
+	})
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }

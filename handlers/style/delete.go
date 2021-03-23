@@ -6,21 +6,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
 
 func DeleteByID(c *fiber.Ctx) error {
-	u := sessions.User(c)
+	u := jwt.User(c)
 	p := c.Params("id")
-
-	if sessions.State(c).Fresh() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to add new userstyle.",
-		})
-	}
 
 	s, err := models.GetStyleByID(database.DB, p)
 	if err != nil {

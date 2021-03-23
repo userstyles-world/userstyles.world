@@ -3,8 +3,10 @@ module userstyles.world
 go 1.15
 
 require (
+	github.com/form3tech-oss/jwt-go v3.2.2+incompatible
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/gofiber/fiber/v2 v2.6.0
+	github.com/gofiber/jwt/v2 v2.2.0
 	github.com/gofiber/template v1.6.7
 	github.com/markbates/pkger v0.17.1
 	github.com/vednoc/go-usercss-parser v0.7.0

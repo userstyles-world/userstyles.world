@@ -9,20 +9,12 @@ import (
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
 
 func StyleImportGet(c *fiber.Ctx) error {
-	u := sessions.User(c)
-
-	if sessions.State(c).Fresh() {
-		c.Status(fiber.StatusFound)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to add new userstyle.",
-		})
-	}
+	u := jwt.User(c)
 
 	return c.Render("import", fiber.Map{
 		"Title": "Add userstyle",
@@ -31,15 +23,8 @@ func StyleImportGet(c *fiber.Ctx) error {
 }
 
 func StyleImportPost(c *fiber.Ctx) error {
-	u := sessions.User(c)
+	u := jwt.User(c)
 	r := c.FormValue("import")
-
-	if sessions.State(c).Fresh() {
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to import a userstyle.",
-		})
-	}
 
 	// Check if someone tries submitting local userstyle.
 	if strings.Contains(r, "file:///") {

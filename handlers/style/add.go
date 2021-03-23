@@ -9,21 +9,12 @@ import (
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
 
 func StyleCreateGet(c *fiber.Ctx) error {
-	u := sessions.User(c)
-
-	if sessions.State(c).Fresh() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to add new userstyle.",
-		})
-	}
-
+	u := jwt.User(c)
 	return c.Render("add", fiber.Map{
 		"Title":  "Add userstyle",
 		"User":   u,
@@ -32,15 +23,7 @@ func StyleCreateGet(c *fiber.Ctx) error {
 }
 
 func StyleCreatePost(c *fiber.Ctx) error {
-	u := sessions.User(c)
-
-	if sessions.State(c).Fresh() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to add new userstyle.",
-		})
-	}
+	u := jwt.User(c)
 
 	s := models.Style{
 		Name:        c.FormValue("name"),
