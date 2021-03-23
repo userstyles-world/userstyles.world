@@ -3,11 +3,13 @@ package user
 import (
 	"log"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
 	"userstyles.world/handlers/sessions"
 	"userstyles.world/models"
+	"userstyles.world/utils"
 )
 
 func Account(c *fiber.Ctx) error {
@@ -72,7 +74,22 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
+	prevBio := user.Biography
 	user.Biography = c.FormValue("bio")
+
+	if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
+		errors := err.(validator.ValidationErrors)
+		log.Println("Validation errors:", errors)
+		user.Biography = prevBio
+
+		return c.Render("account", fiber.Map{
+			"Title":  "Validation Error",
+			"User":   u,
+			"Params": user,
+			"Styles": styles,
+			"Error":  "Validation error",
+		})
+	}
 
 	t := new(models.User)
 
