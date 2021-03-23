@@ -25,8 +25,8 @@ func Connect() {
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
 			SlowThreshold: time.Second,
-			LogLevel:      utils.DatabaseLogLevel(DB),
-			Colorful:      utils.DatabaseColorful(DB),
+			LogLevel:      utils.DatabaseLogLevel(),
+			Colorful:      utils.DatabaseColorful(),
 		},
 	)
 
@@ -52,7 +52,7 @@ func Initialize() {
 	Connect()
 
 	// Generate data for development.
-	if utils.DatabaseDropTables(DB) && config.DB == "dev.db" {
+	if utils.DatabaseDropTables() && config.DB == "dev.db" {
 		log.Println("Dropping database tables.")
 		Drop(&user, &style)
 		defer Seed()

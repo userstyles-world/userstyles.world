@@ -15,6 +15,18 @@ nav {
         list-style: none;
         li:not(:last-child) > a { margin-right: 1rem }
     }
+
+    .motto {
+        left: 5em;
+        position: absolute;
+    }
+    .mascot {
+        height: 50px;
+        left: 1em;
+        top: 0.25em;
+        position: absolute;
+        width: 50px;
+    }
 }
 
 /*

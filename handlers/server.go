@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/template/html"
@@ -27,8 +28,16 @@ func Initialize() {
 		DisableStartupMessage: true,
 	})
 
-	app.Get("/", jwt.Everyone, core.Home)
+	app.Use(cache.New(cache.Config{
+		Expiration:   5 * time.Minute,
+		CacheControl: true,
+	}))
+	app.Use(compress.New())
+	if config.DB != "dev.db" {
+		app.Use(limiter.New())
+	}
 
+	app.Get("/", core.Home)
 	app.Get("/login", jwt.NoLoggedInUsers, user.LoginGet)
 	app.Post("/login", user.LoginPost)
 
