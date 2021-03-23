@@ -20,6 +20,16 @@
                         via <a href="https://github.com/vednoc/userstyles.world">GitHub</a>
                         or via <a href="mailto:vednoc@protonmail.com">e-mail</a>.
                     </p>
+                </section>
+
+                <section class="settings mt:l">
+                    <h2>Information</h2>
+                    <p>ID: {{ .User.ID }}</p>
+                    <p>Username: {{ .User.Username }}</p>
+                    <p>Email: {{ .User.Email }}</p>
+                    <br>
+                    <h2>Biography</h2>
+                    <p>Biography: {{ .Params.Biography }}</p>
                     <form class="full" method="post" action="/account">
                         <label for="name">Biography</label>
                         <input
@@ -28,14 +38,6 @@
                             placeholder="e.g. I'd often make styles.">
                         <button class="flex btn primary" type="submit">Edit</button>
                     </form>
-                </section>
-
-                <section class="settings mt:l">
-                    <h2>Information</h2>
-                    <p>ID: {{ .User.ID }}</p>
-                    <p>Username: {{ .User.Username }}</p>
-                    <p>Email: {{ .User.Email }}</p>
-                    <p>Biography: {{ .Params.Biography }}</p>
                 </section>
 
                 <section class="styles mt:l">
