@@ -1,13 +1,12 @@
 package utils
 
 import (
-	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/config"
 )
 
-func DatabaseLogLevel(db *gorm.DB) logger.LogLevel {
+func DatabaseLogLevel() logger.LogLevel {
 	switch config.DB_DEBUG {
 	case "error":
 		return logger.Error
@@ -20,7 +19,7 @@ func DatabaseLogLevel(db *gorm.DB) logger.LogLevel {
 	}
 }
 
-func DatabaseColorful(db *gorm.DB) bool {
+func DatabaseColorful() bool {
 	switch config.DB_COLOR {
 	case "true", "yes", "1":
 		return true
@@ -29,7 +28,7 @@ func DatabaseColorful(db *gorm.DB) bool {
 	}
 }
 
-func DatabaseDropTables(db *gorm.DB) bool {
+func DatabaseDropTables() bool {
 	switch config.DB_DROP {
 	case "true", "yes", "1":
 		return true

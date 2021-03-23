@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/template/html"
@@ -14,6 +15,7 @@ import (
 	"userstyles.world/config"
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
 )
@@ -26,37 +28,47 @@ func Initialize() {
 		DisableStartupMessage: true,
 	})
 
-	app.Get("/", core.Home)
+	app.Use(cache.New(cache.Config{
+		Expiration:   5 * time.Minute,
+		CacheControl: true,
+	}))
+	app.Use(compress.New())
+	if config.DB != "dev.db" {
+		app.Use(limiter.New())
+	}
 
-	app.Get("/login", user.LoginGet)
+	app.Get("/", core.Home)
+	app.Get("/login", jwt.NoLoggedInUsers, user.LoginGet)
 	app.Post("/login", user.LoginPost)
 
-	app.Post("/logout", user.Logout)
-	app.Get("/account", user.Account)
-	app.Post("/account", user.EditAccount)
+	app.Post("/logout", jwt.Protected, user.Logout)
+	app.Get("/account", jwt.Protected, user.Account)
+	app.Post("/account", jwt.Protected, user.EditAccount)
 
-	app.Get("/register", user.RegisterGet)
+	app.Get("/register", jwt.NoLoggedInUsers, user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
 
-	app.Get("/user/:name", user.Profile)
+	app.Get("/user/:name", jwt.Everyone, user.Profile)
 
-	app.Get("/explore", style.GetExplore)
-	app.Get("/style/:id", style.GetStyle)
-	app.Post("/style/:id", style.DeleteByID)
-	app.Get("/add", style.StyleCreateGet)
-	app.Post("/add", style.StyleCreatePost)
-	app.Get("/import", style.StyleImportGet)
-	app.Post("/import", style.StyleImportPost)
-	app.Get("/edit/:id", style.StyleEditGet)
-	app.Post("/edit/:id", style.StyleEditPost)
+	app.Get("/explore", jwt.Everyone, style.GetExplore)
+	app.Get("/style/:id", jwt.Everyone, style.GetStyle)
+	app.Post("/style/:id", jwt.Protected, style.DeleteByID)
+	app.Get("/add", jwt.Protected, style.StyleCreateGet)
+	app.Post("/add", jwt.Protected, style.StyleCreatePost)
+	app.Get("/import", jwt.Protected, style.StyleImportGet)
+	app.Post("/import", jwt.Protected, style.StyleImportPost)
+	app.Get("/edit/:id", jwt.Protected, style.StyleEditGet)
+	app.Post("/edit/:id", jwt.Protected, style.StyleEditPost)
 
 	app.Get("/api/style/:id.user.css", api.GetStyleSource)
 	app.Get("/api/style/:id", api.GetStyleDetails)
 	app.Get("/api/styles", api.GetStyleIndex)
 
-	app.Get("/monitor", core.Monitor)
+	app.Get("/monitor", jwt.Protected, core.Monitor)
 
-	app.Use(limiter.New())
+	if config.DB == "prod.dev" {
+		app.Use(limiter.New())
+	}
 	app.Use(cache.New(cache.Config{
 		Expiration: 5 * time.Minute,
 	}))

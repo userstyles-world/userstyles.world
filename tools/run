@@ -32,6 +32,7 @@ prod() {
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
         SALT="${4:15}" \
+        JWT_SIGNING_KEY="$(cat ./.auth)"
         ./userstyles.world
 }
 
@@ -64,7 +65,19 @@ dev() {
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
         DB_COLOR="true" \
+        JWT_SIGNING_KEY="$(cat ./.auth)"
         air
+}
+
+build() {
+    log "build"
+    check_air
+    check_dir
+    env DB_DEBUG="${2:-silent}" \
+        DB_DROP="${3:-false}" \
+        DB_COLOR="true" \
+        JWT_SIGNING_KEY="$(cat ./.auth)"
+    go build
 }
 
 case "$1" in

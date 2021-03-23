@@ -4,12 +4,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/sessions"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
 
 func Profile(c *fiber.Ctx) error {
-	u := sessions.User(c)
+	u := jwt.User(c)
 	p := c.Params("name")
 
 	user, err := models.FindUserByName(database.DB, p)

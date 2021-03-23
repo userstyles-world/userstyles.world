@@ -3,14 +3,13 @@ package core
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
-
-	"userstyles.world/handlers/sessions"
+	"userstyles.world/handlers/jwt"
 )
 
 var monitorhandler = monitor.New()
 
 func Monitor(c *fiber.Ctx) error {
-	u := sessions.User(c)
+	u := jwt.User(c)
 
 	// Only first user (admin) is allowed.
 	if u.ID == 1 {

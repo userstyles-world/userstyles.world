@@ -38,8 +38,7 @@ func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 func FindUserByName(db *gorm.DB, name string) (*User, error) {
 	user := new(User)
 
-	err := db.
-		Debug().
+	err := getDBSession(db).
 		Where("username = ?", name).
 		First(&user).
 		Error
