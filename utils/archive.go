@@ -8,5 +8,6 @@ const ArchiveURL = "https://raw.githubusercontent.com/33kk/uso-archive/flomaster
 
 func ImportFromArchive(url string) *models.Style {
 	s := new(models.Style)
+	s.Name = "test"
 	return s
 }

@@ -123,7 +123,7 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 	return q, nil
 }
 
-func CreateStyle(db *gorm.DB, s Style) (Style, error) {
+func CreateStyle(db *gorm.DB, s *Style) (*Style, error) {
 	err := getDBSession(db).
 		Create(&s).
 		Error

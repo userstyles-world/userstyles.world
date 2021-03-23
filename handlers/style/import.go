@@ -26,7 +26,7 @@ func StyleImportGet(c *fiber.Ctx) error {
 func StyleImportPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	r := c.FormValue("import")
-	uc := new(usercss.UserCSS)
+	s := new(models.Style)
 
 	// Check if someone tries submitting local userstyle.
 	if strings.Contains(r, "file:///") {
@@ -39,10 +39,13 @@ func StyleImportPost(c *fiber.Ctx) error {
 	// Check if userstyle is imported from USo-archive.
 	if strings.HasPrefix(r, utils.ArchiveURL) {
 		// TODO: Implement.
-		_ = utils.ImportFromArchive(r)
+		style := utils.ImportFromArchive(r)
+
+		// Move style content to outer scope.
+		s = style
 	} else {
 		// Get userstyle.
-		style, err := usercss.ParseFromURL(r)
+		uc, err := usercss.ParseFromURL(r)
 		if err != nil {
 			log.Println("ParsingFromURL err:", err)
 			return c.Render("err", fiber.Map{
@@ -50,27 +53,23 @@ func StyleImportPost(c *fiber.Ctx) error {
 				"User":  u,
 			})
 		}
-		if valid, _ := usercss.BasicMetadataValidation(style); !valid {
+		if valid, _ := usercss.BasicMetadataValidation(uc); !valid {
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to validate external userstyle",
 				"User":  u,
 			})
 		}
 
-		// Move style content to outer scope.
-		uc = style
-	}
-
-	s := models.Style{
-		UserID:      u.ID,
-		Name:        uc.Name,
-		Code:        uc.SourceCode,
-		License:     uc.License,
-		Description: uc.Description,
-		Homepage:    uc.HomepageURL,
-		Preview:     c.FormValue("preview"),
-		Category:    c.FormValue("category"),
-		Original:    r,
+		// Set fields.
+		s.UserID = u.ID
+		s.Name = uc.Name
+		s.Code = uc.SourceCode
+		s.License = uc.License
+		s.Description = uc.Description
+		s.Homepage = uc.HomepageURL
+		s.Preview = c.FormValue("preview")
+		s.Category = c.FormValue("category")
+		s.Original = r
 	}
 
 	s, err := models.CreateStyle(database.DB, s)

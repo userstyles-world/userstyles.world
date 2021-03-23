@@ -26,7 +26,7 @@ func StyleCreateGet(c *fiber.Ctx) error {
 func StyleCreatePost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	s := models.Style{
+	s := &models.Style{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		Notes:       c.FormValue("notes"),
