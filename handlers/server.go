@@ -37,34 +37,32 @@ func Initialize() {
 		app.Use(limiter.New())
 	}
 
-	app.Get("/", core.Home)
-	app.Get("/login", jwt.NoLoggedInUsers, user.LoginGet)
-	app.Post("/login", user.LoginPost)
+	public := app.Group("/", jwt.Everyone)
+	public.Get("/", core.Home)
+	public.Get("/login", jwt.NoLoggedInUsers, user.LoginGet)
+	public.Post("/login", user.LoginPost)
+	public.Get("/register", jwt.NoLoggedInUsers, user.RegisterGet)
+	public.Post("/register", user.RegisterPost)
+	public.Get("/explore", style.GetExplore)
+	public.Get("/style/:id", style.GetStyle)
+	public.Get("/user/:name", user.Profile)
 
-	app.Post("/logout", jwt.Protected, user.Logout)
-	app.Get("/account", jwt.Protected, user.Account)
-	app.Post("/account", jwt.Protected, user.EditAccount)
+	protected := app.Group("/", jwt.Protected)
+	protected.Post("/logout", user.Logout)
+	protected.Get("/account", user.Account)
+	protected.Post("/style/:id", style.DeleteByID)
+	protected.Get("/add", style.StyleCreateGet)
+	protected.Post("/add", style.StyleCreatePost)
+	protected.Get("/import", style.StyleImportGet)
+	protected.Post("/import", style.StyleImportPost)
+	protected.Get("/edit/:id", style.StyleEditGet)
+	protected.Post("/edit/:id", style.StyleEditPost)
+	protected.Get("/monitor", core.Monitor)
 
-	app.Get("/register", jwt.NoLoggedInUsers, user.RegisterGet)
-	app.Post("/register", user.RegisterPost)
-
-	app.Get("/user/:name", jwt.Everyone, user.Profile)
-
-	app.Get("/explore", jwt.Everyone, style.GetExplore)
-	app.Get("/style/:id", jwt.Everyone, style.GetStyle)
-	app.Post("/style/:id", jwt.Protected, style.DeleteByID)
-	app.Get("/add", jwt.Protected, style.StyleCreateGet)
-	app.Post("/add", jwt.Protected, style.StyleCreatePost)
-	app.Get("/import", jwt.Protected, style.StyleImportGet)
-	app.Post("/import", jwt.Protected, style.StyleImportPost)
-	app.Get("/edit/:id", jwt.Protected, style.StyleEditGet)
-	app.Post("/edit/:id", jwt.Protected, style.StyleEditPost)
-
-	app.Get("/api/style/:id.user.css", api.GetStyleSource)
-	app.Get("/api/style/:id", api.GetStyleDetails)
-	app.Get("/api/styles", api.GetStyleIndex)
-
-	app.Get("/monitor", jwt.Protected, core.Monitor)
+	v1 := app.Group("/api")
+	v1.Get("/style/:id.user.css", api.GetStyleSource)
+	v1.Get("/style/:id", api.GetStyleDetails)
+	v1.Get("/styles", api.GetStyleIndex)
 
 	if config.DB == "prod.dev" {
 		app.Use(limiter.New())
