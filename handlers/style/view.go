@@ -9,7 +9,7 @@ import (
 )
 
 func GetStyle(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	data, err := models.GetStyleByID(database.DB, c.Params("id"))
 	if err != nil {

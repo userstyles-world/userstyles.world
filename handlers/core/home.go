@@ -9,7 +9,7 @@ import (
 )
 
 func Home(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	styles, err := models.GetAllFeaturedStyles(database.DB)
 	if err != nil {

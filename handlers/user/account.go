@@ -13,7 +13,7 @@ import (
 )
 
 func Account(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	styles, err := models.GetStylesByUser(database.DB, u.Username)
 	if err != nil {
@@ -40,7 +40,7 @@ func Account(c *fiber.Ctx) error {
 }
 
 func EditAccount(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	styles, err := models.GetStylesByUser(database.DB, u.Username)
 	if err != nil {

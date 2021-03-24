@@ -11,7 +11,7 @@ import (
 )
 
 func DeleteByID(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 	p := c.Params("id")
 
 	s, err := models.GetStyleByID(database.DB, p)

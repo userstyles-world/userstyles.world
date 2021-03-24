@@ -28,36 +28,38 @@ func Initialize() {
 		DisableStartupMessage: true,
 	})
 
+<<<<<<< Caching-Branch
 	app.Use(cache.New(cache.Config{
 		Expiration:   5 * time.Minute,
 		CacheControl: true,
 	}))
+=======
+>>>>>>> refactor: use custom middleware
 	app.Use(compress.New())
 	if config.DB != "dev.db" {
 		app.Use(limiter.New())
 	}
+	app.Use(jwt.New())
 
-	public := app.Group("/", jwt.Everyone)
-	public.Get("/", core.Home)
-	public.Get("/login", jwt.NoLoggedInUsers, user.LoginGet)
-	public.Post("/login", user.LoginPost)
-	public.Get("/register", jwt.NoLoggedInUsers, user.RegisterGet)
-	public.Post("/register", user.RegisterPost)
-	public.Get("/explore", style.GetExplore)
-	public.Get("/style/:id", style.GetStyle)
-	public.Get("/user/:name", user.Profile)
+	app.Get("/", core.Home)
+	app.Get("/login", user.LoginGet)
+	app.Post("/login", user.LoginPost)
+	app.Get("/register", user.RegisterGet)
+	app.Post("/register", user.RegisterPost)
+	app.Get("/explore", style.GetExplore)
+	app.Get("/style/:id", style.GetStyle)
+	app.Get("/user/:name", user.Profile)
 
-	protected := app.Group("/", jwt.Protected)
-	protected.Post("/logout", user.Logout)
-	protected.Get("/account", user.Account)
-	protected.Post("/style/:id", style.DeleteByID)
-	protected.Get("/add", style.StyleCreateGet)
-	protected.Post("/add", style.StyleCreatePost)
-	protected.Get("/import", style.StyleImportGet)
-	protected.Post("/import", style.StyleImportPost)
-	protected.Get("/edit/:id", style.StyleEditGet)
-	protected.Post("/edit/:id", style.StyleEditPost)
-	protected.Get("/monitor", core.Monitor)
+	app.Post("/logout", jwt.Protected, user.Logout)
+	app.Get("/account", jwt.Protected, user.Account)
+	app.Post("/style/:id", jwt.Protected, style.DeleteByID)
+	app.Get("/add", jwt.Protected, style.StyleCreateGet)
+	app.Post("/add", jwt.Protected, style.StyleCreatePost)
+	app.Get("/import", jwt.Protected, style.StyleImportGet)
+	app.Post("/import", jwt.Protected, style.StyleImportPost)
+	app.Get("/edit/:id", jwt.Protected, style.StyleEditGet)
+	app.Post("/edit/:id", jwt.Protected, style.StyleEditPost)
+	app.Get("/monitor", jwt.Protected, core.Monitor)
 
 	v1 := app.Group("/api")
 	v1.Get("/style/:id.user.css", api.GetStyleSource)

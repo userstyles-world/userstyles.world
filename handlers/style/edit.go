@@ -11,7 +11,7 @@ import (
 )
 
 func StyleEditGet(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 	p := c.Params("id")
 
 	s, err := models.GetStyleByID(database.DB, p)
@@ -39,8 +39,8 @@ func StyleEditGet(c *fiber.Ctx) error {
 }
 
 func StyleEditPost(c *fiber.Ctx) error {
-	u, p := jwt.User(c), c.Params("id")
-	t := new(models.Style)
+	u, _ := jwt.User(c)
+	p, t := c.Params("id"), new(models.Style)
 
 	q := models.Style{
 		Name:        c.FormValue("name"),

@@ -9,7 +9,7 @@ import (
 )
 
 func GetExplore(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	data, err := models.GetAllStyles(database.DB)
 	if err != nil {

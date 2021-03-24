@@ -14,7 +14,7 @@ import (
 )
 
 func StyleImportGet(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	return c.Render("import", fiber.Map{
 		"Title": "Add userstyle",
@@ -23,7 +23,7 @@ func StyleImportGet(c *fiber.Ctx) error {
 }
 
 func StyleImportPost(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 	r := c.FormValue("import")
 
 	// Check if someone tries submitting local userstyle.

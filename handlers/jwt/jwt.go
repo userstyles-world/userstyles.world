@@ -1,53 +1,22 @@
 package jwt
 
 import (
-	"log"
-
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	jwtware "github.com/gofiber/jwt/v2"
 
-	"userstyles.world/config"
 	"userstyles.world/models"
 )
 
-var Protected = jwtware.New(jwtware.Config{
-	SigningMethod: "HS512",
-	SigningKey:    []byte(config.JWT_SIGNING_KEY),
-	TokenLookup:   "cookie:" + fiber.HeaderAuthorization,
-	ErrorHandler: func(c *fiber.Ctx, e error) error {
-		if c.Path() == "/login" {
-			return c.Next()
-		}
+var Protected = func(c *fiber.Ctx) error {
+	if _, ok := User(c); !ok {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("login", fiber.Map{
 			"Title": "Login is required",
 			"Error": "You must log in to do this action.",
 		})
-	},
-})
-
-var NoLoggedInUsers = jwtware.New(jwtware.Config{
-	SigningMethod: "HS512",
-	SigningKey:    []byte(config.JWT_SIGNING_KEY),
-	TokenLookup:   "cookie:" + fiber.HeaderAuthorization,
-	ErrorHandler: func(c *fiber.Ctx, e error) error {
-		return c.Next()
-	},
-	SuccessHandler: func(c *fiber.Ctx) error {
-		log.Printf("User %d has set valid JWT Token, redirecting.", User(c).ID)
-		return c.Redirect("/account", fiber.StatusSeeOther)
-	},
-})
-
-var Everyone = jwtware.New(jwtware.Config{
-	SigningMethod: "HS512",
-	SigningKey:    []byte(config.JWT_SIGNING_KEY),
-	TokenLookup:   "cookie:" + fiber.HeaderAuthorization,
-	ErrorHandler: func(c *fiber.Ctx, e error) error {
-		return c.Next()
-	},
-})
+	}
+	return c.Next()
+}
 
 func MapClaim(c *fiber.Ctx) jwt.MapClaims {
 	user, ok := c.Locals("user").(*jwt.Token)
@@ -59,12 +28,12 @@ func MapClaim(c *fiber.Ctx) jwt.MapClaims {
 	return claims
 }
 
-func User(c *fiber.Ctx) *models.APIUser {
+func User(c *fiber.Ctx) (*models.APIUser, bool) {
 	s := MapClaim(c)
 	u := &models.APIUser{}
 
 	if s == nil {
-		return u
+		return u, false
 	}
 
 	// Type assertion will convert interface{} to other types.
@@ -72,5 +41,5 @@ func User(c *fiber.Ctx) *models.APIUser {
 	u.Email = s["email"].(string)
 	u.ID = uint(s["id"].(float64))
 
-	return u
+	return u, true
 }

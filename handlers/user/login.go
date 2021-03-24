@@ -9,11 +9,17 @@ import (
 
 	"userstyles.world/config"
 	"userstyles.world/database"
+	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
 
 func LoginGet(c *fiber.Ctx) error {
+	if u, ok := jwt.User(c); ok == true {
+		log.Printf("User %d has set session, redirecting.", u.ID)
+		c.Redirect("/account", fiber.StatusSeeOther)
+	}
+
 	return c.Render("login", fiber.Map{
 		"Title": "Login",
 	})

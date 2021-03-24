@@ -6,8 +6,7 @@ import (
 )
 
 func NotFound(c *fiber.Ctx) error {
-	jwt.Everyone(c)
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	return c.Render("err", fiber.Map{
 		"User":  u,

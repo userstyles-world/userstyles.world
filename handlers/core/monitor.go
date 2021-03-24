@@ -9,7 +9,7 @@ import (
 var monitorhandler = monitor.New()
 
 func Monitor(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	// Only first user (admin) is allowed.
 	if u.ID == 1 {

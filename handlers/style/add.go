@@ -14,7 +14,8 @@ import (
 )
 
 func StyleCreateGet(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
+
 	return c.Render("add", fiber.Map{
 		"Title":  "Add userstyle",
 		"User":   u,
@@ -23,7 +24,7 @@ func StyleCreateGet(c *fiber.Ctx) error {
 }
 
 func StyleCreatePost(c *fiber.Ctx) error {
-	u := jwt.User(c)
+	u, _ := jwt.User(c)
 
 	s := models.Style{
 		Name:        c.FormValue("name"),
