@@ -39,7 +39,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 	// Check if userstyle is imported from USo-archive.
 	if strings.HasPrefix(r, utils.ArchiveURL) {
 		// TODO: Implement.
-		style := utils.ImportFromArchive(r)
+		style := utils.ImportFromArchive(r, *u)
 
 		// Move style content to outer scope.
 		s = style
