@@ -40,15 +40,7 @@ func Account(c *fiber.Ctx) error {
 }
 
 func EditAccount(c *fiber.Ctx) error {
-	u := sessions.User(c)
-
-	if sessions.State(c).Fresh() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to edit a userstyle.",
-		})
-	}
+	u := jwt.User(c)
 
 	styles, err := models.GetStylesByUser(database.DB, u.Username)
 	if err != nil {
