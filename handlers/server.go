@@ -32,6 +32,9 @@ func Initialize() {
 	app.Use(cache.New(cache.Config{
 		Expiration:   5 * time.Minute,
 		CacheControl: true,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			return c.Path() + c.Get(fiber.HeaderAcceptEncoding)
+		},
 	}))
 =======
 >>>>>>> refactor: use custom middleware
