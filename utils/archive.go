@@ -90,7 +90,10 @@ func fetchJSON(id string) ([]byte, error) {
 func unmarshalJSON(raw []byte) (Data, error) {
 	data := Data{}
 	err := json.Unmarshal(raw, &data)
-	log.Printf("error unmarshaling json: %v\n", err)
+	if err != nil {
+		log.Printf("failed to unmarshal json, err: %v\n", err)
+		return data, err
+	}
 
 	return data, nil
 }
