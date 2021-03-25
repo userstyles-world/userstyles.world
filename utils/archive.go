@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/vednoc/go-usercss-parser"
+
 	"userstyles.world/models"
 )
 
@@ -35,24 +37,41 @@ func ImportFromArchive(url string, u models.APIUser) *models.Style {
 	}
 	log.Printf("extract id: %v\n", id)
 
-	res, err := fetchJSON(id)
+	data, err := fetchJSON(id)
 	if err != nil {
 		log.Printf("failed to fetch json, err: %v\n", err)
 		panic(err)
 	}
-	// log.Printf("json data: %v\n", string(res))
 
-	final, err := unmarshalJSON(res)
+	res, err := unmarshalJSON(data)
 	if err != nil {
 		log.Printf("failed to unmarshal json, err: %v\n", err)
 		panic(err)
 	}
 
-	log.Printf("final ->> %#+v\n", final)
+	log.Printf("final ->> %#+v\n", res)
 
-	s := new(models.Style)
-	s.UserID = u.ID
-	s.Name = "test"
+	// Fetch generated UserCSS format.
+	source := ArchiveURL + "usercss/" + id + ".user.css"
+	uc, err := usercss.ParseFromURL(source)
+	if err != nil {
+		log.Printf("failed to parse style from URL, err: %v\n", err)
+		panic(err)
+	}
+
+	s := &models.Style{
+		UserID:      u.ID,
+		Name:        uc.Name,
+		Description: uc.Description,
+		Notes:       res.Info.AdditionalInfo,
+		Code:        uc.SourceCode,
+		License:     uc.License,
+		Preview:     res.Screenshots.Main.Name,
+		Homepage:    uc.HomepageURL,
+		Category:    res.Info.Category,
+		Original:    url,
+	}
+
 	return s
 }
 
