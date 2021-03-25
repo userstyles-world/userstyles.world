@@ -13,7 +13,11 @@ import (
 	"userstyles.world/models"
 )
 
-const ArchiveURL = "https://raw.githubusercontent.com/33kk/uso-archive/flomaster/data/"
+const (
+	ArchiveURL = "https://raw.githubusercontent.com/33kk/uso-archive/flomaster/data/"
+	StyleURL   = ArchiveURL + "usercss/"
+	PreviewURL = ArchiveURL + "screenshots/"
+)
 
 // Using only the data that we need.
 type Data struct {
@@ -52,7 +56,7 @@ func ImportFromArchive(url string, u models.APIUser) *models.Style {
 	log.Printf("final ->> %#+v\n", res)
 
 	// Fetch generated UserCSS format.
-	source := ArchiveURL + "usercss/" + id + ".user.css"
+	source := StyleURL + id + ".user.css"
 	uc, err := usercss.ParseFromURL(source)
 	if err != nil {
 		log.Printf("failed to parse style from URL, err: %v\n", err)
@@ -66,7 +70,7 @@ func ImportFromArchive(url string, u models.APIUser) *models.Style {
 		Notes:       res.Info.AdditionalInfo,
 		Code:        uc.SourceCode,
 		License:     uc.License,
-		Preview:     ArchiveURL + "screenshots/" + res.Screenshots.Main.Name,
+		Preview:     PreviewURL + res.Screenshots.Main.Name,
 		Homepage:    uc.HomepageURL,
 		Category:    res.Info.Category,
 		Original:    url,
@@ -81,14 +85,14 @@ func extractID(url string) (string, error) {
 	}
 
 	// Trim everything except style id.
-	url = strings.TrimPrefix(url, ArchiveURL+"usercss/")
+	url = strings.TrimPrefix(url, StyleURL)
 	url = strings.TrimSuffix(url, ".user.css")
 
 	return url, nil
 }
 
 func fetchJSON(id string) ([]byte, error) {
-	url := ArchiveURL + "styles/" + id + ".json"
+	url := StyleURL + id + ".json"
 
 	req, err := http.Get(url)
 	if err != nil {
