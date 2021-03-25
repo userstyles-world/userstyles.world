@@ -107,6 +107,11 @@ func fetchJSON(id string) ([]byte, error) {
 		return nil, err
 	}
 
+	// Return error if style doesn't exist.
+	if string(body) == "404: Not Found" {
+		return nil, errors.New("style not found")
+	}
+
 	return body, nil
 }
 
