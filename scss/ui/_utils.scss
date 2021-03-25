@@ -49,13 +49,13 @@
 }
 
 .p {
-
     &x {
         &\:m { padding-left: 1rem; padding-right: 1rem }
         &\:0 { padding-left: 0rem; padding-right: 0rem }
     }
 
     &y {
+        &\:0 { padding-top: 0rem; padding-bottom: 0rem }
         &\:m { padding-top: 1rem; padding-bottom: 1rem }
         &\:l { padding-top: 2rem; padding-bottom: 2rem }
     }
