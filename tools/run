@@ -71,19 +71,16 @@ dev() {
 
 build() {
     log "build"
-    check_air
     check_dir
-    env DB_DEBUG="${2:-silent}" \
-        DB_DROP="${3:-false}" \
-        DB_COLOR="true" \
-        JWT_SIGNING_KEY="$(cat ./.auth)"
     go build
+    strip ./userstyles.world # Remove debug symbols
 }
 
 case "$1" in
-    prod) prod "$@" ;;
-    sass) sass "$@" ;;
-    drop) drop "$@" ;;
-    dev)  dev  "$@" ;;
-    *) invalid "$@" ;;
+    build) build "$a" ;;
+    dev)  dev    "$@" ;;
+    drop) drop   "$@" ;;
+    prod) prod   "$@" ;;
+    sass) sass   "$@" ;;
+    *) invalid   "$@" ;;
 esac
