@@ -73,14 +73,9 @@ build() {
     log "build"
     check_dir
 
-    CGO_ENABLED=0 GOOS=linux go build \
-        -ldflags '-extldflags "-fno-PIC -static"' \
+    GOOS=linux go build \
+        -ldflags '-s -w -extldflags "-fno-PIC -static"' \
         -buildmode pie -tags 'osusergo netgo static_build'
-
-    # Remove debug symbols if build was successful.
-    if [ $? = 0 ]; then
-        strip ./userstyles.world
-    fi
 }
 
 case "$1" in
