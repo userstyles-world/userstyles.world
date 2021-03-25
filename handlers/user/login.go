@@ -30,6 +30,7 @@ func LoginPost(c *fiber.Ctx) error {
 		Email:    c.FormValue("email"),
 		Password: c.FormValue("password"),
 	}
+	remember := c.FormValue("remember") == "on"
 
 	if err := utils.Validate().StructExcept(form, "Username", "Biography"); err != nil {
 		errors := err.(validator.ValidationErrors)
@@ -63,22 +64,36 @@ func LoginPost(c *fiber.Ctx) error {
 		})
 	}
 
+	var expiration time.Duration
+	if remember {
+		// 2 weeks
+		expiration = time.Hour * 24 * 14
+	} else {
+		expiration = -1
+	}
+
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
 		SetClaim("email", user.Email).
-		SetExpiration(time.Hour * 24 * 14).
+		SetExpiration(expiration).
 		GetSignedString()
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
+	var expires time.Time
+	if remember {
+		// 2 weeks
+		expires = time.Now().Add(time.Hour * 24 * 14)
+	}
+
 	c.Cookie(&fiber.Cookie{
 		Name:     fiber.HeaderAuthorization,
 		Value:    t,
 		Path:     "/",
-		Expires:  time.Now().Add(time.Hour * 24 * 14),
+		Expires:  expires,
 		Secure:   config.DB != "dev.db",
 		HTTPOnly: true,
 		SameSite: "strict",

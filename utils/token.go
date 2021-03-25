@@ -21,7 +21,9 @@ func (jt *JWTTokenBuilder) SetClaim(name string, value interface{}) *JWTTokenBui
 }
 
 func (jt *JWTTokenBuilder) SetExpiration(duration time.Duration) *JWTTokenBuilder {
-	jt.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(duration).Unix()
+	if duration != -1 {
+		jt.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(duration).Unix()
+	}
 	return jt
 }
 
