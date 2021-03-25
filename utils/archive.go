@@ -66,7 +66,7 @@ func ImportFromArchive(url string, u models.APIUser) *models.Style {
 		Notes:       res.Info.AdditionalInfo,
 		Code:        uc.SourceCode,
 		License:     uc.License,
-		Preview:     res.Screenshots.Main.Name,
+		Preview:     ArchiveURL + "screenshots/" + res.Screenshots.Main.Name,
 		Homepage:    uc.HomepageURL,
 		Category:    res.Info.Category,
 		Original:    url,
