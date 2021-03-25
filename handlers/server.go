@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"log"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
@@ -28,16 +26,6 @@ func Initialize() {
 		DisableStartupMessage: true,
 	})
 
-<<<<<<< Caching-Branch
-	app.Use(cache.New(cache.Config{
-		Expiration:   5 * time.Minute,
-		CacheControl: true,
-		KeyGenerator: func(c *fiber.Ctx) string {
-			return c.Path() + c.Get(fiber.HeaderAcceptEncoding)
-		},
-	}))
-=======
->>>>>>> refactor: use custom middleware
 	app.Use(compress.New())
 	if config.DB != "dev.db" {
 		app.Use(limiter.New())
@@ -69,13 +57,6 @@ func Initialize() {
 	v1.Get("/style/:id.user.css", api.GetStyleSource)
 	v1.Get("/style/:id", api.GetStyleDetails)
 	v1.Get("/styles", api.GetStyleIndex)
-
-	if config.DB == "prod.dev" {
-		app.Use(limiter.New())
-	}
-	app.Use(cache.New(cache.Config{
-		Expiration: 5 * time.Minute,
-	}))
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.
