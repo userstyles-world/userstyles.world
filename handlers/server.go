@@ -52,6 +52,7 @@ func Initialize() {
 
 	app.Post("/logout", jwt.Protected, user.Logout)
 	app.Get("/account", jwt.Protected, user.Account)
+	app.Post("/account", jwt.Protected, user.EditAccount)
 	app.Post("/style/:id", jwt.Protected, style.DeleteByID)
 	app.Get("/add", jwt.Protected, style.StyleCreateGet)
 	app.Post("/add", jwt.Protected, style.StyleCreatePost)
