@@ -32,38 +32,36 @@ type Data struct {
 	}
 }
 
-func ImportFromArchive(url string, u models.APIUser) *models.Style {
+func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	// TODO: Implement better error handling.
 	id, err := extractID(url)
+	s := &models.Style{}
 	if err != nil {
 		log.Printf("failed to extract id, err: %v\n", err)
-		panic(err)
+		return s, errors.New("Failed to extract Style ID")
 	}
-	log.Printf("extract id: %v\n", id)
 
 	data, err := fetchJSON(id)
 	if err != nil {
 		log.Printf("failed to fetch json, err: %v\n", err)
-		panic(err)
+		return s, errors.New("Failed to fetch Style data")
 	}
 
 	res, err := unmarshalJSON(data)
 	if err != nil {
 		log.Printf("failed to unmarshal json, err: %v\n", err)
-		panic(err)
+		return s, errors.New("Failed to process Style data")
 	}
-
-	log.Printf("final ->> %#+v\n", res)
 
 	// Fetch generated UserCSS format.
 	source := StyleURL + id + ".user.css"
 	uc, err := usercss.ParseFromURL(source)
 	if err != nil {
 		log.Printf("failed to parse style from URL, err: %v\n", err)
-		panic(err)
+		return s, errors.New("Ffailed to fetch Style")
 	}
 
-	s := &models.Style{
+	s = &models.Style{
 		UserID:      u.ID,
 		Name:        uc.Name,
 		Description: uc.Description,
@@ -76,7 +74,7 @@ func ImportFromArchive(url string, u models.APIUser) *models.Style {
 		Original:    url,
 	}
 
-	return s
+	return s, nil
 }
 
 func extractID(url string) (string, error) {
