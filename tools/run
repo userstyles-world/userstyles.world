@@ -69,11 +69,13 @@ dev() {
         air
 }
 
+# This option builds USw executable for use in production.
+# To build it on unsupported systems, run `go build` in project root directory.
 build() {
     log "build"
     check_dir
 
-    GOOS=linux go build \
+    CGO_ENABLED=0 GOOS=linux go build \
         -ldflags '-s -w -extldflags "-fno-PIC -static"' \
         -buildmode pie -tags 'osusergo netgo static_build'
 }
