@@ -2,6 +2,7 @@ package style
 
 import (
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -47,10 +48,10 @@ func StyleEditPost(c *fiber.Ctx) error {
 		Description: c.FormValue("description"),
 		Notes:       c.FormValue("notes"),
 		Code:        c.FormValue("code"),
-		License:     c.FormValue("license", "No License"),
 		Preview:     c.FormValue("preview"),
 		Homepage:    c.FormValue("homepage"),
-		Category:    c.FormValue("category"),
+		License:     strings.TrimSpace(c.FormValue("license", "No License")),
+		Category:    strings.TrimSpace(c.FormValue("category", "global")),
 		UserID:      u.ID,
 	}
 
