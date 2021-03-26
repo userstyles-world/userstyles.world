@@ -15,6 +15,7 @@ import (
 
 const (
 	ArchiveURL = "https://raw.githubusercontent.com/33kk/uso-archive/flomaster/data/"
+	DataURL    = ArchiveURL + "styles/"
 	StyleURL   = ArchiveURL + "usercss/"
 	PreviewURL = ArchiveURL + "screenshots/"
 )
@@ -90,7 +91,7 @@ func extractID(url string) (string, error) {
 }
 
 func fetchJSON(id string) ([]byte, error) {
-	url := StyleURL + id + ".json"
+	url := DataURL + id + ".json"
 
 	req, err := http.Get(url)
 	if err != nil {
