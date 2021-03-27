@@ -24,16 +24,16 @@
 
                 <section class="settings mt:l">
                     <h2>Information</h2>
-                    <p><span class="minw">ID:</span>{{ .User.ID }}</p>
-                    <p><span class="minw">Username:</span>{{ .User.Username }}</p>
-                    <p><span class="minw">Email:</span>{{ .User.Email }}</p>
+                    <p><span class="minw">ID</span>{{ .User.ID }}</p>
+                    <p><span class="minw">Username</span>{{ .User.Username }}</p>
+                    <p><span class="minw">Email</span>{{ .User.Email }}</p>
 
                     <h2 class="mt:l">Biography</h2>
-                    <p>Biography: {{ .Params.Biography }}</p>
+                    <p>{{ .Params.Biography }}</p>
                     <form class="full" method="post" action="/account">
                         <label for="name">Biography</label>
                         <input
-                            required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,128}$"
+                            pattern="^[a-zA-Z0-9!@#$%-_ ]{1,128}$"
                             type="text" name="bio" value="{{ .Params.Biography }}"
                             placeholder="e.g. I'd often make styles.">
                         <button class="flex btn primary" type="submit">Edit</button>
