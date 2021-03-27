@@ -70,7 +70,7 @@ build() {
     log "build"
     check_dir
 
-    CGO_ENABLED=0 GOOS=linux go build \
+    GOOS=linux go build \
         -ldflags '-s -w -extldflags "-fno-PIC -static"' \
         -buildmode pie -tags 'osusergo netgo static_build'
 }
