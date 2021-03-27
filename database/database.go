@@ -115,10 +115,11 @@ func Seed() {
 			Description: "Customizable dark theme for WhatsApp.",
 			Notes:       "Some notes go here.",
 			Preview:     "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/images/preview.png",
-			Code:        "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/wa.user.styl",
+			Code:        "/* ==UserStyle==\n@name           Example\n@namespace      example.com\n@version        1.0.0\n@description    A new userstyle\n@author         Me\n==/UserStyle== */\n@-moz-document domain('example.com') {\n/** Your code goes here! */\n}",
 			Homepage:    "https://github.com/vednoc/dark-whatsapp",
 			Category:    "web.whatsapp.com",
 			Featured:    true,
+			Original:    "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/wa.user.styl",
 		},
 		{
 			UserID:   2,

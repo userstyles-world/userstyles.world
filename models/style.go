@@ -90,6 +90,23 @@ func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
 	return q, nil
 }
 
+func GetAllImportedStyles(db *gorm.DB) (*[]APIStyle, error) {
+	t, q := new(Style), new([]APIStyle)
+	err := getDBSession(db).
+		Model(t).
+		Joins("join users u on u.id = styles.user_id").
+		Select("styles.id, styles.name, styles.preview, u.username").
+		// TODO: Fix this part
+		Find(q, "styles.original = ?").
+		Error
+
+	if err != nil {
+		return nil, errors.New("No imported styles.")
+	}
+
+	return q, nil
+}
+
 // Using ID as a string is fine in this case.
 func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
