@@ -23,7 +23,9 @@ func UpdateBatch(batch models.APIStyle) {
 		fmt.Printf("Updater: Cannot validate style %d.\n", batch.ID)
 		return
 	}
-	if style.SourceCode != batch.Code {
+
+	// Run updates if versions don't match.
+	if style.Version != usercss.ParseFromString(batch.Code).Version {
 		fmt.Printf("Updater: Style %d was changed.\n", batch.ID)
 		s := models.Style{
 			UserID:      batch.UserID,
@@ -47,6 +49,5 @@ func UpdateBatch(batch models.APIStyle) {
 			log.Printf("Updater: Updating style %d failed, caught err %s", batch.ID, err)
 
 		}
-
 	}
 }

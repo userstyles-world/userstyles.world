@@ -95,7 +95,7 @@ func GetAllImportedStyles(db *gorm.DB) (*[]APIStyle, error) {
 	err := getDBSession(db).
 		Model(t).
 		Joins("join users u on u.id = styles.user_id").
-		Select("styles.id, styles.original, styles.user_id").
+		Select("styles.id, styles.original, styles.user_id, styles.code").
 		Find(q, "styles.original <> ''").
 		Error
 
