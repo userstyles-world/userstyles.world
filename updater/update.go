@@ -16,15 +16,15 @@ func UpdateBatch(batch models.APIStyle) {
 	t := new(models.Style)
 	style, err := usercss.ParseFromURL(batch.Original)
 	if err != nil {
-		fmt.Printf("Updater: Cannot fetch style %d.", batch.ID)
+		fmt.Printf("Updater: Cannot fetch style %d.\n", batch.ID)
 		return
 	}
 	if valid, _ := usercss.BasicMetadataValidation(style); !valid {
-		fmt.Printf("Updater: Cannot validate style %d.", batch.ID)
+		fmt.Printf("Updater: Cannot validate style %d.\n", batch.ID)
 		return
 	}
 	if style.SourceCode != batch.Code {
-		fmt.Printf("Updater: Style %d was changed.", batch.ID)
+		fmt.Printf("Updater: Style %d was changed.\n", batch.ID)
 		s := models.Style{
 			UserID:      batch.UserID,
 			Name:        batch.Name,
