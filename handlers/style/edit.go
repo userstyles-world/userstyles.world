@@ -59,6 +59,8 @@ func StyleEditPost(c *fiber.Ctx) error {
 		Model(t).
 		Where("id", p).
 		Updates(q).
+		// GORM doesn't update non-zero values in structs.
+		Update("mirror", c.FormValue("mirror") == "on").
 		Error
 
 	if err != nil {

@@ -77,6 +77,9 @@ func StyleImportPost(c *fiber.Ctx) error {
 		s.Original = r
 	}
 
+	// Enable style mirroring.
+	s.Mirror = c.FormValue("mirror") == "on"
+
 	s, err := models.CreateStyle(database.DB, s)
 	if err != nil {
 		log.Println("Style import failed, err:", err)

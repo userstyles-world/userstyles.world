@@ -24,6 +24,7 @@ type Style struct {
 	Archived    bool   `gorm:"default:false"`
 	Featured    bool   `gorm:"default:false"`
 	Category    string `gorm:"not null"`
+	Mirror      bool   `gorm:"default:false"`
 	Original    string
 }
 
@@ -42,6 +43,7 @@ type APIStyle struct {
 	Featured    bool
 	Category    string
 	Original    string
+	Mirror      bool
 	UserID      uint
 	Username    string
 }
@@ -96,7 +98,7 @@ func GetAllImportedStyles(db *gorm.DB) (*[]APIStyle, error) {
 		Model(t).
 		Joins("join users u on u.id = styles.user_id").
 		Select("styles.id, styles.original, styles.user_id, styles.code").
-		Find(q, "styles.original <> ''").
+		Find(q, "styles.original <> '' and styles.mirror = ?", true).
 		Error
 
 	if err != nil {
