@@ -11,7 +11,7 @@ type User struct {
 	Username   string `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
 	Email      string `gorm:"unique;not null" validate:"required,email"`
 	Password   string `gorm:"not null"        validate:"required,min=8,max=32"`
-	Biography  string `validate:"required,min=0,max=128"`
+	Biography  string `validate:"min=0,max=128"`
 }
 
 type APIUser struct {

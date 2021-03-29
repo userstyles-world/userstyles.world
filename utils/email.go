@@ -1,9 +1,6 @@
 package utils
 
 import (
-	"crypto/rand"
-	"fmt"
-	"log"
 	"regexp"
 	"strings"
 
@@ -80,10 +77,17 @@ func (eb *EmailBuilder) parseMultiPart() string {
 	partsLen := len(eb.Parts)
 
 	if partsLen > 1 {
-		output += "Content-Type: multipart/alternative; boundary=\"" + eb.boundary + "\"\n" +
-			"MIME-Version: 1.0\n\n"
-	} else if partsLen == 0 {
-		output += "\n"
+		output += "Content-Type: multipart/alternative; boundary=\"" + eb.boundary + "\"\n\n"
+	} else if partsLen == 1 {
+		part0 := eb.Parts[0]
+		if part0.ContentTransferEncoding == "" {
+			part0.ContentTransferEncoding = "8bit"
+		}
+		if part0.ContentType == "" {
+			part0.ContentType = "text/plain"
+		}
+		output += "Content-Type: " + part0.ContentType + "charset=\"utf-8\"\n" +
+			"Content-Transfer-Encoding: " + part0.ContentTransferEncoding + "\n\n"
 	} else {
 		panic("Wanted to send Email but no parts were detected.")
 	}
@@ -95,20 +99,20 @@ func (eb *EmailBuilder) parseMultiPart() string {
 			panic("Wanted to send Email part, but it doesn't contain a body.")
 		}
 		if part.ContentTransferEncoding == "" {
-			part.ContentTransferEncoding = "7bit"
+			part.ContentTransferEncoding = "8bit"
 		}
 		if part.ContentType == "" {
-			part.ContentType = "text/plain; charset=\"utf-8\""
+			part.ContentType = "text/plain"
 		}
-
-		output += boundary + "\n" +
-			"Content-Type:" + part.ContentType + "\n" +
-			"Content-Transfer-Encoding:" + part.ContentTransferEncoding + "\n" +
-			"\n" +
-			part.Body + "\n\n"
+		if partsLen > 1 {
+			output += boundary + "\n" +
+				"Content-Type: " + part.ContentType + "; charset=\"utf-8\"\n" +
+				"Content-Transfer-Encoding: " + part.ContentTransferEncoding + "\n" +
+				"\n"
+		}
+		output += part.Body + "\n\n"
 
 	}
-
 	return output
 }
 
@@ -116,18 +120,8 @@ func correctLineBreak(message string) string {
 	return string(emailLine.ReplaceAll([]byte(message), []byte(CLRF)))
 }
 
-func RandomString(size int) string {
-	b := make([]byte, size)
-
-	if _, err := rand.Read(b); err != nil {
-		log.Fatalln("Failed to generate RandomString, err:", err)
-	}
-
-	return fmt.Sprintf("%X", b[0:size])
-}
-
 func (eb *EmailBuilder) SendEmail() error {
-	eb.boundary = RandomString(30)
+	eb.boundary = RandStringBytesMaskImprSrcUnsafe(30)
 
 	if eb.From == "" {
 		eb.From = config.EMAIL_ADDRESS
@@ -144,6 +138,7 @@ func (eb *EmailBuilder) SendEmail() error {
 	r := strings.NewReader(correctLineBreak("To: " + eb.To + "\n" +
 		"From:" + eb.From + "\n" +
 		"Subject:" + eb.Subject + "\n" +
+		"MIME-Version: 1.0\n" +
 		eb.parseMultiPart()))
 	return smtp.SendMail("mail.userstyles.world:587", auth, config.EMAIL_ADDRESS, []string{eb.To}, r)
 }

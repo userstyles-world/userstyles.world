@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+        <main>
+            <div class="wrapper py:l">
+                <section class="ta:c">
+                    <h1>Email verification</h1>
+                </section>
+
+                <section class="ta:c">
+                    <p>
+                        An verification mail has been send yo your email address.
+                        Please click on the link that has been send to you, so we can
+                        verify you have ownership of that email address.
+
+                    </p>
+                    <i class="fg:3">Don't see the email?
+                        Make sure to check your junk folder.</a>.
+                    </i>
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>
