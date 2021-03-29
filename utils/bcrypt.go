@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"crypto/rand"
-	"fmt"
 	"log"
 	"strconv"
 
@@ -37,14 +35,4 @@ func CompareHashedPassword(user, form string) error {
 	}
 
 	return nil
-}
-
-func RandomString(size int) string {
-	b := make([]byte, size)
-
-	if _, err := rand.Read(b); err != nil {
-		log.Fatalln("Failed to generate RandomString, err:", err)
-	}
-
-	return fmt.Sprintf("%X", b[0:size])
 }
