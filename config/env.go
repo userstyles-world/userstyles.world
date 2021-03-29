@@ -13,6 +13,8 @@ var (
 	DB_DROP         = getEnv("DB_DROP", "false")
 	SALT            = getEnv("SALT", "10")
 	JWT_SIGNING_KEY = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
+	EMAIL_ADDRESS   = getEnv("EMAIL_ADDRESS", "")
+	EMAIL_PWD       = getEnv("EMAIL_PWD", "")
 )
 
 func getEnv(name, fallback string) string {

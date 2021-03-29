@@ -21,13 +21,19 @@ check_dir() {
     cd "${pwd%/tools}"
 }
 
+export_secrets() {
+    set -a 
+    source ./.auth
+    set +a
+}
+
 prod() {
     log "prod"
     check_dir
+    export_secrets
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
         SALT="${4:15}" \
-        JWT_SIGNING_KEY="$(cat ./.auth)"
         ./userstyles.world
 }
 
@@ -57,10 +63,10 @@ dev() {
     log "dev"
     check_cmd air
     check_dir
+    export_secrets
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
         DB_COLOR="true" \
-        JWT_SIGNING_KEY="$(cat ./.auth)"
         air
 }
 
