@@ -47,6 +47,7 @@ func Initialize() {
 	app.Post("/login", user.LoginPost)
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
+	app.Get("/verify/:key", user.VerifyGet)
 	app.Get("/explore", style.GetExplore)
 	app.Get("/style/:id", style.GetStyle)
 	app.Get("/user/:name", user.Profile)

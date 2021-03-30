@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/base64"
 	"log"
+	"net/url"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -43,6 +44,8 @@ func RegisterPost(c *fiber.Ctx) error {
 	}
 
 	jwt, err := utils.NewJWTToken().
+		SetClaim("username", u.Username).
+		SetClaim("password", utils.GenerateHashedPassword(u.Password)).
 		SetClaim("email", u.Email).
 		SetExpiration(time.Hour * 2).
 		GetSignedString()
@@ -54,7 +57,7 @@ func RegisterPost(c *fiber.Ctx) error {
 
 	sealedText := base64.StdEncoding.EncodeToString(utils.SealText(jwt))
 
-	link := c.BaseURL() + "/verify#" + string(sealedText)
+	link := c.BaseURL() + "/verify/" + url.PathEscape(sealedText)
 
 	PlainPart := utils.NewPart().
 		SetBody("Verify this Email-address for your UserStyles World account by clicking the link below.\n\n" +
@@ -78,23 +81,6 @@ func RegisterPost(c *fiber.Ctx) error {
 	if emailErr != nil {
 		log.Fatalf("Couldn't send email due to %s", err)
 	}
-
-	// password := utils.GenerateHashedPassword(u.Password)
-	// regErr := database.DB.Create(&models.User{
-	// 	Username: u.Username,
-	// 	Password: password,
-	// 	Email:    u.Email,
-	// })
-
-	// if regErr.Error != nil {
-	// 	log.Printf("Failed to register %s, error: %s", u.Email, regErr.Error)
-
-	// 	c.SendStatus(fiber.StatusInternalServerError)
-	// 	return c.Render("register", fiber.Map{
-	// 		"Title": "Register failed",
-	// 		"Error": "Failed to register. Make sure your credentials are valid.",
-	// 	})
-	// }
 
 	return c.Render("await_verifcation", fiber.Map{
 		"Title": "Email Verifcation",

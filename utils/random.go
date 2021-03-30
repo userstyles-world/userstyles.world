@@ -30,5 +30,9 @@ func RandStringBytesMaskImprSrcUnsafe(n int) string {
 		remain--
 	}
 
-	return *(*string)(unsafe.Pointer(&b))
+	return FastByteToString(b)
+}
+
+func FastByteToString(msg []byte) string {
+	return *(*string)(unsafe.Pointer(&msg))
 }
