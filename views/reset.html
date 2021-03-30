@@ -8,32 +8,20 @@
         <main>
             <div class="wrapper py:l">
                 <section class="ta:c">
-                    <h1>Login</h1>
-                    <p>Note: Logging in using usernames is disabled.</p>
+                    <h1>Reset password</h1>
                 </section>
 
                 {{ template "partials/alert" . }}
 
                 <section class="ta:c">
-                    <form method="post" action="/login">
+                    <form method="post" action="/recover">
                         <label for="email">E-mail</label>
                         <input
                             required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
                             type="text" name="email"
                             placeholder="Your e-mail">
-                        <label for="password">Password</label>
-                        <input
-                            required pattern="^[\S]{8,32}$"
-                            type="password" name="password"
-                            placeholder="Your password">
-                        <div class="ta:l">
-                            <label for="remember">Remember me</label>
-                            <input type="checkbox" name="remember">
-                        </div>
-                        <span class="flex" style="align-items: center">
-                             <button class="flex btn primary" type="submit">Sign in</button>
-                             <a class="ml:a" href="/recover">Forgot your password?</a>
-                        </span>
+
+                            <button class="flex btn primary" type="submit">Send email</button>
                     </form>
                     <i class="fg:3">Don't have an account?
                         Continue to <a href="/register">register page</a>.

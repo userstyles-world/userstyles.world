@@ -1,9 +1,7 @@
 package user
 
 import (
-	"encoding/base64"
 	"log"
-	"net/url"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -55,16 +53,16 @@ func RegisterPost(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	sealedText := base64.StdEncoding.EncodeToString(utils.SealText(jwt))
-
-	link := c.BaseURL() + "/verify/" + url.PathEscape(sealedText)
+	link := c.BaseURL() + "/verify/" + utils.PrepareText(jwt)
 
 	PlainPart := utils.NewPart().
-		SetBody("Verify this Email-address for your UserStyles World account by clicking the link below.\n\n" +
+		SetBody("Verify this Email-address for your UserStyles World account by clicking the link below.\n" +
+			"The link will expire in 2 hours\n\n" +
 			link + "\n\n" +
 			"If you didn't request to verify an UserStyles World account, you can safely ignore this Email.")
 	HTMLPart := utils.NewPart().
 		SetBody("<p>Verify this Email-address for your UserStyles World account by clicking the link below.</p>\n" +
+			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Verifcation link</a>\n" +
 			"<br><br>\n" +
@@ -82,7 +80,10 @@ func RegisterPost(c *fiber.Ctx) error {
 		log.Fatalf("Couldn't send email due to %s", err)
 	}
 
-	return c.Render("await_verifcation", fiber.Map{
+	return c.Render("send_email", fiber.Map{
 		"Title": "Email Verifcation",
+		"Reason": "An verification mail has been send yo your email address." +
+			"Please click on the link that has been send to you, so we can" +
+			"verify you have ownership of that email address.",
 	})
 }

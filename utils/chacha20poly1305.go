@@ -2,8 +2,9 @@ package utils
 
 import (
 	"crypto/cipher"
+	"encoding/base64"
 	"fmt"
-	"math/rand"
+	"net/url"
 
 	"github.com/form3tech-oss/jwt-go"
 	"golang.org/x/crypto/chacha20poly1305"
@@ -13,7 +14,7 @@ import (
 var (
 	AEAD                cipher.AEAD
 	VerifySigningKey    = []byte(config.VERIFY_JWT_SIGNING_KEY)
-	VerifySigningMethod = "HS512"
+	verifySigningMethod = "HS512"
 )
 
 func InitalizeCrypto() {
@@ -25,10 +26,7 @@ func InitalizeCrypto() {
 }
 
 func SealText(text string) []byte {
-	nonce := make([]byte, AEAD.NonceSize(), AEAD.NonceSize()+len(text)+AEAD.Overhead())
-	if _, err := rand.Read(nonce); err != nil {
-		panic(err)
-	}
+	nonce := []byte(RandStringBytesMaskImprSrcUnsafe(AEAD.NonceSize()))
 
 	return AEAD.Seal(nonce, nonce, []byte(text), nil)
 }
@@ -42,9 +40,48 @@ func OpenText(encryptedMsg string) ([]byte, error) {
 
 }
 
-func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
-	if t.Method.Alg() != VerifySigningMethod {
+func verifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
+	if t.Method.Alg() != verifySigningMethod {
 		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
 	}
 	return VerifySigningKey, nil
+}
+
+func PrepareText(text string) string {
+	// We have to prepare the encrypted text for transport
+	// Seal Text -> Base64 -> Path Escape
+
+	sealedText := SealText(text)
+
+	base64 := base64.StdEncoding.EncodeToString(sealedText)
+
+	return url.PathEscape(base64)
+}
+
+func DecodePreparedText(preparedText string) (*jwt.Token, error) {
+	// Now we have to reverse the process.
+	// PathUnescape -> Decode base64 -> Unseal Text
+
+	unescapedText, err := url.PathUnescape(preparedText)
+	if err != nil {
+		return nil, err
+	}
+
+	enryptedText, err := base64.StdEncoding.DecodeString(unescapedText)
+	if err != nil {
+		return nil, err
+	}
+
+	decryptedText, err := OpenText(FastByteToString(enryptedText))
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := jwt.Parse(FastByteToString(decryptedText), verifyJwtKeyFunction)
+	if err != nil || !token.Valid {
+		return nil, err
+	}
+
+	return token, nil
+
 }

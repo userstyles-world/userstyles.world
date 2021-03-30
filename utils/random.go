@@ -13,6 +13,7 @@ const (
 	letterIdxMax  = 63 / letterIdxBits
 )
 
+// Todo: Add fast Seed into function itself.
 var src = rand.NewSource(time.Now().UnixNano())
 
 func RandStringBytesMaskImprSrcUnsafe(n int) string {
