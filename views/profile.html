@@ -10,7 +10,7 @@
             <div class="wrapper py:l">
                 <section class="welcome">
                     <h1>{{ .Params.Username }}</h1>
-                    <p>{{ .Params.Biography }}</p>
+                    <p>{{ .Params.Biography | Markdown }}</p>
                 </section>
 
                 <section class="styles mt:l">

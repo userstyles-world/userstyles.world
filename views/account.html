@@ -29,13 +29,16 @@
                     <p><span class="minw">Email</span>{{ .User.Email }}</p>
 
                     <h2 class="mt:l">Biography</h2>
-                    <p>{{ .Params.Biography }}</p>
+                    <p>{{ .Params.Biography | Markdown }}</p>
                     <form class="full" method="post" action="/account">
                         <label for="name">Biography</label>
-                        <input
+                        <i class="fg:3">Supports Markdown syntax.</i>
+                        <textarea
                             pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
-                            type="text" name="bio" value="{{ .Params.Biography }}"
+                            type="text" name="bio"
                             placeholder="e.g. I'd often make styles.">
+                            {{- .Params.Biography -}}
+                        </textarea>
                         <button class="flex btn primary" type="submit">Edit</button>
                     </form>
                 </section>
