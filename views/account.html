@@ -33,7 +33,7 @@
                     <form class="full" method="post" action="/account">
                         <label for="name">Biography</label>
                         <input
-                            pattern="^[a-zA-Z0-9!@#$%-_ ]{1,128}$"
+                            pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
                             type="text" name="bio" value="{{ .Params.Biography }}"
                             placeholder="e.g. I'd often make styles.">
                         <button class="flex btn primary" type="submit">Edit</button>

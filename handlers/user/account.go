@@ -71,7 +71,7 @@ func EditAccount(c *fiber.Ctx) error {
 			"User":   u,
 			"Params": user,
 			"Styles": styles,
-			"Error":  "Validation error",
+			"Error":  "Biography must be less than 512 characters in length.",
 		})
 	}
 
