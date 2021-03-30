@@ -23,8 +23,10 @@ html {
 
         > main {
             display: flex;
-            min-height: calc(100vh - 114px);
+            min-height: calc(100vh - 130px);
         }
+
+        > footer > div { min-height: 64px }
     }
 
     a {
