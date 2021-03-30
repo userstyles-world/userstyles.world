@@ -2,13 +2,19 @@ package utils
 
 import (
 	"crypto/cipher"
+	"fmt"
 	"math/rand"
 
+	"github.com/form3tech-oss/jwt-go"
 	"golang.org/x/crypto/chacha20poly1305"
 	"userstyles.world/config"
 )
 
-var AEAD cipher.AEAD
+var (
+	AEAD                cipher.AEAD
+	VerifySigningKey    = []byte(config.VERIFY_JWT_SIGNING_KEY)
+	VerifySigningMethod = "HS512"
+)
 
 func InitalizeCrypto() {
 	aead, err := chacha20poly1305.NewX([]byte(config.CRYPTO_KEY))
@@ -34,4 +40,11 @@ func OpenText(encryptedMsg string) ([]byte, error) {
 	// Decrypt the message and check it wasn't tampered with.
 	return AEAD.Open(nil, []byte(nonce), []byte(ciphertext), nil)
 
+}
+
+func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
+	if t.Method.Alg() != VerifySigningMethod {
+		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+	}
+	return VerifySigningKey, nil
 }

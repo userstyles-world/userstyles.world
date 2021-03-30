@@ -61,7 +61,7 @@ func VerifyGet(c *fiber.Ctx) error {
 
 	regErr := database.DB.Create(&models.User{
 		Username: claims["username"].(string),
-		Password: claims["password"].(string),
+		Password: utils.GenerateHashedPassword(claims["password"].(string)),
 		Email:    claims["email"].(string),
 	})
 

@@ -45,10 +45,10 @@ func RegisterPost(c *fiber.Ctx) error {
 
 	jwt, err := utils.NewJWTToken().
 		SetClaim("username", u.Username).
-		SetClaim("password", utils.GenerateHashedPassword(u.Password)).
+		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).
 		SetExpiration(time.Hour * 2).
-		GetSignedString()
+		GetSignedString(utils.VerifySigningKey)
 
 	if err != nil {
 		log.Fatal(err)

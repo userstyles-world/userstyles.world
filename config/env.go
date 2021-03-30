@@ -6,16 +6,17 @@ import (
 )
 
 var (
-	PORT            = getEnv("PORT", ":3000")
-	DB              = getEnv("DB", "dev.db")
-	DB_DEBUG        = getEnv("DB_DEBUG", "silent")
-	DB_COLOR        = getEnv("DB_COLOR", "false")
-	DB_DROP         = getEnv("DB_DROP", "false")
-	SALT            = getEnv("SALT", "10")
-	JWT_SIGNING_KEY = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
-	CRYPTO_KEY      = getEnv("CRYPTO_KEY", "ABigSecretPasswordWhichIsExact32")
-	EMAIL_ADDRESS   = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
-	EMAIL_PWD       = getEnv("EMAIL_PWD", "hahah_not_your_password")
+	PORT                   = getEnv("PORT", ":3000")
+	DB                     = getEnv("DB", "dev.db")
+	DB_DEBUG               = getEnv("DB_DEBUG", "silent")
+	DB_COLOR               = getEnv("DB_COLOR", "false")
+	DB_DROP                = getEnv("DB_DROP", "false")
+	SALT                   = getEnv("SALT", "10")
+	JWT_SIGNING_KEY        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
+	VERIFY_JWT_SIGNING_KEY = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")
+	CRYPTO_KEY             = getEnv("CRYPTO_KEY", "ABigSecretPasswordWhichIsExact32")
+	EMAIL_ADDRESS          = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
+	EMAIL_PWD              = getEnv("EMAIL_PWD", "hahah_not_your_password")
 )
 
 func getEnv(name, fallback string) string {

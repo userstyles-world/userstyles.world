@@ -77,7 +77,7 @@ func LoginPost(c *fiber.Ctx) error {
 		SetClaim("name", user.Username).
 		SetClaim("email", user.Email).
 		SetExpiration(expiration).
-		GetSignedString()
+		GetSignedString(nil)
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
