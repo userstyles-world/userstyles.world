@@ -9,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
-	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
@@ -49,7 +48,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	token, err := jwt.Parse(utils.FastByteToString(decryptedText), jwtware.KeyFuncion)
+	token, err := jwt.Parse(utils.FastByteToString(decryptedText), utils.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		return c.Render("err", fiber.Map{
 			"Title":  "Verifcation key not found",
