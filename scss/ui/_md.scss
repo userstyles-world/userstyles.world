@@ -1,11 +1,9 @@
 .md {
-    h2,  h3 {
-        padding-top: 1rem
-    }
+    h1 { font-size: 1.8rem }
+    h2 { font-size: 1.6rem }
+    h3 { font-size: 1.3rem }
 
-    p {
-        line-height: 1.5;
-    }
+    h2, h3 { padding-top: 1rem }
 
     code {
         padding: 0.125rem 0.25rem;

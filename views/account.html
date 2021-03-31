@@ -10,7 +10,7 @@
             <div class="wrapper py:l">
                 {{ template "partials/alert" . }}
                 <section class="welcome">
-                    <h1>Hi, {{ .User.Username }}!</h1>
+                    <h1 class="mb:m">Hi, {{ .User.Username }}!</h1>
                     <p>This is your dashboard. More features will be added soon!</p>
                     <p>
                         Since this is an early iteration, feedback would be
@@ -29,7 +29,7 @@
                     <p><span class="minw">Email</span>{{ .User.Email }}</p>
 
                     <h2 class="mt:l">Biography</h2>
-                    <p>{{ .Params.Biography | Markdown }}</p>
+                    <div class="md">{{- .Params.Biography | Markdown -}}</div>
                     <form class="full" method="post" action="/account">
                         <label for="name">Biography</label>
                         <i class="fg:3">Supports Markdown syntax.</i>
