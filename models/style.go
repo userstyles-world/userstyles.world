@@ -169,3 +169,15 @@ func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
 
 	return q, nil
 }
+
+func CheckDuplicateStyleName(db *gorm.DB, s *Style) error {
+	err := getDBSession(db).
+		First(s, "styles.name = ? and styles.user_id = ?", s.Name, s.UserID).
+		Error
+
+	if err == nil {
+		return errors.New("Duplicate style name")
+	}
+
+	return nil
+}

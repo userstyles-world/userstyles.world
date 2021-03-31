@@ -80,7 +80,16 @@ func StyleImportPost(c *fiber.Ctx) error {
 	// Enable style mirroring.
 	s.Mirror = c.FormValue("mirror") == "on"
 
-	s, err := models.CreateStyle(database.DB, s)
+	// Prevent importing multiples of the same style.
+	err := models.CheckDuplicateStyleName(database.DB, s)
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": err,
+			"User":  u,
+		})
+	}
+
+	s, err = models.CreateStyle(database.DB, s)
 	if err != nil {
 		log.Println("Style import failed, err:", err)
 		return c.Render("err", fiber.Map{
