@@ -49,7 +49,6 @@ func ResetGet(c *fiber.Ctx) error {
 		"Title": "Reset password",
 		"Key":   key,
 	})
-
 }
 
 // Todo: Send email that password has been changed.
@@ -85,13 +84,13 @@ func ResetPost(c *fiber.Ctx) error {
 	t := new(models.User)
 	user.Password = utils.GenerateHashedPassword(password)
 
-	dbErr := database.DB.
+	err = database.DB.
 		Model(t).
 		Where("id", user.ID).
 		Updates(user).
 		Error
 
-	if dbErr != nil {
+	if err != nil {
 		log.Println("Updating user failed, err:", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
@@ -101,10 +100,9 @@ func ResetPost(c *fiber.Ctx) error {
 
 	return c.Render("verification", fiber.Map{
 		"Title":        "Successful reset",
-		"Verification": "Successful Verification reset",
-		"Reason":       "You've successfully resseted your password",
+		"Verification": "Successful verification reset",
+		"Reason":       "Your successfully resseted your password",
 	})
-
 }
 
 func RecoverPost(c *fiber.Ctx) error {
@@ -121,7 +119,7 @@ func RecoverPost(c *fiber.Ctx) error {
 		c.SendStatus(fiber.StatusInternalServerError)
 		return c.Render("reset", fiber.Map{
 			"Title": "Reset failed",
-			"Error": "Failed to send Email. Make sure you've correct inputs.",
+			"Error": "Failed to send email. Make sure your input is correct.",
 		})
 	}
 
@@ -129,8 +127,8 @@ func RecoverPost(c *fiber.Ctx) error {
 		// We need to just say we have send an reset email.
 		// So that we can't leak if we have such email in our database ;).
 		return c.Render("send_email", fiber.Map{
-			"Title":  "Password Reset",
-			"Reason": "We've send an email to reset your password.",
+			"Title":  "Password reset",
+			"Reason": "We've sent an email to reset your password.",
 		})
 	}
 
@@ -147,17 +145,17 @@ func RecoverPost(c *fiber.Ctx) error {
 	link := c.BaseURL() + "/reset/" + utils.PrepareText(jwt)
 
 	PlainPart := utils.NewPart().
-		SetBody("We have received a request to reset the password for your User Styles world account.\n\n" +
+		SetBody("We have received a request to reset the password for your UserStyles.world account.\n\n" +
 			"The link will expire in 2 hours\n\n" +
 			link + "\n\n" +
-			"If you didn't request to reset your password, you can safely ignore this Email.")
+			"You can safely ignore this e-mail if you didn't request to reset your password.")
 	HTMLPart := utils.NewPart().
-		SetBody("<p>We have received a request to reset the password for your User Styles world account.</p>\n" +
+		SetBody("<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
 			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset password link</a>\n" +
 			"<br><br>\n" +
-			"<p>If you didn't request to reset your password, you can safely ignore this Email.</p>").
+			"<p>You can safely ignore this e-mail if you didn't request to reset your password.</p>").
 		SetContentType("text/html")
 
 	emailErr := utils.NewEmail().
@@ -170,12 +168,12 @@ func RecoverPost(c *fiber.Ctx) error {
 	if emailErr != nil {
 		c.SendStatus(fiber.StatusInternalServerError)
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 		})
 	}
 
 	return c.Render("send_email", fiber.Map{
-		"Title":  "Password Reset",
-		"Reason": "We've send an email to reset your password.",
+		"Title":  "Password reset",
+		"Reason": "We've sent an email to reset your password.",
 	})
 }

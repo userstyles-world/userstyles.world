@@ -90,14 +90,14 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 		output += "Content-Type: " + part0.ContentType + "charset=\"utf-8\"\n" +
 			"Content-Transfer-Encoding: " + part0.ContentTransferEncoding + "\n\n"
 	} else {
-		return "", errors.New("Wanted to send Email but no parts were detected.")
+		return "", errors.New("Wanted to send email but no parts were detected.")
 	}
 
 	for i := 0; i < partsLen; i++ {
 		part := eb.Parts[i]
 
 		if part.Body == "" {
-			return "", errors.New("Wanted to send Email part, but it doesn't contain a body.")
+			return "", errors.New("Wanted to send email part, but it doesn't contain a body.")
 		}
 		if part.ContentTransferEncoding == "" {
 			part.ContentTransferEncoding = "8bit"
@@ -112,8 +112,8 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 				"\n"
 		}
 		output += part.Body + "\n\n"
-
 	}
+
 	return output, nil
 }
 
@@ -129,11 +129,11 @@ func (eb *EmailBuilder) SendEmail() error {
 	}
 
 	if eb.To == "" {
-		return errors.New("Wanted to send Email but TO: is missing")
+		return errors.New("Wanted to send email but TO: is missing")
 	}
 
 	if eb.Subject == "" {
-		return errors.New("Wanted to send Email but SUBJECT: is missing")
+		return errors.New("Wanted to send email but SUBJECT: is missing")
 	}
 
 	bodyMessage, err := eb.parseMultiPart()
@@ -146,5 +146,6 @@ func (eb *EmailBuilder) SendEmail() error {
 		"Subject:" + eb.Subject + "\n" +
 		"MIME-Version: 1.0\n" +
 		bodyMessage))
+
 	return smtp.SendMail("mail.userstyles.world:587", auth, config.EMAIL_ADDRESS, []string{eb.To}, r)
 }
