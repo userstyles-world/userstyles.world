@@ -121,7 +121,7 @@ func correctLineBreak(message string) string {
 }
 
 func (eb *EmailBuilder) SendEmail() error {
-	eb.boundary = RandStringBytesMaskImprSrcUnsafe(30)
+	eb.boundary = B2s(RandStringBytesMaskImprSrcUnsafe(30))
 
 	if eb.From == "" {
 		eb.From = config.EMAIL_ADDRESS

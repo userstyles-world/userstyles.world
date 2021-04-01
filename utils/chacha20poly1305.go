@@ -4,7 +4,6 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"fmt"
-	"net/url"
 
 	"github.com/form3tech-oss/jwt-go"
 	"golang.org/x/crypto/chacha20poly1305"
@@ -26,9 +25,9 @@ func InitalizeCrypto() {
 }
 
 func SealText(text string) []byte {
-	nonce := []byte(RandStringBytesMaskImprSrcUnsafe(AEAD.NonceSize()))
+	nonce := RandStringBytesMaskImprSrcUnsafe(AEAD.NonceSize())
 
-	return AEAD.Seal(nonce, nonce, []byte(text), nil)
+	return AEAD.Seal(nonce, nonce, S2b(text), nil)
 }
 
 func OpenText(encryptedMsg string) ([]byte, error) {
@@ -36,7 +35,7 @@ func OpenText(encryptedMsg string) ([]byte, error) {
 	nonce, ciphertext := encryptedMsg[:AEAD.NonceSize()], encryptedMsg[AEAD.NonceSize():]
 
 	// Decrypt the message and check it wasn't tampered with.
-	return AEAD.Open(nil, []byte(nonce), []byte(ciphertext), nil)
+	return AEAD.Open(nil, S2b(nonce), S2b(ciphertext), nil)
 
 }
 
@@ -49,35 +48,26 @@ func verifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
 
 func PrepareText(text string) string {
 	// We have to prepare the encrypted text for transport
-	// Seal Text -> Base64 -> Path Escape
-
+	// Seal Text -> Base64(URL Version)
 	sealedText := SealText(text)
 
-	base64 := base64.StdEncoding.EncodeToString(sealedText)
-
-	return url.PathEscape(base64)
+	return EncodeToString(sealedText)
 }
 
 func DecodePreparedText(preparedText string) (*jwt.Token, error) {
 	// Now we have to reverse the process.
-	// PathUnescape -> Decode base64 -> Unseal Text
-
-	unescapedText, err := url.PathUnescape(preparedText)
+	// Decode Base64(URL version) -> Unseal Text
+	enryptedText, err := base64.URLEncoding.DecodeString(preparedText)
 	if err != nil {
 		return nil, err
 	}
 
-	enryptedText, err := base64.StdEncoding.DecodeString(unescapedText)
+	decryptedText, err := OpenText(B2s(enryptedText))
 	if err != nil {
 		return nil, err
 	}
 
-	decryptedText, err := OpenText(FastByteToString(enryptedText))
-	if err != nil {
-		return nil, err
-	}
-
-	token, err := jwt.Parse(FastByteToString(decryptedText), verifyJwtKeyFunction)
+	token, err := jwt.Parse(B2s(decryptedText), verifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		return nil, err
 	}

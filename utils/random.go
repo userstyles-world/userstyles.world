@@ -3,7 +3,6 @@ package utils
 import (
 	"math/rand"
 	"time"
-	"unsafe"
 )
 
 const (
@@ -16,7 +15,7 @@ const (
 // Todo: Add fast Seed into function itself.
 var src = rand.NewSource(time.Now().UnixNano())
 
-func RandStringBytesMaskImprSrcUnsafe(n int) string {
+func RandStringBytesMaskImprSrcUnsafe(n int) []byte {
 	b := make([]byte, n)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
 	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
@@ -31,9 +30,5 @@ func RandStringBytesMaskImprSrcUnsafe(n int) string {
 		remain--
 	}
 
-	return FastByteToString(b)
-}
-
-func FastByteToString(msg []byte) string {
-	return *(*string)(unsafe.Pointer(&msg))
+	return b
 }
