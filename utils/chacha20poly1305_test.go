@@ -22,7 +22,7 @@ func TestSimpleKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !bytes.Equal([]byte(jwt), unSealedText) {
+	if !bytes.Equal(S2b(jwt), unSealedText) {
 		t.Error("Originial and Unsealed aren't the same string.")
 	}
 }
@@ -41,8 +41,7 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte) {
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	var ct []byte
-	ct = SealText(B2s(buf[:]))
+	ct := SealText(B2s(buf[:]))
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
