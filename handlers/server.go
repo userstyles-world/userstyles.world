@@ -26,7 +26,7 @@ func Initialize() {
 
 	// TODO: Refactor this in a separate package.
 	engine.AddFunc("Markdown", func(s string) template.HTML {
-		gen := blackfriday.Run([]byte(s))
+		gen := blackfriday.Run([]byte(s), blackfriday.WithExtensions(blackfriday.HardLineBreak))
 		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
 		return template.HTML(out)
 	})
