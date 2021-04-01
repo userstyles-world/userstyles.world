@@ -168,7 +168,10 @@ func RecoverPost(c *fiber.Ctx) error {
 		SendEmail()
 
 	if emailErr != nil {
-		log.Fatalf("Couldn't send email due to %s", err)
+		c.SendStatus(fiber.StatusInternalServerError)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error.",
+		})
 	}
 
 	return c.Render("send_email", fiber.Map{

@@ -80,7 +80,10 @@ func LoginPost(c *fiber.Ctx) error {
 		GetSignedString(nil)
 
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		c.SendStatus(fiber.StatusInternalServerError)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error.",
+		})
 	}
 
 	var expires time.Time

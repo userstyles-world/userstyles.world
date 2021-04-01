@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"regexp"
 	"strings"
 
@@ -71,7 +72,7 @@ func (eb *EmailBuilder) AddPart(part MimePart) *EmailBuilder {
 	return eb
 }
 
-func (eb *EmailBuilder) parseMultiPart() string {
+func (eb *EmailBuilder) parseMultiPart() (string, error) {
 	output := ""
 	boundary := "--" + eb.boundary
 	partsLen := len(eb.Parts)
@@ -89,14 +90,14 @@ func (eb *EmailBuilder) parseMultiPart() string {
 		output += "Content-Type: " + part0.ContentType + "charset=\"utf-8\"\n" +
 			"Content-Transfer-Encoding: " + part0.ContentTransferEncoding + "\n\n"
 	} else {
-		panic("Wanted to send Email but no parts were detected.")
+		return "", errors.New("Wanted to send Email but no parts were detected.")
 	}
 
 	for i := 0; i < partsLen; i++ {
 		part := eb.Parts[i]
 
 		if part.Body == "" {
-			panic("Wanted to send Email part, but it doesn't contain a body.")
+			return "", errors.New("Wanted to send Email part, but it doesn't contain a body.")
 		}
 		if part.ContentTransferEncoding == "" {
 			part.ContentTransferEncoding = "8bit"
@@ -113,7 +114,7 @@ func (eb *EmailBuilder) parseMultiPart() string {
 		output += part.Body + "\n\n"
 
 	}
-	return output
+	return output, nil
 }
 
 func correctLineBreak(message string) string {
@@ -128,17 +129,22 @@ func (eb *EmailBuilder) SendEmail() error {
 	}
 
 	if eb.To == "" {
-		panic("Wanted to send Email but TO: is missing")
+		return errors.New("Wanted to send Email but TO: is missing")
 	}
 
 	if eb.Subject == "" {
-		panic("Wanted to send Email but SUBJECT: is missing")
+		return errors.New("Wanted to send Email but SUBJECT: is missing")
+	}
+
+	bodyMessage, err := eb.parseMultiPart()
+	if err != nil {
+		return err
 	}
 
 	r := strings.NewReader(correctLineBreak("To: " + eb.To + "\n" +
 		"From:" + eb.From + "\n" +
 		"Subject:" + eb.Subject + "\n" +
 		"MIME-Version: 1.0\n" +
-		eb.parseMultiPart()))
+		bodyMessage))
 	return smtp.SendMail("mail.userstyles.world:587", auth, config.EMAIL_ADDRESS, []string{eb.To}, r)
 }
