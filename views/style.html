@@ -38,6 +38,11 @@
                                     class="btn ml:s"
                                 >Edit</a>
                             {{ end }}
+                            {{ if eq .User.ID 1 }}
+                                <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
+                                    <button class="btn ml:s" type="submit">🌟</button>
+                                </form>
+                            {{ end }}
                             {{ if .Style.Homepage }}
                                 <a
                                     target="_blank"

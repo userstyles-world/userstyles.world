@@ -66,6 +66,7 @@ func Initialize() {
 	app.Post("/import", jwt.Protected, style.StyleImportPost)
 	app.Get("/edit/:id", jwt.Protected, style.StyleEditGet)
 	app.Post("/edit/:id", jwt.Protected, style.StyleEditPost)
+	app.Post("/style/:id/promote", jwt.Protected, style.StylePromote)
 	app.Get("/monitor", jwt.Protected, core.Monitor)
 
 	v1 := app.Group("/api")
