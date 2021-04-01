@@ -27,7 +27,7 @@
 
                 <section class="mt:l">
                     <div class="header flex mb:m ai:c">
-                        <h2 class="my:0">Details</h2>
+                        <h2 class="my:0 td:d">Details</h2>
                         <span class="ml:a">
                             {{ if eq .User.ID .Style.UserID }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}">
@@ -67,7 +67,7 @@
                         <p><span class="minw">Updated at</span>{{- .Style.UpdatedAt.Format "2006-02-01 15:04:05" -}}</p>
                         <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
                         <div class="mt:m">
-                            <h3>Description</h3>
+                            <h2 class="td:d">Description</h2>
                             {{ if .Style.Description }}
                                 <div class="md">{{ .Style.Description | Markdown }}</div>
                             {{ else }}
@@ -75,7 +75,7 @@
                             {{ end }}
                         </div>
                         <div class="mt:m">
-                            <h3>Notes</h3>
+                            <h2 class="td:d">Notes</h2>
                             {{ if .Style.Notes }}
                                 <div class="md">{{ .Style.Notes | Markdown }}</div>
                             {{ else }}
@@ -85,7 +85,7 @@
                     </div>
 
                     <div class="code mt:l">
-                        <h2 class="mt:0 mb:m">Source code</h2>
+                        <h2 class="mt:0 mb:m td:d">Source code</h2>
                         <textarea readonly>{{ printf "%s" .Style.Code }}</textarea>
                     </div>
                 </section>
