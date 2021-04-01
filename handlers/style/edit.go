@@ -51,7 +51,7 @@ func StyleEditPost(c *fiber.Ctx) error {
 		Preview:     c.FormValue("preview"),
 		Homepage:    c.FormValue("homepage"),
 		License:     strings.TrimSpace(c.FormValue("license", "No License")),
-		Category:    strings.TrimSpace(c.FormValue("category", "global")),
+		Category:    strings.TrimSpace(c.FormValue("category", "unset")),
 		UserID:      u.ID,
 	}
 

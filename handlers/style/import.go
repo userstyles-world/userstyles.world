@@ -73,7 +73,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 		s.Description = uc.Description
 		s.Homepage = uc.HomepageURL
 		s.Preview = c.FormValue("preview")
-		s.Category = c.FormValue("category")
+		s.Category = strings.TrimSpace(c.FormValue("category", "unset"))
 		s.Original = r
 	}
 

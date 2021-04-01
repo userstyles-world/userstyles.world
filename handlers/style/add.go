@@ -3,6 +3,7 @@ package style
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
@@ -30,10 +31,10 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		Description: c.FormValue("description"),
 		Notes:       c.FormValue("notes"),
 		Homepage:    c.FormValue("homepage"),
-		Category:    c.FormValue("category"),
 		Preview:     c.FormValue("preview"),
 		Code:        c.FormValue("code"),
-		License:     c.FormValue("license", "No License"),
+		License:     strings.TrimSpace(c.FormValue("license", "No License")),
+		Category:    strings.TrimSpace(c.FormValue("category", "unset")),
 		UserID:      u.ID,
 	}
 
