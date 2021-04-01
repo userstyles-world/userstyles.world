@@ -60,6 +60,7 @@
                             placeholder="e.g. UserStyles.world tweaks">
 
                         <label for="description">Description</label>
+                        <i class="fg:3">Supports Markdown syntax.</i>
                         <textarea
                             required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
                             type="text" name="description"
@@ -67,6 +68,7 @@
                         >{{ .Style.Description }}</textarea>
 
                         <label for="notes">Notes</label>
+                        <i class="fg:3">Supports Markdown syntax.</i>
                         <textarea
                             type="text" name="notes"
                             placeholder="Userstyle's instructions, release notes, etc."
@@ -92,6 +94,7 @@
                             placeholder="e.g CC Zero">
 
                         <label for="category">Category</label>
+                        <i class="fg:3">Website that your userstyle applies to.</i>
                         <input
                             required
                             type="text" name="category" value="{{ .Style.Category }}"
