@@ -3,7 +3,6 @@ package style
 import (
 	"fmt"
 	"log"
-	"regexp"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
@@ -38,48 +37,19 @@ func StyleCreatePost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	// Check if source code is a link.
-	r, err := regexp.Compile(`^https?://.*\.user\.(css|styl|less)$`)
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
+	code := usercss.ParseFromString(c.FormValue("code"))
+	valid, errs := usercss.BasicMetadataValidation(code)
+	if !valid {
+		return c.Render("add", fiber.Map{
+			"Title": "Add userstyle",
+			"User":  u,
+			"Style": s,
+			"UCSS":  errs,
 		})
 	}
 
-	// Redirect to external userstyle.
-	if r.MatchString(s.Code) {
-		ext, err := usercss.ParseFromURL(s.Code)
-		if err != nil {
-			return c.Render("err", fiber.Map{
-				"Title": "Failed to fetch external userstyle",
-				"User":  u,
-			})
-		}
-
-		// Check if external userstyle is valid.
-		if valid, _ := usercss.BasicMetadataValidation(ext); !valid {
-			return c.Render("err", fiber.Map{
-				"Title": "Failed to validate external userstyle",
-				"User":  u,
-			})
-		}
-
-		s.Code = ext.SourceCode
-	} else {
-		form := usercss.ParseFromString(c.FormValue("code"))
-		valid, errs := usercss.BasicMetadataValidation(form)
-		if !valid {
-			return c.Render("add", fiber.Map{
-				"Title": "Add userstyle",
-				"User":  u,
-				"Style": s,
-				"UCSS":  errs,
-			})
-		}
-	}
-
 	// Prevent adding multiples of the same style.
-	err = models.CheckDuplicateStyleName(database.DB, s)
+	err := models.CheckDuplicateStyleName(database.DB, s)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": err,
