@@ -2,7 +2,6 @@ package utils
 
 import (
 	"crypto/cipher"
-	"encoding/base64"
 	"fmt"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -57,7 +56,7 @@ func PrepareText(text string) string {
 func DecodePreparedText(preparedText string) (*jwt.Token, error) {
 	// Now we have to reverse the process.
 	// Decode Base64(URL version) -> Unseal Text
-	enryptedText, err := base64.URLEncoding.DecodeString(preparedText)
+	enryptedText, err := DecodeString(preparedText)
 	if err != nil {
 		return nil, err
 	}
