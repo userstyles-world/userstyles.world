@@ -138,8 +138,10 @@ func RecoverPost(c *fiber.Ctx) error {
 		GetSignedString(utils.VerifySigningKey)
 
 	if err != nil {
-		log.Fatal(err)
-		return c.SendStatus(fiber.StatusInternalServerError)
+		c.SendStatus(fiber.StatusInternalServerError)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error",
+		})
 	}
 
 	link := c.BaseURL() + "/reset/" + utils.PrepareText(jwt)

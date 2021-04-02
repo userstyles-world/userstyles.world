@@ -49,12 +49,14 @@ func RegisterPost(c *fiber.Ctx) error {
 		GetSignedString(utils.VerifySigningKey)
 
 	if err != nil {
-		log.Fatal(err)
-		return c.SendStatus(fiber.StatusInternalServerError)
+		c.SendStatus(fiber.StatusInternalServerError)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error",
+		})
 	}
 
 	link := c.BaseURL() + "/verify/" + utils.PrepareText(jwt)
-
+	log.Println(link)
 	PlainPart := utils.NewPart().
 		SetBody("Verify your UserStyles.world account by clicking the link below.\n" +
 			"The link will expire in 2 hours\n\n" +
