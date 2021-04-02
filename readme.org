@@ -1,3 +1,23 @@
-#+TITLE: UserStyles.world
+* [[https://userstyles.world][UserStyles.world]]
+A modern replacement for =UserStyles.org=.
 
-A new site to explore userstyles.
+** Features
+Features are implemented as they are needed. Visit our [[https://github.com/userstyles-world/userstyles.world/projects/1][public roadmap]] to see
+what we're working on, and feel free to open an issue to request new features.
+
+*** Core User functionality:
+- Register, login, and logout
+- Custom biography (more to come soon)
+- Email verification and password recovery
+*** Core Userstyle functionality:
+- Manual creation
+- Importing from [[https://33kk.github.io/uso-archive/][USo-archive]], GitHub, GitLab, Codeberg, etc.
+- Optional source code mirroring for imported or manually added userstyles
+- Permanent link to original URL that the style was imported from
+- Project homepages, description, notes, license, category, screenshots, etc.
+- Userstyle deletion and editing of all available fields
+*** Small (for now) testing API:
+- Style index, style details, and style source code endpoints
+
+** License
+Source code released under the [[./license][AGPL-3.0 License]].
