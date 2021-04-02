@@ -25,6 +25,6 @@ func GetStyle(c *fiber.Ctx) error {
 		"Title": data.Name,
 		"User":  u,
 		"Style": data,
-		"Url":   fmt.Sprintf("%s/style/%d", "https://userstyles.world", data.ID),
+		"Url":   fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
 	})
 }
