@@ -22,10 +22,10 @@ import (
 	"userstyles.world/models"
 )
 
-func Initialize() {
+// TODO: Refactor this as a separate package.
+func renderEngine() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
 
-	// TODO: Refactor this in a separate package.
 	engine.AddFunc("Markdown", func(s string) template.HTML {
 		gen := blackfriday.Run([]byte(s), blackfriday.WithExtensions(blackfriday.HardLineBreak))
 		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
@@ -49,8 +49,12 @@ func Initialize() {
 		return template.HTML(r)
 	})
 
+	return engine
+}
+
+func Initialize() {
 	app := fiber.New(fiber.Config{
-		Views:                 engine,
+		Views:                 renderEngine(),
 		DisableStartupMessage: true,
 	})
 
