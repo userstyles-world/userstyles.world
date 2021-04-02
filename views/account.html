@@ -10,7 +10,7 @@
             <div class="wrapper py:l">
                 {{ template "partials/alert" . }}
                 <section class="welcome">
-                    <h1 class="mb:m">Hi, {{ .User.Username }}!</h1>
+                    <h1 class="mb:m">Hi, {{ .Params.Username }}!</h1>
                     <p>This is your dashboard. More features will be added soon!</p>
                     <p>
                         Since this is an early iteration, feedback would be
@@ -24,9 +24,10 @@
 
                 <section class="settings mt:l">
                     <h2>Information</h2>
-                    <p><span class="minw">ID</span>{{ .User.ID }}</p>
-                    <p><span class="minw">Username</span>{{ .User.Username }}</p>
-                    <p><span class="minw">Email</span>{{ .User.Email }}</p>
+                    <p><span class="minw">ID</span>{{ .Params.ID }}</p>
+                    <p><span class="minw">Role</span>{{ .Params.Role | Role }}</p>
+                    <p><span class="minw">Username</span>{{ .Params.Username }}</p>
+                    <p><span class="minw">Email</span>{{ .Params.Email }}</p>
 
                     <h2 class="mt:l">Biography</h2>
                     <div class="md">{{- .Params.Biography | Markdown -}}</div>

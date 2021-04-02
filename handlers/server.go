@@ -19,6 +19,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
+	"userstyles.world/models"
 )
 
 func Initialize() {
@@ -33,6 +34,19 @@ func Initialize() {
 
 	engine.AddFunc("GitCommit", func() template.HTML {
 		return template.HTML(config.GIT_COMMIT)
+	})
+
+	engine.AddFunc("Role", func(i models.Role) template.HTML {
+		r := ""
+		switch i {
+		case 0:
+			r = "Regular"
+		case 1:
+			r = "Moderator"
+		case 2:
+			r = "Admin"
+		}
+		return template.HTML(r)
 	})
 
 	app := fiber.New(fiber.Config{

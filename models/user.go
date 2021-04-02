@@ -6,12 +6,21 @@ import (
 	"gorm.io/gorm"
 )
 
+type Role int
+
+const (
+	Regular Role = iota
+	Moderator
+	Admin
+)
+
 type User struct {
 	gorm.Model `json:"-"`
 	Username   string `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
 	Email      string `gorm:"unique;not null" validate:"required,email"`
 	Password   string `gorm:"not null"        validate:"required,min=8,max=32"`
 	Biography  string `validate:"min=0,max=512"`
+	Role       Role   `gorm:"default=0"`
 }
 
 type APIUser struct {
@@ -19,6 +28,7 @@ type APIUser struct {
 	Email     string
 	ID        uint
 	Biography string
+	Role      Role
 }
 
 func FindUserByEmail(db *gorm.DB, email string) (*User, error) {

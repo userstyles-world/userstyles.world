@@ -40,6 +40,7 @@ func User(c *fiber.Ctx) (*models.APIUser, bool) {
 	u.Username = s["name"].(string)
 	u.Email = s["email"].(string)
 	u.ID = uint(s["id"].(float64))
+	u.Role = models.Role(s["role"].(float64))
 
 	return u, true
 }
