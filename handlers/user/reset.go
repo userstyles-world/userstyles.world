@@ -100,8 +100,8 @@ func ResetPost(c *fiber.Ctx) error {
 
 	return c.Render("verification", fiber.Map{
 		"Title":        "Successful reset",
-		"Verification": "Successful verification reset",
-		"Reason":       "Your successfully resseted your password",
+		"Verification": "Successful password reset",
+		"Reason":       "You've successfully changed your password",
 	})
 }
 

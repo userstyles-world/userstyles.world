@@ -60,5 +60,4 @@ func VerifyGet(c *fiber.Ctx) error {
 		"Verification": "Successful email verification",
 		"Reason":       "You've successfully verified your email address",
 	})
-
 }
