@@ -31,6 +31,10 @@ func Initialize() {
 		return template.HTML(out)
 	})
 
+	engine.AddFunc("GitCommit", func() template.HTML {
+		return template.HTML(config.GIT_COMMIT)
+	})
+
 	app := fiber.New(fiber.Config{
 		Views:                 engine,
 		DisableStartupMessage: true,

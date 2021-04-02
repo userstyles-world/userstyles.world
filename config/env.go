@@ -17,6 +17,7 @@ var (
 	CRYPTO_KEY             = getEnv("CRYPTO_KEY", "ABigSecretPasswordWhichIsExact32")
 	EMAIL_ADDRESS          = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
 	EMAIL_PWD              = getEnv("EMAIL_PWD", "hahah_not_your_password")
+	GIT_COMMIT             = getEnv("GIT_COMMIT", "unset")
 )
 
 func getEnv(name, fallback string) string {
