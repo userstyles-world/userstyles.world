@@ -9,3 +9,10 @@
 <link rel="mask-icon" href="/mascot.svg" color="blue">
 <link rel="icon" href="/favicon.ico">
 <title>{{ .Title }} — {{ $title }}</title>
+{{ if .Url }}
+<meta property="og:url" content="{{ .Url }}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ .Style.Name }} by {{ .Style.Username }}" />
+<meta property="og:description" content="{{ .Style.Description }}" />
+<meta property="og:image" content="{{ .Style.Preview }}" />
+{{ end }}

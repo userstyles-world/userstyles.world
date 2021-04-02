@@ -1,6 +1,8 @@
 package style
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
@@ -23,5 +25,6 @@ func GetStyle(c *fiber.Ctx) error {
 		"Title": data.Name,
 		"User":  u,
 		"Style": data,
+		"Url":   fmt.Sprintf("%s/style/%d", "https://userstyles.world", data.ID),
 	})
 }
