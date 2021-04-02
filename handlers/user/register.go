@@ -57,7 +57,7 @@ func RegisterPost(c *fiber.Ctx) error {
 	}
 
 	link := c.BaseURL() + "/verify/" + utils.PrepareText(jwt)
-	log.Println(link)
+
 	PlainPart := utils.NewPart().
 		SetBody("Verify your UserStyles.world account by clicking the link below.\n" +
 			"The link will expire in 2 hours\n\n" +

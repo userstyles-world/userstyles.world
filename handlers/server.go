@@ -54,8 +54,7 @@ func renderEngine() *html.Engine {
 
 func Initialize() {
 	app := fiber.New(fiber.Config{
-		Views:                 renderEngine(),
-		DisableStartupMessage: true,
+		Views: renderEngine(),
 	})
 
 	app.Use(compress.New())
