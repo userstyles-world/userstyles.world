@@ -42,7 +42,7 @@ func Initialize() {
 
 	app.Use(compress.New())
 	if config.DB != "dev.db" {
-		app.Use(limiter.New())
+		app.Use(limiter.New(limiter.Config{Max: 50}))
 	}
 	app.Use(jwt.New())
 
