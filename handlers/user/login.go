@@ -32,7 +32,8 @@ func LoginPost(c *fiber.Ctx) error {
 	}
 	remember := c.FormValue("remember") == "on"
 
-	if err := utils.Validate().StructExcept(form, "Username", "Biography"); err != nil {
+	err := utils.Validate().StructPartial(form, "Email", "Password")
+	if err != nil {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 
