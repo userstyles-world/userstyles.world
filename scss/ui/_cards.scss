@@ -37,14 +37,10 @@
             border-radius: var(--br-3);
         }
 
-        &.no-screenshot {
-            padding-top: 0;
-            justify-content: center;
-            display: flex;
-
-            svg {
-                height: 140px;
-            }
+        &.no-screenshot svg {
+            height: 140px;
+            position: absolute;
+            top: calc(50% - 70px);
         }
     }
 
