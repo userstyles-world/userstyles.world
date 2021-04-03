@@ -16,12 +16,7 @@
                         <p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
                     {{- end }}
                     <div class="card bd:o">
-                        <figure class="preview-img">
-                            <img src="{{ .Style.Preview }}"
-                                alt="{{ .Style.Name }} screenshot"
-                                loading="lazy"
-                            />
-                        </figure>
+                        {{ template "partials/preview_image" .Style }}
                     </div>
                 </section>
 

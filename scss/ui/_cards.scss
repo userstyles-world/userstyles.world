@@ -37,6 +37,18 @@
             border-radius: var(--br-3);
         }
 
+        &.no-screenshot {
+            padding-top: 0;
+            justify-content: center;
+            display: flex;
+
+            svg {
+                height: 140px;
+            }
+        }
+    }
+
+    .thumbnail figure {
         &::before,
         &::after {
             top: 0;
@@ -75,10 +87,6 @@
                 transition-delay: 0.4s;
             }
         }
-    }
-
-    .preview-img {
-        &::before, &::after { content: unset }
     }
 }
 

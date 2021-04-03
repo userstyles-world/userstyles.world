@@ -1,0 +1,12 @@
+{{ if .Preview }}
+    <figure>
+        <img src="{{ .Preview  }}"
+            alt="{{ .Name }} screenshot"
+            loading="lazy"
+        />
+    </figure>
+{{ else }}
+    <figure class="no-screenshot">
+        {{- template "partials/no_screenshot" -}}
+    </figure>
+{{ end }}
