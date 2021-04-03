@@ -33,7 +33,7 @@
                                     class="btn ml:s"
                                 >Edit</a>
                             {{ end }}
-                            {{ if eq .User.ID 1 }}
+                            {{ if ge .User.Role 1 }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
                                     <button class="btn ml:s" type="submit"
                                     tooltip-data='Promote this style. The style will then be featured on the home page.'
