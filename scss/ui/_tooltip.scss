@@ -1,0 +1,56 @@
+[tooltip-data] {
+    cursor: pointer;
+    position: relative;
+  
+    &:hover {
+        z-index: 1337;
+
+        &::before,
+        &:after {
+        opacity: .9;
+        }
+    }
+  
+    &::before,
+    &::after {
+        opacity: 0;
+        transition: opacity 0.15s linear;
+        pointer-events: none;
+    }
+  
+    &::before {
+        background-color: #000;
+        border-radius: 3px;
+        bottom: 150%;
+        content: attr(tooltip-data);
+        color: #fff;
+        font-size: 14px;
+        font-weight: normal;
+        left: 50%;
+        line-height: 1.2;
+        margin-bottom: 5px;
+        margin-left: -100px;
+        padding: 7px;
+        position: absolute;
+        text-align: center;
+        white-space: break-spaces;
+        width: 200px;
+    }
+  
+    /* Little arrow */
+    &:after {
+        border-style: solid;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-top-color: #000;
+        border-width: 5px;
+        border-bottom: none;
+        bottom: 150%;
+        content: ' ';
+        left: 50%;
+        margin-left: -5px;
+        position: absolute;
+        width: 0;
+    }
+
+}
