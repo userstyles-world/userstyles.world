@@ -5,20 +5,120 @@ nav {
     a {
         color: var(--fg-1);
         text-decoration: none;
-
-        &:not(:last-child) { margin-right: 1rem }
-    }
-
-    del { margin-right: 1rem }
-
-    ul {
-        list-style: none;
-        li:not(:last-child) > a { margin-right: 1rem }
     }
 
     .mascot {
+        margin-right: auto;
+        display: inline-flex;
+        svg { width: 32px }
         &:hover span { text-decoration: underline }
-        svg {width: 32px }
+    }
+
+    // Menu.
+    > div {
+        position: relative;
+        flex-direction: column;
+    }
+
+    // Items.
+    ul {
+        padding: 0;
+        list-style: none;
+        overflow: hidden;
+
+        li a {
+            display: flex;
+            border-radius: var(--br-3);
+        }
+    }
+
+    // Menu.
+    .menu {
+        clear: both;
+        max-height: 0;
+        // margin: 0 -1rem;
+        transition: max-height 0.2s ease-out;
+
+        // Icon wrapper.
+        &-icon {
+            top: 32px;
+            right: 16px;
+            padding: 1rem;
+            margin: -1rem;
+            position: absolute;
+            display: inline-flex;
+            cursor: pointer;
+            float: right;
+
+            // Icon.
+            .i {
+                height: 2px;
+                width: 18px;
+                display: block;
+                position: relative;
+                transition: background 0.2s ease-out;
+                background-color: var(--fg-1);
+
+                &:before,
+                &:after {
+                    content: '';
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                    position: absolute;
+                    transition: all 0.2s ease-out;
+                    background-color: var(--fg-1);
+                }
+                &:before { top: 5px }
+                &:after { top: -5px }
+            }
+        }
+
+        // Toggle.
+        &-btn {
+            display: none;
+
+            // Show/hide menu.
+            &:checked ~ .menu {
+                max-height: calc(100vh - 64px);
+                &-icon .i {
+                    background-color: transparent;
+                    &:before { transform: rotate(-45deg) }
+                    &:after { transform: rotate(45deg) }
+                }
+                &-icon:not(.steps) .i {
+                    &:before, &:after { top: 0 }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    nav ul li {
+        &:first-child { margin-top: 1rem }
+        a {
+            padding: 1rem;
+            &:hover { background-color: var(--bg-3) }
+        }
+    }
+}
+
+@media screen and (min-width: 769px) {
+    nav {
+        > div { flex-direction: row }
+        li {
+            float: left;
+            a { margin-left: 1rem }
+        }
+        .menu {
+            clear: none;
+            float: right;
+            display: flex;
+            align-items: center;
+            max-height: none;
+            &-icon { display: none }
+        }
     }
 }
 

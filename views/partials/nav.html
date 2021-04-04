@@ -1,17 +1,21 @@
 
-<nav>
+<nav class="navbar">
     <div class="wrapper flex py:m">
-        <a class="mascot flex ai:c py:0" href="/">
+        <a class="mascot ai:c" href="/">
             {{- template "partials/mascot" -}}
             <span class="motto ml:s">UserStyles.world</span>
         </a>
-        <ul class="flex ai:c my:0 ml:a px:0">
+
+        <input class="menu-btn" type="checkbox" id="menu-btn">
+        <label class="menu-icon" for="menu-btn"><span class="i"></span></label>
+
+        <ul class="menu">
             {{/*<li><del class="fg:4" href="/search">Search</del></li>*/}}
             <li><a href="/add">Add</a></li>
             <li><a href="/import">Import</a></li>
             <li><a href="/explore">Explore</a></li>
             {{ if .User.Username }}
-                {{ if eq .User.ID 1 }}
+                {{ if eq .User.Role 2 }}
                     <li><a href="/monitor">Monitor</a></li>
                 {{ end }}
                 <li><a href="/account">Account</a></li>
