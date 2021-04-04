@@ -2,9 +2,11 @@ package search
 
 import (
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
 	"userstyles.world/models"
@@ -34,17 +36,14 @@ func Initialize() {
 		log.Printf("Opening existing index...")
 	}
 
+	StyleIndex = stylesIndex
+
 	go func() {
 		err = indexStyles(stylesIndex)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
-}
-
-type Index struct {
-	Name        string
-	Description string
 }
 
 func indexStyles(index bleve.Index) error {
@@ -56,9 +55,12 @@ func indexStyles(index bleve.Index) error {
 	batch := index.NewBatch()
 	batchCount := 0
 	for _, styleEntry := range *styleEntries {
-		batch.Index(styleEntry.Name, &Index{
-			Name:        styleEntry.Name,
-			Description: styleEntry.Description,
+		ID := strconv.FormatUint(uint64(styleEntry.ID), 10)
+		batch.Index(ID, fiber.Map{
+			"name":        styleEntry.Name,
+			"description": styleEntry.Description,
+			"notes":       styleEntry.Notes,
+			"user":        styleEntry.Username,
 		})
 
 		batchCount++

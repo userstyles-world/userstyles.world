@@ -64,7 +64,7 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 	err := getDBSession(db).
 		Model(t).
-		Select("styles.id, styles.name, styles.preview, u.username").
+		Select("styles.id, styles.name, styles.description, styles.notes, styles.preview, u.username").
 		Joins("join users u on u.id = styles.user_id").
 		Find(q).
 		Error

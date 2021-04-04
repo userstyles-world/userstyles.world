@@ -14,14 +14,14 @@ func buildIndexMapping() (mapping.IndexMapping, error) {
 	keywordFieldMapping := bleve.NewTextFieldMapping()
 	keywordFieldMapping.Analyzer = keyword.Name
 
-	indexMapping := bleve.NewIndexMapping()
-
 	styleMapping := bleve.NewDocumentMapping()
-
 	styleMapping.AddFieldMappingsAt("name", englishTextFieldMapping)
 	styleMapping.AddFieldMappingsAt("description", englishTextFieldMapping)
+	styleMapping.AddFieldMappingsAt("notes", englishTextFieldMapping)
+	styleMapping.AddFieldMappingsAt("user", keywordFieldMapping)
 
-	indexMapping.AddDocumentMapping("style", styleMapping)
+	indexMapping := bleve.NewIndexMapping()
+	indexMapping.AddDocumentMapping("_default", styleMapping)
 
 	indexMapping.TypeField = "type"
 	indexMapping.DefaultAnalyzer = "en"
