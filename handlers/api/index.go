@@ -11,7 +11,7 @@ func GetStyleIndex(c *fiber.Ctx) error {
 	styles, err := models.GetAllStyles(database.DB)
 	if err != nil {
 		return c.JSON(fiber.Map{
-			"data": "style not found",
+			"data": "styles not found",
 		})
 	}
 
