@@ -48,6 +48,10 @@ func Initialize() {
 func indexStyles(index bleve.Index) error {
 	styleEntries, err := models.GetAllStyles(database.DB)
 
+	if err != nil {
+		return err
+	}
+
 	log.Printf("Indexing...")
 	count := 0
 	startTime := time.Now()
