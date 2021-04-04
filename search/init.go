@@ -13,7 +13,7 @@ import (
 
 var (
 	StyleIndex bleve.Index
-	batchSize  = 25
+	batchSize  = 100
 )
 
 func Initialize() {
