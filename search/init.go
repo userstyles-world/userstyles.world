@@ -19,8 +19,7 @@ var (
 func Initialize() {
 	stylesIndex, err := bleve.Open("styles.bleve")
 	if err == bleve.ErrorIndexPathDoesNotExist {
-		log.Printf("Creating new index...")
-		// create a mapping
+		log.Println("Creating new index...")
 		indexMapping, err := buildIndexMapping()
 		if err != nil {
 			log.Fatal(err)
@@ -32,32 +31,29 @@ func Initialize() {
 	} else if err != nil {
 		log.Fatal(err)
 	} else {
-		log.Printf("Opening existing index...")
+		log.Println("Opening existing index...")
 	}
 
 	StyleIndex = stylesIndex
 
 	go func() {
-		err = indexStyles(stylesIndex)
+		styleEntries, err := models.GetAllStyles(database.DB)
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = indexStyles(stylesIndex, *styleEntries)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
 }
 
-func indexStyles(index bleve.Index) error {
-	styleEntries, err := models.GetAllStyles(database.DB)
-
-	if err != nil {
-		return err
-	}
-
-	log.Printf("Indexing...")
+func indexStyles(index bleve.Index, data []models.APIStyle) error {
 	count := 0
 	startTime := time.Now()
 	batch := index.NewBatch()
 	batchCount := 0
-	for _, styleEntry := range *styleEntries {
+	for _, styleEntry := range data {
 		ID := strconv.FormatUint(uint64(styleEntry.ID), 10)
 		batch.Index(ID, MinimalStyle{
 			Name:        styleEntry.Name,
@@ -71,7 +67,7 @@ func indexStyles(index bleve.Index) error {
 		batchCount++
 
 		if batchCount >= batchSize {
-			err = index.Batch(batch)
+			err := index.Batch(batch)
 			if err != nil {
 				return err
 			}
@@ -88,7 +84,7 @@ func indexStyles(index bleve.Index) error {
 	}
 	// flush the last batch
 	if batchCount > 0 {
-		err = index.Batch(batch)
+		err := index.Batch(batch)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -97,5 +93,6 @@ func indexStyles(index bleve.Index) error {
 	indexDurationSeconds := float64(indexDuration) / float64(time.Second)
 	timePerDoc := float64(indexDuration) / float64(count)
 	log.Printf("Indexed %d documents, in %.2fs (average %.2fms/doc)", count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
+
 	return nil
 }
