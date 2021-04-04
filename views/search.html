@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                <section class="header flex f-col ta:c">
+                    <h1>Search</h1>
+                </section>
+
+                <section class="mt:l">
+                    {{ if gt (len .Styles) 0 }}
+                        {{/* template "utils/debug_styles" . */}}
+                        <div class="grid flex rwrap mx:r mt:m">
+                            {{ range .Styles }}
+                                {{ template "partials/style_card" . }}
+                            {{ end }}
+                        </div>
+                    {{ else }}
+                        <div class="ta:c">
+                            <p>Couldn't find styles that match your query.</p>
+                        </div>
+                    {{ end }}
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>
