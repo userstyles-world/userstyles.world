@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"gorm.io/driver/sqlite"
@@ -65,6 +66,39 @@ func Drop(dst ...interface{}) error {
 	return DB.Migrator().DropTable(dst...)
 }
 
+func generateData(amount int) ([]models.Style, []models.User) {
+	randomData := utils.B2s(utils.RandStringBytesMaskImprSrcUnsafe(amount * 7 * 4))
+	var styleStructs []models.Style
+	for i := 0; i < amount; i++ {
+		startData := randomData[(i * 7 * 4):]
+		styleStructs = append(styleStructs, models.Style{
+			UserID:      uint(amount),
+			Category:    startData[:4],
+			Name:        startData[4:8],
+			Description: startData[8:12],
+			Notes:       startData[12:16],
+			Preview:     startData[16:20],
+			Code:        startData[20:24],
+			Homepage:    startData[24:28],
+			Featured:    true,
+		})
+	}
+
+	var userStructs []models.User
+	randomData = utils.B2s(utils.RandStringBytesMaskImprSrcUnsafe(amount * 4 * 4))
+	for i := 0; i < amount; i++ {
+		startData := randomData[(i * 4 * 4):]
+		userStructs = append(userStructs, models.User{
+			Username:  startData[:4],
+			Email:     startData[4:8],
+			Biography: startData[8:12],
+			Password:  startData[12:16],
+		})
+	}
+
+	return styleStructs, userStructs
+}
+
 func Seed() {
 	users := []models.User{
 		{
@@ -72,6 +106,7 @@ func Seed() {
 			Email:     "vednoc@usw.local",
 			Biography: "Something goes here.",
 			Password:  utils.GenerateHashedPassword("vednoc123"),
+			Role:      models.Admin,
 		},
 		{
 			Username:  "john",
@@ -135,6 +170,13 @@ func Seed() {
 			UserID: 3,
 			Name:   "Temporary userstyle",
 		},
+	}
+
+	if config.DB_RANDOM_DATA != "false" {
+		amount, _ := strconv.Atoi(config.DB_RANDOM_DATA)
+		s, u := generateData(amount)
+		styles = append(styles, s...)
+		users = append(users, u...)
 	}
 
 	for _, user := range users {

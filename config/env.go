@@ -11,6 +11,7 @@ var (
 	DB_DEBUG               = getEnv("DB_DEBUG", "silent")
 	DB_COLOR               = getEnv("DB_COLOR", "false")
 	DB_DROP                = getEnv("DB_DROP", "false")
+	DB_RANDOM_DATA         = getEnv("DB_RANDOM_DATA", "false")
 	SALT                   = getEnv("SALT", "10")
 	JWT_SIGNING_KEY        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
 	VERIFY_JWT_SIGNING_KEY = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")
