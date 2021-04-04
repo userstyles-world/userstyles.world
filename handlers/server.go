@@ -64,7 +64,7 @@ func Initialize() {
 	app.Use(jwt.New())
 
 	app.Get("/", core.Home)
-	app.Get("/search/:query", core.Search)
+	app.Get("/search", core.Search)
 	app.Get("/login", user.LoginGet)
 	app.Post("/login", user.LoginPost)
 	app.Get("/register", user.RegisterGet)
