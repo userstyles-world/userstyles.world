@@ -38,10 +38,8 @@ func New() fiber.Handler {
 		if !ok {
 			return c.Next()
 		}
-		token := new(jwt.Token)
-		var err error
 
-		token, err = jwt.Parse(auth, KeyFuncion)
+		token, err := jwt.Parse(auth, KeyFuncion)
 
 		if err == nil && token.Valid {
 			// Store user information from token into context.
