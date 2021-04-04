@@ -74,6 +74,19 @@ nav {
             }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+
+            &-icon .i {
+                transition: none;
+
+                &:before,
+                &:after {
+                    transition: none;
+                }
+            }
+        }
+
         // Toggle.
         &-btn {
             display: none;
