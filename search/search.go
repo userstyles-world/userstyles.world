@@ -5,12 +5,12 @@ import (
 )
 
 type MinimalStyle struct {
+	ID          string `json:"id"`
+	Username    string `json:"username"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	ID          string `json:"id"`
 	Preview     string `json:"preview"`
 	Notes       string `json:"notes"`
-	Author      string `json:"author"`
 }
 
 func SearchText(text string) ([]MinimalStyle, error) {
@@ -33,7 +33,7 @@ func SearchText(text string) ([]MinimalStyle, error) {
 		StyleInfo.Description = hit.Fields["description"].(string)
 		StyleInfo.Preview = hit.Fields["preview"].(string)
 		StyleInfo.Notes = hit.Fields["notes"].(string)
-		StyleInfo.Author = hit.Fields["author"].(string)
+		StyleInfo.Username = hit.Fields["username"].(string)
 
 		returnResult = append(returnResult, StyleInfo)
 	}

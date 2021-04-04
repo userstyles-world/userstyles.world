@@ -61,7 +61,7 @@ func indexStyles(index bleve.Index, data []models.APIStyle) error {
 			Preview:     styleEntry.Preview,
 			Description: styleEntry.Description,
 			Notes:       styleEntry.Notes,
-			Author:      styleEntry.Username,
+			Username:    styleEntry.Username,
 		})
 
 		batchCount++
