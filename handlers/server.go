@@ -77,7 +77,7 @@ func Initialize() {
 	app.Get("/style/:id", style.GetStyle)
 	app.Get("/user/:name", user.Profile)
 
-	app.Post("/logout", jwt.Protected, user.Logout)
+	app.Get("/logout", jwt.Protected, user.Logout)
 	app.Get("/account", jwt.Protected, user.Account)
 	app.Post("/account", jwt.Protected, user.EditAccount)
 	app.Post("/style/:id", jwt.Protected, style.DeleteByID)
