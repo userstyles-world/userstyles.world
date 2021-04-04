@@ -4,21 +4,38 @@ import (
 	"github.com/blevesearch/bleve/v2"
 )
 
-func SearchText(text string) ([]string, error) {
+type MinimalStyle struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ID          string `json:"id"`
+	Preview     string `json:"preview"`
+	Notes       string `json:"notes"`
+	Author      string `json:"author"`
+}
+
+func SearchText(text string) ([]MinimalStyle, error) {
 	query := bleve.NewQueryStringQuery(text)
 	searchRequest := bleve.NewSearchRequestOptions(query, 5, 0, false)
-	// searchRequest.Fields = []string{"*"}
+	searchRequest.Fields = []string{"*"}
 
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}
-	var returnResult []string
-	for _, a := range sr.Hits {
+	var returnResult []MinimalStyle
+	for _, hit := range sr.Hits {
 		if err != nil {
 			return nil, err
 		}
-		returnResult = append(returnResult, a.ID)
+		StyleInfo := MinimalStyle{}
+		StyleInfo.Name = hit.Fields["name"].(string)
+		StyleInfo.ID = hit.Fields["id"].(string)
+		StyleInfo.Description = hit.Fields["description"].(string)
+		StyleInfo.Preview = hit.Fields["preview"].(string)
+		StyleInfo.Notes = hit.Fields["notes"].(string)
+		StyleInfo.Author = hit.Fields["author"].(string)
+
+		returnResult = append(returnResult, StyleInfo)
 	}
 	return returnResult, nil
 }

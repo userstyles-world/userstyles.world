@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
 	"userstyles.world/models"
@@ -56,11 +55,13 @@ func indexStyles(index bleve.Index) error {
 	batchCount := 0
 	for _, styleEntry := range *styleEntries {
 		ID := strconv.FormatUint(uint64(styleEntry.ID), 10)
-		batch.Index(ID, fiber.Map{
-			"name":        styleEntry.Name,
-			"description": styleEntry.Description,
-			"notes":       styleEntry.Notes,
-			"user":        styleEntry.Username,
+		batch.Index(ID, MinimalStyle{
+			Name:        styleEntry.Name,
+			ID:          ID,
+			Preview:     styleEntry.Preview,
+			Description: styleEntry.Description,
+			Notes:       styleEntry.Notes,
+			Author:      styleEntry.Username,
 		})
 
 		batchCount++
