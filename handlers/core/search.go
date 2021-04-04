@@ -19,5 +19,6 @@ func Search(c *fiber.Ctx) error {
 		"User":   u,
 		"Styles": s,
 		"Value":  q,
+		"Root":   c.OriginalURL() == "/search",
 	})
 }

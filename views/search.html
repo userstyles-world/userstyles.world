@@ -16,8 +16,8 @@
                     <form method="get" action="/search/">
                         <label for="q">Search keyword</label>
                         <input
-                            type="text" name="q"
-                            value="{{ .Value }}"
+                            type="text" name="q" value="{{ .Value }}"
+                            required pattern="[a-zA-Z0-9]{1,}"
                             placeholder="e.g. dark">
                         <button class="flex btn primary" type="submit">Search</button>
                     </form>
@@ -31,9 +31,9 @@
                                 {{ template "partials/style_card" . }}
                             {{ end }}
                         </div>
-                    {{ else }}
+                    {{ else if not .Root }}
                         <div class="ta:c">
-                            <p>Couldn't find styles that match your query.</p>
+                            <p>Couldn't find styles that matches your keywords.</p>
                         </div>
                     {{ end }}
                 </section>
