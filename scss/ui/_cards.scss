@@ -106,6 +106,7 @@
 }
 
 .details img {
-    border-radius: var(--br-2);
+    max-width: 50%;
+    border-radius: var(--br-3);
     background-color: var(--bg-3);
 }
