@@ -11,8 +11,10 @@
 
         <ul class="menu">
             {{/*<li><del class="fg:4" href="/search">Search</del></li>*/}}
-            <li><a href="/add">Add</a></li>
-            <li><a href="/import">Import</a></li>
+            {{ if .User.Username }}
+                <li><a href="/add">Add</a></li>
+                <li><a href="/import">Import</a></li>
+            {{ end }}
             <li><a href="/search">🆕 Search</a></li>
             <li><a href="/explore">Explore</a></li>
             {{ if .User.Username }}
