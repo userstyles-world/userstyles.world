@@ -23,6 +23,7 @@ const (
 // Using only the data that we need.
 type Data struct {
 	Info struct {
+		Description    string
 		AdditionalInfo string
 		Category       string
 	}
@@ -65,7 +66,7 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	s = &models.Style{
 		UserID:      u.ID,
 		Name:        uc.Name,
-		Description: uc.Description,
+		Description: res.Info.Description,
 		Notes:       res.Info.AdditionalInfo,
 		Code:        uc.SourceCode,
 		License:     uc.License,
