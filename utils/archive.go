@@ -76,6 +76,11 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 		Original:    url,
 	}
 
+	// Disallow GIF format.
+	if strings.HasSuffix(s.Preview, ".gif") {
+		s.Preview = ""
+	}
+
 	return s, nil
 }
 
