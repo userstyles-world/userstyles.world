@@ -37,7 +37,7 @@ nav {
         clear: both;
         max-height: 0;
         // margin: 0 -1rem;
-        transition: max-height 0.2s ease-out;
+        transition: max-height 0.425s linear;
 
         // Icon wrapper.
         &-icon {
