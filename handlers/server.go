@@ -3,6 +3,7 @@ package handlers
 import (
 	"html/template"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -104,7 +105,8 @@ func Initialize() {
 	}
 
 	app.Use("/", filesystem.New(filesystem.Config{
-		Root: pkger.Dir("/static"),
+		MaxAge: int(time.Hour) * 2,
+		Root:   pkger.Dir("/static"),
 	}))
 	app.Use(core.NotFound)
 
