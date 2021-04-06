@@ -95,8 +95,11 @@ nav {
 }
 
 @media screen and (max-width: 768px) {
+    .menu {
+        padding: 0;
+        form { margin: 1rem }
+    }
     nav ul li {
-        &:first-child { margin-top: 1rem }
         a {
             padding: 1rem;
             &:hover { background-color: var(--bg-3) }
@@ -117,6 +120,7 @@ nav {
             display: flex;
             align-items: center;
             max-height: none;
+            padding-left: 1rem;
             &-icon { display: none }
         }
     }

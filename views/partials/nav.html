@@ -1,7 +1,7 @@
 
 <nav class="navbar">
-    <div class="wrapper flex py:m">
-        <a class="mascot ai:c" href="/">
+    <div class="wrapper flex px:m">
+        <a class="mascot py:m ai:c" href="/">
             {{- template "partials/mascot" -}}
             <span class="motto ml:s">UserStyles.world</span>
         </a>
@@ -9,13 +9,20 @@
         <input class="menu-btn" type="checkbox" id="menu-btn">
         <label class="menu-icon" for="menu-btn"><span class="i"></span></label>
 
-        <ul class="menu">
-            {{/*<li><del class="fg:4" href="/search">Search</del></li>*/}}
+        <ul class="menu py:m">
+            <li>
+                <form class="search" method="get" action="/search/">
+                    <input
+                        type="text" name="q"
+                        pattern="[a-zA-Z0-9]{1,}"
+                        placeholder="Search userstyles...">
+                    <!-- <button class="flex btn primary" type="submit">Search</button> -->
+                </form>
+            </li>
             {{ if .User.Username }}
                 <li><a href="/add">Add</a></li>
                 <li><a href="/import">Import</a></li>
             {{ end }}
-            <li><a href="/search">🆕 Search</a></li>
             <li><a href="/explore">Explore</a></li>
             {{ if .User.Username }}
                 {{ if eq .User.Role 2 }}

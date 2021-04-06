@@ -151,4 +151,19 @@ form {
         cursor: pointer;
         line-height: initial;
     }
+
+    // TODO: Refactor.
+    &.search {
+        margin: -2px 0;
+        padding: 0;
+        max-width: unset;
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+        input {
+            margin: 0;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--bg-3);
+        }
+    }
 }
