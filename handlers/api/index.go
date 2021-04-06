@@ -33,9 +33,6 @@ func fixCategory(cat string) string {
 	if cat == "unset" {
 		return "global"
 	}
-	if !strings.Contains(cat, ".") {
-		return cat
-	}
 	cat = strings.TrimSuffix(cat, ".com")
 	cat = strings.TrimSuffix(cat, ".org")
 	return cat
