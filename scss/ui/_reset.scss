@@ -157,13 +157,32 @@ form {
         margin: -2px 0;
         padding: 0;
         max-width: unset;
+        position: relative;
         border: none;
         border-radius: 0;
         background-color: transparent;
-        input {
+        input, button {
             margin: 0;
             padding: 0.25rem 0.5rem;
             background-color: var(--bg-3);
+            &:hover:not(:focus) { border-color: var(--bg-4) }
+        }
+        button {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            bottom: 1px;
+            border: none;
+            border-left: 1px solid var(--bg-4);
+            border-radius: 0 var(--br-3) var(--br-3) 0;
+            &:hover {
+                background-color: var(--bg-4);
+            }
+            &:focus {
+                top: 0px;
+                right: 0px;
+                bottom: 0px;
+                border: 1px solid var(--ac-3) }
         }
     }
 }

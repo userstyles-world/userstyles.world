@@ -14,9 +14,9 @@
                 <form class="search" method="get" action="/search/">
                     <input
                         type="text" name="q"
-                        pattern="[a-zA-Z0-9]{1,}"
+                        required pattern="[a-zA-Z0-9]{1,}"
                         placeholder="Search userstyles...">
-                    <!-- <button class="flex btn primary" type="submit">Search</button> -->
+                    <button type="submit">Submit</button>
                 </form>
             </li>
             {{ if .User.Username }}
