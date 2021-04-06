@@ -9,8 +9,8 @@ import (
 	"userstyles.world/models"
 )
 
-type USOFormat struct {
-	Id         uint   `json:"i"`
+type USoFormat struct {
+	ID         uint   `json:"i"`
 	Name       string `json:"n"`
 	Category   string `json:"c"`
 	Author     string `json:"an"`
@@ -18,13 +18,13 @@ type USOFormat struct {
 	IsUSWStyle bool   `json:"uw"`
 }
 
-func convertToUsoFormat(ob1 models.APIStyle) USOFormat {
-	return USOFormat{
-		Id:         ob1.ID,
-		Name:       ob1.Name,
-		Category:   fixCategory(ob1.Category),
-		Author:     ob1.Username,
-		Screenshot: ob1.Preview,
+func convertToUSoFormat(s models.APIStyle) USoFormat {
+	return USoFormat{
+		ID:         s.ID,
+		Name:       s.Name,
+		Category:   fixCategory(s.Category),
+		Author:     s.Username,
+		Screenshot: s.Preview,
 		IsUSWStyle: true,
 	}
 }
@@ -49,10 +49,11 @@ func GetStyleIndex(c *fiber.Ctx) error {
 		})
 	}
 
+	// Used by Stylus integration.
 	if format == "uso-format" {
-		formattedStyles := make([]USOFormat, len(*styles))
+		formattedStyles := make([]USoFormat, len(*styles))
 		for i, style := range *styles {
-			formattedStyles[i] = convertToUsoFormat(style)
+			formattedStyles[i] = convertToUSoFormat(style)
 		}
 
 		return c.JSON(fiber.Map{
