@@ -62,8 +62,8 @@ func ProcessToAvif(imageBytes io.Reader, path string) error {
 	var buf bytes.Buffer
 	if err = avif.Encode(&buf, image, &avif.Options{
 		Threads: 0,
-		Speed:   2,
-		Quality: avif.MaxQuality,
+		Speed:   6,
+		Quality: 50,
 	}); err != nil {
 		return err
 	}
