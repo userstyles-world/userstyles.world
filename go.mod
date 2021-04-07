@@ -3,7 +3,9 @@ module userstyles.world
 go 1.15
 
 require (
+	github.com/Kagami/go-avif v0.1.0
 	github.com/blevesearch/bleve/v2 v2.0.3
+	github.com/chai2010/webp v1.1.0
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
 	github.com/form3tech-oss/jwt-go v3.2.2+incompatible

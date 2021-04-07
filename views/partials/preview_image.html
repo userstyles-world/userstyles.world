@@ -1,10 +1,11 @@
 {{ if .Preview }}
-    <figure>
-        <img src="{{ .Preview  }}"
+    <picture>
+        <source srcset="/api/style/preview/{{ .ID }}.avif" type="image/avif">
+        <source srcset="/api/style/preview/{{ .ID }}.webp" type="image/webp">
+        <img src="/api/style/preview/{{ .ID }}.jpeg"
             alt="{{ .Name }} screenshot"
-            loading="lazy"
-        />
-    </figure>
+            loading="lazy">
+    </picture>
 {{ else }}
     <figure class="no-screenshot flex jc:c ai:c">
         {{- template "partials/no_screenshot" -}}

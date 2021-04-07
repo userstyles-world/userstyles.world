@@ -3,6 +3,7 @@ package main
 import (
 	"userstyles.world/database"
 	"userstyles.world/handlers"
+	"userstyles.world/images"
 	"userstyles.world/search"
 	"userstyles.world/updater"
 	"userstyles.world/utils"
@@ -14,5 +15,6 @@ func main() {
 	database.Initialize()
 	search.Initialize()
 	updater.Initialize()
+	images.Initialize()
 	handlers.Initialize()
 }
