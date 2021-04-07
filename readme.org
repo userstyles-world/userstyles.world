@@ -7,15 +7,18 @@ what we're working on, and feel free to open an issue to request new features.
 
 *** Core User functionality:
 - Register, login, and logout
-- Custom biography (more to come soon)
 - Email verification and password recovery
+- Custom biography area with [[https://guides.github.com/features/mastering-markdown/][Markdown]] support
+
 *** Core Userstyle functionality:
 - Manual creation
+- Search functionality (to be improved upon)
 - Importing from [[https://33kk.github.io/uso-archive/][USo-archive]], GitHub, GitLab, Codeberg, etc.
-- Optional source code mirroring for imported or manually added userstyles
 - Permanent link to original URL that the style was imported from
+- Optional source code mirroring for imported or manually added userstyles
 - Project homepages, description, notes, license, category, screenshots, etc.
 - Userstyle deletion and editing of all available fields
+
 *** Small (for now) testing API:
 - Style index, style details, and style source code endpoints
 
