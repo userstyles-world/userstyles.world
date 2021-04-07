@@ -44,6 +44,7 @@ func StyleCreatePost(c *fiber.Ctx) error {
 			"Title":  "Add userstyle",
 			"User":   u,
 			"Style":  s,
+			"Method": "add",
 			"Errors": errs,
 		})
 	}
