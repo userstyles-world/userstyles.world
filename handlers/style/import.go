@@ -58,7 +58,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 				"User":  u,
 			})
 		}
-		if valid, _ := usercss.BasicMetadataValidation(uc); !valid {
+		if errs := usercss.BasicMetadataValidation(uc); errs != nil {
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to validate external userstyle",
 				"User":  u,

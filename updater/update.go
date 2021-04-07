@@ -19,7 +19,7 @@ func UpdateBatch(batch models.APIStyle) {
 		fmt.Printf("Updater: Cannot fetch style %d.\n", batch.ID)
 		return
 	}
-	if valid, _ := usercss.BasicMetadataValidation(style); !valid {
+	if errs := usercss.BasicMetadataValidation(style); errs != nil {
 		fmt.Printf("Updater: Cannot validate style %d.\n", batch.ID)
 		return
 	}

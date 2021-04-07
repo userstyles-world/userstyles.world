@@ -13,7 +13,7 @@ require (
 	github.com/markbates/pkger v0.17.1
 	github.com/microcosm-cc/bluemonday v1.0.5
 	github.com/russross/blackfriday/v2 v2.0.1
-	github.com/vednoc/go-usercss-parser v0.8.0
+	github.com/vednoc/go-usercss-parser v0.9.0
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.21.3
