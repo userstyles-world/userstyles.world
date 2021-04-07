@@ -52,7 +52,7 @@
                 </section>
 
                 <section class="">
-                    <form class="full" method="post" action="/{{ $method }}">
+                    <form class="full" method="post" action="/{{ $method }}" enctype="multipart/form-data">
                         <label for="name">Name</label>
                         <input
                             required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
@@ -80,12 +80,19 @@
                             type="text" name="homepage" value="{{ .Style.Homepage }}"
                             placeholder="Link to userstyle's project home, bug tracker, etc.">
 
-                        <label for="preview">Preview image</label>
+                        <label for="previewUrl">Preview URL</label>
                         <i class="fg:3">Images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
                         <input
                             pattern="^https:\/\/(www\.)?((user-images|raw)\.githubusercontent\.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
-                            type="text" name="preview" value="{{ .Style.Preview }}"
+                            type="text" name="previewUrl" value="{{ .Style.Preview }}"
                             placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
+                        
+                            <label for="preview">Preview image</label>
+                            <input type="file" 
+                                name="preview"
+                                accept="image/jpeg,image/png,image/webp"
+                            >
+                            <i class="fg:3">jpg, jpeg, png, and webp formats only</i>
 
                         <label for="license">License</label>
                         <i class="fg:3">If left empty, the style uses <a href="https://choosealicense.com/no-permission/">No License</a> by default.</i>

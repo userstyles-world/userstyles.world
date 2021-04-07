@@ -32,7 +32,7 @@ func ProcessToJPEG(input string, path string) error {
 		return err
 	}
 
-	err = os.WriteFile(path, buf.Bytes(), 0666)
+	err = os.WriteFile(path, buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func ProcessToAvif(imageBytes io.Reader, path string) error {
 	}); err != nil {
 		return err
 	}
-	err = os.WriteFile(path, buf.Bytes(), 0666)
+	err = os.WriteFile(path, buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
