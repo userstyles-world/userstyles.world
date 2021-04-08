@@ -19,6 +19,7 @@ var (
 	DB    *gorm.DB
 	user  models.User
 	style models.Style
+	stats models.Stats
 )
 
 func Connect() {
@@ -55,11 +56,11 @@ func Initialize() {
 	// Generate data for development.
 	if utils.DatabaseDropTables() && config.DB == "dev.db" {
 		log.Println("Dropping database tables.")
-		Drop(&user, &style)
+		Drop(&user, &style, &stats)
 		defer Seed()
 	}
 
-	Migrate(&user, &style)
+	Migrate(&user, &style, &stats)
 }
 
 func Drop(dst ...interface{}) error {
