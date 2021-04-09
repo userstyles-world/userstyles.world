@@ -15,7 +15,6 @@ type USoFormat struct {
 	Category   string `json:"c"`
 	Author     string `json:"an"`
 	Screenshot string `json:"sn"`
-	IsUSWStyle bool   `json:"uw"`
 }
 
 func convertToUSoFormat(s models.APIStyle) USoFormat {
@@ -25,7 +24,6 @@ func convertToUSoFormat(s models.APIStyle) USoFormat {
 		Category:   fixCategory(s.Category),
 		Author:     s.Username,
 		Screenshot: s.Preview,
-		IsUSWStyle: true,
 	}
 }
 
