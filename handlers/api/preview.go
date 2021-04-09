@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/gofiber/fiber/v2"
 	"userstyles.world/images"
 )
@@ -17,15 +18,16 @@ func getFileExtension(path string) string {
 	return path[n:]
 }
 
+var notFound = func(c *fiber.Ctx) error {
+	c.Status(fiber.StatusNotFound)
+	return c.SendString("Screenshot not found")
+}
+
 func GetPreviewScreenshot(c *fiber.Ctx) error {
 	styleId := c.Params("id")
 	format := getFileExtension(styleId)
 	styleId = strings.TrimSuffix(styleId, format)
 
-	notFound := func(c *fiber.Ctx) error {
-		c.Status(fiber.StatusNotFound)
-		return c.SendString("Screenshot not found")
-	}
 	info, err := images.GetImageFromStyle(styleId)
 	if err != nil {
 		return notFound(c)
@@ -43,45 +45,20 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 		stat = info.Originial
 		fileName = images.CacheFolder + styleId + ".jpeg"
 	case "webp":
-		webpName := images.CacheFolder + styleId + ".webp"
+		fileName = images.CacheFolder + styleId + ".webp"
 		if info.WebP == nil {
-			file, err := os.Open(orignialFile)
+			err = images.DecodeImage(orignialFile, fileName, vips.ImageTypeWEBP)
 			if err != nil {
 				return notFound(c)
 			}
-			if err = images.ProcessToWebp(file, webpName); err != nil {
-				return notFound(c)
-			}
-			webpStat, err := os.Stat(webpName)
+			webpStat, err := os.Stat(fileName)
 			if err != nil {
 				return notFound(c)
 			}
-			fileName = webpName
 			stat = webpStat
 			break
 		}
 		stat = info.WebP
-		fileName = webpName
-	case "avif":
-		avifName := images.CacheFolder + styleId + ".avif"
-		if info.Avif == nil {
-			file, err := os.Open(orignialFile)
-			if err != nil {
-				return notFound(c)
-			}
-			if err = images.ProcessToAvif(file, avifName); err != nil {
-				return notFound(c)
-			}
-			avifStat, err := os.Stat(avifName)
-			if err != nil {
-				return notFound(c)
-			}
-			fileName = avifName
-			stat = avifStat
-			break
-		}
-		stat = info.Avif
-		fileName = avifName
 	}
 
 	if stat == nil || fileName == "" {
@@ -92,16 +69,8 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 	if err != nil {
 		return notFound(c)
 	}
-	contentLength := int(stat.Size())
+	c.Type(getFileExtension(stat.Name()))
+	c.Response().SetBodyStream(file, int(stat.Size()))
 
-	// fasthttp currently doesn't recognize avif format.
-	// Nor does nginx?
-	if format == ".avif" {
-		c.Context().SetContentType("image/avif")
-	} else {
-		c.Type(getFileExtension(stat.Name()))
-	}
-
-	c.Response().SetBodyStream(file, contentLength)
 	return nil
 }

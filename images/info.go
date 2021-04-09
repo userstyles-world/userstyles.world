@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/davidbyttow/govips/v2/vips"
 	"userstyles.world/database"
 	"userstyles.world/models"
 )
@@ -16,7 +17,6 @@ type ImageInfo struct {
 	Originial fs.FileInfo
 	Jpeg      fs.FileInfo
 	WebP      fs.FileInfo
-	Avif      fs.FileInfo
 }
 
 var (
@@ -24,15 +24,18 @@ var (
 )
 
 func Initialize() {
-	if _, err := os.Stat(CacheFolder); err != nil {
-		if os.IsNotExist(err) {
-			if err = os.Mkdir(CacheFolder, 0755); err != nil {
-				log.Fatalln(err)
-			}
-		} else {
+	if fileInfo := fileExist(CacheFolder); fileInfo == nil {
+		if err := os.Mkdir(CacheFolder, 0755); err != nil {
 			log.Fatalln(err)
 		}
 	}
+
+	vips.Startup(&vips.Config{
+		ConcurrencyLevel: 0,
+		MaxCacheFiles:    0,
+		MaxCacheMem:      0,
+		MaxCacheSize:     0,
+	})
 }
 
 func fileExist(path string) fs.FileInfo {
@@ -48,7 +51,6 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 	originial := template + ".originial"
 	jpeg := template + ".jpeg"
 	webp := template + ".webp"
-	avif := template + ".avif"
 	if fileExist(originial) == nil {
 		style, err := models.GetStyleByID(database.DB, id)
 		if err != nil || style.Preview == "" {
@@ -66,7 +68,7 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 		data, _ := io.ReadAll(req.Body)
 		os.WriteFile(originial, data, 0644)
 
-		err = ProcessToJPEG(originial, jpeg)
+		err = DecodeImage(originial, jpeg, vips.ImageTypeJPEG)
 		if err != nil {
 			fmt.Println("Error processing:", err)
 			return ImageInfo{}, err
@@ -80,6 +82,5 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 		Originial: fileExist(originial),
 		Jpeg:      fileExist(jpeg),
 		WebP:      fileExist(webp),
-		Avif:      fileExist(avif),
 	}, nil
 }

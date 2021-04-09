@@ -1,75 +1,36 @@
 package images
 
 import (
-	"bytes"
-	"image"
-	"image/jpeg"
-	"image/png"
-	"io"
 	"os"
 
-	"github.com/Kagami/go-avif"
-	"github.com/chai2010/webp"
+	"github.com/davidbyttow/govips/v2/vips"
 )
 
-func ProcessToJPEG(input string, path string) error {
-	imageFile, err := os.Open(input)
+func DecodeImage(input, output string, imageType vips.ImageType) error {
+	buf, err := os.ReadFile(input)
 	if err != nil {
 		return err
 	}
-	image, _, err := image.Decode(imageFile)
+	buffer, err := vips.NewImageFromBuffer(buf)
 	if err != nil {
-		image, err = png.Decode(imageFile)
-		if err != nil {
-			return err
-		}
+		return err
 	}
-	var buf bytes.Buffer
-	err = jpeg.Encode(&buf, image, &jpeg.Options{
-		Quality: 75,
+
+	newImage, _, err := buffer.Export(&vips.ExportParams{
+		Format:        imageType,
+		Quality:       60,
+		Compression:   6,
+		Effort:        4,
+		StripMetadata: true,
 	})
+
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(output, newImage, 0644)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(path, buf.Bytes(), 0644)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func ProcessToWebp(imageBytes io.Reader, path string) error {
-	image, _, err := image.Decode(imageBytes)
-	if err != nil {
-		return err
-	}
-	if err = webp.Save(path, image, &webp.Options{
-		Lossless: false,
-		Quality:  65,
-		Exact:    false,
-	}); err != nil {
-		return err
-	}
-	return nil
-}
-
-func ProcessToAvif(imageBytes io.Reader, path string) error {
-	image, _, err := image.Decode(imageBytes)
-	if err != nil {
-		return err
-	}
-	var buf bytes.Buffer
-	if err = avif.Encode(&buf, image, &avif.Options{
-		Threads: 0,
-		Speed:   6,
-		Quality: 50,
-	}); err != nil {
-		return err
-	}
-	err = os.WriteFile(path, buf.Bytes(), 0644)
-	if err != nil {
-		return err
-	}
 	return nil
 }

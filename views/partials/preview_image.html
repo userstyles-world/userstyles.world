@@ -1,6 +1,5 @@
 {{ if .Preview }}
     <picture>
-        <source srcset="/api/style/preview/{{ .ID }}.avif" type="image/avif">
         <source srcset="/api/style/preview/{{ .ID }}.webp" type="image/webp">
         <img src="/api/style/preview/{{ .ID }}.jpeg"
             alt="{{ .Name }} screenshot"
