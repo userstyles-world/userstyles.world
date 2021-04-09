@@ -1,5 +1,7 @@
 styles.bleve/
+.vscode/
 public/
+.idea/
 cache/
 data/
 .auth
