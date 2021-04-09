@@ -1,6 +1,8 @@
 package api
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
@@ -21,6 +23,11 @@ func GetStyleSource(c *fiber.Ctx) error {
 	uc := usercss.ParseFromString(style.Code)
 	url := "https://userstyles.world/api/style/" + id + ".user.css"
 	uc.OverrideUpdateURL(url)
+
+	_, err = models.AddStatsForStyle(database.DB, id, c.IP())
+	if err != nil {
+		log.Fatal("API error:", err)
+	}
 
 	c.Set("Content-Type", "text/css")
 	return c.SendString(uc.SourceCode)
