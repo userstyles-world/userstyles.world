@@ -28,8 +28,17 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	token, err := utils.DecodePreparedText(base64Key)
+	unSealedText, err := utils.DecodePreparedText(base64Key, utils.AEAD_CRYPTO)
 	if err != nil {
+		log.Printf("Couldn't decode key due to: %s\n", err.Error())
+		return c.Render("err", fiber.Map{
+			"Title":  "Verifcation key not found",
+			"Error:": "Key was not found",
+		})
+	}
+
+	token, err := jwt.Parse(unSealedText, utils.VerifyJwtKeyFunction)
+	if err != nil || !token.Valid {
 		log.Printf("Couldn't decode key due to: %s\n", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title":  "Verifcation key not found",
