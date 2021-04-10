@@ -72,7 +72,7 @@ func Initialize() {
 	app.Post("/login", user.LoginPost)
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
-	app.Get("/oath/:type", user.AuthLoginGet)
+	app.Get("/oauth/:type", user.AuthLoginGet)
 	app.Get("/verify/:key", user.VerifyGet)
 	app.Get("/recover", user.RecoverGet)
 	app.Post("/recover", user.RecoverPost)
@@ -101,6 +101,7 @@ func Initialize() {
 	v1.Get("/style/preview/:id", api.GetPreviewScreenshot)
 	v1.Get("/index/:format?", api.GetStyleIndex)
 	v1.Get("/search/:query", api.GetSearchResult)
+	v1.Get("/callback/:rcode", api.CallbackGet)
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.

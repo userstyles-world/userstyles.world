@@ -19,7 +19,7 @@ func AuthLoginGet(c *fiber.Ctx) error {
 
 	switch oathType {
 	case "github":
-		redirectURI = utils.OATHGithub(c.BaseURL())
+		redirectURI = utils.GithubMakeURL(c.BaseURL())
 	}
 
 	return c.Redirect(redirectURI, fiber.StatusSeeOther)
