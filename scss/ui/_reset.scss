@@ -168,6 +168,7 @@ form {
             &:hover:not(:focus) { border-color: var(--bg-4) }
         }
         button {
+            padding: 0 1rem;
             position: absolute;
             top: 1px;
             right: 1px;
