@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -50,8 +49,6 @@ func CallbackGet(c *fiber.Ctx) error {
 	} else {
 		verified = "unverified"
 	}
-
-	fmt.Println(verified, email.Verified)
 	stateText := utils.PrepareText(verified+"+"+email.Email, utils.AEAD_OAUTH)
 
 	return c.Render("more_info", fiber.Map{
