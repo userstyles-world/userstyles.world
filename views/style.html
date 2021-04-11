@@ -64,6 +64,11 @@
                         <p><span class="minw">Created at</span>{{- .Style.CreatedAt.Format "2006-02-01 15:04:05" -}}</p>
                         <p><span class="minw">Updated at</span>{{- .Style.UpdatedAt.Format "2006-02-01 15:04:05" -}}</p>
                         <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
+                        <div class="stats mt:m">
+                            <h2 class="td:d">Statistics</h2>
+                            <p class="total"><span class="minw">Total installs</span>{{ .Total }}</p>
+                            <p class="week"><span class="minw">This week</span>{{ .Week }}</p>
+                        </div>
                         <div class="mt:m">
                             <h2 class="td:d">Description</h2>
                             {{ if .Style.Description }}
