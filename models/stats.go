@@ -59,3 +59,23 @@ func AddStatsForStyle(db *gorm.DB, id, ip string) (Stats, error) {
 
 	return *s, nil
 }
+
+func GetWeeklyInstallsForStyle(db *gorm.DB, id string) int64 {
+	var weekly int64
+	db.
+		Model(Stats{}).
+		Where("style_id = ? and updated_at > ?", id, time.Now().AddDate(0, 0, -7)).
+		Count(&weekly)
+
+	return weekly
+}
+
+func GetTotalInstallsForStyle(db *gorm.DB, id string) int64 {
+	var total int64
+	db.
+		Model(Stats{}).
+		Where("style_id = ?", id).
+		Count(&total)
+
+	return total
+}

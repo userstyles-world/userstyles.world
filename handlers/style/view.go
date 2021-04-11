@@ -2,7 +2,6 @@ package style
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -23,26 +22,12 @@ func GetStyle(c *fiber.Ctx) error {
 		})
 	}
 
-	var total int64
-	database.DB.
-		Debug().
-		Model(models.Stats{}).
-		Where("style_id = ?", id).
-		Count(&total)
-
-	var week int64
-	database.DB.
-		Debug().
-		Model(models.Stats{}).
-		Where("style_id = ? and updated_at > ?", id, time.Now().AddDate(0, 0, -7)).
-		Count(&week)
-
 	return c.Render("style", fiber.Map{
 		"Title": data.Name,
 		"User":  u,
 		"Style": data,
-		"Total": total,
-		"Week":  week,
+		"Total": models.GetTotalInstallsForStyle(database.DB, id),
+		"Week":  models.GetWeeklyInstallsForStyle(database.DB, id),
 		"Url":   fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
 	})
 }
