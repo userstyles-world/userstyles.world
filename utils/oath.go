@@ -26,6 +26,11 @@ type GithubEmailResponse struct {
 	Visibility string `json:"visibility"`
 }
 
+type OAuthResponse struct {
+	Email    string `json:"email"`
+	Verified bool   `json:"verified"`
+}
+
 func GithubMakeURL(baseURL string) string {
 	// Base URL.
 	oathURL := "https://github.com/login/oauth/authorize"
@@ -51,7 +56,7 @@ func GithubMakeURL(baseURL string) string {
 	return oathURL
 }
 
-func GithubCallbackOAuth(tempCode, state string) string {
+func GithubCallbackOAuth(tempCode, state string) OAuthResponse {
 	// Now the hard part D:
 	// With our temp code and orignial state, we need to request the auth code.
 	// With that auth code we need to ask nicely for the user's email.
@@ -71,26 +76,27 @@ func GithubCallbackOAuth(tempCode, state string) string {
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", authURL, nil)
 	if err != nil {
-		return ""
+		return OAuthResponse{}
 	}
 	// Ensure we get a json response.
 	req.Header.Set("Accept", "application/json")
 	res, err := client.Do(req)
 	if err != nil {
-		return ""
+		return OAuthResponse{}
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		return ""
+		return OAuthResponse{}
 	}
 	var responseJson GithubResponse
+
 	err = json.NewDecoder(res.Body).Decode(&responseJson)
 	if err != nil {
-		return ""
+		return OAuthResponse{}
 	}
 	reqEmail, err := http.NewRequest("GET", "https://api.github.com/user/emails", nil)
 	if err != nil {
-		return ""
+		return OAuthResponse{}
 	}
 	// Recommended
 	reqEmail.Header.Set("Accept", "application/vnd.github.v3+json")
@@ -98,26 +104,29 @@ func GithubCallbackOAuth(tempCode, state string) string {
 
 	resEmail, err := client.Do(reqEmail)
 	if err != nil {
-		return ""
+		return OAuthResponse{}
 	}
 	defer resEmail.Body.Close()
 	if resEmail.StatusCode != 200 {
-		return ""
+		return OAuthResponse{}
 	}
 
 	var responseEmailJson []GithubEmailResponse
 	err = json.NewDecoder(resEmail.Body).Decode(&responseEmailJson)
 	if err != nil {
-		return ""
+		return OAuthResponse{}
 	}
-	var email string
+	var email GithubEmailResponse
 
 	for _, a := range responseEmailJson {
 		if a.Primary {
-			email = a.Email
+			email = a
 			break
 		}
 	}
 
-	return email
+	return OAuthResponse{
+		Email:    email.Email,
+		Verified: email.Verified,
+	}
 }

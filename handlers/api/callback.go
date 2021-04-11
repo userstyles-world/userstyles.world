@@ -35,15 +35,27 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	var email string
+	var email utils.OAuthResponse
 	switch service {
 	case "github":
 		email = utils.GithubCallbackOAuth(tempCode, rState)
 	}
+	if email == (utils.OAuthResponse{}) {
+		return c.Next()
+	}
 
-	fmt.Println(email)
+	var verified string
+	if email.Verified {
+		verified = "verified"
+	} else {
+		verified = "unverified"
+	}
+
+	fmt.Println(verified, email.Verified)
+	stateText := utils.PrepareText(verified+"+"+email.Email, utils.AEAD_OAUTH)
 
 	return c.Render("more_info", fiber.Map{
-		"Email": email,
+		"Email": email.Email,
+		"State": stateText,
 	})
 }

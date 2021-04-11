@@ -36,10 +36,18 @@ func RegisterPost(c *fiber.Ctx) error {
 		log.Println("Validation errors:", errors)
 
 		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("register", fiber.Map{
-			"Title": "Register failed",
-			"Error": "Failed to register. Make sure your input is correct.",
-		})
+		if c.Locals("Email") != nil {
+			return c.Render("more_info", fiber.Map{
+				"Title": "Register failed",
+				"Error": "Failed to register. Make sure your input is correct.",
+				"Email": c.Locals("email"),
+			})
+		} else {
+			return c.Render("register", fiber.Map{
+				"Title": "Register failed",
+				"Error": "Failed to register. Make sure your input is correct.",
+			})
+		}
 	}
 
 	jwt, err := utils.NewJWTToken().
