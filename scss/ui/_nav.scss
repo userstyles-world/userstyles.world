@@ -94,7 +94,7 @@ nav {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 820px) {
     .menu {
         padding: 0;
         form { margin: 1rem }
@@ -107,7 +107,7 @@ nav {
     }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 821px) {
     nav {
         > div { flex-direction: row }
         li {
