@@ -53,6 +53,13 @@ func LoginPost(c *fiber.Ctx) error {
 			"Error": "Invalid credentials.",
 		})
 	}
+	if user.OAuthProvider != "none" {
+		c.SendStatus(fiber.StatusUnauthorized)
+		return c.Render("login", fiber.Map{
+			"Title": "Login failed",
+			"Error": "Login via OAuth provider",
+		})
+	}
 
 	match := utils.CompareHashedPassword(user.Password, form.Password)
 	if match != nil {
