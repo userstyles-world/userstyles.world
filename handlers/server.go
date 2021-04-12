@@ -72,7 +72,6 @@ func Initialize() {
 	app.Post("/login", user.LoginPost)
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
-	app.Post("/register/:state", user.AuthRegisterPost)
 	app.Get("/oauth/:type", user.AuthLoginGet)
 	app.Get("/verify/:key", user.VerifyGet)
 	app.Get("/recover", user.RecoverGet)

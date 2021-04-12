@@ -15,6 +15,18 @@
                 {{ template "partials/alert" . }}
 
                 <section class="ta:c">
+                    <a href="http://localhost:3000/oauth/github" class="button-link">
+                        <button class="github oauth">
+                            {{- template "partials/github_logo" . -}}
+                            Login via Github
+                        </button>
+                    </a>
+                    <a href="http://localhost:3000/oauth/gitlab" class="button-link">
+                        <button class="gitlab oauth">
+                            {{- template "partials/gitlab_logo" . -}}
+                            Login via Gitlab
+                        </button>
+                    </a>
                     <form method="post" action="/login">
                         <label for="email">E-mail</label>
                         <input

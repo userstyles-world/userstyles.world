@@ -15,12 +15,13 @@ const (
 )
 
 type User struct {
-	gorm.Model `json:"-"`
-	Username   string `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
-	Email      string `gorm:"unique;not null" validate:"required,email"`
-	Password   string `gorm:"not null"        validate:"required,min=8,max=32"`
-	Biography  string `validate:"min=0,max=512"`
-	Role       Role   `gorm:"default=0"`
+	gorm.Model    `json:"-"`
+	Username      string `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
+	Email         string `gorm:"unique;not null" validate:"required,email"`
+	OAuthProvider string `gorm:"default:none"`
+	Password      string `validate:"min=8,max=32"`
+	Biography     string `validate:"min=0,max=512"`
+	Role          Role   `gorm:"default=0"`
 }
 
 type APIUser struct {

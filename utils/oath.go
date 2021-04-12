@@ -10,69 +10,93 @@ import (
 
 var (
 	githubClientID = "f3f2d378d88794062895"
+	gitlabClientID = "f906330603e645d54184fd13337ca51b762ea5da2188e7f248e109c686940897"
 )
 
 // https://docs.github.com/en/developers/apps/authorizing-oauth-apps#response
-type GithubResponse struct {
+type OAuthTokenResponse struct {
 	AccesToken string `json:"access_token"`
 	TokenType  string `json:"token_type"`
 }
 
-// https://docs.github.com/en/rest/reference/users#list-email-addresses-for-the-authenticated-user
-type GithubEmailResponse struct {
-	Email      string `json:"email"`
-	Primary    bool   `json:"primary"`
-	Verified   bool   `json:"verified"`
-	Visibility string `json:"visibility"`
-}
-
 type OAuthResponse struct {
-	Email    string `json:"email"`
-	Verified bool   `json:"verified"`
+	Email string `json:"email"`
+	Name  string `json:"name"`
 }
 
-func GithubMakeURL(baseURL string) string {
-	// Base URL.
-	oathURL := "https://github.com/login/oauth/authorize"
-	// Add our app client ID.
-	oathURL += "?client_id=" + githubClientID
-	// Add email scope.
-	oathURL += "&scope=" + url.QueryEscape("user:email")
-
-	// Our non-guessable state of 16 characters.
+func OauthMakeURL(baseURL, service string) string {
+	if service == "" {
+		return ""
+	}
+	var oauthURL string
 	nonsenseState := B2s(RandStringBytesMaskImprSrcUnsafe(16))
+	if service == "github" {
+		// Base URL.
+		oauthURL = "https://github.com/login/oauth/authorize"
+		// Add our app client ID.
+		oauthURL += "?client_id=" + githubClientID
+		// Add email scope.
+		oauthURL += "&scope=" + url.QueryEscape("read:user")
+		// Our non-guessable state of 16 characters.
 
-	// Adding the nonsene state within the query.
-	oathURL += "&state=" + nonsenseState
+		// Adding the nonsene state within the query.
+		oauthURL += "&state=" + nonsenseState
+	} else if service == "gitlab" {
+		// Base URL.
+		oauthURL = "https://gitlab.com/oauth/authorize"
+		// Add our app client ID.
+		oauthURL += "?client_id=" + gitlabClientID
+		// Define we want a code back
+		oauthURL += "&response_type=code"
+		// Add read_user scope.
+		oauthURL += "&scope=read_user"
+	}
 
 	// Trying to follow our stateless design we encrypt the
 	// Nonsense state so we later can re-use by decrypting it.
 	// And than have the actual value. Also we use this to specify
 	// From which site the callback was from.
-	redirectURL := baseURL + "/api/callback"
-	redirectURL += "/" + PrepareText("github+"+nonsenseState, AEAD_OAUTH)
-	oathURL += "&redirect_uri=" + redirectURL
+	redirectURL := baseURL + "/api/callback/"
+	if service == "github" {
+		redirectURL += PrepareText(service+"+"+nonsenseState, AEAD_OAUTH) + "/"
+	} else if service == "gitlab" {
+		redirectURL += "gitlab/"
+	}
+	oauthURL += "&redirect_uri=" + redirectURL
 
-	return oathURL
+	return oauthURL
 }
 
-func GithubCallbackOAuth(tempCode, state string) OAuthResponse {
+func CallbackOAuth(tempCode, state, service string) OAuthResponse {
+	if service == "" {
+		return OAuthResponse{}
+	}
 	// Now the hard part D:
 	// With our temp code and orignial state, we need to request the auth code.
 	// With that auth code we need to ask nicely for the user's email.
 	// Which is then passed back.
 
 	// Base URL
-	authURL := "https://github.com/login/oauth/access_token"
 	// Add our app client ID.
-	authURL += "?client_id=" + githubClientID
 	// Add our client secret.
-	authURL += "&client_secret=" + config.GITHUB_CLIENT_SECRET
+	var authURL string
+	if service == "github" {
+		authURL = "https://github.com/login/oauth/access_token"
+		authURL += "?client_id=" + githubClientID
+		authURL += "&client_secret=" + config.GITHUB_CLIENT_SECRET
+		// Add the nonsense state we uses earlier.
+		authURL += "&state=" + state
+	} else if service == "gitlab" {
+		authURL = "https://gitlab.com/oauth/token"
+		authURL += "?client_id=" + gitlabClientID
+		authURL += "&client_secret=" + config.GITLAB_CLIENT_SECRET
+		// Define we log in trough the temp code.
+		authURL += "&grant_type=authorization_code"
+		// Specify the the redirect uri? It is required
+		authURL += "&redirect_uri=" + url.PathEscape("http://localhost:3000/api/callback/gitlab/")
+	}
 	// Add the temp code.
 	authURL += "&code=" + tempCode
-	// Add the nonsense state we uses earlier.
-	authURL += "&state=" + state
-
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", authURL, nil)
 	if err != nil {
@@ -88,18 +112,28 @@ func GithubCallbackOAuth(tempCode, state string) OAuthResponse {
 	if res.StatusCode != 200 {
 		return OAuthResponse{}
 	}
-	var responseJson GithubResponse
+	var responseJson OAuthTokenResponse
 
 	err = json.NewDecoder(res.Body).Decode(&responseJson)
 	if err != nil {
 		return OAuthResponse{}
 	}
-	reqEmail, err := http.NewRequest("GET", "https://api.github.com/user/emails", nil)
+	var userEndpoint string
+	if service == "github" {
+		userEndpoint = "https://api.github.com/user"
+	} else if service == "gitlab" {
+		userEndpoint = "https://gitlab.com/api/v4/user"
+	}
+
+	reqEmail, err := http.NewRequest("GET", userEndpoint, nil)
 	if err != nil {
 		return OAuthResponse{}
 	}
-	// Recommended
-	reqEmail.Header.Set("Accept", "application/vnd.github.v3+json")
+	if service == "github" {
+		// Recommended
+		reqEmail.Header.Set("Accept", "application/vnd.github.v3+json")
+	}
+
 	reqEmail.Header.Set("Authorization", responseJson.TokenType+" "+responseJson.AccesToken)
 
 	resEmail, err := client.Do(reqEmail)
@@ -111,22 +145,11 @@ func GithubCallbackOAuth(tempCode, state string) OAuthResponse {
 		return OAuthResponse{}
 	}
 
-	var responseEmailJson []GithubEmailResponse
-	err = json.NewDecoder(resEmail.Body).Decode(&responseEmailJson)
+	var oauthResponse OAuthResponse
+	err = json.NewDecoder(resEmail.Body).Decode(&oauthResponse)
 	if err != nil {
 		return OAuthResponse{}
 	}
-	var email GithubEmailResponse
 
-	for _, a := range responseEmailJson {
-		if a.Primary {
-			email = a
-			break
-		}
-	}
-
-	return OAuthResponse{
-		Email:    email.Email,
-		Verified: email.Verified,
-	}
+	return oauthResponse
 }
