@@ -16,6 +16,7 @@ var (
 	JWT_SIGNING_KEY        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
 	VERIFY_JWT_SIGNING_KEY = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")
 	CRYPTO_KEY             = getEnv("CRYPTO_KEY", "ABigSecretPasswordWhichIsExact32")
+	STATS_KEY              = getEnv("STATS_KEY", "KeyUsedForHashingStatistics")
 	EMAIL_ADDRESS          = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
 	EMAIL_PWD              = getEnv("EMAIL_PWD", "hahah_not_your_password")
 	GIT_COMMIT             = getEnv("GIT_COMMIT", "unset")

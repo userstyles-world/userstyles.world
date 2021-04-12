@@ -11,6 +11,8 @@ import (
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"userstyles.world/config"
 )
 
 var (
@@ -35,10 +37,9 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 
 	// TODO: Refactor as GenerateHashedRecord; we have a circular dependency now.
 	record := ip + " " + id
-	secret := "secretkey" // TODO: Add another key for this.
 
 	// Generate unique hash.
-	h := hmac.New(sha512.New, []byte(secret))
+	h := hmac.New(sha512.New, []byte(config.STATS_KEY))
 	h.Write([]byte(record))
 	sha := hex.EncodeToString(h.Sum(nil))
 
