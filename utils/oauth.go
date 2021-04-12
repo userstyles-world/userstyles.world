@@ -2,18 +2,20 @@ package utils
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"userstyles.world/config"
 )
 
 var (
-	githubClientID = "f3f2d378d88794062895"
-	gitlabClientID = "f906330603e645d54184fd13337ca51b762ea5da2188e7f248e109c686940897"
+	githubClientID   = "f3f2d378d88794062895"
+	gitlabClientID   = "f906330603e645d54184fd13337ca51b762ea5da2188e7f248e109c686940897"
+	codebergClientID = "308920d9-e49d-4db6-baa9-7513c9f6dea2"
 )
 
-// https://docs.github.com/en/developers/apps/authorizing-oauth-apps#response
 type OAuthTokenResponse struct {
 	AccesToken string `json:"access_token"`
 	TokenType  string `json:"token_type"`
@@ -22,6 +24,16 @@ type OAuthTokenResponse struct {
 type OAuthResponse struct {
 	Email string `json:"email"`
 	Name  string `json:"name"`
+	// https://gitea.com/gitea/go-sdk/src/commit/e11a4f7f3bdb5251a25f754125887c88f88f2f63/gitea/user.go#L19
+	GiteaName string `json:"login"`
+}
+
+type GiteaLikeAccessJson struct {
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	Code         string `json:"code"`
+	GrantType    string `json:"grant_type"`
+	RedirectURI  string `json:"redirect_uri"`
 }
 
 func OauthMakeURL(baseURL, service string) string {
@@ -29,8 +41,9 @@ func OauthMakeURL(baseURL, service string) string {
 		return ""
 	}
 	var oauthURL string
-	nonsenseState := B2s(RandStringBytesMaskImprSrcUnsafe(16))
+	var nonsenseState string
 	if service == "github" {
+		nonsenseState = B2s(RandStringBytesMaskImprSrcUnsafe(16))
 		// Base URL.
 		oauthURL = "https://github.com/login/oauth/authorize"
 		// Add our app client ID.
@@ -38,8 +51,6 @@ func OauthMakeURL(baseURL, service string) string {
 		// Add email scope.
 		oauthURL += "&scope=" + url.QueryEscape("read:user")
 		// Our non-guessable state of 16 characters.
-
-		// Adding the nonsene state within the query.
 		oauthURL += "&state=" + nonsenseState
 	} else if service == "gitlab" {
 		// Base URL.
@@ -50,6 +61,15 @@ func OauthMakeURL(baseURL, service string) string {
 		oauthURL += "&response_type=code"
 		// Add read_user scope.
 		oauthURL += "&scope=read_user"
+	} else if service == "codeberg" {
+		// Base URL.
+		oauthURL = "https://codeberg.org/login/oauth/authorize"
+		// Add our app client ID.
+		oauthURL += "?client_id=" + codebergClientID
+		// Define we want a code back
+		oauthURL += "&response_type=code"
+	} else {
+		return ""
 	}
 
 	// Trying to follow our stateless design we encrypt the
@@ -59,8 +79,8 @@ func OauthMakeURL(baseURL, service string) string {
 	redirectURL := baseURL + "/api/callback/"
 	if service == "github" {
 		redirectURL += PrepareText(service+"+"+nonsenseState, AEAD_OAUTH) + "/"
-	} else if service == "gitlab" {
-		redirectURL += "gitlab/"
+	} else {
+		redirectURL += service + "/"
 	}
 	oauthURL += "&redirect_uri=" + redirectURL
 
@@ -80,6 +100,7 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 	// Add our app client ID.
 	// Add our client secret.
 	var authURL string
+	var body GiteaLikeAccessJson
 	if service == "github" {
 		authURL = "https://github.com/login/oauth/access_token"
 		authURL += "?client_id=" + githubClientID
@@ -94,9 +115,22 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 		authURL += "&grant_type=authorization_code"
 		// Specify the the redirect uri? It is required
 		authURL += "&redirect_uri=" + url.PathEscape("http://localhost:3000/api/callback/gitlab/")
+	} else if service == "codeberg" {
+		authURL = "https://codeberg.org/login/oauth/access_token"
+		body = GiteaLikeAccessJson{
+			ClientID:     codebergClientID,
+			ClientSecret: config.CODEBERG_CLIENT_SECRET,
+			Code:         tempCode,
+			GrantType:    "authorization_code",
+			RedirectURI:  "http://localhost:3000/api/callback/codeberg/",
+		}
+	} else {
+		return OAuthResponse{}
 	}
-	// Add the temp code.
-	authURL += "&code=" + tempCode
+	if service != "codeberg" {
+		// Add the temp code.
+		authURL += "&code=" + tempCode
+	}
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", authURL, nil)
 	if err != nil {
@@ -104,6 +138,15 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 	}
 	// Ensure we get a json response.
 	req.Header.Set("Accept", "application/json")
+	if body.ClientID != "" {
+		bodyString, err := json.Marshal(body)
+		if err != nil {
+			return OAuthResponse{}
+		}
+		req.Body = ioutil.NopCloser(strings.NewReader(B2s(bodyString)))
+		req.ContentLength = int64(len(bodyString))
+		req.Header.Set("Content-Type", "application/json")
+	}
 	res, err := client.Do(req)
 	if err != nil {
 		return OAuthResponse{}
@@ -123,8 +166,9 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 		userEndpoint = "https://api.github.com/user"
 	} else if service == "gitlab" {
 		userEndpoint = "https://gitlab.com/api/v4/user"
+	} else if service == "codeberg" {
+		userEndpoint = "https://codeberg.org/api/v1/user"
 	}
-
 	reqEmail, err := http.NewRequest("GET", userEndpoint, nil)
 	if err != nil {
 		return OAuthResponse{}

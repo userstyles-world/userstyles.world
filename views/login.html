@@ -27,6 +27,12 @@
                             Login via Gitlab
                         </button>
                     </a>
+                    <a href="http://localhost:3000/oauth/codeberg" class="button-link">
+                        <button class="codeberg oauth">
+                            {{- template "partials/codeberg_logo" . -}}
+                            Login via Codeberg
+                         </button>
+                    </a>
                     <form method="post" action="/login">
                         <label for="email">E-mail</label>
                         <input

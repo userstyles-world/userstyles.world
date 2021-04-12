@@ -29,6 +29,12 @@
                             Register via Gitlab
                          </button>
                     </a>
+                    <a href="http://localhost:3000/oauth/codeberg" class="button-link">
+                        <button class="codeberg oauth">
+                            {{- template "partials/codeberg_logo" . -}}
+                            Register via Codeberg
+                         </button>
+                    </a>
                     <form method="post" action="/register">
                         <label for="username">Username</label>
                         <input

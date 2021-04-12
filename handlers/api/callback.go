@@ -22,7 +22,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	}
 	var service string
 	var rState string
-	if redirectCode != "gitlab" {
+	if redirectCode != "gitlab" && redirectCode != "codeberg" {
 		// Decode the string so we get our actual information back.
 		code, err := utils.DecodePreparedText(redirectCode, utils.AEAD_OAUTH)
 		if err != nil {
@@ -40,12 +40,15 @@ func CallbackGet(c *fiber.Ctx) error {
 			return c.Next()
 		}
 	} else {
-		service = "gitlab"
+		service = redirectCode
 	}
 
 	response := utils.CallbackOAuth(tempCode, rState, service)
 	if response == (utils.OAuthResponse{}) {
 		return c.Next()
+	}
+	if service == "codeberg" {
+		response.Name = response.GiteaName
 	}
 
 	user, err := models.FindUserByEmail(database.DB, response.Email)

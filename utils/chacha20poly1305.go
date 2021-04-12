@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/cipher"
+	"errors"
 	"fmt"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -37,6 +38,9 @@ func SealText(text string, aead cipher.AEAD) []byte {
 }
 
 func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
+	if len(encryptedMsg) < aead.NonceSize() {
+		return nil, errors.New("message too small")
+	}
 	// Split nonce and ciphertext.
 	nonce, ciphertext := encryptedMsg[:aead.NonceSize()], encryptedMsg[aead.NonceSize():]
 
