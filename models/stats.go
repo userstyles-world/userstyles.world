@@ -4,8 +4,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha512"
 	"encoding/hex"
-	"errors"
-	"log"
 	"strconv"
 	"time"
 
@@ -32,7 +30,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 
 	styleID, err := strconv.Atoi(id)
 	if err != nil {
-		return *s, errors.New("failed to convert StyleID to int")
+		return *s, err
 	}
 
 	// TODO: Refactor as GenerateHashedRecord; we have a circular dependency now.
@@ -75,7 +73,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	}
 
 	if err != nil {
-		log.Fatal("Got error:", err)
+		return *s, err
 	}
 
 	return *s, nil

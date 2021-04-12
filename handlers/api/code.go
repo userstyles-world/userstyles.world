@@ -1,8 +1,6 @@
 package api
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
@@ -27,7 +25,9 @@ func GetStyleSource(c *fiber.Ctx) error {
 	// Count installs.
 	_, err = models.AddStatsToStyle(database.DB, id, c.IP(), true)
 	if err != nil {
-		log.Fatal("API error:", err)
+		return c.JSON(fiber.Map{
+			"data": "Internal server error",
+		})
 	}
 
 	c.Set("Content-Type", "text/css")

@@ -26,7 +26,11 @@ func GetStyle(c *fiber.Ctx) error {
 	// Count views.
 	_, err = models.AddStatsToStyle(database.DB, id, c.IP(), false)
 	if err != nil {
-		log.Fatal("Adding stats error:", err)
+		log.Println("Failed to add stats to style, err:", err)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"User":  u,
+		})
 	}
 
 	return c.Render("style", fiber.Map{
