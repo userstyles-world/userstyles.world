@@ -18,9 +18,10 @@ func DecodeImage(input, output string, imageType vips.ImageType) error {
 
 	newImage, _, err := buffer.Export(&vips.ExportParams{
 		Format:        imageType,
-		Quality:       60,
-		Compression:   6,
-		Effort:        4,
+		Quality:       50,
+		Compression:   8,
+		Effort:        6,
+		Lossless:      false,
 		StripMetadata: true,
 	})
 
