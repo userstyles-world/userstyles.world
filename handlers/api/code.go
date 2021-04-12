@@ -24,7 +24,8 @@ func GetStyleSource(c *fiber.Ctx) error {
 	url := "https://userstyles.world/api/style/" + id + ".user.css"
 	uc.OverrideUpdateURL(url)
 
-	_, err = models.AddStatsForStyle(database.DB, id, c.IP())
+	// Count installs.
+	_, err = models.AddStatsToStyle(database.DB, id, c.IP(), true)
 	if err != nil {
 		log.Fatal("API error:", err)
 	}
