@@ -70,16 +70,6 @@ func CallbackGet(c *fiber.Ctx) error {
 					"Error": "Internal server error.",
 				})
 			}
-			user, err = models.FindUserByEmail(database.DB, response.Email)
-			if err != nil {
-				log.Printf("Failed to register %s, error: %s", response.Email, err.Error())
-
-				c.SendStatus(fiber.StatusInternalServerError)
-				return c.Render("err", fiber.Map{
-					"Title": "Register failed",
-					"Error": "Internal server error.",
-				})
-			}
 		} else {
 			return c.Next()
 		}
