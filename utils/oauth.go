@@ -125,7 +125,7 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 	if authURL == "" {
 		return OAuthResponse{}
 	}
-	if body.ClientID != "" {
+	if body.ClientID == "" {
 		// Add the temp code.
 		authURL += "&code=" + tempCode
 	}
