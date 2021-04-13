@@ -1,4 +1,4 @@
-a:not(.button-link) {
+a {
     color: var(--ac-1);
     text-decoration: none;
     &:not([class]):hover { text-decoration: underline }
@@ -116,16 +116,16 @@ label[for="remember"] {
 }
 
 .oauth {
+    width: 100%;
     align-items: center;
     display: inline-flex;
-    transition: background-color .3s linear;
+    background-color: var(--bg-2);
+    &:not(:first-child) { margin-left: 1rem }
 
-    svg {
-        margin-right: 0.75em;
-    }
+    svg { margin-right: 0.8rem }
 
     &:hover {
-        background-color: rgb(184, 178, 178);
+        background-color: var(--bg-3);
         cursor: pointer;
     }
 }

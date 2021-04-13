@@ -14,26 +14,9 @@
 
                 {{ template "partials/alert" . }}
 
-                <section class="ta:c">
-                    <a href="http://localhost:3000/oauth/github" class="button-link">
-                        <button class="github oauth">
-                            {{- template "partials/github_logo" . -}}
-                            Login via Github
-                        </button>
-                    </a>
-                    <a href="http://localhost:3000/oauth/gitlab" class="button-link">
-                        <button class="gitlab oauth">
-                            {{- template "partials/gitlab_logo" . -}}
-                            Login via Gitlab
-                        </button>
-                    </a>
-                    <a href="http://localhost:3000/oauth/codeberg" class="button-link">
-                        <button class="codeberg oauth">
-                            {{- template "partials/codeberg_logo" . -}}
-                            Login via Codeberg
-                         </button>
-                    </a>
-                    <form method="post" action="/login">
+                <section class="login limit mx:a">
+                    {{- template "partials/btn_oauth" . -}}
+                    <form class="form-wrapper" method="post" action="/login">
                         <label for="email">E-mail</label>
                         <input
                             required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
@@ -53,9 +36,9 @@
                              <a class="ml:a" href="/recover">Forgot your password?</a>
                         </span>
                     </form>
-                    <i class="fg:3">Don't have an account?
-                        Continue to <a href="/register">register page</a>.
-                    </i>
+                    <p class="form-tip ta:c">
+                        <i class="fg:3">Don't have an account? Continue to <a href="/register">register page</a>.</i>
+                    </p>
                 </section>
             </div>
         </main>
