@@ -21,8 +21,11 @@ var (
 	EMAIL_ADDRESS          = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
 	EMAIL_PWD              = getEnv("EMAIL_PWD", "hahah_not_your_password")
 	GIT_COMMIT             = getEnv("GIT_COMMIT", "unset")
+	GITHUB_CLIENT_ID       = getEnv("GITHUB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	GITHUB_CLIENT_SECRET   = getEnv("GITHUB_CLIENT_SECRET", "YouActuallyThinkWeIncludeOurSecretHere?_www.youtube.com/watch?v=dQw4w9WgXcQ")
+	GITLAB_CLIENT_ID       = getEnv("GITLAB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	GITLAB_CLIENT_SECRET   = getEnv("GITLAB_CLIENT_SECRET", "www.youtube.com/watch?v=dQw4w9WgXcQ")
+	CODEBERG_CLIENT_ID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	CODEBERG_CLIENT_SECRET = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
 )
 
