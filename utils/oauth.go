@@ -16,8 +16,7 @@ type OAuthTokenResponse struct {
 }
 
 type OAuthResponse struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	Name string `json:"name"`
 	// https://gitea.com/gitea/go-sdk/src/commit/e11a4f7f3bdb5251a25f754125887c88f88f2f63/gitea/user.go#L19
 	GiteaName string `json:"login"`
 }
@@ -192,6 +191,10 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 	err = json.NewDecoder(resEmail.Body).Decode(&oauthResponse)
 	if err != nil {
 		return OAuthResponse{}
+	}
+
+	if oauthResponse.GiteaName != "" {
+		oauthResponse.Name = oauthResponse.GiteaName
 	}
 
 	return oauthResponse

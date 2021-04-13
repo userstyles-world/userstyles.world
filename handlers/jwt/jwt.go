@@ -38,7 +38,9 @@ func User(c *fiber.Ctx) (*models.APIUser, bool) {
 
 	// Type assertion will convert interface{} to other types.
 	u.Username = s["name"].(string)
-	u.Email = s["email"].(string)
+	if s["email"] != nil {
+		u.Email = s["email"].(string)
+	}
 	u.ID = uint(s["id"].(float64))
 	u.Role = models.Role(s["role"].(float64))
 

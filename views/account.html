@@ -27,8 +27,9 @@
                     <p><span class="minw">ID</span>{{ .Params.ID }}</p>
                     <p><span class="minw">Role</span>{{ .Params.Role | Role }}</p>
                     <p><span class="minw">Username</span>{{ .Params.Username }}</p>
-                    <p><span class="minw">Email</span>{{ .Params.Email }}</p>
-
+                    {{ if .Params.Email -}}
+                        <p><span class="minw">Email</span>{{ .Params.Email }}</p>
+                    {{- end }}
                     <h2 class="mt:l">Biography</h2>
                     <div class="md">{{- .Params.Biography | Markdown -}}</div>
                     <form class="full" method="post" action="/account">

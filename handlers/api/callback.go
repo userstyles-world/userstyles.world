@@ -47,22 +47,20 @@ func CallbackGet(c *fiber.Ctx) error {
 	if response == (utils.OAuthResponse{}) {
 		return c.Next()
 	}
-	if service == "codeberg" {
-		response.Name = response.GiteaName
-	}
 
-	user, err := models.FindUserByEmail(database.DB, response.Email)
+	user, err := models.FindUserByName(database.DB, response.Name)
 	if err != nil {
 		fmt.Println(err.Error())
 		if err.Error() == "User not found." || err.Error() == "record not found" {
-			regErr := database.DB.Create(&models.User{
+			user = &models.User{
 				Username:      response.Name,
 				OAuthProvider: service,
-				Email:         response.Email,
-			})
+			}
+
+			regErr := database.DB.Create(user)
 
 			if regErr.Error != nil {
-				log.Printf("Failed to register %s, error: %s", response.Email, regErr.Error)
+				log.Printf("Failed to register %s, error: %s", response.Name, regErr.Error)
 
 				c.SendStatus(fiber.StatusInternalServerError)
 				return c.Render("err", fiber.Map{
@@ -82,7 +80,6 @@ func CallbackGet(c *fiber.Ctx) error {
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
-		SetClaim("email", user.Email).
 		SetClaim("role", user.Role).
 		SetExpiration(expiration).
 		GetSignedString(nil)
