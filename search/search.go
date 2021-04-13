@@ -14,7 +14,7 @@ type MinimalStyle struct {
 }
 
 func SearchText(text string) ([]MinimalStyle, error) {
-	query := bleve.NewQueryStringQuery(text)
+	query := bleve.NewFuzzyQuery(text)
 	searchRequest := bleve.NewSearchRequestOptions(query, 99, 0, false)
 	searchRequest.Fields = []string{"*"}
 
