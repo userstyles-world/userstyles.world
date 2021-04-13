@@ -48,19 +48,19 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	user, err := models.FindUserByName(database.DB, response.Name)
+	user, err := models.FindUserByName(database.DB, response.UserName)
 	if err != nil {
 		fmt.Println(err.Error())
 		if err.Error() == "User not found." || err.Error() == "record not found" {
 			user = &models.User{
-				Username:      response.Name,
+				Username:      response.UserName,
 				OAuthProvider: service,
 			}
 
 			regErr := database.DB.Create(user)
 
 			if regErr.Error != nil {
-				log.Printf("Failed to register %s, error: %s", response.Name, regErr.Error)
+				log.Printf("Failed to register %s, error: %s", response.UserName, regErr.Error)
 
 				c.SendStatus(fiber.StatusInternalServerError)
 				return c.Render("err", fiber.Map{

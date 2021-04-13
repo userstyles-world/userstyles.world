@@ -16,9 +16,10 @@ type OAuthTokenResponse struct {
 }
 
 type OAuthResponse struct {
-	Name string `json:"name"`
-	// https://gitea.com/gitea/go-sdk/src/commit/e11a4f7f3bdb5251a25f754125887c88f88f2f63/gitea/user.go#L19
-	GiteaName string `json:"login"`
+	// Gitlab returns "username" for the username
+	UserName string `json:"username"`
+	// Github/Gitea-based returns "login" for the username
+	LoginName string `json:"login"`
 }
 
 type GiteaLikeAccessJson struct {
@@ -193,8 +194,8 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 		return OAuthResponse{}
 	}
 
-	if oauthResponse.GiteaName != "" {
-		oauthResponse.Name = oauthResponse.GiteaName
+	if oauthResponse.LoginName != "" {
+		oauthResponse.UserName = oauthResponse.LoginName
 	}
 
 	return oauthResponse
