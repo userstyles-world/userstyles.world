@@ -20,7 +20,7 @@ func StylePromote(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		c.Render("err", fiber.Map{
+		return c.Render("err", fiber.Map{
 			"Title": "Failed to promote a style",
 			"User":  u,
 		})

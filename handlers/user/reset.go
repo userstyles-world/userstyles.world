@@ -14,22 +14,22 @@ import (
 	"userstyles.world/utils"
 )
 
-func hasAccount(c *fiber.Ctx) {
+func RecoverGet(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
 		log.Printf("User %d has set session, redirecting.", u.ID)
-		c.Redirect("/account", fiber.StatusSeeOther)
+		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
-}
-
-func RecoverGet(c *fiber.Ctx) error {
-	hasAccount(c)
 	return c.Render("reset", fiber.Map{
 		"Title": "Reset",
 	})
 }
 
 func ResetGet(c *fiber.Ctx) error {
-	hasAccount(c)
+	if u, ok := jwtware.User(c); ok {
+		log.Printf("User %d has set session, redirecting.", u.ID)
+		return c.Redirect("/account", fiber.StatusSeeOther)
+	}
+
 	renderError := c.Render("err", fiber.Map{
 		"Title": "Reset key not found",
 	})
@@ -53,7 +53,10 @@ func ResetGet(c *fiber.Ctx) error {
 
 // Todo: Send email that password has been changed.
 func ResetPost(c *fiber.Ctx) error {
-	hasAccount(c)
+	if u, ok := jwtware.User(c); ok {
+		log.Printf("User %d has set session, redirecting.", u.ID)
+		return c.Redirect("/account", fiber.StatusSeeOther)
+	}
 
 	renderError := c.Render("err", fiber.Map{
 		"Title":  "Reset key not found",
@@ -106,7 +109,10 @@ func ResetPost(c *fiber.Ctx) error {
 }
 
 func RecoverPost(c *fiber.Ctx) error {
-	hasAccount(c)
+	if u, ok := jwtware.User(c); ok {
+		log.Printf("User %d has set session, redirecting.", u.ID)
+		return c.Redirect("/account", fiber.StatusSeeOther)
+	}
 
 	u := models.User{
 		Email: c.FormValue("email"),

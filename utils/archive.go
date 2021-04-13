@@ -40,19 +40,19 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	s := &models.Style{}
 	if err != nil {
 		log.Printf("failed to extract id, err: %v\n", err)
-		return s, errors.New("Failed to extract Style ID")
+		return s, errors.New("failed to extract Style ID")
 	}
 
 	data, err := fetchJSON(id)
 	if err != nil {
 		log.Printf("failed to fetch json, err: %v\n", err)
-		return s, errors.New("Failed to fetch Style data")
+		return s, errors.New("failed to fetch Style data")
 	}
 
 	res, err := unmarshalJSON(data)
 	if err != nil {
 		log.Printf("failed to unmarshal json, err: %v\n", err)
-		return s, errors.New("Failed to process Style data")
+		return s, errors.New("failed to process Style data")
 	}
 
 	// Fetch generated UserCSS format.
@@ -60,7 +60,7 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	uc, err := usercss.ParseFromURL(source)
 	if err != nil {
 		log.Printf("failed to parse style from URL, err: %v\n", err)
-		return s, errors.New("Ffailed to fetch Style")
+		return s, errors.New("failed to fetch Style")
 	}
 
 	s = &models.Style{

@@ -90,14 +90,14 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 		output += "Content-Type: " + part0.ContentType + "charset=\"utf-8\"\n" +
 			"Content-Transfer-Encoding: " + part0.ContentTransferEncoding + "\n\n"
 	} else {
-		return "", errors.New("Wanted to send email but no parts were detected.")
+		return "", errors.New("no parts were detected")
 	}
 
 	for i := 0; i < partsLen; i++ {
 		part := eb.Parts[i]
 
 		if part.Body == "" {
-			return "", errors.New("Wanted to send email part, but it doesn't contain a body.")
+			return "", errors.New("part doesn't contain body")
 		}
 		if part.ContentTransferEncoding == "" {
 			part.ContentTransferEncoding = "8bit"
@@ -129,11 +129,11 @@ func (eb *EmailBuilder) SendEmail() error {
 	}
 
 	if eb.To == "" {
-		return errors.New("Wanted to send email but TO: is missing")
+		return errors.New("to parameter is missing")
 	}
 
 	if eb.Subject == "" {
-		return errors.New("Wanted to send email but SUBJECT: is missing")
+		return errors.New("subject parameter is missing")
 	}
 
 	bodyMessage, err := eb.parseMultiPart()

@@ -88,7 +88,14 @@ func StyleCreatePost(c *fiber.Ctx) error {
 	if image != nil {
 		ID := strconv.FormatUint(uint64(s.ID), 10)
 		data, _ := io.ReadAll(image)
-		os.WriteFile(images.CacheFolder+ID+".originial", data, 0644)
+		err = os.WriteFile(images.CacheFolder+ID+".originial", data, 0644)
+		if err != nil {
+			log.Println("Style creation failed, err:", err)
+			return c.Render("err", fiber.Map{
+				"Title": "Internal server error.",
+				"User":  u,
+			})
+		}
 		if s.Preview == "" {
 			s.Preview = "https://userstyles.world/api/screenshot/" + ID + ".jpeg"
 			database.DB.

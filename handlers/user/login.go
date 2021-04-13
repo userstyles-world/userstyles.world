@@ -15,9 +15,9 @@ import (
 )
 
 func LoginGet(c *fiber.Ctx) error {
-	if u, ok := jwt.User(c); ok == true {
+	if u, ok := jwt.User(c); ok {
 		log.Printf("User %d has set session, redirecting.", u.ID)
-		c.Redirect("/account", fiber.StatusSeeOther)
+		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
 	return c.Render("login", fiber.Map{

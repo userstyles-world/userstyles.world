@@ -15,7 +15,7 @@ import (
 func VerifyGet(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
 		log.Printf("User %d has set session, redirecting.", u.ID)
-		c.Redirect("/account", fiber.StatusSeeOther)
+		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
 	// Using unified Errors, won't give possible attackers any information.

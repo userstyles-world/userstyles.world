@@ -40,7 +40,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 	if strings.HasPrefix(r, utils.ArchiveURL) {
 		style, err := utils.ImportFromArchive(r, *u)
 		if err != nil {
-			c.Render("err", fiber.Map{
+			return c.Render("err", fiber.Map{
 				"Title": err,
 				"User":  u,
 			})

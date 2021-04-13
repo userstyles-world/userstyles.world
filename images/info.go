@@ -66,7 +66,11 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 
 		// Make sure to received the full body before processing it.
 		data, _ := io.ReadAll(req.Body)
-		os.WriteFile(originial, data, 0644)
+		err = os.WriteFile(originial, data, 0644)
+		if err != nil {
+			fmt.Println("Error processing:", err)
+			return ImageInfo{}, err
+		}
 
 		err = DecodeImage(originial, jpeg, vips.ImageTypeJPEG)
 		if err != nil {
