@@ -9,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/template/html"
 	"github.com/markbates/pkger"
 	"github.com/microcosm-cc/bluemonday"
@@ -64,7 +63,6 @@ func Initialize() {
 		app.Use(limiter.New(limiter.Config{Max: 75}))
 	}
 	app.Use(jwt.New())
-	app.Use(pprof.New())
 
 	app.Get("/", core.Home)
 	app.Get("/search", core.Search)
