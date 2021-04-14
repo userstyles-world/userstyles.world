@@ -30,6 +30,7 @@
                     {{ if .Params.Email -}}
                         <p><span class="minw">Email</span>{{ .Params.Email }}</p>
                     {{- end }}
+                    <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt.Format "January 02, 2006 15:04" }}</p>
                     <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">{{- .Params.Biography | Markdown -}}</div>
                     <form class="full" method="post" action="/account">
@@ -48,6 +49,7 @@
                 <section class="styles mt:l">
                     <h2 class="sub-title td:d">Userstyles</h2>
                     {{ if ne (len .Styles) 0 }}
+                        <p class="description">{{ len .Styles }} styles in total.</p>
                         {{/* template "utils/debug_styles" . */}}
                         <div class="grid  flex rwrap mx:r mt:m">
                             {{ range .Styles }}

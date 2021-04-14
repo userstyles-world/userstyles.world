@@ -10,6 +10,7 @@
             <div class="wrapper py:l">
                 <section class="welcome">
                     <h1 class="title mb:m">{{ .Params.Username }}</h1>
+                    <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt.Format "January 02, 2006 15:04" }}</p>
                     <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">{{- .Params.Biography | Markdown -}}</div>
                 </section>
@@ -17,6 +18,7 @@
                 <section class="styles mt:l">
                     <h2 class="sub-title td:d">Userstyles</h2>
                     {{ if ne (len .Styles) 0 }}
+                        <p class="description">{{ len .Styles }} styles in total.</p>
                         {{/* template "utils/debug_styles" . */}}
                         <div class="grid  flex rwrap mx:r mt:m">
                             {{ range .Styles }}
