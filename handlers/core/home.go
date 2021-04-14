@@ -10,6 +10,8 @@ import (
 
 func Home(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	p := models.GetHomepageStatistics(database.DB)
+
 
 	styles, err := models.GetAllFeaturedStyles(database.DB)
 	if err != nil {
@@ -24,5 +26,6 @@ func Home(c *fiber.Ctx) error {
 		"Title":  "Home",
 		"User":   u,
 		"Styles": styles,
+		"Params": p,
 	})
 }
