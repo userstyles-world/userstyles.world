@@ -94,6 +94,7 @@ func Initialize() {
 	app.Get("/monitor", jwt.Protected, core.Monitor)
 
 	v1 := app.Group("/api")
+	v1.Head("/style/:id.user.css", api.GetStyleEtag)
 	v1.Get("/style/:id.user.css", api.GetStyleSource)
 	v1.Get("/style/:id", api.GetStyleDetails)
 	v1.Get("/style/preview/:id", api.GetPreviewScreenshot)
