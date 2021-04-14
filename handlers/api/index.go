@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -10,20 +12,28 @@ import (
 )
 
 type USoFormat struct {
-	ID         uint   `json:"i"`
-	Name       string `json:"n"`
-	Category   string `json:"c"`
-	Author     string `json:"an"`
-	Screenshot string `json:"sn"`
+	ID             uint      `json:"i"`
+	Name           string    `json:"n"`
+	Category       string    `json:"c"`
+	UpdatedAt      time.Time `json:"u"`
+	TotalInstalls  int64     `json:"t"`
+	WeeklyInstalls int64     `json:"w"`
+	Author         string    `json:"an"`
+	Screenshot     string    `json:"sn"`
 }
 
 func convertToUSoFormat(s models.APIStyle) USoFormat {
+	id := fmt.Sprintf("%d", s.ID) // Convert uint to string.
+
 	return USoFormat{
-		ID:         s.ID,
-		Name:       s.Name,
-		Category:   fixCategory(s.Category),
-		Author:     s.Username,
-		Screenshot: s.Preview,
+		ID:             s.ID,
+		Name:           s.Name,
+		Category:       fixCategory(s.Category),
+		Author:         s.Username,
+		Screenshot:     s.Preview,
+		UpdatedAt:      s.UpdatedAt,
+		TotalInstalls:  models.GetTotalInstallsForStyle(database.DB, id),
+		WeeklyInstalls: models.GetWeeklyInstallsForStyle(database.DB, id),
 	}
 }
 
