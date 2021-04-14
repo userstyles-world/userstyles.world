@@ -43,14 +43,14 @@ func fixCategory(cat string) string {
 	}
 	cat = strings.TrimSuffix(cat, ".com")
 	cat = strings.TrimSuffix(cat, ".org")
-	return cat
 
+	return cat
 }
 
 func GetStyleIndex(c *fiber.Ctx) error {
 	format := c.Params("format")
 
-	styles, err := models.GetAllStyles(database.DB)
+	styles, err := models.GetAllStylesForIndexAPI(database.DB)
 	if err != nil {
 		return c.JSON(fiber.Map{
 			"data": "styles not found",
