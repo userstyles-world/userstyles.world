@@ -120,7 +120,6 @@ func GetHomepageStatistics(db *gorm.DB) *siteStats {
 	p := new(siteStats)
 	i := "install = ?"
 	t := "install = ? and updated_at > ?"
-	// m := "install = ? and updated_at > ?"
 
 	db.Model(User{}).Where("id").Count(&p.UserCount)
 	db.Model(Style{}).Where("id").Count(&p.StyleCount)
@@ -128,7 +127,7 @@ func GetHomepageStatistics(db *gorm.DB) *siteStats {
 	// TODO: Replace lastDay with lastWeek on 2021-04-21.
 	db.Model(Stats{}).Where(t, false, lastDay).Count(&p.WeeklyViews)
 	db.Model(Stats{}).Where(t, true, lastDay).Count(&p.WeeklyInstalls)
-	// db.Model(Stats{}).Where(m, true, lastMonth).Count(&p.MonthlyInstalls)
+	// db.Model(Stats{}).Where(t, true, lastMonth).Count(&p.MonthlyInstalls)
 	db.Model(Stats{}).Where(i, true).Count(&p.TotalInstalls)
 
 	return p
