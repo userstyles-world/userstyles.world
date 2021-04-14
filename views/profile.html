@@ -9,12 +9,13 @@
         <main>
             <div class="wrapper py:l">
                 <section class="welcome">
-                    <h1 class="mb:m">{{ .Params.Username }}</h1>
+                    <h1 class="title mb:m">{{ .Params.Username }}</h1>
+                    <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">{{- .Params.Biography | Markdown -}}</div>
                 </section>
 
                 <section class="styles mt:l">
-                    <h2>Userstyles</h2>
+                    <h2 class="sub-title td:d">Userstyles</h2>
                     {{ if ne (len .Styles) 0 }}
                         {{/* template "utils/debug_styles" . */}}
                         <div class="grid  flex rwrap mx:r mt:m">
