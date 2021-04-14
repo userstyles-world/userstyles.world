@@ -1,8 +1,8 @@
 package api
 
 import (
-	"crypto/md5"
 	"fmt"
+	"hash/crc32"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
@@ -50,7 +50,7 @@ func GetStyleEtag(c *fiber.Ctx) error {
 	// TODO: add a possible update stat?
 
 	// Follows the format "source code length - MD5 Checksum of source code"
-	etagValue := fmt.Sprintf("\"%d-%x\"", len(style.Code), md5.Sum([]byte(style.Code)))
+	etagValue := fmt.Sprintf("\"%v-%v\"", len(style.Code), crc32.ChecksumIEEE([]byte(style.Code)))
 
 	// Set the value for "Etag" header
 	c.Response().Header.SetCanonical(normalizedHeaderETag, []byte(etagValue))
