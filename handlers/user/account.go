@@ -58,21 +58,34 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	prevBio := user.Biography
-	user.Biography = c.FormValue("bio")
+	if c.FormValue("bio") != "" {
+		prevBio := user.Biography
+		user.Biography = c.FormValue("bio")
 
-	if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
-		errors := err.(validator.ValidationErrors)
-		log.Println("Validation errors:", errors)
-		user.Biography = prevBio
+		if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
+			errors := err.(validator.ValidationErrors)
+			log.Println("Validation errors:", errors)
+			user.Biography = prevBio
 
-		return c.Render("account", fiber.Map{
-			"Title":  "Validation Error",
-			"User":   u,
-			"Params": user,
-			"Styles": styles,
-			"Error":  "Biography must be less than 512 characters in length.",
-		})
+			return c.Render("account", fiber.Map{
+				"Title":  "Validation Error",
+				"User":   u,
+				"Params": user,
+				"Styles": styles,
+				"Error":  "Biography must be less than 512 characters in length.",
+			})
+		}
+	}
+	githubValue, gitlabValue, codebergValue := c.FormValue("github"), c.FormValue("gitlab"), c.FormValue("codeberg")
+
+	if githubValue != user.Socials.Github {
+		user.Socials.Github = githubValue
+	}
+	if gitlabValue != user.Socials.Gitlab {
+		user.Socials.Gitlab = gitlabValue
+	}
+	if codebergValue != user.Socials.Codeberg {
+		user.Socials.Codeberg = codebergValue
 	}
 
 	t := new(models.User)

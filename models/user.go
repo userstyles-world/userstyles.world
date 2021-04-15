@@ -14,6 +14,12 @@ const (
 	Admin
 )
 
+type SocialMedia struct {
+	Github   string
+	Gitlab   string
+	Codeberg string
+}
+
 type User struct {
 	gorm.Model    `json:"-"`
 	Username      string `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
@@ -22,6 +28,10 @@ type User struct {
 	Password      string `validate:"required,min=8,max=32"`
 	Biography     string `validate:"min=0,max=512"`
 	Role          Role   `gorm:"default=0"`
+
+	// The values within SocialMedia struct
+	// Will be saved under the user struct
+	Socials SocialMedia `gorm:"embedded"`
 }
 
 type APIUser struct {

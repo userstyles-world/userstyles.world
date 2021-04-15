@@ -13,6 +13,19 @@ import (
 	"userstyles.world/utils"
 )
 
+func getSocialMediaValue(user *models.User, social string) string {
+	switch social {
+	case "github":
+		return user.Socials.Github
+	case "gitlab":
+		return user.Socials.Gitlab
+	case "codeberg":
+		return user.Socials.Codeberg
+	default:
+		return ""
+	}
+}
+
 func CallbackGet(c *fiber.Ctx) error {
 	// Get the necessary information.
 	redirectCode, tempCode, state := c.Params("rcode"), c.Query("code"), c.Query("state")
@@ -72,7 +85,7 @@ func CallbackGet(c *fiber.Ctx) error {
 			return c.Next()
 		}
 	}
-	if user.OAuthProvider == "none" || user.OAuthProvider != service {
+	if (user.OAuthProvider == "none" || user.OAuthProvider != service) && getSocialMediaValue(user, service) != response.UserName {
 		return c.Next()
 	}
 

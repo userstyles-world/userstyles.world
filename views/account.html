@@ -44,6 +44,39 @@
                         </textarea>
                         <button class="flex btn primary" type="submit">Save</button>
                     </form>
+                    <h2 class="sub-title td:d mt:l">Socials</h2>
+                    <form class="full socials" method="post" action="/account">
+                        <label for="github">
+                            {{- template "partials/github_logo" . -}}
+                            Github
+                        </label>
+                        <input
+                            pattern="^[a-zA-Z0-9]*$"
+                            type="text" name="github"
+                            placeholder="e.g. username"
+                            value="{{ .Params.Socials.Github }}"/>
+                        <label for="gitlab">
+                            {{- template "partials/gitlab_logo" . -}}
+                            Gitlab
+                        </label>
+                        <input
+                            pattern="^[a-zA-Z0-9_]*$"
+                            type="text" name="gitlab"
+                            placeholder="e.g. username"
+                            value="{{ .Params.Socials.Gitlab }}"/>
+                        </input>
+                        <label for="codeberg">
+                            {{- template "partials/codeberg_logo" . -}}
+                            Codeberg
+                        </label>
+                        <input
+                            pattern="^[a-zA-Z0-9_]*$"
+                            type="text" name="codeberg"
+                            placeholder="e.g. username"
+                            value="{{ .Params.Socials.Codeberg }}"/>
+                        </input>
+                        <button class="flex btn primary" type="submit">Save</button>
+                    </form>
                 </section>
 
                 <section class="styles mt:l">
