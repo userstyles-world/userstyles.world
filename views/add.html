@@ -115,10 +115,16 @@
 
                         {{ if eq .Method "edit" }}
                             <div class="ta:l">
-                                {{- $checked := "" -}}
-                                {{- if .Style.MirrorCode -}}{{- $checked = "checked" -}}{{- end -}}
-                                <label for="mirrorCode">Mirror code updates</label>
-                                <input type="checkbox" name="mirrorCode" {{ $checked }}>
+                                {{- $mirrorMeta := "" -}}
+                                {{- if .Style.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
+                                <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
+                                <input type="checkbox" name="mirrorMeta" {{ $mirrorMeta }}>
+                            </div>
+                            <div class="ta:l">
+                                {{- $mirrorCode := "" -}}
+                                {{- if .Style.MirrorCode -}}{{- $mirrorCode = "checked" -}}{{- end -}}
+                                <label for="mirrorCode">Mirror source code updates</label>
+                                <input type="checkbox" name="mirrorCode" {{ $mirrorCode }}>
                             </div>
                         {{ end }}
 

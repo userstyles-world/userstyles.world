@@ -24,9 +24,9 @@ func Initialize() {
 func Tick() {
 	time.Sleep(startupDelay)
 	for {
-		importedStyles, err := models.GetAllImportedStyles(database.DB)
+		importedStyles, err := models.GetImportedStyles(database.DB)
 		if err == nil {
-			stylesLen := len(*importedStyles)
+			stylesLen := len(importedStyles)
 			n, i := 0, 0
 		out:
 			for {
@@ -34,7 +34,7 @@ func Tick() {
 					if i >= stylesLen {
 						break out
 					}
-					go UpdateBatch((*importedStyles)[i])
+					go UpdateBatch(&importedStyles[i])
 					i++
 					n++
 				}
