@@ -14,6 +14,7 @@ func UpdateBatch(batch models.APIStyle) {
 		return
 	}
 	t := new(models.Style)
+
 	style, err := usercss.ParseFromURL(batch.Original)
 	if err != nil {
 		fmt.Printf("Updater: Cannot fetch style %d.\n", batch.ID)
@@ -24,20 +25,12 @@ func UpdateBatch(batch models.APIStyle) {
 		return
 	}
 
-	// Run updates if versions don't match.
+	// Mirror source code if versions don't match.
 	if style.Version != usercss.ParseFromString(batch.Code).Version {
 		fmt.Printf("Updater: Style %d was changed.\n", batch.ID)
 		s := models.Style{
-			UserID:      batch.UserID,
-			Name:        batch.Name,
-			Code:        style.SourceCode,
-			Description: batch.Description,
-			Homepage:    batch.Homepage,
-			Preview:     batch.Preview,
-			Category:    batch.Category,
-			Original:    batch.Original,
+			Code: style.SourceCode,
 		}
-		s.Code = style.SourceCode
 
 		err := database.DB.
 			Model(t).

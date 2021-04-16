@@ -35,7 +35,6 @@ type Data struct {
 }
 
 func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
-	// TODO: Implement better error handling.
 	id, err := extractID(url)
 	s := &models.Style{}
 	if err != nil {

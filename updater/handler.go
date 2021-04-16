@@ -42,7 +42,7 @@ func Tick() {
 				n = 0
 			}
 		} else {
-			log.Printf("Updater: Wannted to update imported styles, but caught error: %s", err)
+			log.Printf("Updater: Wanted to update imported styles, but caught error: %s", err)
 		}
 		time.Sleep(updaterTick)
 	}
