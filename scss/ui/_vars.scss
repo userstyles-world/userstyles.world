@@ -67,3 +67,8 @@ $mode: (
         }
     }
 }
+
+[data-darkreader-scheme="dark"] .github svg { filter: invert(1) }
+@media (prefers-color-scheme: dark) {
+    .github svg { filter: invert(1) }
+}
