@@ -3,6 +3,7 @@ package handlers
 import (
 	"html/template"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,8 +29,14 @@ func renderEngine() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
 
 	engine.AddFunc("Markdown", func(s string) template.HTML {
-		gen := blackfriday.Run([]byte(s), blackfriday.WithExtensions(blackfriday.HardLineBreak))
+		// Normalize EOL to prevent empty new lines.
+		s = strings.ReplaceAll(s, "\r\n", "\n")
+		s = strings.ReplaceAll(s, "\r", "\n")
+
+		// Generate Markdown then sanitize it before returning HTML.
+		gen := blackfriday.Run([]byte(s))
 		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
+
 		return template.HTML(out)
 	})
 
