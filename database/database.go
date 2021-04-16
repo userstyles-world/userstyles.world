@@ -60,6 +60,10 @@ func Initialize() {
 		defer Seed()
 	}
 
+	// Split mirror into code and meta. TODO: Remove once it ran once in production.
+	DB.Migrator().RenameColumn(models.Style{}, "mirror", "mirror_code")
+	DB.Migrator().DropColumn(models.Style{}, "mirror")
+
 	Migrate(&user, &style, &stats)
 }
 

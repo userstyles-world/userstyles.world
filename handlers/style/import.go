@@ -77,8 +77,8 @@ func StyleImportPost(c *fiber.Ctx) error {
 		s.Original = r
 	}
 
-	// Enable style mirroring.
-	s.Mirror = c.FormValue("mirror") == "on"
+	// Enable source code mirroring.
+	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 
 	// Prevent importing multiples of the same style.
 	err := models.CheckDuplicateStyleName(database.DB, s)

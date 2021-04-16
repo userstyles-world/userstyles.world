@@ -116,9 +116,9 @@
                         {{ if eq .Method "edit" }}
                             <div class="ta:l">
                                 {{- $checked := "" -}}
-                                {{- if .Style.Mirror -}}{{- $checked = "checked" -}}{{- end -}}
-                                <label for="mirror">Mirror code updates</label>
-                                <input type="checkbox" name="mirror" {{ $checked }}>
+                                {{- if .Style.MirrorCode -}}{{- $checked = "checked" -}}{{- end -}}
+                                <label for="mirrorCode">Mirror code updates</label>
+                                <input type="checkbox" name="mirrorCode" {{ $checked }}>
                             </div>
                         {{ end }}
 
