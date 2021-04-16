@@ -37,36 +37,30 @@ func UpdateBatch(batch *models.Style) {
 		return
 	}
 
+	s := new(models.Style)
+	s.ID = batch.ID
+
 	// Update style metadata if style comes from USo-archive.
 	if isUSo(batch.Original) && batch.MirrorMeta {
 		new, err := utils.ImportFromArchive(batch.Original, models.APIUser{})
 		if err != nil {
-			log.Printf("%v\n", err)
+			log.Printf("Updater: Failed to ImportFromArchive, err: %v\n", err)
 		}
 
 		// Run update if fields differ.
 		if updateMeta(batch, new) {
-			s := models.Style{
-				Name:        new.Name,
-				Notes:       new.Notes,
-				Preview:     new.Preview,
-				Description: new.Description,
-			}
+			s.Name = new.Name
+			s.Notes = new.Notes
+			s.Preview = new.Preview
+			s.Description = new.Description
 
-			err := database.DB.
-				Debug().
-				Model(models.Style{}).
-				Where("id", batch.ID).
-				Updates(s).
-				Error
-
-			if err != nil {
-				log.Printf("Updater: Updating style %d failed, caught err %s", batch.ID, err)
+			if err = models.UpdateStyle(database.DB, s); err != nil {
+				log.Printf("Updater: Mirroring meta for %d failed, err: %s", batch.ID, err)
 			}
 		}
 	}
 
-	// Update style source code.
+	// Get new style source code.
 	style, err := usercss.ParseFromURL(batch.Original)
 	if err != nil {
 		log.Printf("Updater: Cannot fetch style %d.\n", batch.ID)
@@ -80,18 +74,9 @@ func UpdateBatch(batch *models.Style) {
 	// Mirror source code if versions don't match.
 	if style.Version != usercss.ParseFromString(batch.Code).Version {
 		log.Printf("Updater: Style %d was changed.\n", batch.ID)
-		s := models.Style{
-			Code: style.SourceCode,
-		}
-
-		err := database.DB.
-			Model(models.Style{}).
-			Where("id", batch.ID).
-			Updates(s).
-			Error
-
-		if err != nil {
-			log.Printf("Updater: Updating style %d failed, caught err %s", batch.ID, err)
+		s.Code = style.SourceCode
+		if err = models.UpdateStyle(database.DB, s); err != nil {
+			log.Printf("Updater: Mirroring code for %d failed, err: %s", batch.ID, err)
 		}
 	}
 }

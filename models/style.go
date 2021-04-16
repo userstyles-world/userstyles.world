@@ -173,6 +173,21 @@ func CreateStyle(db *gorm.DB, s *Style) (*Style, error) {
 	return s, nil
 }
 
+func UpdateStyle(db *gorm.DB, s *Style) error {
+	err := getDBSession(db).
+		Debug().
+		Model(Style{}).
+		Where("id", s.ID).
+		Updates(s).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
 	err := getDBSession(db).
