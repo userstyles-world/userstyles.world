@@ -3,13 +3,13 @@ package handlers
 import (
 	"html/template"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html"
 	"github.com/markbates/pkger"
 	"github.com/microcosm-cc/bluemonday"
@@ -60,6 +60,10 @@ func Initialize() {
 	app := fiber.New(fiber.Config{
 		Views: renderEngine(),
 	})
+
+	if config.DB == "dev.db" {
+		app.Use(logger.New())
+	}
 
 	app.Use(compress.New())
 	if config.DB != "dev.db" {
