@@ -20,9 +20,9 @@ func (jt *JWTTokenBuilder) SetClaim(name string, value interface{}) *JWTTokenBui
 	return jt
 }
 
-func (jt *JWTTokenBuilder) SetExpiration(duration time.Duration) *JWTTokenBuilder {
-	if duration != -1 {
-		jt.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(duration).Unix()
+func (jt *JWTTokenBuilder) SetExpiration(duration time.Time) *JWTTokenBuilder {
+	if !duration.IsZero() {
+		jt.Claims.(jwt.MapClaims)["exp"] = duration.Unix()
 	}
 	return jt
 }

@@ -145,7 +145,7 @@ func RecoverPost(c *fiber.Ctx) error {
 
 	jwt, err := utils.NewJWTToken().
 		SetClaim("email", u.Email).
-		SetExpiration(time.Hour * 2).
+		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.VerifySigningKey)
 
 	if err != nil {

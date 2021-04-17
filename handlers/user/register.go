@@ -46,7 +46,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		SetClaim("username", u.Username).
 		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).
-		SetExpiration(time.Hour * 2).
+		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.VerifySigningKey)
 
 	if err != nil {

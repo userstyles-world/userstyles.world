@@ -72,14 +72,11 @@ func LoginPost(c *fiber.Ctx) error {
 		})
 	}
 
-	var expiration time.Duration
+	var expiration time.Time
 	if remember {
 		// 2 weeks
-		expiration = time.Hour * 24 * 14
-	} else {
-		expiration = -1
+		expiration = time.Now().Add(time.Hour * 24 * 14)
 	}
-
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
@@ -95,17 +92,11 @@ func LoginPost(c *fiber.Ctx) error {
 		})
 	}
 
-	var expires time.Time
-	if remember {
-		// 2 weeks
-		expires = time.Now().Add(time.Hour * 24 * 14)
-	}
-
 	c.Cookie(&fiber.Cookie{
 		Name:     fiber.HeaderAuthorization,
 		Value:    t,
 		Path:     "/",
-		Expires:  expires,
+		Expires:  expiration,
 		Secure:   config.DB != "dev.db",
 		HTTPOnly: true,
 		SameSite: "strict",

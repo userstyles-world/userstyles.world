@@ -89,7 +89,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	expiration := time.Hour * 24 * 14
+	expiration := time.Now().Add(time.Hour * 24 * 14)
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
@@ -108,7 +108,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		Name:     fiber.HeaderAuthorization,
 		Value:    t,
 		Path:     "/",
-		Expires:  time.Now().Add(expiration),
+		Expires:  expiration,
 		Secure:   config.DB != "dev.db",
 		HTTPOnly: true,
 		SameSite: "lax",
