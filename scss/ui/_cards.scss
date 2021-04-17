@@ -30,8 +30,7 @@
         img {
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            height: 100%;
             position: absolute;
             border-radius: var(--br-3) var(--br-3) 0 0;
             object-position: center top;
