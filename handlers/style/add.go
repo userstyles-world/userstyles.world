@@ -55,7 +55,7 @@ func StyleCreatePost(c *fiber.Ctx) error {
 	}
 
 	// Prevent adding multiples of the same style.
-	err := models.CheckDuplicateStyleName(database.DB, s)
+	err := models.CheckDuplicateStyle(database.DB, s)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": err,

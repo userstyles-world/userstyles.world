@@ -82,7 +82,7 @@ func StyleImportPost(c *fiber.Ctx) error {
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 
 	// Prevent importing multiples of the same style.
-	err := models.CheckDuplicateStyleName(database.DB, s)
+	err := models.CheckDuplicateStyle(database.DB, s)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": err,
