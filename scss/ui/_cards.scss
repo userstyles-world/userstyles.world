@@ -1,4 +1,5 @@
 .card {
+    min-width: var(--card-min-width);
     border-radius: var(--br-3);
     background-color: var(--bg-2);
 
@@ -97,10 +98,13 @@
 }
 
 .grid {
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: 1280px) {
+        .col { flex-basis: calc(100% / 3 - 1rem) }
+    }
+    @media screen and (max-width: 964px) {
         .col { flex-basis: calc(100% / 2 - 1rem) }
     }
-    @media screen and (max-width: 480px) {
+    @media screen and (max-width: 648px) {
         .col { flex-basis: 100% }
     }
 }
