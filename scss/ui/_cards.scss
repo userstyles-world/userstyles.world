@@ -4,10 +4,7 @@
     background-color: var(--bg-2);
 
     &.col {
-        figure {
-            &::before, img {
-                border-radius: var(--br-3) var(--br-3) 0 0;
-            }
+        picture {
             // Overlay the image on top of borders.
             @media (prefers-color-scheme: light) {
                 margin: -1px;
@@ -23,19 +20,22 @@
         }
     }
 
-    figure {
-        margin: 0;
+    .screenshot img { border-radius: var(--br-3) }
+
+    picture {
         padding-top: 56.25%;
         position: relative;
+        display: flex;
 
         img {
-            position: absolute;
             top: 0;
             left: 0;
-            height: 100%;
-            object-fit: cover;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            border-radius: var(--br-3) var(--br-3) 0 0;
             object-position: center top;
-            border-radius: var(--br-3);
+            object-fit: cover;
         }
 
         &.no-screenshot svg {
@@ -45,7 +45,7 @@
         }
     }
 
-    .thumbnail figure {
+    .thumbnail picture {
         &::before,
         &::after {
             top: 0;
@@ -56,7 +56,7 @@
             content: '';
             position: absolute;
             text-align: center;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             transition: all 0.3s ease-in-out;
             color: var(--fg-1);
             opacity: 0;

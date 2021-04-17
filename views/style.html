@@ -16,7 +16,9 @@
                         <p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
                     {{- end }}
                     <div class="card bd:o">
-                        {{ template "partials/preview_image" .Style }}
+                        <div class="screenshot">
+                            {{- template "partials/preview_image" .Style -}}
+                        </div>
                     </div>
                 </section>
 
