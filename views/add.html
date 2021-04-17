@@ -81,9 +81,9 @@
                             placeholder="Link to userstyle's project home, bug tracker, etc.">
 
                         <label for="previewUrl">Preview URL</label>
-                        <i class="fg:3">Images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
+                        <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
                         <input
-                            pattern="^https:\/\/(www\.)?((user-images|raw)\.githubusercontent\.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
+                            pattern="^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw)\.githubusercontent\.com|github.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
                             type="text" name="previewUrl" value="{{ .Style.Preview }}"
                             placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
                         
