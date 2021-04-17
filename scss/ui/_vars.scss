@@ -56,6 +56,7 @@ $mode: (
     --br-3: 0.33rem;
     --inverse: #ffffff;
     --card-min-width: 300px;
+    --form-max-width: 840px;
     --layout-max-width: 80rem;
     @each $key, $val in map-get($mode, "dark") {
         --#{$key}: #{$val};

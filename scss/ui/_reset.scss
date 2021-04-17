@@ -124,7 +124,7 @@ pre {
 form {
     margin: 1rem auto;
     padding: 1rem;
-    max-width: 480px;
+    max-width: var(--form-max-width);
     border: 1px solid var(--bg-4);
     background-color: var(--bg-2);
     border-radius: var(--br-3);

@@ -33,7 +33,7 @@
                     <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt.Format "January 02, 2006 15:04" }}</p>
                     <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">{{- .Params.Biography | Markdown -}}</div>
-                    <form class="full" method="post" action="/account">
+                    <form class="biography ml:0" method="post" action="/account">
                         <label for="name">Biography</label>
                         <i class="fg:3">Supports Markdown syntax.</i>
                         <textarea
@@ -45,7 +45,7 @@
                         <button class="flex btn primary" type="submit">Save</button>
                     </form>
                     <h2 class="sub-title td:d mt:l">Socials</h2>
-                    <form class="full socials" method="post" action="/account">
+                    <form class="socials ml:0" method="post" action="/account">
                         <label for="github">
                             {{- template "partials/github_logo" . -}}
                             Github

@@ -52,7 +52,7 @@
                 </section>
 
                 <section class="">
-                    <form class="full" method="post" action="/{{ $method }}" enctype="multipart/form-data">
+                    <form class="{{ $method }}" method="post" action="/{{ $method }}" enctype="multipart/form-data">
                         <label for="name">Name</label>
                         <input
                             required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
