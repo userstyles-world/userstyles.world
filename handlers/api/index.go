@@ -24,12 +24,17 @@ type USoFormat struct {
 func convertToUSoFormat(s models.APIStyle) USoFormat {
 	id := fmt.Sprintf("%d", s.ID) // Convert uint to string.
 
+	var img string
+	if s.Preview != "" {
+		img = fmt.Sprintf("https://userstyles.world/api/style/preview/%d.webp", s.ID)
+	}
+
 	return USoFormat{
 		ID:             s.ID,
 		Name:           s.Name,
 		Category:       fixCategory(s.Category),
 		Author:         s.Username,
-		Screenshot:     s.Preview,
+		Screenshot:     img,
 		UpdatedAt:      s.UpdatedAt.Unix(),
 		TotalInstalls:  models.GetTotalInstallsForStyle(database.DB, id),
 		WeeklyInstalls: models.GetWeeklyInstallsForStyle(database.DB, id),
