@@ -14,11 +14,7 @@ import (
 const archiveURL = "https://raw.githubusercontent.com/33kk/uso-archive/"
 
 func isUSo(url string) bool {
-	if strings.HasPrefix(url, archiveURL) {
-		return true
-	}
-
-	return false
+	return strings.HasPrefix(url, archiveURL)
 }
 
 func updateMeta(a, b *models.Style) bool {
