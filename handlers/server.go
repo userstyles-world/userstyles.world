@@ -67,7 +67,7 @@ func Initialize() {
 
 	app.Use(compress.New())
 	if config.DB != "dev.db" {
-		app.Use(limiter.New(limiter.Config{Max: 75}))
+		app.Use(limiter.New(limiter.Config{Max: 300}))
 	}
 	app.Use(jwt.New())
 
