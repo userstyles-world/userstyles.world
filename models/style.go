@@ -79,9 +79,9 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 }
 
 func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
-	t, q, s := new(Style), new([]APIStyle), ""
+	t, q := new(Style), new([]APIStyle)
 
-	s += "styles.id, styles.name, styles.created_at, styles.updated_at, "
+	s := "styles.id, styles.name, styles.created_at, styles.updated_at, "
 	s += "styles.description, styles.notes, styles.category, styles.preview, u.username"
 
 	err := getDBSession(db).
