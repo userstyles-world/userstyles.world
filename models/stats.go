@@ -32,6 +32,18 @@ type siteStats struct {
 	WeeklyInstalls, MonthlyInstalls, TotalInstalls int64
 }
 
+func generateHashedRecord(id, ip string) string {
+	// Merge it here before using.
+	record := ip + " " + id
+
+	// Generate unique hash.
+	h := hmac.New(sha512.New, []byte(config.STATS_KEY))
+	h.Write([]byte(record))
+	s := hex.EncodeToString(h.Sum(nil))
+
+	return s
+}
+
 func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	s := new(Stats)
 
@@ -40,16 +52,8 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 		return *s, err
 	}
 
-	// TODO: Refactor as GenerateHashedRecord; we have a circular dependency now.
-	record := ip + " " + id
-
-	// Generate unique hash.
-	h := hmac.New(sha512.New, []byte(config.STATS_KEY))
-	h.Write([]byte(record))
-	sha := hex.EncodeToString(h.Sum(nil))
-
 	// Set values.
-	s.Hash = sha
+	s.Hash = generateHashedRecord(id, ip)
 	s.StyleID = styleID
 
 	if install {
