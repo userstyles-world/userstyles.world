@@ -56,9 +56,19 @@ func renderEngine() *html.Engine {
 	return engine
 }
 
+// Get proper IP depending on the environment.
+func proxyHeader() (s string) {
+	if config.DB != "dev.db" {
+		s = "X-Real-IP"
+	}
+
+	return s
+}
+
 func Initialize() {
 	app := fiber.New(fiber.Config{
-		Views: renderEngine(),
+		Views:       renderEngine(),
+		ProxyHeader: proxyHeader(),
 	})
 
 	if config.DB == "dev.db" {

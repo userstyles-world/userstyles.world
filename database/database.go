@@ -60,6 +60,11 @@ func Initialize() {
 		defer Seed()
 	}
 
+	// Remove previous statistics.
+	if DB.Migrator().HasTable(&stats) {
+		DB.Migrator().DropTable(&stats)
+	}
+
 	Migrate(&user, &style, &stats)
 }
 
