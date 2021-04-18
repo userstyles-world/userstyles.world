@@ -46,8 +46,20 @@ func fixCategory(cat string) string {
 		return "global"
 	}
 	cat = strings.ToLower(cat)
-	cat = strings.TrimSuffix(cat, ".com")
-	cat = strings.TrimSuffix(cat, ".org")
+
+	if strings.HasSuffix(cat, ".com") || strings.HasSuffix(cat, ".org") {
+		cat = strings.TrimSuffix(cat, ".com")
+		cat = strings.TrimSuffix(cat, ".org")
+		// Remove any subdomain
+		// web.whatsapp -> whatsapp
+		if strings.Count(cat, ".") >= 1 {
+			cat = strings.Split(cat, ".")[1]
+		}
+	} else {
+		if strings.Count(cat, ".") >= 2 {
+			cat = strings.Join(strings.Split(cat, ".")[1:], ".")
+		}
+	}
 
 	return cat
 }
