@@ -53,6 +53,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	s.StyleID = styleID
 
 	if install {
+		s.Install = install // Initial install.
 		err = db.
 			Debug().
 			Model(s).
