@@ -51,7 +51,7 @@
                             Github
                         </label>
                         <input
-                            pattern="^[a-zA-Z0-9]*$"
+                            pattern="^[a-zA-Z0-9_-]*$"
                             type="text" name="github"
                             placeholder="e.g. username"
                             value="{{ .Params.Socials.Github }}"/>
@@ -60,7 +60,7 @@
                             Gitlab
                         </label>
                         <input
-                            pattern="^[a-zA-Z0-9_]*$"
+                            pattern="^[a-zA-Z0-9_-]*$"
                             type="text" name="gitlab"
                             placeholder="e.g. username"
                             value="{{ .Params.Socials.Gitlab }}"/>
@@ -70,7 +70,7 @@
                             Codeberg
                         </label>
                         <input
-                            pattern="^[a-zA-Z0-9_]*$"
+                            pattern="^[a-zA-Z0-9_-]*$"
                             type="text" name="codeberg"
                             placeholder="e.g. username"
                             value="{{ .Params.Socials.Codeberg }}"/>
