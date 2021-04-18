@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -12,14 +11,14 @@ import (
 )
 
 type USoFormat struct {
-	ID             uint      `json:"i"`
-	Name           string    `json:"n"`
-	Category       string    `json:"c"`
-	UpdatedAt      time.Time `json:"u"`
-	TotalInstalls  int64     `json:"t"`
-	WeeklyInstalls int64     `json:"w"`
-	Author         string    `json:"an"`
-	Screenshot     string    `json:"sn"`
+	ID             uint   `json:"i"`
+	Name           string `json:"n"`
+	Category       string `json:"c"`
+	UpdatedAt      int64  `json:"u"` // Requires Unix timestamp
+	TotalInstalls  int64  `json:"t"`
+	WeeklyInstalls int64  `json:"w"`
+	Author         string `json:"an"`
+	Screenshot     string `json:"sn"`
 }
 
 func convertToUSoFormat(s models.APIStyle) USoFormat {
@@ -31,7 +30,7 @@ func convertToUSoFormat(s models.APIStyle) USoFormat {
 		Category:       fixCategory(s.Category),
 		Author:         s.Username,
 		Screenshot:     s.Preview,
-		UpdatedAt:      s.UpdatedAt,
+		UpdatedAt:      s.UpdatedAt.Unix(),
 		TotalInstalls:  models.GetTotalInstallsForStyle(database.DB, id),
 		WeeklyInstalls: models.GetWeeklyInstallsForStyle(database.DB, id),
 	}
@@ -41,6 +40,7 @@ func fixCategory(cat string) string {
 	if cat == "unset" {
 		return "global"
 	}
+	cat = strings.ToLower(cat)
 	cat = strings.TrimSuffix(cat, ".com")
 	cat = strings.TrimSuffix(cat, ".org")
 
