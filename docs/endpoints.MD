@@ -24,7 +24,7 @@ Example response
 {
     "username": "Gusted",
     "email": "notmyemail@example.com",
-    "biography": "I'm _one_ of the UserStyles World Developers.\nBe aware, **I'm gay** 🌈.",
+    "biography": "I'm _one_ of the UserStyles World Developers.\nI'm aware, **I'm gay** 🌈.",
     "role": "Moderator",
     "socials": {
         "github": "gusted",
@@ -50,7 +50,7 @@ Example response of id=8/username="Gusted"
 ```json
 {
     "username": "Gusted",
-    "biography": "I'm _one_ of the UserStyles World Developers.\nBe aware, **I'm gay** 🌈.",
+    "biography": "I'm _one_ of the UserStyles World Developers.\nI'm aware, **I'm gay** 🌈.",
     "role": "Moderator",
     "socials": {
         "github": "gusted",
