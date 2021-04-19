@@ -22,8 +22,12 @@ what we're working on, and feel free to open an issue to request new features.
 - Userstyle deletion and editing of all available fields
 - Style statistics in form of views, and weekly/total installs
 
-*** Small (for now) testing API:
-- Style index, style details, and style source code endpoints
+*** API:
+- Style index, style details, and style source code endpoints.
+- OAuth support to make certain actions on the user behalf.
+
+*** Documentation:
+_Please see [[./docs/][docs/]] folder for relevant documentation on features._
 
 ** License
 Source code released under the [[./license][AGPL-3.0 License]].
