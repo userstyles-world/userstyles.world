@@ -16,10 +16,11 @@ import (
 )
 
 var (
-	DB    *gorm.DB
-	user  models.User
-	style models.Style
-	stats models.Stats
+	DB      *gorm.DB
+	user    models.User
+	style   models.Style
+	stats   models.Stats
+	history models.History
 )
 
 func Connect() {
@@ -56,11 +57,11 @@ func Initialize() {
 	// Generate data for development.
 	if utils.DatabaseDropTables() && config.DB == "dev.db" {
 		log.Println("Dropping database tables.")
-		Drop(&user, &style, &stats)
+		Drop(&user, &style, &stats, &history)
 		defer Seed()
 	}
 
-	Migrate(&user, &style, &stats)
+	Migrate(&user, &style, &stats, &history)
 }
 
 func Drop(dst ...interface{}) error {
