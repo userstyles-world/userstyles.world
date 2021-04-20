@@ -91,18 +91,17 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	return *s, nil
 }
 
-func GetWeeklyInstallsForStyle(db *gorm.DB, id string) int64 {
-	var weekly int64
+func GetWeeklyInstallsForStyle(db *gorm.DB, id string) (weekly int64) {
+	q := "style_id = ? and install = ? and updated_at > ?"
 	db.
 		Model(Stats{}).
-		Where("style_id = ? and install = ? and updated_at > ?", id, true, lastWeek).
+		Where(q, id, true, lastWeek).
 		Count(&weekly)
 
 	return weekly
 }
 
-func GetTotalInstallsForStyle(db *gorm.DB, id string) int64 {
-	var total int64
+func GetTotalInstallsForStyle(db *gorm.DB, id string) (total int64) {
 	db.
 		Model(Stats{}).
 		Where("style_id = ? and install = ?", id, true).
@@ -111,8 +110,7 @@ func GetTotalInstallsForStyle(db *gorm.DB, id string) int64 {
 	return total
 }
 
-func GetTotalViewsForStyle(db *gorm.DB, id string) int64 {
-	var total int64
+func GetTotalViewsForStyle(db *gorm.DB, id string) (total int64) {
 	db.
 		Model(Stats{}).
 		Where("style_id = ?", id).
@@ -123,8 +121,7 @@ func GetTotalViewsForStyle(db *gorm.DB, id string) int64 {
 
 func GetHomepageStatistics(db *gorm.DB) *siteStats {
 	p := new(siteStats)
-	i := "install = ?"
-	t := "install = ? and updated_at > ?"
+	i, t := "install = ?", "install = ? and updated_at > ?"
 
 	db.Model(User{}).Where("id").Count(&p.UserCount)
 	db.Model(Style{}).Where("id").Count(&p.StyleCount)
