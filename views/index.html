@@ -34,14 +34,14 @@
 
                 {{ if ge (len .Styles) 1 }}
                     <section class="mt:l">
-                        <h2 class="ta:c fg:3">Featured userstyles</h2>
+                        <h2 class="ta:c">Featured userstyles</h2>
+                        <p class="ta:c mb:l fg:3">See more styles on <a href="/explore">Explore</a> page.</p>
                         {{/* template "utils/debug_styles" . */}}
                         <div class="grid flex rwrap mx:r mt:m">
                             {{ range .Styles }}
                                 {{ template "partials/style_card" . }}
                             {{ end }}
                         </div>
-                        <p class="ta:c mt:m mb:0">Find more styles on <a href="/explore">Explore</a> page.</p>
                     </section>
                 {{ end }}
             </div>
