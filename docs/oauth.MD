@@ -1,7 +1,7 @@
 # OAuth documentation
 
 This documentation is focussed on the OAuth workflow, you should find all steps/information about the OAuth of Userstyles world(USw)
-within this documentation and _all_ related coded is within the `oauth_provider/` folder.
+within this documentation and _most_ related coded is within the `oauth_provider/` folder.
 
 _**Note:** currently headless OAuth isn't supported._
 

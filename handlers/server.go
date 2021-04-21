@@ -21,6 +21,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
+	"userstyles.world/oauth_provider"
 )
 
 // TODO: Refactor this as a separate package.
@@ -111,6 +112,7 @@ func Initialize() {
 	app.Get("/edit/:id", jwt.Protected, style.EditGet)
 	app.Post("/edit/:id", jwt.Protected, style.EditPost)
 	app.Post("/style/:id/promote", jwt.Protected, style.Promote)
+	app.Get("/oauth_settings/:id?", jwt.Protected, oauth_provider.OAuthSettingsGet)
 	app.Get("/monitor", jwt.Protected, core.Monitor)
 
 	v1 := app.Group("/api")
