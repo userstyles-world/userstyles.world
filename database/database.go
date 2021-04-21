@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -22,6 +23,7 @@ var (
 	style   models.Style
 	stats   models.Stats
 	history models.History
+	oauth   models.OAuth
 )
 
 func connect() {
@@ -58,13 +60,13 @@ func Initialize() {
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		log.Println("Dropping database tables.")
-		if err := drop(&user, &style, &stats, &history); err != nil {
+		if err := drop(&user, &style, &stats, &oauth, &history); err != nil {
 			log.Printf("Warning: Couldn't drop table due to error: %s", err.Error())
 		}
 		defer seed()
 	}
 
-	if err := migrate(&user, &style, &stats, &history); err != nil {
+	if err := migrate(&user, &style, &stats, &oauth, &history); err != nil {
 		log.Printf("Warning: Couldn't migrate due to error: %s", err.Error())
 	}
 }
@@ -182,6 +184,16 @@ func seed() {
 		},
 	}
 
+	OAuths := []models.OAuth{
+		{
+			UserID:      1,
+			Name:        "USw integration",
+			Description: "Just some integration",
+			Scopes:      []string{"styles"},
+			RedirectURI: "http://localhost:3001/api/callback",
+		},
+	}
+
 	if config.DB_RANDOM_DATA != "false" {
 		amount, _ := strconv.Atoi(config.DB_RANDOM_DATA)
 		s, u := generateData(amount)
@@ -194,5 +206,9 @@ func seed() {
 	}
 	for i := range styles {
 		DB.Create(&styles[i])
+	}
+	for _, oauth := range OAuths {
+		fmt.Println(oauth)
+		DB.Create(&oauth)
 	}
 }
