@@ -96,6 +96,7 @@ func Initialize() {
 	app.Get("/explore", style.GetExplore)
 	app.Get("/style/:id", style.GetStyle)
 	app.Get("/user/:name", user.Profile)
+	app.Get("~:name", user.Profile)
 
 	app.Get("/logout", jwt.Protected, user.Logout)
 	app.Get("/account", jwt.Protected, user.Account)
