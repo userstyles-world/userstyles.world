@@ -21,7 +21,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 		method = "add"
 	}
 
-	oauths, err := models.GetOAuthByUser(database.DB, u.Username)
+	oauths, err := models.ListOAuthsOfUser(database.DB, u.Username)
 	if err != nil {
 		return c.Render("oauth_settings", fiber.Map{
 			"Title":  "OAuth Settings",

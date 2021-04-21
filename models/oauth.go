@@ -26,7 +26,7 @@ type APIOAuth struct {
 	Username    string
 }
 
-func GetOAuthByUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
+func ListOAuthsOfUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
 	t, q := new(OAuth), new([]APIOAuth)
 	err := getDBSession(db).
 		Model(t).
@@ -49,7 +49,7 @@ func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 		Model(t).
 		Select("oauth.*,  u.username").
 		Joins("join users u on u.id = oauth.user_id").
-		Find(q, "oauth.id = ?", id).
+		First(q, "oauth.id = ?", id).
 		Error
 
 	if err != nil || q.ID == 0 {
