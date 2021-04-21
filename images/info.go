@@ -9,18 +9,19 @@ import (
 	"os"
 
 	"github.com/davidbyttow/govips/v2/vips"
+
 	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
 type ImageInfo struct {
-	Originial fs.FileInfo
-	Jpeg      fs.FileInfo
-	WebP      fs.FileInfo
+	Original fs.FileInfo
+	Jpeg     fs.FileInfo
+	WebP     fs.FileInfo
 }
 
 var (
-	CacheFolder = "./image_cache/"
+	CacheFolder = "./data/images/"
 )
 
 func Initialize() {
@@ -48,10 +49,10 @@ func fileExist(path string) fs.FileInfo {
 
 func GetImageFromStyle(id string) (ImageInfo, error) {
 	template := CacheFolder + id
-	originial := template + ".originial"
+	original := template + ".original"
 	jpeg := template + ".jpeg"
 	webp := template + ".webp"
-	if fileExist(originial) == nil {
+	if fileExist(original) == nil {
 		style, err := models.GetStyleByID(database.DB, id)
 		if err != nil || style.Preview == "" {
 			return ImageInfo{}, err
@@ -66,25 +67,26 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 
 		// Make sure to received the full body before processing it.
 		data, _ := io.ReadAll(req.Body)
-		err = os.WriteFile(originial, data, 0644)
+		err = os.WriteFile(original, data, 0644)
 		if err != nil {
 			fmt.Println("Error processing:", err)
 			return ImageInfo{}, err
 		}
 
-		err = DecodeImage(originial, jpeg, vips.ImageTypeJPEG)
+		err = DecodeImage(original, jpeg, vips.ImageTypeJPEG)
 		if err != nil {
 			fmt.Println("Error processing:", err)
 			return ImageInfo{}, err
 		}
 
 		return ImageInfo{
-			Originial: fileExist(originial),
+			Original: fileExist(original),
 		}, nil
 	}
+
 	return ImageInfo{
-		Originial: fileExist(originial),
-		Jpeg:      fileExist(jpeg),
-		WebP:      fileExist(webp),
+		Original: fileExist(original),
+		Jpeg:     fileExist(jpeg),
+		WebP:     fileExist(webp),
 	}, nil
 }

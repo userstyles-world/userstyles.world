@@ -24,10 +24,10 @@ func DecodeImage(input, output string, imageType vips.ImageType) error {
 		Lossless:      false,
 		StripMetadata: true,
 	})
-
 	if err != nil {
 		return err
 	}
+
 	err = os.WriteFile(output, newImage, 0644)
 	if err != nil {
 		return err

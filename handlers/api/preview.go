@@ -7,6 +7,7 @@ import (
 
 	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/gofiber/fiber/v2"
+
 	"userstyles.world/images"
 )
 
@@ -35,19 +36,19 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 
 	var stat fs.FileInfo
 	var fileName string
-	orignialFile := images.CacheFolder + styleId + ".originial"
+	orignalFile := images.CacheFolder + styleId + ".original"
 
 	switch format[1:] {
 	case "jpeg":
 		if info.Jpeg == nil {
 			return notFound(c)
 		}
-		stat = info.Originial
+		stat = info.Original
 		fileName = images.CacheFolder + styleId + ".jpeg"
 	case "webp":
 		fileName = images.CacheFolder + styleId + ".webp"
 		if info.WebP == nil {
-			err = images.DecodeImage(orignialFile, fileName, vips.ImageTypeWEBP)
+			err = images.DecodeImage(orignalFile, fileName, vips.ImageTypeWEBP)
 			if err != nil {
 				return notFound(c)
 			}
