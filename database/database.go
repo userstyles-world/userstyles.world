@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -21,6 +22,7 @@ var (
 	style   models.Style
 	stats   models.Stats
 	history models.History
+	oauth   models.OAuth
 )
 
 func Connect() {
@@ -57,11 +59,11 @@ func Initialize() {
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		log.Println("Dropping database tables.")
-		Drop(&user, &style, &stats, &history)
+		Drop(&user, &style, &stats, &oauth, &history)
 		defer Seed()
 	}
 
-	Migrate(&user, &style, &stats, &history)
+	Migrate(&user, &style, &stats, &oauth, &history)
 }
 
 func Drop(dst ...interface{}) error {
@@ -174,6 +176,16 @@ func Seed() {
 		},
 	}
 
+	OAuths := []models.OAuth{
+		{
+			UserID:      1,
+			Name:        "USw integration",
+			Description: "Just some integration",
+			Scopes:      []string{"styles"},
+			RedirectURI: "http://localhost:3001/api/callback",
+		},
+	}
+
 	if config.DB_RANDOM_DATA != "false" {
 		amount, _ := strconv.Atoi(config.DB_RANDOM_DATA)
 		s, u := generateData(amount)
@@ -186,5 +198,9 @@ func Seed() {
 	}
 	for _, style := range styles {
 		DB.Create(&style)
+	}
+	for _, oauth := range OAuths {
+		fmt.Println(oauth)
+		DB.Create(&oauth)
 	}
 }
