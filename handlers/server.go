@@ -113,6 +113,7 @@ func Initialize() {
 	app.Post("/edit/:id", jwt.Protected, style.EditPost)
 	app.Post("/style/:id/promote", jwt.Protected, style.Promote)
 	app.Get("/oauth_settings/:id?", jwt.Protected, oauth_provider.OAuthSettingsGet)
+	app.Post("/oauth_settings/:id?", jwt.Protected, oauth_provider.OAuthSettingsPost)
 	app.Get("/monitor", jwt.Protected, core.Monitor)
 
 	v1 := app.Group("/api")

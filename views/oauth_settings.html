@@ -1,10 +1,10 @@
 {{- $btn := "" -}}
 {{- $method := "" -}}
 {{- if eq .Method "add" -}}
-    {{ $method = "add" }}
+    {{ $method = "oauth_settings" }}
     {{ $btn = "Add OAuth Application" }}
 {{ else }}
-    {{ $method = printf "edit/%d" .OAuth.ID }}
+    {{ $method = printf "oauth_settings/%d" .OAuth.ID }}
     {{ $btn = "Save changes" }}
 {{ end }}
 
@@ -47,19 +47,20 @@
                         >{{ .OAuth.Description }}</textarea>
 
                         <label>Scopes</label>
-                        <div>
-                            <input type="checkbox" name="interest" value="user">
-                            <label for="user">User</label>
+                        // Ehhh when in EDIT Mode we somehow need to check thesee...
+                        <div class="flex">
+                            <input type="checkbox" name="user" value="user">
+                            <label class="ml:m"  for="user">User</label>
                         </div>
-                        <div>
-                            <input type="checkbox" name="interest" value="styles">
-                            <label for="styles">Styles</label>
+                        <div class="flex">
+                            <input type="checkbox" name="styles" value="styles">
+                            <label class="ml:m" for="styles">Styles</label>
                         </div>
 
-                        <label for="redirecturi">Redirect URI</label>
+                        <label for="redirect_uri">Redirect URI</label>
                         <input
-                            required pattern="^(https?:\/\/)[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)$"
-                            type="text" name="redirecturi" value="{{ .OAuth.RedirectURI }}"
+                            required pattern="^(https?:\/\/)([a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\.[a-z]{2,6}|localhost)\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)$"
+                            type="text" name="redirect_uri" value="{{ .OAuth.RedirectURI }}"
                             placeholder="e.g. http://localhost:8080/api/callback">
 
 

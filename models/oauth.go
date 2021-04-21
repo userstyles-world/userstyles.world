@@ -12,22 +12,26 @@ import (
 
 type OAuth struct {
 	gorm.Model
-	UserID      uint
-	User        User `gorm:"foreignKey:ID"`
-	Name        string
-	Description string
-	Scopes      Scopes `gorm:"type:varchar(255);" db:"scopes"`
-	RedirectURI string
+	UserID       uint
+	User         User `gorm:"foreignKey:ID"`
+	Name         string
+	Description  string
+	Scopes       Scopes `gorm:"type:varchar(255);"`
+	RedirectURI  string
+	ClientID     string
+	ClientSecret string
 }
 
 type APIOAuth struct {
-	ID          uint
-	Name        string
-	Description string
-	Scopes      Scopes `gorm:"type:varchar(255);" db:"scopes"`
-	RedirectURI string
-	UserID      uint
-	Username    string
+	ID           uint
+	Name         string
+	Description  string
+	Scopes       Scopes `gorm:"type:varchar(255);"`
+	RedirectURI  string
+	UserID       uint
+	Username     string
+	ClientID     string
+	ClientSecret string
 }
 
 type Scopes []string
@@ -88,4 +92,31 @@ func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 	}
 
 	return q, nil
+}
+
+func CreateOAuth(db *gorm.DB, o *OAuth) (*OAuth, error) {
+	err := getDBSession(db).
+		Create(&o).
+		Error
+
+	if err != nil {
+		return o, err
+	}
+
+	return o, nil
+}
+
+func UpdateOAuth(db *gorm.DB, o *OAuth) error {
+	err := getDBSession(db).
+		Debug().
+		Model(OAuth{}).
+		Where("id", o.ID).
+		Updates(o).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
