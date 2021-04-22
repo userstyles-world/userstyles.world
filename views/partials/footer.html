@@ -2,9 +2,13 @@
 <footer>
     <div class="wrapper ai:c py:m flex">
         <span>2020–2021</span>
-        <a href="https://github.com/userstyles-world/userstyles.world/commit/{{ GitCommit }}">
-            {{- printf "Version %.8s" GitCommit -}}
-        </a>
+        {{ if eq GitCommit "dev" }}
+            <span>DevEnv</span>
+        {{ else }}
+            <a href="https://github.com/userstyles-world/userstyles.world/commit/{{ GitCommit }}">
+                {{- printf "Version %.8s" GitCommit -}}
+            </a>
+        {{ end }}
         <a href="https://github.com/userstyles-world/userstyles.world">Source code</a>
     </div>
 </footer>

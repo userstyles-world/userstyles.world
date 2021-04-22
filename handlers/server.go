@@ -37,6 +37,10 @@ func renderEngine() *html.Engine {
 	})
 
 	engine.AddFunc("GitCommit", func() template.HTML {
+		if config.DB == "dev.db" {
+			return template.HTML("dev")
+		}
+
 		return template.HTML(config.GIT_COMMIT)
 	})
 
