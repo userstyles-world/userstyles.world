@@ -13,12 +13,6 @@ import (
 	"userstyles.world/config"
 )
 
-var (
-	lastDay   = time.Now().AddDate(0, 0, -1)
-	lastWeek  = time.Now().AddDate(0, 0, -7)
-	lastMonth = time.Now().AddDate(0, -1, 0)
-)
-
 type Stats struct {
 	gorm.Model
 	Hash    string `gorm:"unique"`
@@ -92,6 +86,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 }
 
 func GetWeeklyInstallsForStyle(db *gorm.DB, id string) (weekly int64) {
+	lastWeek := time.Now().AddDate(0, -1, 0)
 	q := "style_id = ? and install = ? and updated_at > ?"
 	db.
 		Model(Stats{}).
@@ -123,12 +118,14 @@ func GetHomepageStatistics(db *gorm.DB) *siteStats {
 	p := new(siteStats)
 	i, t := "install = ?", "install = ? and updated_at > ?"
 
+	// TODO: Replace last day with last week when we get enough data.
+	lastDay := time.Now().AddDate(0, 0, -1)
+
 	db.Model(User{}).Where("id").Count(&p.UserCount)
 	db.Model(Style{}).Where("id").Count(&p.StyleCount)
 	db.Model(Stats{}).Where(i, false).Count(&p.TotalViews)
-	// TODO: Replace lastDay with lastWeek on 2021-04-21.
-	db.Model(Stats{}).Where(t, false, lastDay).Count(&p.WeeklyViews)
-	db.Model(Stats{}).Where(t, true, lastDay).Count(&p.WeeklyInstalls)
+	db.Debug().Model(Stats{}).Where(t, false, lastDay).Count(&p.WeeklyViews)
+	db.Debug().Model(Stats{}).Where(t, true, lastDay).Count(&p.WeeklyInstalls)
 	// db.Model(Stats{}).Where(t, true, lastMonth).Count(&p.MonthlyInstalls)
 	db.Model(Stats{}).Where(i, true).Count(&p.TotalInstalls)
 
