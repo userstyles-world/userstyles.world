@@ -27,6 +27,9 @@ var (
 	GITLAB_CLIENT_SECRET   = getEnv("GITLAB_CLIENT_SECRET", "www.youtube.com/watch?v=dQw4w9WgXcQ")
 	CODEBERG_CLIENT_ID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	CODEBERG_CLIENT_SECRET = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
+
+	// Used for various "feature flags".
+	Production = DB != "dev.db"
 )
 
 func getEnv(name, fallback string) string {

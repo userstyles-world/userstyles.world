@@ -109,7 +109,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		Value:    t,
 		Path:     "/",
 		Expires:  expiration,
-		Secure:   config.DB != "dev.db",
+		Secure:   config.Production,
 		HTTPOnly: true,
 		SameSite: "lax",
 	})

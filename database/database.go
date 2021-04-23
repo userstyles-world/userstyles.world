@@ -55,7 +55,7 @@ func Initialize() {
 	Connect()
 
 	// Generate data for development.
-	if utils.DatabaseDropTables() && config.DB == "dev.db" {
+	if utils.DatabaseDropTables() && !config.Production {
 		log.Println("Dropping database tables.")
 		Drop(&user, &style, &stats, &history)
 		defer Seed()

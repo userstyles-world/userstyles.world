@@ -37,7 +37,7 @@ func renderEngine() *html.Engine {
 	})
 
 	engine.AddFunc("GitCommit", func() template.HTML {
-		if config.DB == "dev.db" {
+		if !config.Production {
 			return template.HTML("dev")
 		}
 
@@ -62,7 +62,7 @@ func renderEngine() *html.Engine {
 
 // Get proper IP depending on the environment.
 func proxyHeader() (s string) {
-	if config.DB != "dev.db" {
+	if config.Production {
 		s = "X-Real-IP"
 	}
 
@@ -75,12 +75,12 @@ func Initialize() {
 		ProxyHeader: proxyHeader(),
 	})
 
-	if config.DB == "dev.db" {
+	if !config.Production {
 		app.Use(logger.New())
 	}
 
 	app.Use(compress.New())
-	if config.DB != "dev.db" {
+	if config.Production {
 		app.Use(limiter.New(limiter.Config{Max: 300}))
 	}
 	app.Use(jwt.New())
@@ -126,7 +126,7 @@ func Initialize() {
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.
-	if config.DB == "dev.db" {
+	if !config.Production {
 		app.Static("/", "/static")
 	}
 
