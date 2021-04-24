@@ -96,6 +96,24 @@ func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 	return q, nil
 }
 
+// Using ID as a string is fine in this case.
+func GetOAuthByClientID(db *gorm.DB, clientID string) (*APIOAuth, error) {
+	t, q := new(OAuth), new(APIOAuth)
+	err := getDBSession(db).
+		Debug().
+		Model(t).
+		Select("o_auths.*,  u.username").
+		Joins("join users u on u.id = o_auths.user_id").
+		First(q, "o_auths.client_id = ?", clientID).
+		Error
+
+	if err != nil || q.ID == 0 {
+		return nil, errors.New("oauth not found")
+	}
+
+	return q, nil
+}
+
 func CreateOAuth(db *gorm.DB, o *OAuth) (*OAuth, error) {
 	err := getDBSession(db).
 		Create(&o).

@@ -18,7 +18,6 @@ GET https://usestyles.world/oauth/authorize
 | :--- | :--- | :--- | :--- |
 | client_id | string | Yes | The client ID that is generated when you've registered for an USw application. |
 | state | string | Recommended | An unguessable random string. It is used to protect against [[https://en.wikipedia.org/wiki/Cross-site_request_forgery][cross-site request forgery]] attacks. |
-| redirect_uri | string | No | Specify which URL should be used after the authorization is finished. When not specified, default value within the application would be used. |
 | scope | string | No | A comma-delimited list of the [[./oauth.MD#scopes][scopes]], when not specified the default scopes will be used based on the application's setting. |
 
 
@@ -36,7 +35,7 @@ POST https://userstyles.world/oauth/access_token
 | :--- | :--- | :--- | :--- |
 | client_id | string | Yes | The client ID that is generated when you've registered for an USw application. |
 | client_secret | string | Yes | The client secret that is generated when you've registered for an USw application. |
-| code | string | Yes | The code that you've received as a parameter to Step 1.
+| code | string | Yes | The code that you've received as a parameter to Step 1. |
 | state | string | No | The unguessable random string you've provided in Step 1. |
 
 
