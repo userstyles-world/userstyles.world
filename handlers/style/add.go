@@ -88,7 +88,7 @@ func StyleCreatePost(c *fiber.Ctx) error {
 	if image != nil {
 		ID := strconv.FormatUint(uint64(s.ID), 10)
 		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+ID+".originial", data, 0644)
+		err = os.WriteFile(images.CacheFolder+ID+".original", data, 0644)
 		if err != nil {
 			log.Println("Style creation failed, err:", err)
 			return c.Render("err", fiber.Map{
@@ -97,13 +97,12 @@ func StyleCreatePost(c *fiber.Ctx) error {
 			})
 		}
 		if s.Preview == "" {
-			s.Preview = "https://userstyles.world/api/screenshot/" + ID + ".jpeg"
+			s.Preview = "https://userstyles.world/api/preview/" + ID + ".jpeg"
 			database.DB.
 				Model(new(models.Style)).
 				Where("id", ID).
 				Updates(s)
 		}
-
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
