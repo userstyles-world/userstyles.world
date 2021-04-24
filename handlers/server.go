@@ -19,8 +19,10 @@ import (
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
 	"userstyles.world/handlers/jwt"
+	"userstyles.world/handlers/oauth_provider"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
+	"userstyles.world/models"
 	"userstyles.world/oauth_provider"
 )
 

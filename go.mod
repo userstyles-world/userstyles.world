@@ -14,8 +14,13 @@ require (
 	github.com/gofiber/fiber/v2 v2.10.0
 	github.com/gofiber/template v1.6.9
 	github.com/markbates/pkger v0.17.1
+<<<<<<< develop
 	github.com/microcosm-cc/bluemonday v1.0.9
 	github.com/ohler55/ojg v1.10.0 // indirect
+=======
+	github.com/microcosm-cc/bluemonday v1.0.9
+	github.com/ohler55/ojg v1.10.0
+>>>>>>> feat: validate upon authorize
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/vednoc/go-usercss-parser v0.9.2
 	golang.org/x/crypto v0.0.0-20210506145944-38f3c27a63bf

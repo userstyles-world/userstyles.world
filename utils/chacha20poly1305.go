@@ -11,14 +11,19 @@ import (
 )
 
 var (
-	AEAD_CRYPTO         cipher.AEAD
-	AEAD_OAUTH          cipher.AEAD
-	VerifySigningKey    = []byte(config.VERIFY_JWT_SIGNING_KEY)
-	verifySigningMethod = "HS512"
+	AEAD_CRYPTO      cipher.AEAD
+	AEAD_OAUTH       cipher.AEAD
+	AEAD_OAUTHP      cipher.AEAD
+	VerifySigningKey = []byte(config.VERIFY_JWT_SIGNING_KEY)
+	OAuthPSigningKey = []byte(config.OAUTHP_JWT_SIGNING_KEY)
+	signingMethod    = "HS512"
 )
 
 func InitalizeCrypto() {
-	aead, err := chacha20poly1305.NewX([]byte(config.CRYPTO_KEY))
+	var aead cipher.AEAD
+	var err error
+
+	aead, err = chacha20poly1305.NewX([]byte(config.CRYPTO_KEY))
 	if err != nil {
 		panic("Cannot create AEAD_CRYPTO chipher, due to " + err.Error())
 	}
@@ -29,6 +34,12 @@ func InitalizeCrypto() {
 		panic("Cannot create AEAD_OAUTH chipher, due to " + err.Error())
 	}
 	AEAD_OAUTH = aead
+
+	aead, err = chacha20poly1305.NewX([]byte(config.OAUTH_KEY))
+	if err != nil {
+		panic("Cannot create AEAD_OAUTHP chipher, due to " + err.Error())
+	}
+	AEAD_OAUTHP = aead
 }
 
 func SealText(text string, aead cipher.AEAD) []byte {
@@ -53,6 +64,13 @@ func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
 		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}
 	return VerifySigningKey, nil
+}
+
+func OAuthPJwtKeyFunction(t *jwt.Token) (interface{}, error) {
+	if t.Method.Alg() != signingMethod {
+		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+	}
+	return OAuthPSigningKey, nil
 }
 
 func PrepareText(text string, aead cipher.AEAD) string {

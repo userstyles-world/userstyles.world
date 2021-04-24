@@ -1,0 +1,26 @@
+{{- $method :=  printf "authorize/%d" .OAuth.ID -}}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                <section class="settings mt:l">
+                    <h2 class="sub-title td:d">Authorization information</h2>
+                    <p><span class="minw">Name</span>{{ .OAuth.Name }}</p>
+                    <p><span class="minw">Description</span>{{ .OAuth.Description }}</p>
+                    // Scopes? SOmeone pleasseee.
+                    <form class="biography ml:0" method="post" action="/{{ $method }}">
+                        <button class="flex btn primary" type="submit">Authorize</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>
