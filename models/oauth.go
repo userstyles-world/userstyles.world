@@ -2,11 +2,11 @@ package models
 
 import (
 	"database/sql/driver"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
 
+	"github.com/ohler55/ojg/oj"
 	"gorm.io/gorm"
 )
 
@@ -34,6 +34,8 @@ type APIOAuth struct {
 	ClientSecret string
 }
 
+// Custom []string time for the GORM.
+// As gorm highly dislike slices, we have to impliment, this ourself.
 type Scopes []string
 
 func (s Scopes) Value() (driver.Value, error) {
@@ -47,9 +49,9 @@ func (s *Scopes) Scan(src interface{}) (err error) {
 	var scopes []string
 	switch src := src.(type) {
 	case string:
-		err = json.Unmarshal([]byte(src), &scopes)
+		err = oj.Unmarshal([]byte(src), &scopes)
 	case []byte:
-		err = json.Unmarshal(src, &scopes)
+		err = oj.Unmarshal(src, &scopes)
 	default:
 		return errors.New("incompatible type for Scopes")
 	}
