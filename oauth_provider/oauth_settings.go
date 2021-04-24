@@ -80,6 +80,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	})
 }
 
+// Filtering an slice well "preserving" the type with the reflect package.
 func filter(arr interface{}, cond func(interface{}) bool) interface{} {
 	contentType := reflect.TypeOf(arr)
 	contentValue := reflect.ValueOf(arr)
