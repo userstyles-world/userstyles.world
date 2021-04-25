@@ -4,6 +4,9 @@
         &\:t { border-top: 1px solid var(--bg-3) }
         &\:b { border-bottom: 1px solid var(--bg-3) }
     }
+    &g {
+        &\:2 { background-color: var(--bg-2) }
+    }
 }
 
 .f {
@@ -48,6 +51,7 @@
 
     &r {
         &\:a { margin-right: auto }
+        &\:s { margin-right: 0.5rem }
         &\:m { margin-right: 1rem }
     }
 }
@@ -81,6 +85,7 @@
 .col { flex-basis: calc(100% / 4 - 1rem) }
 .gap { margin: 0 0.5rem 1rem .5rem }
 .flex { display: flex }
+.iflex { display: inline-flex }
 .f-col { flex-direction: column }
 .rwrap { flex-flow: row wrap }
 .cwrap { flex-flow: column wrap }

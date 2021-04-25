@@ -55,11 +55,12 @@ section > p { margin-bottom: 0.5em }
 input,
 button {
     padding: 0.5rem;
+    min-height: 42px;
     font-size: inherit;
     line-height: inherit;
     color: var(--fg-1);
     background: var(--bg-1);
-    border: 1px solid var(--bg-4);
+    border: 1px solid var(--bg-3);
     border-radius: var(--br-3);
 
     &:hover {
@@ -169,6 +170,7 @@ form {
             background-color: var(--bg-3);
         }
         button {
+            min-height: unset;
             position: absolute;
             top: 1px;
             right: 1px;

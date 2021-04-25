@@ -24,8 +24,17 @@
 
                 <section class="mt:l">
                     <div class="header flex mb:m ai:c">
-                        <h2 class="my:0 td:d">Details</h2>
-                        <span class="ml:a">
+                        {{ if .Slug }}
+                            <div class="share flex ai:c">
+                                <span class="mr:s">Share style</span>
+                                <input class="bg:2" readonly value="{{ printf "https://userstyles.world%s" .Slug }}"></input>
+                                <button class="btn iflex ml:s ai:c">
+                                    {{- template "icons/copy" -}}
+                                </button>
+                            </div>
+                        {{ end }}
+
+                        <span class="actions flex ml:a">
                             {{ if eq .User.ID .Style.UserID }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}">
                                     <button class="btn" type="submit">Delete</button>
@@ -67,6 +76,7 @@
                     </div>
 
                     <div class="details">
+                        <h2 class="my:0 td:d">Details</h2>
                         <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
                         <p><span class="minw">License</span>{{ .Style.License }}</p>
                         <p><span class="minw">Created at</span>{{- .Style.CreatedAt.Format "January 02, 2006 15:04" -}}</p>
