@@ -146,6 +146,22 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 	return q, nil
 }
 
+func slugify(s string) string {
+	r := strings.NewReplacer(" ", "-", ".", "-", ",", "-", "?", "")
+	s = r.Replace(s)
+
+	r = strings.NewReplacer("(", "", ")", "", "[", "", "]", "", "<", "", ">", "")
+	s = r.Replace(s)
+
+	r = strings.NewReplacer("!", "", "@", "", "&", "", "'", "", "\"", "", "|", "")
+	s = r.Replace(s)
+
+	r = strings.NewReplacer("/", "", "\\", "", "+", "", "---", "-", "--", "-")
+	s = r.Replace(s)
+
+	return strings.ToLower(s)
+}
+
 func GetStyleWithSlug(db *gorm.DB, id, slug string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
 	err := getDBSession(db).
