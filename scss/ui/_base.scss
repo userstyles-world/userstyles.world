@@ -65,6 +65,28 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
             box-shadow: 0 0 0 0.25rem var(--ac-5);
         }
     }
+
+    &.stylus {
+        color: var(--inverse);
+        border-color: var(--st-3);
+        background-color: var(--st-4);
+
+        &::after { color: var(--inverse) }
+        &:hover { background-color: var(--st-3) }
+        &:not(.active):focus {
+            color: var(--inverse);
+            border-color: var(--st-2);
+            box-shadow: 0 0 0 0.25rem var(--st-5);
+        }
+
+        @media (prefers-color-scheme: light) {
+            border-color: var(--st-5);
+            &:not(.active):focus {
+                border-color: var(--st-5);
+                box-shadow: 0 0 0 0.2rem var(--st-2);
+            }
+        }
+    }
 }
 
 .link {
