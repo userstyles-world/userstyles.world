@@ -37,6 +37,31 @@ func contains(arr []string, entry string) bool {
 	return false
 }
 
+func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
+	u, _ := jwtware.User(c)
+
+	jwt, err := utils.NewJWTToken().
+		SetClaim("state", state).
+		SetClaim("userID", u.Username).
+		SetExpiration(time.Now().Add(time.Minute * 10)).
+		GetSignedString(utils.OAuthPSigningKey)
+
+	if err != nil {
+		fmt.Println("Error: Couldn't create JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
+	if state != "" {
+		returnCode += "&state=" + state
+	}
+
+	return c.Redirect(redirect_uri + "/" + returnCode)
+}
+
 func AuthorizeGet(c *fiber.Ctx) error {
 	u, ok := jwtware.User(c)
 	if !ok {
@@ -115,31 +140,6 @@ func AuthorizeGet(c *fiber.Ctx) error {
 		"OAuth":       OAuth,
 		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP),
 	})
-}
-
-func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
-	u, _ := jwtware.User(c)
-
-	jwt, err := utils.NewJWTToken().
-		SetClaim("state", state).
-		SetClaim("userID", u.ID).
-		SetExpiration(time.Now().Add(time.Minute * 10)).
-		GetSignedString(utils.OAuthPSigningKey)
-
-	if err != nil {
-		fmt.Println("Error: Couldn't create JWT Token:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
-	}
-
-	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
-	if state != "" {
-		returnCode += "&state=" + state
-	}
-
-	return c.Redirect(redirect_uri + "/" + returnCode)
 }
 
 func AuthorizePost(c *fiber.Ctx) error {
