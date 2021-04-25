@@ -100,12 +100,12 @@ func AccessTokenPost(c *fiber.Ctx) error {
 	case "application/json":
 		return c.JSON(fiber.Map{
 			"access_token": jwt,
+			"token_type":   "Bearer",
 		})
 	case "plain/text":
-		return c.SendString(jwt)
-
+		return c.SendString(jwt + "&token_type=Bearer")
 	}
 
-	return c.SendString(jwt)
+	return c.SendString(jwt + "&token_type=Bearer")
 
 }

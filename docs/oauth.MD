@@ -45,13 +45,13 @@ Depending on the `Accept` header that was sent.
 It will by default, send the `text/plain` format.
 
 ```
-access_token=usw_IamAveryRandomAccesTokkeennAndImNotAfraid&token_type=bearer
+access_token=usw_IamAveryRandomAccesTokkeennAndImNotAfraid&token_type=Bearer
 ```
 
 Otherwise when specified:
 ```json
 Accept: application/json
-{"access_token":"usw_IamAveryRandomAccesTokkeennAndImNotAfraid", "token_type":"bearer"}
+{"access_token":"usw_IamAveryRandomAccesTokkeennAndImNotAfraid", "token_type":"Bearer"}
 ```
 
 ### 3 >> Using the access token
