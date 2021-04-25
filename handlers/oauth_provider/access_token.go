@@ -67,7 +67,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 
 	claims := token.Claims.(jwt.MapClaims)
 
-	state, userName := claims["state"].(string), claims["userID"].(string)
+	state, userName := claims["state"].(string), claims["username"].(string)
 
 	if stateQuery != state {
 		return c.Status(400).
