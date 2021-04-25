@@ -85,7 +85,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 	}
 
 	jwt, err := utils.NewJWTToken().
-		SetClaim("scopes", strings.Join(OAuth.Scopes, ", ")).
+		SetClaim("scopes", strings.Join(OAuth.Scopes, ",")).
 		SetClaim("username", user.Username).
 		GetSignedString(utils.OAuthPSigningKey)
 

@@ -21,7 +21,6 @@ var ParseAPIJWT = jwtware.New("apiUser", func(t *jwt.Token) (interface{}, error)
 })
 
 func ProtectedAPI(c *fiber.Ctx) error {
-	fmt.Println("aaa")
 	if _, ok := APIUser(c); !ok {
 		return c.Status(401).
 			JSON(fiber.Map{

@@ -189,7 +189,7 @@ func seed() {
 			UserID:       1,
 			Name:         "USw integration",
 			Description:  "Just some integration",
-			Scopes:       []string{"styles"},
+			Scopes:       []string{"style", "user"},
 			ClientID:     "publicccc_client",
 			ClientSecret: "secreettUwU",
 			RedirectURI:  "https://gusted.xyz/callback_helper",
