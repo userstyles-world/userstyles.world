@@ -72,6 +72,7 @@ func Initialize() {
 	app := fiber.New(fiber.Config{
 		Views:       renderEngine(),
 		ProxyHeader: proxyHeader(),
+		JSONEncoder: utils.JsonEncoder,
 	})
 
 	if !config.Production {

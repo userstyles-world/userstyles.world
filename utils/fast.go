@@ -4,10 +4,14 @@ import (
 	"encoding/base64"
 	"reflect"
 	"unsafe"
+
+	"github.com/ohler55/ojg/oj"
 )
 
 // This file is pure for functions.
 // That mimick originial behaviour, just faster.
+
+var jsonEncoderOptions = oj.Options{OmitNil: true}
 
 // UnsafeString returns a string pointer without allocation.
 func UnsafeString(b []byte) string {
@@ -34,4 +38,8 @@ func DecodeString(s string) ([]byte, error) {
 	dbuf := make([]byte, len(s)*6/8)
 	n, err := base64.RawURLEncoding.Decode(dbuf, UnsafeBytes(s))
 	return dbuf[:n], err
+}
+
+func JsonEncoder(value interface{}) ([]byte, error) {
+	return S2b(oj.JSON(value, jsonEncoderOptions)), nil
 }
