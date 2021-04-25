@@ -2,7 +2,6 @@ package oauth_provider
 
 import (
 	"fmt"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -14,28 +13,6 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
-
-// Checks if every entry of slice fulfills condition.
-func every(arr interface{}, cond func(interface{}) bool) bool {
-	contentValue := reflect.ValueOf(arr)
-
-	for i := 0; i < contentValue.Len(); i++ {
-		if content := contentValue.Index(i); !cond(content.Interface()) {
-			return false
-		}
-	}
-	return true
-}
-
-// Check if array contains certain entry.
-func contains(arr []string, entry string) bool {
-	for _, possibleEntry := range arr {
-		if possibleEntry == entry {
-			return true
-		}
-	}
-	return false
-}
 
 func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
 	u, _ := jwtware.User(c)
@@ -99,7 +76,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	}
 
 	// Check if the user has already authorized this OAuth application.
-	if contains(user.AuthorizedOAuth, strconv.Itoa(int(OAuth.ID))) {
+	if utils.Contains(user.AuthorizedOAuth, strconv.Itoa(int(OAuth.ID))) {
 		return redirectFunction(c, state, OAuth.RedirectURI)
 	}
 
@@ -107,8 +84,8 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	scopes := strings.Split(scope, " ")
 
 	// Just check if the application has actually set if they will request these scopes.
-	if !every(scopes, func(name interface{}) bool {
-		return contains(OAuth.Scopes, name.(string))
+	if !utils.Every(scopes, func(name interface{}) bool {
+		return utils.Contains(OAuth.Scopes, name.(string))
 	}) {
 		return c.Status(400).
 			JSON(fiber.Map{

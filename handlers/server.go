@@ -127,7 +127,7 @@ func Initialize() {
 	app.Post("/oauth_settings/:id?", jwtware.Protected, oauth_provider.OAuthSettingsPost)
 	app.Get("/monitor", jwtware.Protected, core.Monitor)
 
-	v1 := app.Group("/api")
+	v1 := app.Group("/api", api.ParseAPIJWT)
 	v1.Head("/style/:id.user.css", api.GetStyleEtag)
 	v1.Get("/style/:id.user.css", api.GetStyleSource)
 	v1.Get("/style/:id", api.GetStyleDetails)
@@ -135,6 +135,8 @@ func Initialize() {
 	v1.Get("/index/:format?", api.GetStyleIndex)
 	v1.Get("/search/:query", api.GetSearchResult)
 	v1.Get("/callback/:rcode", api.CallbackGet)
+	v1.Get("/user", api.ProtectedAPI, api.UserGet)
+	v1.Get("/user/:identifier", api.SpecificUserGet)
 
 	oauthV1 := app.Group("/oauth")
 	oauthV1.Get("/authorize", oauth_provider.AuthorizeGet)

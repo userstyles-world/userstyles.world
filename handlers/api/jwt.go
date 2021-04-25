@@ -13,7 +13,7 @@ import (
 	"userstyles.world/utils"
 )
 
-var parseJWT = jwtware.New("apiUser", func(t *jwt.Token) (interface{}, error) {
+var ParseAPIJWT = jwtware.New("apiUser", func(t *jwt.Token) (interface{}, error) {
 	if t.Method.Alg() != jwtware.SigningMethod {
 		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
 	}
@@ -21,13 +21,12 @@ var parseJWT = jwtware.New("apiUser", func(t *jwt.Token) (interface{}, error) {
 })
 
 func ProtectedAPI(c *fiber.Ctx) error {
-	parseJWT(c)
-	if _, ok := User(c); !ok {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to do this action.",
-		})
+	fmt.Println("aaa")
+	if _, ok := APIUser(c); !ok {
+		return c.Status(401).
+			JSON(fiber.Map{
+				"data": "You need to provide an access_token within the Authorization header.",
+			})
 	}
 	return c.Next()
 }
@@ -42,7 +41,7 @@ func MapClaim(c *fiber.Ctx) jwt.MapClaims {
 	return claims
 }
 
-func User(c *fiber.Ctx) (*models.APIUser, bool) {
+func APIUser(c *fiber.Ctx) (*models.APIUser, bool) {
 	s := MapClaim(c)
 	u := &models.APIUser{}
 
