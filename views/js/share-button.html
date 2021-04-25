@@ -1,0 +1,10 @@
+<script type="module">
+    const i = document.getElementById('share')
+    const b = document.getElementById('btn-share')
+    b.onclick = () => {
+        i.select()
+        document.execCommand('copy')
+        i.blur()
+        b.classList.add('copied')
+    }
+</script>

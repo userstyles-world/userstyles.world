@@ -53,4 +53,7 @@
         width: 0;
     }
 
+    &#btn-share:not(.copied) {
+        &::before, &::after { content: unset }
+    }
 }
