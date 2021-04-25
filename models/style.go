@@ -146,14 +146,6 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 	return q, nil
 }
 
-func slugify(s string) string {
-	s = strings.ReplaceAll(s, " ", "-")
-	s = strings.ReplaceAll(s, ".", "-")
-	s = strings.ToLower(s)
-
-	return s
-}
-
 func GetStyleWithSlug(db *gorm.DB, id, slug string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
 	err := getDBSession(db).
@@ -163,10 +155,7 @@ func GetStyleWithSlug(db *gorm.DB, id, slug string) (*APIStyle, error) {
 		First(q, "styles.id = ?", id).
 		Error
 
-	slug = strings.ToLower(slug)
-	name := slugify(strings.ToLower(q.Name))
-
-	if err != nil || slug != name {
+	if err != nil {
 		return nil, errors.New("Style not found.")
 	}
 

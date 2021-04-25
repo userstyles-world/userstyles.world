@@ -57,26 +57,22 @@ func GetStyleSlug(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id, name := c.Params("id"), c.Params("name")
 
-	// If name parameter is missing, redirect to slugged URL.
-	if name == "" {
-		data, err := models.GetStyleByID(database.DB, id)
-		if err != nil {
-			return c.Render("err", fiber.Map{
-				"Title": "Style not found",
-				"User":  u,
-			})
-		}
-
-		url := fmt.Sprintf("/style/%s/%s", id, slugify(data.Name))
-		return c.Redirect(url, fiber.StatusSeeOther)
-	}
-
-	data, err := models.GetStyleWithSlug(database.DB, id, name)
+	// Check if style exists.
+	data, err := models.GetStyleByID(database.DB, id)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
 			"User":  u,
 		})
+	}
+
+	// Create slugged URL.
+	slug := slugify(data.Name)
+
+	// Always redirect to correct slugged URL.
+	if name != slug {
+		url := fmt.Sprintf("/style/%s/%s", id, slugify(data.Name))
+		return c.Redirect(url, fiber.StatusSeeOther)
 	}
 
 	// Count views.
