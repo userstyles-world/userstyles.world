@@ -14,6 +14,7 @@ please note that the example response won't show this.
 ### Retrieve user's information
 
 **Authorization is required**
+**+ user scope**
 ```
 GET /user
 ```
