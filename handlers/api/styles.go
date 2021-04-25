@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ohler55/ojg/oj"
 	"userstyles.world/database"
@@ -32,7 +34,7 @@ func StylesGet(c *fiber.Ctx) error {
 
 }
 
-var p = &oj.Parser{Reuse: true}
+var JsonParser = &oj.Parser{Reuse: true}
 
 func StylePost(c *fiber.Ctx) error {
 	u, _ := APIUser(c)
@@ -44,6 +46,7 @@ func StylePost(c *fiber.Ctx) error {
 				"data": "You need the \"style\" scope to do this.",
 			})
 	}
+
 	style, err := models.GetStyleByID(database.DB, styleID)
 	if err != nil {
 		return c.Status(500).
@@ -54,11 +57,11 @@ func StylePost(c *fiber.Ctx) error {
 	if style.UserID != u.ID {
 		return c.Status(403).
 			JSON(fiber.Map{
-				"data": "This style doesn't belong to this user.",
+				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
 			})
 	}
 	var postStyle models.Style
-	err = p.Unmarshal(c.Body(), &postStyle)
+	err = JsonParser.Unmarshal(c.Body(), &postStyle)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -83,4 +86,41 @@ func StylePost(c *fiber.Ctx) error {
 		"data": "Succesful edited style!",
 	})
 
+}
+
+func DeleteStyle(c *fiber.Ctx) error {
+	u, _ := APIUser(c)
+	styleID := c.Params("id")
+
+	style, err := models.GetStyleByID(database.DB, styleID)
+	if err != nil {
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "Error: Couldn't find style with ID.",
+			})
+	}
+	if style.UserID != u.ID {
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
+			})
+	}
+
+	styleModel := new(models.Style)
+	err = database.DB.
+		Debug().
+		Delete(styleModel, "styles.id = ?", styleID).
+		Error
+
+	if err != nil {
+		fmt.Printf("Failed to delete style, err: %#+v\n", err)
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "Error: Couldn't delete style",
+			})
+	}
+
+	return c.JSON(fiber.Map{
+		"data": "Succesful removed the style!",
+	})
 }
