@@ -64,6 +64,7 @@ Example response of id=8/username="Gusted"
 ### List styles
 
 **Authorization is required**
+**+ style scope**
 ```
 GET /styles
 ```
