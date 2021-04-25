@@ -150,6 +150,7 @@ Example response ID=29
 ### Edit specific style
 
 **Authorization is required**
+**+ style scope**
 ```
 POST /style/<id>
 ```
@@ -176,20 +177,14 @@ Example response
 ```JSON
 Status: 200
 {
-    "info": "Succesful edited style!"
-}
-```
-or
-```JSON
-Status: 406
-{
-    "err": "Homepage validation is wrong."
+    "data": "Succesful edited style!"
 }
 ```
 
 ### Add new style
 
 **Authorization is required**
+**+ style scope**
 ```
 POST /style/new
 ```
@@ -228,6 +223,7 @@ Status: 406
 ### Delete a style
 
 **Authorization is required**
+**+ style scope**
 ```
 DELETE /style/<id>
 ```

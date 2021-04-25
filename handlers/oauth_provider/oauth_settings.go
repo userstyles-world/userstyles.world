@@ -3,7 +3,6 @@ package oauth_provider
 import (
 	"fmt"
 	"log"
-	"reflect"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -81,20 +80,6 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	})
 }
 
-// Filtering an slice well "preserving" the type with the reflect package.
-func filter(arr interface{}, cond func(interface{}) bool) interface{} {
-	contentType := reflect.TypeOf(arr)
-	contentValue := reflect.ValueOf(arr)
-
-	newContent := reflect.MakeSlice(contentType, 0, 0)
-	for i := 0; i < contentValue.Len(); i++ {
-		if content := contentValue.Index(i); cond(content.Interface()) {
-			newContent = reflect.Append(newContent, content)
-		}
-	}
-	return newContent.Interface()
-}
-
 func OAuthSettingsPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
@@ -103,7 +88,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		RedirectURI: strings.TrimSuffix(c.FormValue("redirect_uri"), "/"),
-		Scopes: filter([]string{"style", "user"}, func(name interface{}) bool {
+		Scopes: utils.Filter([]string{"style", "user"}, func(name interface{}) bool {
 			return c.FormValue(name.(string)) == "on"
 		}).([]string),
 		UserID: u.ID,
