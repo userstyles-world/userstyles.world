@@ -11,8 +11,8 @@ import (
 	"userstyles.world/utils"
 )
 
-func AccessTokenGet(c *fiber.Ctx) error {
-	clientID, clientSecret, stateQuery, tCode := c.Query("client_id"), c.Query("client_secret"), c.Query("state"), c.Query("code")
+func AccessTokenPost(c *fiber.Ctx) error {
+	clientID, clientSecret, stateQuery, tCode := c.FormValue("client_id"), c.FormValue("client_secret"), c.FormValue("state"), c.FormValue("code")
 
 	if clientID == "" {
 		return c.Status(400).

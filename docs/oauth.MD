@@ -26,7 +26,7 @@ GET https://usestyles.world/oauth/authorize
 _When the user accepts your request, USw redirects back to your site with a temporary code in a `code` parameter. This temporary code will expire after 10 minutes. When in the previous step the `state` parameter was provided, it will be sent back in the `state` parameter, When the states don't match, then a third party created the request, and you should abort the process._
 
 ```
-GET https://userstyles.world/oauth/access_token
+POST https://userstyles.world/oauth/access_token
 ```
 
 #### Parameters
