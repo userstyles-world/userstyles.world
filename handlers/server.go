@@ -139,6 +139,7 @@ func Initialize() {
 	v1.Get("/user/:identifier", api.SpecificUserGet)
 	v1.Get("/styles", api.ProtectedAPI, api.StylesGet)
 	v1.Post("/style/:id", api.ProtectedAPI, api.StylePost)
+	v1.Delete("/style/:id", api.ProtectedAPI, api.DeleteStyle)
 
 	oauthV1 := app.Group("/oauth")
 	oauthV1.Get("/authorize", oauth_provider.AuthorizeGet)

@@ -233,14 +233,14 @@ Example response
 ```JSON
 Status: 200
 {
-    "info": "Succesful removed the style!"
+    "data": "Succesful removed the style!"
 }
 ```
 or
 ```JSON
 Status: 403
 {
-    "err": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──"
+    "data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──"
 }
 ```
 
