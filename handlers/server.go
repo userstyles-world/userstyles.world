@@ -137,6 +137,7 @@ func Initialize() {
 	v1.Get("/callback/:rcode", api.CallbackGet)
 	v1.Get("/user", api.ProtectedAPI, api.UserGet)
 	v1.Get("/user/:identifier", api.SpecificUserGet)
+	v1.Get("/styles", api.ProtectedAPI, api.StylesGet)
 
 	oauthV1 := app.Group("/oauth")
 	oauthV1.Get("/authorize", oauth_provider.AuthorizeGet)
