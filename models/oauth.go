@@ -16,7 +16,7 @@ type OAuth struct {
 	User         User `gorm:"foreignKey:ID"`
 	Name         string
 	Description  string
-	Scopes       Scopes `gorm:"type:varchar(255);"`
+	Scopes       StringList `gorm:"type:varchar(255);"`
 	RedirectURI  string
 	ClientID     string
 	ClientSecret string
@@ -24,9 +24,9 @@ type OAuth struct {
 
 type APIOAuth struct {
 	ID           uint
-	Name         string
+	Name         string `gorm:"unique"`
 	Description  string
-	Scopes       Scopes `gorm:"type:varchar(255);"`
+	Scopes       StringList `gorm:"type:varchar(255);"`
 	RedirectURI  string
 	UserID       uint
 	Username     string
@@ -36,16 +36,16 @@ type APIOAuth struct {
 
 // Custom []string time for the GORM.
 // As gorm highly dislike slices, we have to impliment, this ourself.
-type Scopes []string
+type StringList []string
 
-func (s Scopes) Value() (driver.Value, error) {
+func (s StringList) Value() (driver.Value, error) {
 	if len(s) == 0 {
 		return "[]", nil
 	}
 	return fmt.Sprintf(`["%s"]`, strings.Join(s, `","`)), nil
 }
 
-func (s *Scopes) Scan(src interface{}) (err error) {
+func (s *StringList) Scan(src interface{}) (err error) {
 	var scopes []string
 	switch src := src.(type) {
 	case string:

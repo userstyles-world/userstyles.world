@@ -3,12 +3,14 @@ package oauth_provider
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"userstyles.world/database"
-	"userstyles.world/handlers/jwt"
+	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
@@ -36,8 +38,12 @@ func contains(arr []string, entry string) bool {
 }
 
 func AuthorizeGet(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	// TODO: Chekc if user is not logged in and ask if they want to login/register.
+	u, ok := jwtware.User(c)
+	if !ok {
+		// TODO: Make this template.
+		return c.Status(401).
+			Render("ask_login", fiber.Map{})
+	}
 
 	// Under no circumstance this page should be loaded in some third-party frame.
 	// It should be fully the user's consent to choose to authorize.
@@ -59,6 +65,19 @@ func AuthorizeGet(c *fiber.Ctx) error {
 			})
 	}
 
+	user, err := models.FindUserByName(database.DB, u.Username)
+	if err != nil {
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "Notify the admins.",
+			})
+	}
+
+	// Check if the user has already authorized this OAuth application.
+	if contains(user.AuthorizedOAuth, strconv.Itoa(int(OAuth.ID))) {
+		return redirectFunction(c, state, OAuth.RedirectURI)
+	}
+
 	// Convert it to actual []string
 	scopes := strings.Split(scope, " ")
 
@@ -68,7 +87,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	}) {
 		return c.Status(400).
 			JSON(fiber.Map{
-				"error": "An scope was provided which isn't selected in your OAuth selection.",
+				"error": "An scope was provided which isn't selected in the OAuth's settings selection.",
 			})
 	}
 
@@ -96,4 +115,99 @@ func AuthorizeGet(c *fiber.Ctx) error {
 		"OAuth":       OAuth,
 		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP),
 	})
+}
+
+func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
+	u, _ := jwtware.User(c)
+
+	jwt, err := utils.NewJWTToken().
+		SetClaim("state", state).
+		SetClaim("userID", u.ID).
+		SetExpiration(time.Now().Add(time.Minute * 10)).
+		GetSignedString(utils.OAuthPSigningKey)
+
+	if err != nil {
+		fmt.Println("Error: Couldn't create JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
+	if state != "" {
+		returnCode += "&state=" + state
+	}
+
+	return c.Redirect(redirect_uri + "/" + returnCode)
+}
+
+func AuthorizePost(c *fiber.Ctx) error {
+	u, _ := jwtware.User(c)
+
+	oauthID, secureToken := c.Params("id"), c.Params("token")
+
+	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
+	if err != nil || OAuth.ID == 0 {
+		return c.Status(400).
+			JSON(fiber.Map{
+				"error": "Incorrect oauthID specified",
+			})
+	}
+
+	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP)
+	if err != nil {
+		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
+	if err != nil || !token.Valid {
+		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	claims := token.Claims.(jwt.MapClaims)
+
+	if _, ok := claims["userID"].(float64); !ok {
+		fmt.Println("WARNING!: Invalid userID")
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	if uint(claims["userID"].(float64)) != u.ID {
+		fmt.Println("WARNING!: User got valid encrypted state, but userID differ!!!")
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	user, err := models.FindUserByName(database.DB, u.Username)
+	if err != nil {
+		fmt.Println("Error: Couldn't retrieve user:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	user.AuthorizedOAuth = append(user.AuthorizedOAuth, oauthID)
+	if err = models.UpdateUser(database.DB, user); err != nil {
+		fmt.Println("Error: couldn't update user:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"error": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	return redirectFunction(c, claims["state"].(string), OAuth.RedirectURI)
 }

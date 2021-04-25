@@ -22,16 +22,18 @@ type SocialMedia struct {
 }
 
 type User struct {
-	gorm.Model    `json:"-"`
-	Socials       SocialMedia `gorm:"embedded"`
-	Username      string      `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
-	Email         string      `gorm:"unique" validate:"required,email"`
-	OAuthProvider string      `gorm:"default:none"`
-	Password      string      `validate:"required,min=8,max=32"`
-	Biography     string      `validate:"min=0,max=512"`
-	DisplayName   string      `validate:"displayName,min=5,max=20"`
-	Role          Role        `gorm:"default=0"` // The values within SocialMedia struct
+	gorm.Model `json:"-"`
+	// The values within SocialMedia struct
+	Socials SocialMedia `gorm:"embedded"`
 	// Will be saved under the user struct
+	AuthorizedOAuth StringList `gorm:"type:varchar(255)"`
+	Username        string     `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
+	Email           string     `gorm:"unique" validate:"required,email"`
+	OAuthProvider   string     `gorm:"default:none"`
+	Password        string     `validate:"required,min=8,max=32"`
+	Biography       string     `validate:"min=0,max=512"`
+	DisplayName     string     `validate:"displayName,min=5,max=20"`
+	Role            Role       `gorm:"default=0"`
 }
 
 type APIUser struct {
@@ -102,4 +104,18 @@ func FindUserByName(db *gorm.DB, name string) (*User, error) {
 	}
 
 	return user, nil
+}
+
+func UpdateUser(db *gorm.DB, u *User) error {
+	err := getDBSession(db).
+		Debug().
+		Model(User{}).
+		Where("id", u.ID).
+		Updates(u).
+		Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
