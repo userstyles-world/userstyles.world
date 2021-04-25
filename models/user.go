@@ -41,6 +41,7 @@ type APIUser struct {
 	ID        uint
 	Biography string
 	Role      Role
+	Scopes    StringList
 }
 
 func FindUserByEmail(db *gorm.DB, email string) (*User, error) {

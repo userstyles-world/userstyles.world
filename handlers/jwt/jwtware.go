@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -10,18 +9,11 @@ import (
 )
 
 var (
-	signingKey    = []byte(config.JWT_SIGNING_KEY)
-	signingMethod = "HS512"
+	JWTSigningKey = []byte(config.JWT_SIGNING_KEY)
+	SigningMethod = "HS512"
 )
 
-func KeyFuncion(t *jwt.Token) (interface{}, error) {
-	if t.Method.Alg() != signingMethod {
-		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
-	}
-	return signingKey, nil
-}
-
-func New() fiber.Handler {
+func New(local string, keyFunction func(t *jwt.Token) (interface{}, error)) fiber.Handler {
 	extractors := []func(c *fiber.Ctx) (string, bool){jwtFromCookie(fiber.HeaderAuthorization), jwtFromHeader(fiber.HeaderAuthorization)}
 
 	return func(c *fiber.Ctx) error {
@@ -39,11 +31,11 @@ func New() fiber.Handler {
 			return c.Next()
 		}
 
-		token, err := jwt.Parse(auth, KeyFuncion)
+		token, err := jwt.Parse(auth, keyFunction)
 
 		if err == nil && token.Valid {
 			// Store user information from token into context.
-			c.Locals("user", token)
+			c.Locals(local, token)
 			return c.Next()
 		}
 		return c.Next()
