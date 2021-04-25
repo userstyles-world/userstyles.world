@@ -212,12 +212,6 @@ Status: 200
     "info": "Succesful added the style! With ID: 69"
 }
 ```
-or
-```JSON
-Status: 406
-{
-    "err": "Homepage validation is wrong."
-}
 ```
 
 ### Delete a style
