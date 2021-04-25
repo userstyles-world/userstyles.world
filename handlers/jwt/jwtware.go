@@ -11,18 +11,11 @@ import (
 )
 
 var (
-	signingKey    = []byte(config.JWT_SIGNING_KEY)
-	signingMethod = "HS512"
+	JWTSigningKey = []byte(config.JWT_SIGNING_KEY)
+	SigningMethod = "HS512"
 )
 
-func KeyFuncion(t *jwt.Token) (interface{}, error) {
-	if t.Method.Alg() != signingMethod {
-		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
-	}
-	return signingKey, nil
-}
-
-func New() fiber.Handler {
+func New(local string, keyFunction func(t *jwt.Token) (interface{}, error)) fiber.Handler {
 	extractors := []func(c *fiber.Ctx) (string, bool){
 		jwtFromCookie(fiber.HeaderAuthorization),
 		jwtFromHeader(fiber.HeaderAuthorization),
@@ -43,11 +36,11 @@ func New() fiber.Handler {
 			return c.Next()
 		}
 
-		token, err := jwt.Parse(auth, KeyFuncion)
+		token, err := jwt.Parse(auth, keyFunction)
 
 		if err == nil && token.Valid {
 			// Store user information from token into context.
-			c.Locals("user", token)
+			c.Locals(local, token)
 			return c.Next()
 		}
 		return c.Next()

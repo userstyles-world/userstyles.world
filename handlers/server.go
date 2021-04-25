@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"time"
 
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
@@ -18,7 +20,7 @@ import (
 	"userstyles.world/config"
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
-	"userstyles.world/handlers/jwt"
+	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/handlers/oauth_provider"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
@@ -81,7 +83,12 @@ func Initialize() {
 	if config.Production {
 		app.Use(limiter.New(limiter.Config{Max: 300}))
 	}
-	app.Use(jwt.New())
+	app.Use(jwtware.New("user", func(t *jwt.Token) (interface{}, error) {
+		if t.Method.Alg() != jwtware.SigningMethod {
+			return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+		}
+		return jwtware.JWTSigningKey, nil
+	}))
 
 	app.Get("/", core.Home)
 	app.Get("/search", core.Search)
@@ -102,21 +109,22 @@ func Initialize() {
 	app.Get("/legal/:document", core.GetLegal)
 	app.Get("/docs/:document", core.GetDocs)
 
-	app.Get("/logout", jwt.Protected, user.Logout)
-	app.Get("/account", jwt.Protected, user.Account)
-	app.Post("/account", jwt.Protected, user.EditAccount)
+	app.Get("/logout", jwtware.Protected, user.Logout)
+	app.Get("/account", jwtware.Protected, user.Account)
+	app.Post("/account", jwtware.Protected, user.EditAccount)
+	app.Post("/style/:id", jwtware.Protected, style.DeleteByID)
+	app.Get("/add", jwtware.Protected, style.CreateGet)
+	app.Post("/add", jwtware.Protected, style.CreatePost)
 	app.Get("/delete/:id", jwt.Protected, style.DeleteGet)
 	app.Post("/delete/:id", jwt.Protected, style.DeletePost)
-	app.Get("/add", jwt.Protected, style.CreateGet)
-	app.Post("/add", jwt.Protected, style.CreatePost)
-	app.Get("/import", jwt.Protected, style.ImportGet)
-	app.Post("/import", jwt.Protected, style.ImportPost)
-	app.Get("/edit/:id", jwt.Protected, style.EditGet)
-	app.Post("/edit/:id", jwt.Protected, style.EditPost)
-	app.Post("/style/:id/promote", jwt.Protected, style.Promote)
-	app.Get("/oauth_settings/:id?", jwt.Protected, oauth_provider.OAuthSettingsGet)
-	app.Post("/oauth_settings/:id?", jwt.Protected, oauth_provider.OAuthSettingsPost)
-	app.Get("/monitor", jwt.Protected, core.Monitor)
+	app.Get("/import", jwtware.Protected, style.ImportGet)
+	app.Post("/import", jwtware.Protected, style.ImportPost)
+	app.Get("/edit/:id", jwtware.Protected, style.EditGet)
+	app.Post("/edit/:id", jwtware.Protected, style.EditPost)
+	app.Post("/style/:id/promote", jwtware.Protected, style.Promote)
+	app.Get("/oauth_settings/:id?", jwtware.Protected, oauth_provider.OAuthSettingsGet)
+	app.Post("/oauth_settings/:id?", jwtware.Protected, oauth_provider.OAuthSettingsPost)
+	app.Get("/monitor", jwtware.Protected, core.Monitor)
 
 	v1 := app.Group("/api")
 	v1.Head("/style/:id.user.css", api.GetStyleEtag)
@@ -129,7 +137,7 @@ func Initialize() {
 
 	oauthV1 := app.Group("/oauth")
 	oauthV1.Get("/authorize", oauth_provider.AuthorizeGet)
-	oauthV1.Post("/authorize/:id/:token", jwt.Protected, oauth_provider.AuthorizePost)
+	oauthV1.Post("/authorize/:id/:token", jwtware.Protected, oauth_provider.AuthorizePost)
 	oauthV1.Post("/access_token", oauth_provider.AccessTokenPost)
 
 	// Allows assets to be reloaded in dev mode.

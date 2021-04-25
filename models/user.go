@@ -43,6 +43,7 @@ type APIUser struct {
 	Biography   string
 	ID          uint
 	Role        Role
+	Scopes      StringList
 }
 
 // Check if user set any social media.
