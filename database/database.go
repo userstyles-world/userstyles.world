@@ -186,11 +186,13 @@ func seed() {
 
 	OAuths := []models.OAuth{
 		{
-			UserID:      1,
-			Name:        "USw integration",
-			Description: "Just some integration",
-			Scopes:      []string{"styles"},
-			RedirectURI: "http://localhost:3001/api/callback",
+			UserID:       1,
+			Name:         "USw integration",
+			Description:  "Just some integration",
+			Scopes:       []string{"styles"},
+			ClientID:     "publicccc_client",
+			ClientSecret: "secreettUwU",
+			RedirectURI:  "http://localhost:3001/api/callback",
 		},
 	}
 

@@ -3,10 +3,10 @@ package oauth_provider
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/ohler55/ojg/oj"
 	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -37,6 +37,8 @@ func contains(arr []string, entry string) bool {
 
 func AuthorizeGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	// TODO: Chekc if user is not logged in and ask if they want to login/register.
+
 	// Under no circumstance this page should be loaded in some third-party frame.
 	// It should be fully the user's consent to choose to authorize.
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
@@ -58,14 +60,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	}
 
 	// Convert it to actual []string
-	var scopes []string
-	err = oj.Unmarshal([]byte(scope), &scopes)
-	if err != nil {
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "Couldn't convert the scope to a list: " + err.Error(),
-			})
-	}
+	scopes := strings.Split(scope, " ")
 
 	// Just check if the application has actually set if they will request these scopes.
 	if !every(scopes, func(name interface{}) bool {
