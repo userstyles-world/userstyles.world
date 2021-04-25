@@ -147,7 +147,11 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 }
 
 func slugify(s string) string {
-	return strings.ReplaceAll(s, " ", "-")
+	s = strings.ReplaceAll(s, " ", "-")
+	s = strings.ReplaceAll(s, ".", "-")
+	s = strings.ToLower(s)
+
+	return s
 }
 
 func GetStyleWithSlug(db *gorm.DB, id, slug string) (*APIStyle, error) {

@@ -3,6 +3,7 @@ package style
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -44,9 +45,31 @@ func GetStyle(c *fiber.Ctx) error {
 	})
 }
 
+func slugify(s string) string {
+	s = strings.ReplaceAll(s, " ", "-")
+	s = strings.ReplaceAll(s, ".", "-")
+	s = strings.ToLower(s)
+
+	return s
+}
+
 func GetStyleSlug(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id, name := c.Params("id"), c.Params("name")
+
+	// If name parameter is missing, redirect to slugged URL.
+	if name == "" {
+		data, err := models.GetStyleByID(database.DB, id)
+		if err != nil {
+			return c.Render("err", fiber.Map{
+				"Title": "Style not found",
+				"User":  u,
+			})
+		}
+
+		url := fmt.Sprintf("/style/%s/%s", id, slugify(data.Name))
+		return c.Redirect(url, fiber.StatusSeeOther)
+	}
 
 	data, err := models.GetStyleWithSlug(database.DB, id, name)
 	if err != nil {
@@ -67,7 +90,7 @@ func GetStyleSlug(c *fiber.Ctx) error {
 	}
 
 	return c.Render("style", fiber.Map{
-		"Title": c.Params("name"),
+		"Title": data.Name,
 		"User":  u,
 		"Style": data,
 		"Views": models.GetTotalViewsForStyle(database.DB, id),

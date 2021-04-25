@@ -98,8 +98,7 @@ func Initialize() {
 	app.Get("/reset/:key", user.ResetGet)
 	app.Post("/reset/:key", user.ResetPost)
 	app.Get("/explore", style.GetExplore)
-	app.Get("/style/:id-:name", style.GetStyleSlug)
-	app.Get("/style/:id", style.GetStyle)
+	app.Get("/style/:id/:name?", style.GetStyleSlug)
 	app.Get("/user/:name", user.Profile)
 	app.Get("~:name", user.Profile)
 
