@@ -42,7 +42,7 @@ func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
 
 	jwt, err := utils.NewJWTToken().
 		SetClaim("state", state).
-		SetClaim("userID", u.Username).
+		SetClaim("username", u.Username).
 		SetExpiration(time.Now().Add(time.Minute * 10)).
 		GetSignedString(utils.OAuthPSigningKey)
 
