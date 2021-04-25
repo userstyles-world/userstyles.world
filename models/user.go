@@ -31,7 +31,8 @@ type User struct {
 
 	// The values within SocialMedia struct
 	// Will be saved under the user struct
-	Socials SocialMedia `gorm:"embedded"`
+	Socials         SocialMedia `gorm:"embedded"`
+	AuthorizedOAuth StringList  `gorm:"default=[];type:varchar(255)"`
 }
 
 type APIUser struct {
@@ -73,4 +74,20 @@ func FindUserByName(db *gorm.DB, name string) (*User, error) {
 	}
 
 	return user, nil
+}
+
+func UpdateUser(db *gorm.DB, u *User) error {
+	err := getDBSession(db).
+		Debug().
+		Model(User{}).
+		Where("id", u.ID).
+		Updates(u).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }

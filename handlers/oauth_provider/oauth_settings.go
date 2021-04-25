@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"userstyles.world/database"
@@ -101,12 +102,14 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	q := models.OAuth{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
-		RedirectURI: c.FormValue("redirect_uri"),
+		RedirectURI: strings.TrimSuffix(c.FormValue("redirect_uri"), "/"),
 		Scopes: filter([]string{"styles", "user"}, func(name interface{}) bool {
 			return c.FormValue(name.(string)) == "on"
 		}).([]string),
 		UserID: u.ID,
 	}
+
+	// TODO: Validate this.
 
 	var err error
 	if id != "" {

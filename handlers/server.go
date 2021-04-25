@@ -129,6 +129,7 @@ func Initialize() {
 
 	oauthV1 := app.Group("/oauth")
 	oauthV1.Get("/authorize", oauth_provider.AuthorizeGet)
+	oauthV1.Post("/authorize/:id/:token", jwt.Protected, oauth_provider.AuthorizePost)
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.
