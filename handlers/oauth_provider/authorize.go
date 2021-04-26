@@ -106,12 +106,15 @@ func AuthorizeGet(c *fiber.Ctx) error {
 				"error": "Couldn't make JWT Token, please notify the admins.",
 			})
 	}
-
-	return c.Render("authorize", fiber.Map{
+	arguments := fiber.Map{
 		"User":        u,
 		"OAuth":       OAuth,
 		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP),
-	})
+	}
+	for _, v := range OAuth.Scopes {
+		arguments["Scope_"+v] = true
+	}
+	return c.Render("authorize", arguments)
 }
 
 func AuthorizePost(c *fiber.Ctx) error {

@@ -48,7 +48,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	oauths, err := models.ListOAuthsOfUser(database.DB, u.Username)
 	if err != nil {
 		if isEdit {
-			var arguments = fiber.Map{
+			arguments := fiber.Map{
 				"Title":  "OAuth Settings",
 				"User":   u,
 				"OAuth":  oauth,
@@ -69,7 +69,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	}
 
 	if isEdit {
-		var arguments = fiber.Map{
+		arguments := fiber.Map{
 			"Title":  "OAuth Settings",
 			"User":   u,
 			"OAuth":  oauth,
@@ -108,7 +108,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		log.Println("Validation errors:", errors)
 
 		c.SendStatus(fiber.StatusInternalServerError)
-		var arguments = fiber.Map{
+		arguments := fiber.Map{
 			"Title":  "OAuth Settings",
 			"Error":  "Failed to validate inputs.",
 			"User":   u,
