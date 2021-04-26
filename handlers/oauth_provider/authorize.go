@@ -40,12 +40,7 @@ func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
 }
 
 func AuthorizeGet(c *fiber.Ctx) error {
-	u, ok := jwtware.User(c)
-	if !ok {
-		// TODO: Make this template.
-		return c.Status(401).
-			Render("ask_login", fiber.Map{})
-	}
+	u, _ := jwtware.User(c)
 
 	// Under no circumstance this page should be loaded in some third-party frame.
 	// It should be fully the user's consent to choose to authorize.
