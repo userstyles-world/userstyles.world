@@ -48,7 +48,7 @@ func APIUser(c *fiber.Ctx) (*models.APIUser, bool) {
 		return u, false
 	}
 
-	user, err := models.FindUserByName(database.DB, s["username"].(string))
+	user, err := models.FindUserByID(database.DB, fmt.Sprintf("%d", uint(s["userID"].(float64))))
 
 	if err != nil || user.ID == 0 {
 		return u, false

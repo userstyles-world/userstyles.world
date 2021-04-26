@@ -67,7 +67,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 
 	claims := token.Claims.(jwt.MapClaims)
 
-	state, userName := claims["state"].(string), claims["username"].(string)
+	state, userID := claims["state"].(string), uint(claims["userID"].(float64))
 
 	if stateQuery != state {
 		return c.Status(400).
@@ -76,7 +76,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 			})
 	}
 
-	user, err := models.FindUserByName(database.DB, userName)
+	user, err := models.FindUserByID(database.DB, fmt.Sprintf("%d", userID))
 	if err != nil || user.ID == 0 {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -86,7 +86,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 
 	jwt, err := utils.NewJWTToken().
 		SetClaim("scopes", strings.Join(OAuth.Scopes, ",")).
-		SetClaim("username", user.Username).
+		SetClaim("userID", user.ID).
 		GetSignedString(utils.OAuthPSigningKey)
 
 	if err != nil {
