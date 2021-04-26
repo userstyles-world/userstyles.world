@@ -7,7 +7,7 @@
 
         &::before,
         &:after {
-        opacity: .9;
+            opacity: 0.9;
         }
     }
   
@@ -19,18 +19,18 @@
     }
 
     &::before {
-        background-color: #000;
-        border-radius: 3px;
-        bottom: 150%;
+        background-color: var(--bg-4);
+        border-radius: var(--br-3);
+        bottom: 120%;
         content: attr(tooltip-data);
-        color: #fff;
-        font-size: 14px;
+        color: var(--fg-1);
+        font-size: 0.875rem;
         font-weight: normal;
         left: 50%;
         line-height: 1.2;
         margin-bottom: 5px;
         margin-left: -100px;
-        padding: 7px;
+        padding: 0.5rem;
         position: absolute;
         text-align: center;
         white-space: break-spaces;
@@ -42,10 +42,10 @@
         border-style: solid;
         border-left-color: transparent;
         border-right-color: transparent;
-        border-top-color: #000;
+        border-top-color: var(--bg-4);
         border-width: 5px;
         border-bottom: none;
-        bottom: 150%;
+        bottom: 120%;
         content: ' ';
         left: 50%;
         margin-left: -5px;
