@@ -49,12 +49,20 @@
                         <label>Scopes</label>
                         // Ehhh when in EDIT Mode we somehow need to check thesee...
                         <div class="flex">
-                            <input type="checkbox" name="user" value="user">
-                            <label class="ml:m"  for="user">User</label>
+                            <input type="checkbox" name="user" value="user"
+                                {{ if .Scope_user }}
+                                    checked
+                                {{ end }}
+                            >
+                            <label class="ml:m" for="user">User</label>
                         </div>
                         <div class="flex">
-                            <input type="checkbox" name="styles" value="styles">
-                            <label class="ml:m" for="styles">Styles</label>
+                            <input type="checkbox" name="style" value="style"
+                                {{ if .Scope_style }}
+                                    checked
+                                {{ end }}
+                            >
+                            <label class="ml:m" for="style">Style</label>
                         </div>
 
                         <label for="redirect_uri">Redirect URI</label>
@@ -67,10 +75,6 @@
                         <button class="flex btn primary" type="submit">{{ $btn }}</button>
                     </form>
                 </section>
-
-
-                // TODO: List all user-created OAuth here :P
-                // That are passed via the OAuths parameter
             </div>
         </main>
 

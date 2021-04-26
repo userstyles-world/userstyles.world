@@ -47,13 +47,17 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	oauths, err := models.ListOAuthsOfUser(database.DB, u.Username)
 	if err != nil {
 		if isEdit {
-			return c.Render("oauth_settings", fiber.Map{
+			var arguments = fiber.Map{
 				"Title":  "OAuth Settings",
 				"User":   u,
 				"OAuth":  oauth,
 				"OAuths": nil,
 				"Method": method,
-			})
+			}
+			for _, v := range oauth.Scopes {
+				arguments["Scope_"+v] = true
+			}
+			return c.Render("oauth_settings", arguments)
 		}
 		return c.Render("oauth_settings", fiber.Map{
 			"Title":  "OAuth Settings",
@@ -64,13 +68,17 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	}
 
 	if isEdit {
-		return c.Render("oauth_settings", fiber.Map{
+		var arguments = fiber.Map{
 			"Title":  "OAuth Settings",
 			"User":   u,
 			"OAuth":  oauth,
 			"OAuths": oauths,
 			"Method": method,
-		})
+		}
+		for _, v := range oauth.Scopes {
+			arguments["Scope_"+v] = true
+		}
+		return c.Render("oauth_settings", arguments)
 	}
 	return c.Render("oauth_settings", fiber.Map{
 		"Title":  "OAuth Settings",
