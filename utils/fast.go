@@ -11,7 +11,7 @@ import (
 // This file is pure for functions.
 // That mimick originial behaviour, just faster.
 
-var jsonEncoderOptions = oj.Options{OmitNil: true}
+var jsonEncoderOptions = &oj.Options{OmitNil: true, UseTags: true}
 
 // UnsafeString returns a string pointer without allocation.
 func UnsafeString(b []byte) string {
