@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
@@ -102,7 +103,23 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		UserID: u.ID,
 	}
 
-	// TODO: Validate this.
+	if err := utils.Validate().Struct(q); err != nil {
+		errors := err.(validator.ValidationErrors)
+		log.Println("Validation errors:", errors)
+
+		c.SendStatus(fiber.StatusInternalServerError)
+		var arguments = fiber.Map{
+			"Title":  "OAuth Settings",
+			"Error":  "Failed to validate inputs.",
+			"User":   u,
+			"OAuth":  q,
+			"Method": "add",
+		}
+		for _, v := range q.Scopes {
+			arguments["Scope_"+v] = true
+		}
+		return c.Render("oauth_settings", arguments)
+	}
 
 	var err error
 	if id != "" {
