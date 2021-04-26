@@ -93,5 +93,6 @@ func GetStyleSlug(c *fiber.Ctx) error {
 		"Total": models.GetTotalInstallsForStyle(database.DB, id),
 		"Week":  models.GetWeeklyInstallsForStyle(database.DB, id),
 		"Url":   fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
+		"Slug":  c.Path(),
 	})
 }
