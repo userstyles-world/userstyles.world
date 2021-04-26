@@ -184,7 +184,7 @@ func Seed() {
 			Scopes:       []string{"style", "user"},
 			ClientID:     "publicccc_client",
 			ClientSecret: "secreettUwU",
-			RedirectURI:  "http://localhost:8080/callback_helper/usw",
+			RedirectURI:  "https://gusted.xyz/callback_helper/usw",
 		},
 	}
 

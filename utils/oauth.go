@@ -111,7 +111,7 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 		// Define we log in trough the temp code.
 		authURL += "&grant_type=authorization_code"
 		// Specify the the redirect uri? It is required
-		authURL += "&redirect_uri=" + url.PathEscape("http://localhost:3000/api/callback/gitlab/")
+		authURL += "&redirect_uri=" + url.PathEscape("https://userstyles.worldapi/callback/gitlab/")
 	case "codeberg":
 		authURL = "https://codeberg.org/login/oauth/access_token"
 		body = GiteaLikeAccessJson{
@@ -119,7 +119,7 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 			ClientSecret: config.CODEBERG_CLIENT_SECRET,
 			Code:         tempCode,
 			GrantType:    "authorization_code",
-			RedirectURI:  "http://localhost:3000/api/callback/codeberg/",
+			RedirectURI:  "https://userstyles.world/api/callback/codeberg/",
 		}
 	}
 	if authURL == "" {
