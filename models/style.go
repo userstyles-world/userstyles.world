@@ -3,7 +3,6 @@ package models
 import (
 	"errors"
 	"log"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -140,38 +139,6 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 		Error
 
 	if err != nil || q.ID == 0 {
-		return nil, errors.New("Style not found.")
-	}
-
-	return q, nil
-}
-
-func slugify(s string) string {
-	r := strings.NewReplacer(" ", "-", ".", "-", ",", "-", "?", "")
-	s = r.Replace(s)
-
-	r = strings.NewReplacer("(", "", ")", "", "[", "", "]", "", "<", "", ">", "")
-	s = r.Replace(s)
-
-	r = strings.NewReplacer("!", "", "@", "", "&", "", "'", "", "\"", "", "|", "")
-	s = r.Replace(s)
-
-	r = strings.NewReplacer("/", "", "\\", "", "+", "", "---", "-", "--", "-")
-	s = r.Replace(s)
-
-	return strings.ToLower(s)
-}
-
-func GetStyleWithSlug(db *gorm.DB, id, slug string) (*APIStyle, error) {
-	t, q := new(Style), new(APIStyle)
-	err := getDBSession(db).
-		Model(t).
-		Select("styles.*,  u.username").
-		Joins("join users u on u.id = styles.user_id").
-		First(q, "styles.id = ?", id).
-		Error
-
-	if err != nil {
 		return nil, errors.New("Style not found.")
 	}
 
