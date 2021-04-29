@@ -1,6 +1,8 @@
 package user
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
@@ -10,7 +12,7 @@ import (
 
 func Profile(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	p := c.Params("name")
+	p := strings.ToLower(c.Params("name"))
 
 	user, err := models.FindUserByName(database.DB, p)
 	if err != nil {
