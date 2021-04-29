@@ -1,4 +1,4 @@
-<a class="card col gap animate bd:o" href="/style/{{ .ID }}">
+<a class="card col gap animate bd:o" href="/style/{{ .ID }}/{{ .Name | Slug }}">
     <div class="thumbnail">
         {{ template "partials/preview_image" . }}
     </div>

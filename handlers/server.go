@@ -22,6 +22,7 @@ import (
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
 	"userstyles.world/models"
+	"userstyles.world/utils"
 )
 
 // TODO: Refactor this as a separate package.
@@ -34,6 +35,10 @@ func renderEngine() *html.Engine {
 		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
 
 		return template.HTML(out)
+	})
+
+	engine.AddFunc("Slug", func(s string) template.HTML {
+		return template.HTML(utils.SlugifyURL(s))
 	})
 
 	engine.AddFunc("GitCommit", func() template.HTML {
