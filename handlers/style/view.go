@@ -3,6 +3,7 @@ package style
 import (
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,9 +14,17 @@ import (
 )
 
 func slugify(s string) string {
-	s = strings.ReplaceAll(s, " ", "-")
-	s = strings.ReplaceAll(s, ".", "-")
-	s = strings.ToLower(s)
+	re := regexp.MustCompile(`[a-zA-Z0-9]+`)
+
+	// Extract valid characters.
+	parts := re.FindAllString(s, -1)
+	fmt.Printf("parts: %#+v\n", parts)
+
+	joined := strings.Join(parts, "-")
+	fmt.Printf("joined: %#+v\n", joined)
+
+	s = strings.ToLower(joined)
+	fmt.Printf("output: %#+v\n", s)
 
 	return s
 }
