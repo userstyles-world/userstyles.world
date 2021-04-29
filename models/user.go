@@ -42,6 +42,12 @@ type APIUser struct {
 	Role      Role
 }
 
+func (u User) HasSocials() bool {
+	return u.Socials.Codeberg != "" ||
+		u.Socials.Gitlab != "" ||
+		u.Socials.Github != ""
+}
+
 func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 	user := new(User)
 

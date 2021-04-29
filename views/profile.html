@@ -14,11 +14,20 @@
                     <p class="role"><span class="minw">Role</span>{{ .Params.Role | Role }}</p>
                     <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt.Format "January 02, 2006 15:04" }}</p>
                     <h2 class="sub-title td:d mt:l">Biography</h2>
-                    <div class="md">{{- .Params.Biography | Markdown -}}</div>
+                    <div class="md">
+                        {{- if .Params.Biography -}}
+                            {{- .Params.Biography | Markdown -}}
+                        {{- else -}}
+                            <p class="fg:3"><i>Biography isn't set.</i></p>
+                        {{- end -}}
+                    </div>
                 </section>
 
                 <section class="socials mt:l">
                     <h2 class="sub-title td:d">Socials</h2>
+                    {{- if not .Params.HasSocials -}}
+                        <p class="fg:3"><i>Socials aren't set.</i></p>
+                    {{- end -}}
                     {{ if .Params.Socials.Github }}
                         <div class="github flex mt:m">
                             {{- template "partials/github_logo" -}}
@@ -56,7 +65,7 @@
                             {{ end }}
                         </div>
                     {{ else }}
-                        <p>No styles found.</p>
+                        <p class="fg:3"><i>No styles found.</i></p>
                     {{ end }}
                 </section>
             </div>
