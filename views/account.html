@@ -46,7 +46,7 @@
                     </form>
                     <h2 class="sub-title td:d mt:l">Socials</h2>
                     <form class="socials ml:0" method="post" action="/account">
-                        <label for="github">
+                        <label class="github" for="github">
                             {{- template "partials/github_logo" . -}}
                             Github
                         </label>
@@ -55,7 +55,7 @@
                             type="text" name="github"
                             placeholder="e.g. username"
                             value="{{ .Params.Socials.Github }}"/>
-                        <label for="gitlab">
+                        <label class="gitlab" for="gitlab">
                             {{- template "partials/gitlab_logo" . -}}
                             Gitlab
                         </label>
@@ -65,7 +65,7 @@
                             placeholder="e.g. username"
                             value="{{ .Params.Socials.Gitlab }}"/>
                         </input>
-                        <label for="codeberg">
+                        <label class="codeberg" for="codeberg">
                             {{- template "partials/codeberg_logo" . -}}
                             Codeberg
                         </label>
