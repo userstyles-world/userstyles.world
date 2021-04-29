@@ -3,31 +3,14 @@ package style
 import (
 	"fmt"
 	"log"
-	"regexp"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/utils"
 )
-
-func slugify(s string) string {
-	re := regexp.MustCompile(`[a-zA-Z0-9]+`)
-
-	// Extract valid characters.
-	parts := re.FindAllString(s, -1)
-	fmt.Printf("parts: %#+v\n", parts)
-
-	joined := strings.Join(parts, "-")
-	fmt.Printf("joined: %#+v\n", joined)
-
-	s = strings.ToLower(joined)
-	fmt.Printf("output: %#+v\n", s)
-
-	return s
-}
 
 func GetStylePage(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
@@ -43,11 +26,11 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 
 	// Create slugged URL.
-	slug := slugify(data.Name)
+	slug := utils.SlugifyURL(data.Name)
 
 	// Always redirect to correct slugged URL.
 	if name != slug {
-		url := fmt.Sprintf("/style/%s/%s", id, slugify(data.Name))
+		url := fmt.Sprintf("/style/%s/%s", id, slug)
 		return c.Redirect(url, fiber.StatusSeeOther)
 	}
 
