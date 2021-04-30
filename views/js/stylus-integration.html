@@ -1,5 +1,8 @@
 <script type="module">
     document.addEventListener("DOMContentLoaded", () => {
-        window.dispatchEvent(new MessageEvent('message', {data: {type: "usw-remove-stylus-button"}}))
+        window.dispatchEvent(new MessageEvent('message', {
+            data: {type: "usw-remove-stylus-button"},
+            origin: "https://userstyles.world"
+        }));
     });
 </script>
