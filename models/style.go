@@ -78,6 +78,21 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 	return q, nil
 }
 
+func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
+	t, q := new(Style), new([]APIStyle)
+	err := getDBSession(db).
+		Model(t).
+		Select("styles.id").
+		Find(q).
+		Error
+
+	if err != nil {
+		return nil, errors.New("Styles not found.")
+	}
+
+	return *q, nil
+}
+
 func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 

@@ -53,14 +53,13 @@ func getInstalls(id int64) (i int64) {
 }
 
 func snapshotStats() {
-	// TODO: Write a query to only get style IDs.
-	styles, err := models.GetAllStyles(database.DB)
+	styles, err := models.GetAllStyleIDs(database.DB)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	items := new([]models.History)
 
-	for _, v := range *styles {
+	for _, v := range styles {
 		item := models.History{
 			StyleID:       v.ID,
 			DailyViews:    getViews(int64(v.ID)),
