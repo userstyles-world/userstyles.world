@@ -13,7 +13,7 @@ import (
 
 func Initialize() {
 	s := gocron.NewScheduler(time.Local)
-	job, err := s.Cron("20 00 * * *").Do(func() { snapshotStats() })
+	job, err := s.Cron("59 23 * * *").Do(func() { snapshotStats() })
 	s.StartAsync()
 	fmt.Printf("job: %v, err: %v\n", job, err)
 }
