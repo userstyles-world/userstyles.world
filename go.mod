@@ -8,6 +8,7 @@ require (
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
 	github.com/form3tech-oss/jwt-go v3.2.2+incompatible
+	github.com/go-co-op/gocron v1.5.0
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/gofiber/fiber/v2 v2.6.0
 	github.com/gofiber/template v1.6.7
