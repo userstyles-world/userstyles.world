@@ -18,21 +18,35 @@ func Initialize() {
 	fmt.Printf("job: %v, err: %v\n", job, err)
 }
 
-// TODO: Refactor and be use proper data after 2021-05-01.
-// NOTE: As the first entry, we'll use _all_ the available data.
 func getViews(id int64) (i int64) {
+	day := time.Now().AddDate(0, 0, -1)
 	database.DB.
 		Model(models.Stats{}).
-		Where("style_id = ?", id).
+		Where("style_id = ? and updated_at > ?", id, day).
+		Count(&i)
+
+	return i
+}
+
+func getUpdates(id int64) (i int64) {
+	day := time.Now().AddDate(0, 0, -1)
+	q := "style_id = ? and install = ? and updated_at > ?"
+	database.DB.
+		Debug().
+		Model(models.Stats{}).
+		Where(q, id, true, day).
 		Count(&i)
 
 	return i
 }
 
 func getInstalls(id int64) (i int64) {
+	day := time.Now().AddDate(0, 0, -1)
+	q := "style_id = ? and install = ? and created_at > ?"
 	database.DB.
+		Debug().
 		Model(models.Stats{}).
-		Where("style_id = ? and install = ?", id, true).
+		Where(q, id, true, day).
 		Count(&i)
 
 	return i
@@ -51,7 +65,7 @@ func snapshotStats() {
 			StyleID:       v.ID,
 			DailyViews:    getViews(int64(v.ID)),
 			DailyInstalls: getInstalls(int64(v.ID)),
-			DailyUpdates:  getInstalls(int64(v.ID)),
+			DailyUpdates:  getUpdates(int64(v.ID)),
 		}
 
 		*items = append(*items, item)
