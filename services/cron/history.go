@@ -22,7 +22,7 @@ func getViews(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
 	database.DB.
 		Model(models.Stats{}).
-		Where("style_id = ? and created_at > ?", id, day).
+		Where("style_id = ? and created_at > ? and view = ?", id, day, true).
 		Count(&i)
 
 	return i
@@ -32,7 +32,6 @@ func getUpdates(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
 	q := "style_id = ? and install = ? and updated_at > ?"
 	database.DB.
-		Debug().
 		Model(models.Stats{}).
 		Where(q, id, true, day).
 		Count(&i)
@@ -44,7 +43,6 @@ func getInstalls(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
 	q := "style_id = ? and install = ? and created_at > ?"
 	database.DB.
-		Debug().
 		Model(models.Stats{}).
 		Where(q, id, true, day).
 		Count(&i)
