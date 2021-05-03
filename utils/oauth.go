@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -74,7 +75,7 @@ func OauthMakeURL(baseURL, service string) string {
 	// From which site the callback was from.
 	redirectURL := baseURL + "/api/callback/"
 	if service == "github" {
-		redirectURL += PrepareText(service+"+"+nonsenseState, AEAD_OAUTH) + "/"
+		redirectURL += PrepareText(nonsenseState, AEAD_OAUTH) + "/"
 	} else {
 		redirectURL += service + "/"
 	}
@@ -83,9 +84,9 @@ func OauthMakeURL(baseURL, service string) string {
 	return oauthURL
 }
 
-func CallbackOAuth(tempCode, state, service string) OAuthResponse {
+func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	if service == "" {
-		return OAuthResponse{}
+		return OAuthResponse{}, errors.New("no service detected")
 	}
 	// Now the hard part D:
 	// With our temp code and orignial state, we need to request the auth code.
@@ -123,7 +124,7 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 		}
 	}
 	if authURL == "" {
-		return OAuthResponse{}
+		return OAuthResponse{}, errors.New("no authURL was set")
 	}
 	if body.ClientID == "" {
 		// Add the temp code.
@@ -132,14 +133,14 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", authURL, nil)
 	if err != nil {
-		return OAuthResponse{}
+		return OAuthResponse{}, err
 	}
 	// Ensure we get a json response.
 	req.Header.Set("Accept", "application/json")
 	if body.ClientID != "" {
 		bodyString, err := json.Marshal(body)
 		if err != nil {
-			return OAuthResponse{}
+			return OAuthResponse{}, err
 		}
 		req.Body = ioutil.NopCloser(strings.NewReader(B2s(bodyString)))
 		req.ContentLength = int64(len(bodyString))
@@ -147,17 +148,17 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 	}
 	res, err := client.Do(req)
 	if err != nil {
-		return OAuthResponse{}
+		return OAuthResponse{}, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		return OAuthResponse{}
+		return OAuthResponse{}, errors.New("status code returned wasn't OK 200")
 	}
 	var responseJson OAuthTokenResponse
 
 	err = json.NewDecoder(res.Body).Decode(&responseJson)
 	if err != nil {
-		return OAuthResponse{}
+		return OAuthResponse{}, err
 	}
 	var userEndpoint string
 	switch service {
@@ -168,35 +169,35 @@ func CallbackOAuth(tempCode, state, service string) OAuthResponse {
 	case "codeberg":
 		userEndpoint = "https://codeberg.org/api/v1/user"
 	}
-	reqEmail, err := http.NewRequest("GET", userEndpoint, nil)
+	userInformationReq, err := http.NewRequest("GET", userEndpoint, nil)
 	if err != nil {
-		return OAuthResponse{}
+		return OAuthResponse{}, err
 	}
 	if service == "github" {
 		// Recommended
-		reqEmail.Header.Set("Accept", "application/vnd.github.v3+json")
+		userInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
 	}
 
-	reqEmail.Header.Set("Authorization", responseJson.TokenType+" "+responseJson.AccesToken)
+	userInformationReq.Header.Set("Authorization", responseJson.TokenType+" "+responseJson.AccesToken)
 
-	resEmail, err := client.Do(reqEmail)
+	resEmail, err := client.Do(userInformationReq)
 	if err != nil {
-		return OAuthResponse{}
+		return OAuthResponse{}, err
 	}
 	defer resEmail.Body.Close()
 	if resEmail.StatusCode != 200 {
-		return OAuthResponse{}
+		return OAuthResponse{}, errors.New("status code returned for userInformationReq wasn't OK 200")
 	}
 
 	var oauthResponse OAuthResponse
 	err = json.NewDecoder(resEmail.Body).Decode(&oauthResponse)
 	if err != nil {
-		return OAuthResponse{}
+		return OAuthResponse{}, err
 	}
 
 	if oauthResponse.LoginName != "" {
 		oauthResponse.UserName = oauthResponse.LoginName
 	}
 
-	return oauthResponse
+	return oauthResponse, nil
 }

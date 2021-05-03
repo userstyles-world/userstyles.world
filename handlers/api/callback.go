@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -30,40 +29,38 @@ func CallbackGet(c *fiber.Ctx) error {
 	// Get the necessary information.
 	redirectCode, tempCode, state := c.Params("rcode"), c.Query("code"), c.Query("state")
 	if redirectCode == "" || tempCode == "" {
+		fmt.Println("No redirectcode or tempCode was detected")
 		// Give them the bad enpoint error.
 		return c.Next()
 	}
 	var service string
 	var rState string
-	if redirectCode != "gitlab" && redirectCode != "codeberg" {
+	if redirectCode == "github" {
+		service = "github"
 		// Decode the string so we get our actual information back.
 		code, err := utils.DecodePreparedText(redirectCode, utils.AEAD_OAUTH)
 		if err != nil {
+			fmt.Println("Error: Couldn't decode our prepared text.")
 			return c.Next()
 		}
-		// We added the service within the the information and use the '+'
-		// As seperator so now unseperate them.
-		if splitted := strings.Split(code, "+"); len(splitted) == 2 {
-			service, rState = splitted[0], splitted[1]
-		} else {
-			return c.Next()
-		}
+		rState = code
 
 		if rState != state {
+			fmt.Println("Error: The state doesn't match!")
 			return c.Next()
 		}
 	} else {
 		service = redirectCode
 	}
 
-	response := utils.CallbackOAuth(tempCode, rState, service)
-	if response == (utils.OAuthResponse{}) {
+	response, err := utils.CallbackOAuth(tempCode, rState, service)
+	if err != nil {
+		fmt.Println("Ouch, the response failed, due to: " + err.Error())
 		return c.Next()
 	}
 
 	user, err := models.FindUserByName(database.DB, response.UserName)
 	if err != nil {
-		fmt.Println(err.Error())
 		if err.Error() == "User not found." || err.Error() == "record not found" {
 			user = &models.User{
 				Username:      response.UserName,
@@ -75,17 +72,17 @@ func CallbackGet(c *fiber.Ctx) error {
 			if regErr.Error != nil {
 				log.Printf("Failed to register %s, error: %s", response.UserName, regErr.Error)
 
-				c.SendStatus(fiber.StatusInternalServerError)
-				return c.Render("err", fiber.Map{
-					"Title": "Register failed",
-					"Error": "Internal server error.",
-				})
+				c.Status(fiber.StatusInternalServerError).
+					JSON(fiber.Map{
+						"data": "Internal Error.",
+					})
 			}
 		} else {
 			return c.Next()
 		}
 	}
 	if (user.OAuthProvider == "none" || user.OAuthProvider != service) && getSocialMediaValue(user, service) != response.UserName {
+		fmt.Println("User detected but the social media value wasn't set of this user.")
 		return c.Next()
 	}
 
@@ -98,10 +95,11 @@ func CallbackGet(c *fiber.Ctx) error {
 		GetSignedString(nil)
 
 	if err != nil {
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
-		})
+		fmt.Println("Couldn't create JWT Token, due to " + err.Error())
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{
+				"data": "Internal Error.",
+			})
 	}
 
 	c.Cookie(&fiber.Cookie{
