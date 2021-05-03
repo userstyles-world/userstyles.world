@@ -17,6 +17,7 @@ type Stats struct {
 	gorm.Model
 	Hash    string `gorm:"unique"`
 	Install bool   `gorm:"default:false"`
+	View    bool   `gorm:"default:false"`
 	StyleID int
 	Style   Style
 }
@@ -65,6 +66,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 			Create(s).
 			Error
 	} else {
+		s.View = true // Initial view.
 		err = db.
 			Debug().
 			Model(s).
@@ -72,6 +74,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 				Columns: []clause.Column{{Name: "hash"}},
 				DoUpdates: clause.Assignments(map[string]interface{}{
 					"updated_at": time.Now(),
+					"view":       true,
 				}),
 			}).
 			Create(s).
