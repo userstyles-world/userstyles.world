@@ -13,7 +13,7 @@ import (
 
 func Initialize() {
 	s := gocron.NewScheduler(time.Local)
-	job, err := s.Cron("59 23 * * *").Do(func() { snapshotStats() })
+	job, err := s.Cron("11 00 * * *").Do(func() { snapshotStats() })
 	s.StartAsync()
 	fmt.Printf("job: %v, err: %v\n", job, err)
 }
@@ -22,7 +22,7 @@ func getViews(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
 	database.DB.
 		Model(models.Stats{}).
-		Where("style_id = ? and updated_at > ?", id, day).
+		Where("style_id = ? and created_at > ?", id, day).
 		Count(&i)
 
 	return i
