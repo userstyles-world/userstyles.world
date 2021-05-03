@@ -1,7 +1,6 @@
 package cron
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -13,9 +12,11 @@ import (
 
 func Initialize() {
 	s := gocron.NewScheduler(time.Local)
-	job, err := s.Cron("11 00 * * *").Do(func() { snapshotStats() })
+	s.WaitForScheduleAll()
 	s.StartAsync()
-	fmt.Printf("job: %v, err: %v\n", job, err)
+
+	job, err := s.Cron("59 23 * * *").Do(func() { snapshotStats() })
+	log.Printf("job: %v, err: %v\n", job, err)
 }
 
 func getViews(id int64) (i int64) {
@@ -55,8 +56,11 @@ func snapshotStats() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	items := new([]models.History)
 
+	// Store style stats.
+	stats := new([]models.History)
+
+	// Iterate over styles and collect their stats.
 	for _, v := range styles {
 		item := models.History{
 			StyleID:       v.ID,
@@ -65,9 +69,9 @@ func snapshotStats() {
 			DailyUpdates:  getUpdates(int64(v.ID)),
 		}
 
-		*items = append(*items, item)
+		*stats = append(*stats, item)
 	}
 
 	log.Println("Stats history.")
-	database.DB.Debug().Create(items)
+	database.DB.Debug().Create(stats)
 }
