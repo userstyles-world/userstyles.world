@@ -35,7 +35,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	}
 	var service string
 	var rState string
-	if redirectCode == "github" {
+	if redirectCode != "codeberg" && redirectCode != "gitlab" {
 		service = "github"
 		// Decode the string so we get our actual information back.
 		code, err := utils.DecodePreparedText(redirectCode, utils.AEAD_OAUTH)
