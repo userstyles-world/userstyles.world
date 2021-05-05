@@ -32,6 +32,10 @@
                             required pattern="^[\S]{8,32}$"
                             type="password" name="password"
                             placeholder="(8–32 characters)">
+                        <label for="agreement">You hereby agree to the <a href="/legal/terms_of_services">Terms of Services</a>.</label>
+                        <input
+                            required
+                            type="checkbox" name="agreement">
                         <button class="flex btn primary" type="submit">Register</button>
                     </form>
                     <p class="form-tip ta:c">
