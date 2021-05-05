@@ -210,4 +210,4 @@ If any complaint with us is not satisfactorily resolved, you can contact the Com
 
 ## CONTACT US
 
-In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at: feedback@userstyles.world
+In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at: [feedback@userstyles.world](mailto:feedback@userstyles.world)

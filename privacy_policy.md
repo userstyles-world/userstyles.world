@@ -7,7 +7,7 @@ Last updated May 5, 2021
 Thank you for choosing to be part of our community at userstyles world (“company”, “we”, “us”, or “our”). 
 We are committed to protecting your personal information and your right to privacy. 
 If you have any questions or concerns about our policy, or our practices with regards to your personal information, 
-please contact us at feedback@userstyles.world.
+please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world).
 
 When you visit our website userstyles.world (“Site”) and use our services, 
 you trust us with your personal information. We take your privacy very seriously.
@@ -141,7 +141,7 @@ We have implemented appropriate technical and organizational security measures d
 
 _In Short: We do not knowingly collect data from or market to children under 18 years of age._
 
-We do not knowingly solicit data from or market to children under 18 years of age. By using the Site, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s use of the Site. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we have collected from children under age 18, please contact us at feedback@userstyles.world
+We do not knowingly solicit data from or market to children under 18 years of age. By using the Site, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s use of the Site. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we have collected from children under age 18, please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world)
 
 ## WHAT ARE YOUR PRIVACY RIGHTS?
 
@@ -178,4 +178,4 @@ We may update this privacy policy from time to time. The updated version will be
 
 ## HOW CAN YOU CONTACT US ABOUT THIS POLICY?
 
-If you have questions or comments about this policy, email us at feedback@userstyles.world
+If you have questions or comments about this policy, email us at [feedback@userstyles.world](mailto:feedback@userstyles.world)
