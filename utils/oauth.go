@@ -73,7 +73,7 @@ func OauthMakeURL(baseURL, service string) string {
 	// Nonsense state so we later can re-use by decrypting it.
 	// And than have the actual value. Also we use this to specify
 	// From which site the callback was from.
-	redirectURL := baseURL + "/api/callback/"
+	redirectURL := config.OAuthURL()
 	if service == "github" {
 		redirectURL += PrepareText(nonsenseState, AEAD_OAUTH) + "/"
 	} else {
@@ -112,7 +112,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		// Define we log in trough the temp code.
 		authURL += "&grant_type=authorization_code"
 		// Specify the the redirect uri? It is required
-		authURL += "&redirect_uri=" + url.PathEscape("http://localhost:3000/api/callback/gitlab/")
+		authURL += "&redirect_uri=" + url.PathEscape(config.OAuthURL()+"gitlab/")
 	case "codeberg":
 		authURL = "https://codeberg.org/login/oauth/access_token"
 		body = GiteaLikeAccessJson{
@@ -120,7 +120,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 			ClientSecret: config.CODEBERG_CLIENT_SECRET,
 			Code:         tempCode,
 			GrantType:    "authorization_code",
-			RedirectURI:  "http://localhost:3000/api/callback/codeberg/",
+			RedirectURI:  config.OAuthURL() + "codeberg/",
 		}
 	}
 	if authURL == "" {

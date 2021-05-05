@@ -43,3 +43,12 @@ func getEnv(name, fallback string) string {
 
 	panic(fmt.Sprintf(`Env variable not found: %v`, name))
 }
+
+// Use proper callback URL depending on the environment.
+func OAuthURL() string {
+	if Production {
+		return "https://userstyles.world/api/callback/"
+	}
+
+	return "http://localhost" + PORT + "/api/callback/"
+}

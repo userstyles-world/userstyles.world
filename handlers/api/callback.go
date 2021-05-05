@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -81,7 +82,10 @@ func CallbackGet(c *fiber.Ctx) error {
 			return c.Next()
 		}
 	}
-	if (user.OAuthProvider == "none" || user.OAuthProvider != service) && getSocialMediaValue(user, service) != response.UserName {
+
+	// TODO: Simplify this logic.
+	if (user.OAuthProvider == "none" || user.OAuthProvider != service) &&
+		strings.ToLower(getSocialMediaValue(user, service)) != response.UserName {
 		fmt.Println("User detected but the social media value wasn't set of this user.")
 		return c.Next()
 	}
