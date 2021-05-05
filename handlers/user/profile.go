@@ -14,7 +14,7 @@ func Profile(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("name")
 
-	user, err := models.FindUserByName(database.DB, strings.ToLower(p))
+	user, err := models.FindUserByName(database.DB, p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "User not found",

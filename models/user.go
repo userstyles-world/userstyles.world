@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -66,7 +67,7 @@ func FindUserByName(db *gorm.DB, name string) (*User, error) {
 	user := new(User)
 
 	err := getDBSession(db).
-		Where("username = ?", name).
+		Where("username = ?", strings.ToLower(name)).
 		First(&user).
 		Error
 
