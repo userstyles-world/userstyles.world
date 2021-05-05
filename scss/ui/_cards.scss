@@ -34,7 +34,7 @@
             position: absolute;
             border-radius: var(--br-3) var(--br-3) 0 0;
             object-position: center top;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         &.no-screenshot svg {
