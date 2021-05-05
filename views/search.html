@@ -18,7 +18,7 @@
                         <label for="q">Search keyword</label>
                         <input
                             type="text" name="q" value="{{ .Value }}"
-                            required pattern="[a-zA-Z0-9]{1,}"
+                            required pattern="[a-zA-Z0-9\s-]{1,}"
                             placeholder="e.g. dark">
                         <button class="flex btn primary" type="submit">Search</button>
                     </form>
