@@ -127,11 +127,11 @@ func RecoverPost(c *fiber.Ctx) error {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("reset", fiber.Map{
-			"Title": "Reset failed",
-			"Error": "Failed to send email. Make sure your input is correct.",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("reset", fiber.Map{
+				"Title": "Reset failed",
+				"Error": "Failed to send email. Make sure your input is correct.",
+			})
 	}
 
 	if _, err := models.FindUserByEmail(database.DB, u.Email); err != nil {
@@ -149,10 +149,10 @@ func RecoverPost(c *fiber.Ctx) error {
 		GetSignedString(utils.VerifySigningKey)
 
 	if err != nil {
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Internal server error",
+			})
 	}
 
 	link := c.BaseURL() + "/reset/" + utils.PrepareText(jwt, utils.AEAD_CRYPTO)
@@ -179,10 +179,10 @@ func RecoverPost(c *fiber.Ctx) error {
 		SendEmail()
 
 	if emailErr != nil {
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Internal server error",
+			})
 	}
 
 	return c.Render("send_email", fiber.Map{

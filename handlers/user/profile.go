@@ -24,7 +24,7 @@ func Profile(c *fiber.Ctx) error {
 
 	// Always redirect to correct URL.
 	if p != user.Username {
-		c.Redirect("/user/"+strings.ToLower(p), fiber.StatusSeeOther)
+		return c.Redirect("/user/"+strings.ToLower(p), fiber.StatusSeeOther)
 	}
 
 	styles, err := models.GetStylesByUser(database.DB, p)

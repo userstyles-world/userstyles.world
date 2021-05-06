@@ -47,29 +47,29 @@ func LoginPost(c *fiber.Ctx) error {
 	if err != nil {
 		log.Printf("Failed to find %s, error: %s", form.Email, err)
 
-		c.SendStatus(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login failed",
-			"Error": "Invalid credentials.",
-		})
+		return c.Status(fiber.StatusUnauthorized).
+			Render("login", fiber.Map{
+				"Title": "Login failed",
+				"Error": "Invalid credentials.",
+			})
 	}
 	if user.OAuthProvider != "none" {
-		c.SendStatus(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login failed",
-			"Error": "Login via OAuth provider",
-		})
+		return c.Status(fiber.StatusUnauthorized).
+			Render("login", fiber.Map{
+				"Title": "Login failed",
+				"Error": "Login via OAuth provider",
+			})
 	}
 
 	match := utils.CompareHashedPassword(user.Password, form.Password)
 	if match != nil {
 		log.Printf("Failed to match hash for user: %#+v\n", user.Email)
 
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("login", fiber.Map{
-			"Title": "Login failed",
-			"Error": "Invalid credentials.",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("login", fiber.Map{
+				"Title": "Login failed",
+				"Error": "Invalid credentials.",
+			})
 	}
 
 	var expiration time.Time
@@ -86,10 +86,10 @@ func LoginPost(c *fiber.Ctx) error {
 		GetSignedString(nil)
 
 	if err != nil {
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Internal server error.",
+			})
 	}
 
 	c.Cookie(&fiber.Cookie{

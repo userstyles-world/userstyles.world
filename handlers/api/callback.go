@@ -73,7 +73,7 @@ func CallbackGet(c *fiber.Ctx) error {
 			if regErr.Error != nil {
 				log.Printf("Failed to register %s, error: %s", response.UserName, regErr.Error)
 
-				c.Status(fiber.StatusInternalServerError).
+				return c.Status(fiber.StatusInternalServerError).
 					JSON(fiber.Map{
 						"data": "Internal Error.",
 					})

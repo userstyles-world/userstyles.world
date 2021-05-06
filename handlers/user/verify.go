@@ -57,11 +57,11 @@ func VerifyGet(c *fiber.Ctx) error {
 	if regErr.Error != nil {
 		log.Printf("Failed to register %s, error: %s", claims["email"].(string), regErr.Error)
 
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Register failed",
-			"Error": "Internal server error.",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Register failed",
+				"Error": "Internal server error.",
+			})
 	}
 
 	return c.Render("verification", fiber.Map{

@@ -36,11 +36,11 @@ func RegisterPost(c *fiber.Ctx) error {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("register", fiber.Map{
-			"Title": "Register failed",
-			"Error": "Failed to register. Make sure your input is correct.",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("register", fiber.Map{
+				"Title": "Register failed",
+				"Error": "Failed to register. Make sure your input is correct.",
+			})
 	}
 
 	jwt, err := utils.NewJWTToken().
@@ -51,10 +51,10 @@ func RegisterPost(c *fiber.Ctx) error {
 		GetSignedString(utils.VerifySigningKey)
 
 	if err != nil {
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Internal server error",
+			})
 	}
 
 	link := c.BaseURL() + "/verify/" + utils.PrepareText(jwt, utils.AEAD_CRYPTO)
@@ -81,11 +81,11 @@ func RegisterPost(c *fiber.Ctx) error {
 		SendEmail()
 
 	if err != nil {
-		c.SendStatus(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"Error": "Failed to send e-mail.",
-		})
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Internal server error",
+				"Error": "Failed to send e-mail.",
+			})
 	}
 
 	return c.Render("send_email", fiber.Map{
