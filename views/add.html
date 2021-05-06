@@ -80,13 +80,18 @@
                             type="text" name="homepage" value="{{ .Style.Homepage }}"
                             placeholder="Link to userstyle's project home, bug tracker, etc.">
 
+                        {{- if eq .Method "edit" }}
+                            <h3>Current image:</h3>
+                            {{ template "partials/preview_image" .Style }}
+                        {{ end }}
+
                         <label for="previewUrl">Preview URL</label>
                         <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
                         <input
                             pattern="^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw)\.githubusercontent\.com|github.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
                             type="text" name="previewUrl" value="{{ .Style.Preview }}"
                             placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
-                        
+
                         <label for="preview">Preview image</label>
                         <i class="fg:3">Only jpg, jpeg, png, and webp formats are allowed.</i>
                         <input type="file"
