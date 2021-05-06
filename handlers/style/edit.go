@@ -67,8 +67,8 @@ func StyleEditPost(c *fiber.Ctx) error {
 		Description: c.FormValue("description"),
 		Notes:       c.FormValue("notes"),
 		Code:        c.FormValue("code"),
-		Preview:     c.FormValue("previewUrl"),
 		Homepage:    c.FormValue("homepage"),
+		Preview:     c.FormValue("previewUrl"),
 		License:     strings.TrimSpace(c.FormValue("license", "No License")),
 		Category:    strings.TrimSpace(c.FormValue("category", "unset")),
 		UserID:      u.ID,
@@ -98,6 +98,12 @@ func StyleEditPost(c *fiber.Ctx) error {
 		_ = os.Remove(images.CacheFolder + StyleID + ".webp")
 
 		q.Preview = "https://userstyles.world/api/preview/" + StyleID + ".jpeg"
+	}
+
+	if q.Preview != s.Preview {
+		_ = os.Remove(images.CacheFolder + StyleID + ".original")
+		_ = os.Remove(images.CacheFolder + StyleID + ".jpeg")
+		_ = os.Remove(images.CacheFolder + StyleID + ".webp")
 	}
 
 	err = database.DB.
