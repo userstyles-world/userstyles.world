@@ -3,7 +3,6 @@ package style
 import (
 	"io"
 	"log"
-	"mime/multipart"
 	"os"
 	"strconv"
 	"strings"
@@ -76,10 +75,8 @@ func StyleEditPost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	var image multipart.File
-
-	if ff, _ := c.FormFile("preview"); ff != nil {
-		image, err = ff.Open()
+	if PreviewFormValue, _ := c.FormFile("preview"); PreviewFormValue != nil {
+		image, err := PreviewFormValue.Open()
 		if err != nil {
 			log.Println("Opening image , err:", err)
 			return c.Render("err", fiber.Map{
@@ -87,14 +84,9 @@ func StyleEditPost(c *fiber.Ctx) error {
 				"User":  u,
 			})
 		}
-	}
-
-	if image != nil {
-		ID := strconv.FormatUint(uint64(u.ID), 10)
+		ID := strconv.Itoa(int(u.ID))
 		data, _ := io.ReadAll(image)
 		err = os.WriteFile(images.CacheFolder+ID+".original", data, 0644)
-		_ = os.Remove(images.CacheFolder + ID + ".jpeg")
-		_ = os.Remove(images.CacheFolder + ID + ".webp")
 		if err != nil {
 			log.Println("Style creation failed, err:", err)
 			return c.Render("err", fiber.Map{
@@ -102,6 +94,11 @@ func StyleEditPost(c *fiber.Ctx) error {
 				"User":  u,
 			})
 		}
+		// Either it's removed or it didn't exist.
+		// So we don't care about the error.
+		_ = os.Remove(images.CacheFolder + ID + ".jpeg")
+		_ = os.Remove(images.CacheFolder + ID + ".webp")
+
 		q.Preview = "https://userstyles.world/api/preview/" + ID + ".jpeg"
 	}
 
