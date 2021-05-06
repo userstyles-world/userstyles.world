@@ -54,7 +54,7 @@
                             {{ if ge .User.Role 1 }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
                                     <button class="btn ml:s" type="submit"
-                                    tooltip-data='Promote this style. The style will then be featured on the home page.'
+                                    tooltip-data='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
                                     >
                                     🌟</button>
                                 </form>

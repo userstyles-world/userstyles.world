@@ -20,11 +20,18 @@ func StylePromote(c *fiber.Ctx) error {
 		})
 	}
 
-	// TODO: Make it possible to remove promotion.
-	err := database.DB.
+	style, err := models.GetStyleByID(database.DB, p)
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error.",
+			"User":  u,
+		})
+	}
+
+	err = database.DB.
 		Model(models.Style{}).
 		Where("id = ?", p).
-		Update("featured", true).
+		Update("featured", !style.Featured).
 		Error
 
 	if err != nil {
