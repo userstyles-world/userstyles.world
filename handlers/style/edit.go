@@ -48,6 +48,22 @@ func StyleEditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p, t := c.Params("id"), new(models.Style)
 
+	s, err := models.GetStyleByID(database.DB, p)
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Style not found",
+			"User":  u,
+		})
+	}
+
+	// Check if logged-in user matches style author.
+	if u.ID != s.UserID {
+		return c.Render("err", fiber.Map{
+			"Title": "Users don't match",
+			"User":  u,
+		})
+	}
+
 	q := models.Style{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
@@ -61,7 +77,6 @@ func StyleEditPost(c *fiber.Ctx) error {
 	}
 
 	var image multipart.File
-	var err error
 
 	if ff, _ := c.FormFile("preview"); ff != nil {
 		image, err = ff.Open()
