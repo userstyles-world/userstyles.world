@@ -14,6 +14,13 @@ import (
 	"userstyles.world/utils"
 )
 
+func errorMessage(c *fiber.Ctx, status int, errorMessage string) error {
+	return c.Status(status).
+		JSON(fiber.Map{
+			"data": errorMessage,
+		})
+}
+
 func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
 	u, _ := jwtware.User(c)
 
@@ -25,10 +32,7 @@ func redirectFunction(c *fiber.Ctx, state, redirect_uri string) error {
 
 	if err != nil {
 		fmt.Println("Error: Couldn't create JWT Token:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
@@ -49,25 +53,16 @@ func AuthorizeGet(c *fiber.Ctx) error {
 
 	clientID, state, scope := c.Query("client_id"), c.Query("state"), c.Query("scope")
 	if clientID == "" {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "No client_id specified",
-			})
+		return errorMessage(c, 400, "No client_id specified")
 	}
 	OAuth, err := models.GetOAuthByClientID(database.DB, clientID)
 	if err != nil || OAuth.ID == 0 {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "Incorrect client_id specified",
-			})
+		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
 
 	user, err := models.FindUserByName(database.DB, u.Username)
 	if err != nil {
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "Notify the admins.",
-			})
+		return errorMessage(c, 500, "Notify the admins.")
 	}
 
 	// Check if the user has already authorized this OAuth application.
@@ -82,10 +77,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	if !utils.Every(scopes, func(name interface{}) bool {
 		return utils.Contains(OAuth.Scopes, name.(string))
 	}) {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "An scope was provided which isn't selected in the OAuth's settings selection.",
-			})
+		return errorMessage(c, 400, "An scope was provided which isn't selected in the OAuth's settings selection.")
 	}
 
 	// User has to authorize within 2 hours.
@@ -101,11 +93,9 @@ func AuthorizeGet(c *fiber.Ctx) error {
 
 	if err != nil {
 		fmt.Println("Error: Couldn't make a JWT Token due to:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "Couldn't make JWT Token, please notify the admins.",
-			})
+		return errorMessage(c, 500, "Couldn't make JWT Token, please notify the admins.")
 	}
+
 	arguments := fiber.Map{
 		"User":        u,
 		"OAuth":       OAuth,
@@ -114,74 +104,48 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	for _, v := range OAuth.Scopes {
 		arguments["Scope_"+v] = true
 	}
+
 	return c.Render("authorize", arguments)
 }
 
 func AuthorizePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
-
 	oauthID, secureToken := c.Params("id"), c.Params("token")
 
 	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
 	if err != nil || OAuth.ID == 0 {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "Incorrect oauthID specified",
-			})
+		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
 	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP)
 	if err != nil {
 		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
 		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
-
 	claims := token.Claims.(jwt.MapClaims)
 
-	if _, ok := claims["userID"].(float64); !ok {
+	userID, ok := claims["userID"].(float64)
+	if !ok || userID != float64(u.ID) {
 		fmt.Println("WARNING!: Invalid userID")
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
-	}
-
-	if uint(claims["userID"].(float64)) != u.ID {
-		fmt.Println("WARNING!: User got valid encrypted state, but userID differ!!!")
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	user, err := models.FindUserByName(database.DB, u.Username)
 	if err != nil {
 		fmt.Println("Error: Couldn't retrieve user:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	user.AuthorizedOAuth = append(user.AuthorizedOAuth, oauthID)
 	if err = models.UpdateUser(database.DB, user); err != nil {
 		fmt.Println("Error: couldn't update user:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	return redirectFunction(c, claims["state"].(string), OAuth.RedirectURI)

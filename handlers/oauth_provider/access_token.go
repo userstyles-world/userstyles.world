@@ -15,73 +15,46 @@ func AccessTokenPost(c *fiber.Ctx) error {
 	clientID, clientSecret, stateQuery, tCode := c.FormValue("client_id"), c.FormValue("client_secret"), c.FormValue("state"), c.FormValue("code")
 
 	if clientID == "" {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "No client_id specified",
-			})
+		return errorMessage(c, 400, "No client_id specified")
 	}
 	if clientSecret == "" {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "No client_secret specified",
-			})
+		return errorMessage(c, 400, "No client_secret specified")
 	}
 	if tCode == "" {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "No code specified",
-			})
+		return errorMessage(c, 400, "No code specified")
+
 	}
 
 	OAuth, err := models.GetOAuthByClientID(database.DB, clientID)
 	if err != nil || OAuth.ID == 0 {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "Incorrect client_id specified",
-			})
+		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
 	if OAuth.ClientSecret != clientSecret {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "Incorrect client_secret specified",
-			})
+		return errorMessage(c, 400, "Incorrect client_secret specified")
 	}
 
 	unsealedText, err := utils.DecodePreparedText(tCode, utils.AEAD_OAUTHP)
 	if err != nil {
 		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
 		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "JWT Token error, please notify the admins.",
-			})
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	claims := token.Claims.(jwt.MapClaims)
-
 	state, userID := claims["state"].(string), uint(claims["userID"].(float64))
 
 	if stateQuery != state {
-		return c.Status(400).
-			JSON(fiber.Map{
-				"error": "State doesn't match.",
-			})
+		return errorMessage(c, 500, "State doesn't match.")
 	}
 
 	user, err := models.FindUserByID(database.DB, fmt.Sprintf("%d", userID))
 	if err != nil || user.ID == 0 {
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "Couldn't find the user that was specified, please notify the admins.",
-			})
+		return errorMessage(c, 500, "Couldn't find the user that was specified, please notify the admins.")
 	}
 
 	jwt, err := utils.NewJWTToken().
@@ -90,20 +63,14 @@ func AccessTokenPost(c *fiber.Ctx) error {
 		GetSignedString(utils.OAuthPSigningKey)
 
 	if err != nil {
-		return c.Status(500).
-			JSON(fiber.Map{
-				"error": "Couldn't create access_token please notify the admins.",
-			})
+		return errorMessage(c, 500, "Couldn't create access_token please notify the admins.")
 	}
 
-	switch c.Accepts("application/json", "plain/text") {
-	case "application/json":
+	if c.Accepts("application/json", "text/plain ") == "application/json" {
 		return c.JSON(fiber.Map{
 			"access_token": jwt,
 			"token_type":   "Bearer",
 		})
-	case "plain/text":
-		return c.SendString(jwt + "&token_type=Bearer")
 	}
 
 	return c.SendString(jwt + "&token_type=Bearer")

@@ -166,6 +166,12 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	if err != nil {
 		return OAuthResponse{}, err
 	}
+	// Move the collecting of information.
+	return getUserInformation(service, responseJson)
+}
+
+func getUserInformation(service string, responseJson OAuthTokenResponse) (OAuthResponse, error) {
+	client := &http.Client{}
 	var userEndpoint string
 	switch service {
 	case github:
@@ -186,17 +192,17 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 
 	userInformationReq.Header.Set("Authorization", responseJSON.TokenType+" "+responseJSON.AccesToken)
 
-	resEmail, err := client.Do(userInformationReq)
+	resUserInformation, err := client.Do(userInformationReq)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
-	defer resEmail.Body.Close()
-	if resEmail.StatusCode != 200 {
+	defer resUserInformation.Body.Close()
+	if resUserInformation.StatusCode != 200 {
 		return OAuthResponse{}, errors.Not200Ok
 	}
 
 	var oauthResponse OAuthResponse
-	err = json.NewDecoder(resEmail.Body).Decode(&oauthResponse)
+	err = json.NewDecoder(resUserInformation.Body).Decode(&oauthResponse)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
