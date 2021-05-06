@@ -85,7 +85,8 @@ func CallbackGet(c *fiber.Ctx) error {
 
 	// TODO: Simplify this logic.
 	if (user.OAuthProvider == "none" || user.OAuthProvider != service) &&
-		strings.ToLower(getSocialMediaValue(user, service)) != strings.ToLower(response.UserName) {
+		!strings.EqualFold(getSocialMediaValue(user, service), response.UserName) {
+
 		fmt.Println("User detected but the social media value wasn't set of this user.")
 		return c.Next()
 	}
