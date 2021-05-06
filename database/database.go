@@ -57,11 +57,15 @@ func Initialize() {
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		log.Println("Dropping database tables.")
-		Drop(&user, &style, &stats, &history)
+		if err := Drop(&user, &style, &stats, &history); err != nil {
+			log.Printf("Warning: Couldn't drop table due to error: %s", err.Error())
+		}
 		defer Seed()
 	}
 
-	Migrate(&user, &style, &stats, &history)
+	if err := Migrate(&user, &style, &stats, &history); err != nil {
+		log.Printf("Warning: Couldn't migrate due to error: %s", err.Error())
+	}
 }
 
 func Drop(dst ...interface{}) error {
