@@ -4,7 +4,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -45,9 +44,9 @@ func StyleEditGet(c *fiber.Ctx) error {
 
 func StyleEditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	p, t := c.Params("id"), new(models.Style)
+	StyleID, t := c.Params("id"), new(models.Style)
 
-	s, err := models.GetStyleByID(database.DB, p)
+	s, err := models.GetStyleByID(database.DB, StyleID)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -84,9 +83,8 @@ func StyleEditPost(c *fiber.Ctx) error {
 				"User":  u,
 			})
 		}
-		ID := strconv.Itoa(int(u.ID))
 		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+ID+".original", data, 0644)
+		err = os.WriteFile(images.CacheFolder+StyleID+".original", data, 0644)
 		if err != nil {
 			log.Println("Style creation failed, err:", err)
 			return c.Render("err", fiber.Map{
@@ -96,15 +94,15 @@ func StyleEditPost(c *fiber.Ctx) error {
 		}
 		// Either it's removed or it didn't exist.
 		// So we don't care about the error.
-		_ = os.Remove(images.CacheFolder + ID + ".jpeg")
-		_ = os.Remove(images.CacheFolder + ID + ".webp")
+		_ = os.Remove(images.CacheFolder + StyleID + ".jpeg")
+		_ = os.Remove(images.CacheFolder + StyleID + ".webp")
 
-		q.Preview = "https://userstyles.world/api/preview/" + ID + ".jpeg"
+		q.Preview = "https://userstyles.world/api/preview/" + StyleID + ".jpeg"
 	}
 
 	err = database.DB.
 		Model(t).
-		Where("id", p).
+		Where("id", StyleID).
 		Updates(q).
 		// GORM doesn't update non-zero values in structs.
 		Update("mirror_code", c.FormValue("mirrorCode") == "on").
