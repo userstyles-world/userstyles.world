@@ -12,6 +12,25 @@ import (
 	"userstyles.world/utils"
 )
 
+func setSocials(u *models.User, k, v string) models.User {
+	switch k {
+	case "github":
+		if v != u.Socials.Github {
+			u.Socials.Github = v
+		}
+	case "gitlab":
+		if v != u.Socials.Gitlab {
+			u.Socials.Gitlab = v
+		}
+	case "codeberg":
+		if v != u.Socials.Codeberg {
+			u.Socials.Codeberg = v
+		}
+	}
+
+	return *u
+}
+
 func Account(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
@@ -78,40 +97,32 @@ func EditAccount(c *fiber.Ctx) error {
 		}
 	}
 
-	if c.FormValue("bio") != "" {
-		prevBio := user.Biography
-		user.Biography = c.FormValue("bio")
+	bio := c.FormValue("bio")
+	if bio != "" {
+		prev := user.Biography
+		user.Biography = bio
 
 		if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
 			errors := err.(validator.ValidationErrors)
 			log.Println("Validation errors:", errors)
-			user.Biography = prevBio
+			user.Biography = prev
 
 			return c.Render("account", fiber.Map{
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
 				"Styles": styles,
-				"Error":  "Biography must be less than 512 characters in length.",
+				"Error":  "Biography must be shorter than 512 characters.",
 			})
 		}
 	}
-	githubValue, gitlabValue, codebergValue := c.FormValue("github"), c.FormValue("gitlab"), c.FormValue("codeberg")
 
-	if githubValue != user.Socials.Github {
-		user.Socials.Github = githubValue
-	}
-	if gitlabValue != user.Socials.Gitlab {
-		user.Socials.Gitlab = gitlabValue
-	}
-	if codebergValue != user.Socials.Codeberg {
-		user.Socials.Codeberg = codebergValue
-	}
-
-	t := new(models.User)
+	setSocials(user, "github", c.FormValue("github"))
+	setSocials(user, "gitlab", c.FormValue("gitlab"))
+	setSocials(user, "codeberg", c.FormValue("codeberg"))
 
 	dbErr := database.DB.
-		Model(t).
+		Model(models.User{}).
 		Where("id", user.ID).
 		Updates(user).
 		Error
