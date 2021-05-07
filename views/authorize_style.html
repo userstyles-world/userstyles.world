@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                {{ template "partials/alert" . }}
+
+                <section class="styles mt:l">
+                    <h2 class="sub-title td:d">Userstyles</h2>
+                    {{ if ne (len .Styles) 0 }}
+                        <p class="description">Please pick an existing style or a new style, that you'd like to link.</p>
+                        <div class="grid  flex rwrap mx:r mt:m">
+                            {{ range .Styles }}
+                                {{ template "partials/link_style" . }}
+                            {{ end }}
+                        </div>
+                    {{ else }}
+                        {{ template "partials/new_style" }}
+                    {{ end }}
+                </section>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>

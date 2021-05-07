@@ -46,7 +46,13 @@ func AccessTokenPost(c *fiber.Ctx) error {
 	}
 
 	claims := token.Claims.(jwt.MapClaims)
+
 	state, userID := claims["state"].(string), uint(claims["userID"].(float64))
+
+	styleID, ok := claims["styleID"].(string)
+	if !ok {
+		styleID = ""
+	}
 
 	if stateQuery != state {
 		return errorMessage(c, 500, "State doesn't match.")
@@ -57,10 +63,19 @@ func AccessTokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Couldn't find the user that was specified, please notify the admins.")
 	}
 
-	jwt, err := utils.NewJWTToken().
-		SetClaim("scopes", strings.Join(OAuth.Scopes, ",")).
-		SetClaim("userID", user.ID).
-		GetSignedString(utils.OAuthPSigningKey)
+	var jwt string
+
+	if styleID != "" {
+		jwt, err = utils.NewJWTToken().
+			SetClaim("styleID", styleID).
+			SetClaim("userID", user.ID).
+			GetSignedString(utils.OAuthPSigningKey)
+	} else {
+		jwt, err = utils.NewJWTToken().
+			SetClaim("scopes", strings.Join(OAuth.Scopes, ",")).
+			SetClaim("userID", user.ID).
+			GetSignedString(utils.OAuthPSigningKey)
+	}
 
 	if err != nil {
 		return errorMessage(c, 500, "Couldn't create access_token please notify the admins.")
