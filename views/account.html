@@ -31,10 +31,22 @@
                         <p><span class="minw">Email</span>{{ .Params.Email }}</p>
                     {{- end }}
                     <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt.Format "January 02, 2006 15:04" }}</p>
+
+                    <h2 class="sub-title td:d mt:l">Display name</h2>
+                    <div class="md">{{ .Params.DisplayName }}</div>
+                    <form class="name ml:0" method="post" action="/account">
+                        <label for="name">Set your display name</label>
+                        <input
+                            type="text" name="name"
+                            pattern="^[a-zA-Z0-9-_ ]{5,20}$"
+                            value="{{ .Params.DisplayName }}">
+                        <button class="flex btn primary" type="submit">Save</button>
+                    </form>
+
                     <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">{{- .Params.Biography | Markdown -}}</div>
                     <form class="biography ml:0" method="post" action="/account">
-                        <label for="name">Biography</label>
+                        <label for="name">Set your biography</label>
                         <i class="fg:3">Supports Markdown syntax.</i>
                         <textarea
                             pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
@@ -44,6 +56,7 @@
                         </textarea>
                         <button class="flex btn primary" type="submit">Save</button>
                     </form>
+
                     <h2 class="sub-title td:d mt:l">Socials</h2>
                     <form class="socials ml:0" method="post" action="/account">
                         <label class="github" for="github">

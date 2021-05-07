@@ -58,6 +58,11 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
+	name := c.FormValue("name")
+	if name != "" {
+		user.DisplayName = name
+	}
+
 	if c.FormValue("bio") != "" {
 		prevBio := user.Biography
 		user.Biography = c.FormValue("bio")
