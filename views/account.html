@@ -27,10 +27,12 @@
                     <p><span class="minw">ID</span>{{ .Params.ID }}</p>
                     <p><span class="minw">Role</span>{{ .Params.Role | Role }}</p>
                     <p><span class="minw">Username</span>{{ .Params.Username }}</p>
+                    <p><span class="minw">Display name</span>{{ .Params.DisplayName }}</p>
                     {{ if .Params.Email -}}
                         <p><span class="minw">Email</span>{{ .Params.Email }}</p>
                     {{- end }}
                     <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt.Format "January 02, 2006 15:04" }}</p>
+                    <p class="updated"><span class="minw">Updated</span>{{ .Params.UpdatedAt.Format "January 02, 2006 15:04" }}</p>
 
                     <h2 class="sub-title td:d mt:l">Display name</h2>
                     <div class="md">{{ .Params.DisplayName }}</div>
@@ -58,6 +60,7 @@
                     </form>
 
                     <h2 class="sub-title td:d mt:l">Socials</h2>
+                    <p>You can login via OAuth if you have an account on platforms listed below.</p>
                     <form class="socials ml:0" method="post" action="/account">
                         <label class="github" for="github">
                             {{- template "partials/github_logo" . -}}

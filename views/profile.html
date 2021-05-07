@@ -9,9 +9,11 @@
         <main>
             <div class="wrapper py:l">
                 <section class="welcome">
-                    <h1 class="title mb:m">{{ .Params.Username }}</h1>
+                    <h1 class="title mb:m">{{ .Params.Username }}'s profile</h1>
                     <p class="id"><span class="minw">ID</span>{{ .Params.ID }}</p>
                     <p class="role"><span class="minw">Role</span>{{ .Params.Role | Role }}</p>
+                    <p class="username"><span class="minw">Username</span>{{ .Params.Username }}</p>
+                    <p class="displayname"><span class="minw">Display name</span>{{ .Params.DisplayName }}</p>
                     <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt.Format "January 02, 2006 15:04" }}</p>
                     <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">
