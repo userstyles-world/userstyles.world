@@ -81,8 +81,11 @@
                             placeholder="Link to userstyle's project home, bug tracker, etc.">
 
                         {{- if eq .Method "edit" }}
-                            <h3>Current image:</h3>
-                            {{ template "partials/preview_image" .Style }}
+                            <p>Current image</p>
+                            <i class="fg:3">To change it, set a new preview URL or upload a new image.</i>
+                            <div class="flex mt:s">
+                                {{ template "partials/preview_image" .Style }}
+                            </div>
                         {{ end }}
 
                         <label for="previewUrl">Preview URL</label>
