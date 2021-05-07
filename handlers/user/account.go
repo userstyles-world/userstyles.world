@@ -60,7 +60,22 @@ func EditAccount(c *fiber.Ctx) error {
 
 	name := c.FormValue("name")
 	if name != "" {
+		prev := user.DisplayName
 		user.DisplayName = name
+
+		if err := utils.Validate().StructPartial(user, "DisplayName"); err != nil {
+			errors := err.(validator.ValidationErrors)
+			log.Println("Validation errors:", errors)
+			user.DisplayName = prev
+
+			return c.Render("account", fiber.Map{
+				"Title":  "Validation Error",
+				"User":   u,
+				"Params": user,
+				"Styles": styles,
+				"Error":  "Display name must be longer than 5 and shorter than 20 characters.",
+			})
+		}
 	}
 
 	if c.FormValue("bio") != "" {
