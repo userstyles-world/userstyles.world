@@ -48,6 +48,7 @@ type APIStyle struct {
 	MirrorMeta  bool
 	UserID      uint
 	Username    string
+	DisplayName string
 }
 
 func getDBSession(db *gorm.DB) (tx *gorm.DB) {
@@ -66,7 +67,7 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 	err := getDBSession(db).
 		Model(t).
-		Select("styles.id, styles.name, styles.description, styles.notes, styles.category, styles.preview, u.username").
+		Select("styles.id, styles.name, styles.description, styles.notes, styles.category, styles.preview, u.username, u.display_name").
 		Joins("join users u on u.id = styles.user_id").
 		Find(q).
 		Error
@@ -118,7 +119,7 @@ func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
 	err := getDBSession(db).
 		Model(t).
 		Joins("join users u on u.id = styles.user_id").
-		Select("styles.id, styles.name, styles.preview, u.username").
+		Select("styles.id, styles.name, styles.preview, u.username, u.display_name").
 		Find(q, "styles.featured = ?", true).
 		Error
 
@@ -164,7 +165,7 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 	err := getDBSession(db).
 		Model(t).
-		Select("styles.id, styles.name, styles.preview, u.username").
+		Select("styles.id, styles.name, styles.preview, u.username, u.display_name").
 		Joins("join users u on u.id = styles.user_id").
 		Find(q, "u.username = ?", username).
 		Error

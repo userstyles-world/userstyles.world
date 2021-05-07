@@ -24,6 +24,7 @@ type SocialMedia struct {
 type User struct {
 	gorm.Model    `json:"-"`
 	Username      string `gorm:"unique;not null" validate:"required,username,min=5,max=20"`
+	DisplayName   string `validate:"min=5,max=20"`
 	Email         string `gorm:"unique" validate:"required,email"`
 	OAuthProvider string `gorm:"default:none"`
 	Password      string `validate:"required,min=8,max=32"`
@@ -36,11 +37,12 @@ type User struct {
 }
 
 type APIUser struct {
-	Username  string
-	Email     string
-	ID        uint
-	Biography string
-	Role      Role
+	Username    string
+	DisplayName string
+	Email       string
+	ID          uint
+	Biography   string
+	Role        Role
 }
 
 func (u User) HasSocials() bool {

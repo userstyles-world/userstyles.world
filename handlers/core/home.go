@@ -12,7 +12,6 @@ func Home(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := models.GetHomepageStatistics(database.DB)
 
-
 	styles, err := models.GetAllFeaturedStyles(database.DB)
 	if err != nil {
 		return c.Render("index", fiber.Map{

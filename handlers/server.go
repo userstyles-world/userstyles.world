@@ -29,6 +29,22 @@ import (
 func renderEngine() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
 
+	engine.AddFunc("Name", func(u models.User) template.HTML {
+		if u.DisplayName != "" {
+			return template.HTML(u.DisplayName)
+		}
+
+		return template.HTML(u.Username)
+	})
+
+	engine.AddFunc("Author", func(s models.APIStyle) template.HTML {
+		if s.DisplayName != "" {
+			return template.HTML(s.DisplayName)
+		}
+
+		return template.HTML(s.Username)
+	})
+
 	engine.AddFunc("Markdown", func(s string) template.HTML {
 		// Generate Markdown then sanitize it before returning HTML.
 		gen := blackfriday.Run([]byte(s), blackfriday.WithExtensions(blackfriday.HardLineBreak))
