@@ -107,7 +107,6 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 
-		c.SendStatus(fiber.StatusInternalServerError)
 		arguments := fiber.Map{
 			"Title":  "OAuth Settings",
 			"Error":  "Failed to validate inputs.",
@@ -118,7 +117,8 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		for _, v := range q.Scopes {
 			arguments["Scope_"+v] = true
 		}
-		return c.Render("oauth_settings", arguments)
+		return c.Status(500).
+			Render("oauth_settings", arguments)
 	}
 
 	var err error
