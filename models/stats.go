@@ -22,7 +22,7 @@ type Stats struct {
 	Style   Style
 }
 
-type siteStats struct {
+type SiteStats struct {
 	UserCount, StyleCount, WeeklyViews, TotalViews int64
 	WeeklyInstalls, MonthlyInstalls, TotalInstalls int64
 }
@@ -117,8 +117,8 @@ func GetTotalViewsForStyle(db *gorm.DB, id string) (total int64) {
 	return total
 }
 
-func GetHomepageStatistics(db *gorm.DB) *siteStats {
-	p := new(siteStats)
+func GetHomepageStatistics(db *gorm.DB) *SiteStats {
+	p := new(SiteStats)
 	i, t := "install = ?", "install = ? and updated_at > ?"
 
 	// TODO: Replace last day with last week when we get enough data.
