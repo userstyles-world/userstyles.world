@@ -45,8 +45,15 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Couldn't make JWT Token, please notify the admins.")
 	}
 
+	styles, err := models.GetStylesByUser(database.DB, u.Username)
+	if err != nil {
+		fmt.Println("Error: Mo styles find for user", err.Error())
+		return errorMessage(c, 500, "Couldn't retrieve styles of user")
+	}
+
 	arguments := fiber.Map{
 		"User":        u,
+		"Styles":      styles,
 		"OAuth":       OAuth,
 		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP),
 	}
@@ -91,10 +98,16 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
+	style, err := models.GetStyleByID(database.DB, styleID)
+	if err != nil {
+		fmt.Println("Error: Style wasn't found, due to: ", err.Error())
+		return errorMessage(c, 500, "Couldn't retrieve style of user")
+	}
+
 	jwt, err := utils.NewJWTToken().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
-		SetClaim("styleID", styleID).
+		SetClaim("styleID", style.ID).
 		SetExpiration(time.Now().Add(time.Minute * 10)).
 		GetSignedString(utils.OAuthPSigningKey)
 

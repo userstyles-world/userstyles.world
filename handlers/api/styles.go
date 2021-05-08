@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ohler55/ojg/oj"
@@ -35,20 +36,36 @@ func StylesGet(c *fiber.Ctx) error {
 
 }
 
-var JsonParser = &oj.Parser{Reuse: true}
+// JSONParser defined options.
+var JSONParser = &oj.Parser{Reuse: true}
 
 func StylePost(c *fiber.Ctx) error {
 	u, _ := APIUser(c)
-	styleID := c.Params("id")
+	sStyleID := c.Params("id")
 
-	if !utils.Contains(u.Scopes, "style") {
+	styleID, err := strconv.Atoi(sStyleID)
+	if err != nil {
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "Couldn't parse param \"id\"",
+			})
+	}
+
+	if u.StyleID == 0 && !utils.Contains(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"style\" scope to do this.",
 			})
 	}
 
-	style, err := models.GetStyleByID(database.DB, styleID)
+	if u.StyleID != 0 && uint(styleID) != u.StyleID {
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
+			})
+	}
+
+	style, err := models.GetStyleByID(database.DB, sStyleID)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -62,7 +79,7 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 	var postStyle models.Style
-	err = JsonParser.Unmarshal(c.Body(), &postStyle)
+	err = JSONParser.Unmarshal(c.Body(), &postStyle)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -91,15 +108,31 @@ func StylePost(c *fiber.Ctx) error {
 
 func DeleteStyle(c *fiber.Ctx) error {
 	u, _ := APIUser(c)
-	styleID := c.Params("id")
+	sStyleID := c.Params("id")
 
-	style, err := models.GetStyleByID(database.DB, styleID)
+	styleID, err := strconv.Atoi(sStyleID)
+	if err != nil {
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "Couldn't parse param \"id\"",
+			})
+	}
+
+	style, err := models.GetStyleByID(database.DB, sStyleID)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "Error: Couldn't find style with ID.",
 			})
 	}
+
+	if u.StyleID != 0 && uint(styleID) != u.StyleID {
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
+			})
+	}
+
 	if style.UserID != u.ID {
 		return c.Status(403).
 			JSON(fiber.Map{
@@ -110,7 +143,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 	styleModel := new(models.Style)
 	err = database.DB.
 		Debug().
-		Delete(styleModel, "styles.id = ?", styleID).
+		Delete(styleModel, "styles.id = ?", sStyleID).
 		Error
 
 	if err != nil {
@@ -137,7 +170,7 @@ func NewStyle(c *fiber.Ctx) error {
 	}
 
 	var postStyle models.Style
-	err := JsonParser.Unmarshal(c.Body(), &postStyle)
+	err := JSONParser.Unmarshal(c.Body(), &postStyle)
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(500).

@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -40,26 +41,42 @@ func MapClaim(c *fiber.Ctx) jwt.MapClaims {
 	return claims
 }
 
-func APIUser(c *fiber.Ctx) (*models.APIUser, bool) {
+type JWTAPIUser struct {
+	models.APIUser
+	StyleID uint
+}
+
+func APIUser(c *fiber.Ctx) (*JWTAPIUser, bool) {
 	s := MapClaim(c)
-	u := &models.APIUser{}
+	u := &JWTAPIUser{}
 
 	if s == nil {
 		return u, false
 	}
 
-	user, err := models.FindUserByID(database.DB, fmt.Sprintf("%d", uint(s["userID"].(float64))))
+	// Just make sure it's the real deal.
+	fUserID, ok := s["userID"].(float64)
+	if !ok {
+		return u, false
+	}
+	userID := strconv.Itoa(int(fUserID))
 
+	user, err := models.FindUserByID(database.DB, userID)
 	if err != nil || user.ID == 0 {
 		return u, false
 	}
 
-	// Type assertion will convert interface{} to other types.
 	u.Username = user.Username
 	u.Email = user.Email
-	u.ID = user.ID
+	u.ID = uint(fUserID)
 	u.Role = user.Role
-	u.Scopes = strings.Split(s["scopes"].(string), ",")
 
+	// As these are "optional" we need to check them first.
+	if Scopes, ok := s["scopes"].(string); ok {
+		u.Scopes = strings.Split(Scopes, ",")
+	}
+	if StyleID, ok := s["styleID"].(float64); ok {
+		u.StyleID = uint(StyleID)
+	}
 	return u, true
 }

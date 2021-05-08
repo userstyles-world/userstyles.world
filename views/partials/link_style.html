@@ -1,4 +1,4 @@
-{{- $method :=  printf "oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID .SecureToken .OAuth.ID -}}
+{{- $method := printf "oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
 <a class="card col gap animate bd:o" href="{{ $method }}">
     <div class="thumbnail">
         {{ template "partials/preview_image" . }}

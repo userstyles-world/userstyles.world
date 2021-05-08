@@ -144,6 +144,8 @@ func Initialize() {
 
 	oauthV1 := app.Group("/oauth")
 	oauthV1.Get("/authorize", jwtware.Protected, oauth_provider.AuthorizeGet)
+	oauthV1.Get("/authorize_style", jwtware.Protected, oauth_provider.AuthorizeStyleGet)
+	oauthV1.Post("/authorize_style", jwtware.Protected, oauth_provider.AuthorizeStylePost)
 	oauthV1.Post("/authorize/:id/:token", jwtware.Protected, oauth_provider.AuthorizePost)
 	oauthV1.Post("/access_token", oauth_provider.AccessTokenPost)
 

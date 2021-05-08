@@ -16,7 +16,18 @@
                         <p class="description">Please pick an existing style or a new style, that you'd like to link.</p>
                         <div class="grid  flex rwrap mx:r mt:m">
                             {{ range .Styles }}
-                                {{ template "partials/link_style" . }}
+                                {{- $method := printf "oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
+                                <div class="card col gap animate bd:o">
+                                    <div class="thumbnail">
+                                        {{ template "partials/preview_image" . }}
+                                    </div>
+                                    <div class="flex cwrap px:m bd:t fg:1 py:m">
+                                        <span class="f:h3 f:b my:0">{{- .Name -}}</span>
+                                    </div>
+                                    <form method="post" action="/{{ $method }}">
+                                        <button class="flex btn primary" type="submit">Link style</button>
+                                    </form>
+                                </div>
                             {{ end }}
                         </div>
                     {{ else }}

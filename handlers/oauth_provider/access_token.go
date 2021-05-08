@@ -49,10 +49,11 @@ func AccessTokenPost(c *fiber.Ctx) error {
 
 	state, userID := claims["state"].(string), uint(claims["userID"].(float64))
 
-	styleID, ok := claims["styleID"].(string)
+	fStyleID, ok := claims["styleID"].(float64)
 	if !ok {
-		styleID = ""
+		fStyleID = 0
 	}
+	styleID := uint(fStyleID)
 
 	if stateQuery != state {
 		return errorMessage(c, 500, "State doesn't match.")
@@ -65,7 +66,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 
 	var jwt string
 
-	if styleID != "" {
+	if styleID != 0 {
 		jwt, err = utils.NewJWTToken().
 			SetClaim("styleID", styleID).
 			SetClaim("userID", user.ID).
