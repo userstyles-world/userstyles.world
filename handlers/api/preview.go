@@ -25,18 +25,18 @@ var notFound = func(c *fiber.Ctx) error {
 }
 
 func GetPreviewScreenshot(c *fiber.Ctx) error {
-	styleId := c.Params("id")
-	format := getFileExtension(styleId)
-	styleId = strings.TrimSuffix(styleId, format)
+	styleID := c.Params("id")
+	format := getFileExtension(styleID)
+	styleID = strings.TrimSuffix(styleID, format)
 
-	info, err := images.GetImageFromStyle(styleId)
+	info, err := images.GetImageFromStyle(styleID)
 	if err != nil {
 		return notFound(c)
 	}
 
 	var stat fs.FileInfo
 	var fileName string
-	orignalFile := images.CacheFolder + styleId + ".original"
+	orignalFile := images.CacheFolder + styleID + ".original"
 
 	switch format[1:] {
 	case "jpeg":
@@ -44,9 +44,9 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 			return notFound(c)
 		}
 		stat = info.Original
-		fileName = images.CacheFolder + styleId + ".jpeg"
+		fileName = images.CacheFolder + styleID + ".jpeg"
 	case "webp":
-		fileName = images.CacheFolder + styleId + ".webp"
+		fileName = images.CacheFolder + styleID + ".webp"
 		if info.WebP == nil {
 			err = images.DecodeImage(orignalFile, fileName, vips.ImageTypeWEBP)
 			if err != nil {

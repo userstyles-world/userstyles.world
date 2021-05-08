@@ -15,7 +15,7 @@ func AuthLoginGet(c *fiber.Ctx) error {
 	}
 
 	oauthType := c.Params("type")
-	redirectURI := utils.OauthMakeURL(c.BaseURL(), oauthType)
+	redirectURI := utils.OauthMakeURL(oauthType)
 
 	return c.Redirect(redirectURI, fiber.StatusSeeOther)
 }

@@ -23,7 +23,7 @@ type OAuthResponse struct {
 	LoginName string `json:"login"`
 }
 
-type GiteaLikeAccessJson struct {
+type GiteaLikeAccessJSON struct {
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
 	Code         string `json:"code"`
@@ -31,7 +31,7 @@ type GiteaLikeAccessJson struct {
 	RedirectURI  string `json:"redirect_uri"`
 }
 
-func OauthMakeURL(baseURL, service string) string {
+func OauthMakeURL(service string) string {
 	if service == "" {
 		return ""
 	}
@@ -97,7 +97,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	// Add our app client ID.
 	// Add our client secret.
 	var authURL string
-	var body GiteaLikeAccessJson
+	var body GiteaLikeAccessJSON
 	switch service {
 	case "github":
 		authURL = "https://github.com/login/oauth/access_token"
@@ -115,7 +115,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		authURL += "&redirect_uri=" + url.PathEscape(config.OAuthURL()+"gitlab/")
 	case "codeberg":
 		authURL = "https://codeberg.org/login/oauth/access_token"
-		body = GiteaLikeAccessJson{
+		body = GiteaLikeAccessJSON{
 			ClientID:     config.CODEBERG_CLIENT_ID,
 			ClientSecret: config.CODEBERG_CLIENT_SECRET,
 			Code:         tempCode,
@@ -154,9 +154,9 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	if res.StatusCode != 200 {
 		return OAuthResponse{}, errors.New("status code returned wasn't OK 200")
 	}
-	var responseJson OAuthTokenResponse
+	var responseJSON OAuthTokenResponse
 
-	err = json.NewDecoder(res.Body).Decode(&responseJson)
+	err = json.NewDecoder(res.Body).Decode(&responseJSON)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
@@ -178,7 +178,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		userInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
 	}
 
-	userInformationReq.Header.Set("Authorization", responseJson.TokenType+" "+responseJson.AccesToken)
+	userInformationReq.Header.Set("Authorization", responseJSON.TokenType+" "+responseJSON.AccesToken)
 
 	resEmail, err := client.Do(userInformationReq)
 	if err != nil {
