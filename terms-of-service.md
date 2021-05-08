@@ -161,7 +161,7 @@ We reserve the right, but not the obligation, to:
 
 ## PRIVACY POLICY
 
-We care about data privacy and security. Please review our Privacy Policy https://userstyles.world/legal/privacy_policy. By using the Site, you agree to be bound by our Privacy Policy, which is incorporated into these Terms of Service. Please be advised the Site is hosted in the United States. 
+We care about data privacy and security. Please review our Privacy Policy https://userstyles.world/legal/privacy-policy. By using the Site, you agree to be bound by our Privacy Policy, which is incorporated into these Terms of Service. Please be advised the Site is hosted in the United States. 
  
 ## COPYRIGHT INFRINGEMENTS
 
