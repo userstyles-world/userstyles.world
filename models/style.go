@@ -72,7 +72,7 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 		Error
 
 	if err != nil {
-		return nil, errors.New("Styles not found.")
+		return nil, errors.New("styles not found")
 	}
 
 	return q, nil
@@ -87,7 +87,7 @@ func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
 		Error
 
 	if err != nil {
-		return nil, errors.New("Styles not found.")
+		return nil, errors.New("styles not found")
 	}
 
 	return *q, nil
@@ -107,7 +107,7 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 		Error
 
 	if err != nil {
-		return nil, errors.New("Styles not found.")
+		return nil, errors.New("styles not found")
 	}
 
 	return q, nil
@@ -123,7 +123,7 @@ func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
 		Error
 
 	if err != nil {
-		return nil, errors.New("No featured styles.")
+		return nil, errors.New("no featured styles")
 	}
 
 	return q, nil
@@ -137,7 +137,7 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 		Error
 
 	if err != nil {
-		return nil, errors.New("No imported styles.")
+		return nil, errors.New("no imported styles")
 	}
 
 	return *q, nil
@@ -154,7 +154,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 		Error
 
 	if err != nil || q.ID == 0 {
-		return nil, errors.New("Style not found.")
+		return nil, errors.New("style not found")
 	}
 
 	return q, nil
@@ -170,7 +170,7 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 		Error
 
 	if err != nil {
-		return nil, errors.New("Styles not found.")
+		return nil, errors.New("styles not found")
 	}
 
 	return q, nil
@@ -227,7 +227,7 @@ func CheckDuplicateStyle(db *gorm.DB, s *Style) error {
 		Error
 
 	if err == nil {
-		return errors.New("Duplicate style")
+		return errors.New("duplicate style")
 	}
 
 	return nil
