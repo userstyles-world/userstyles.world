@@ -15,10 +15,9 @@ func NotFound(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"error": "bad endpoint",
 		})
-	} else {
-		return c.Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Page not found",
-		})
 	}
+	return c.Render("err", fiber.Map{
+		"User":  u,
+		"Title": "Page not found",
+	})
 }

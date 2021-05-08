@@ -56,11 +56,10 @@ func getDBSession(db *gorm.DB) (tx *gorm.DB) {
 		return db.Session(&gorm.Session{
 			Logger: db.Logger.LogMode(logger.Info),
 		})
-	} else {
-		return db.Session(&gorm.Session{
-			Logger: db.Logger.LogMode(logger.Silent),
-		})
 	}
+	return db.Session(&gorm.Session{
+		Logger: db.Logger.LogMode(logger.Silent),
+	})
 }
 
 func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
