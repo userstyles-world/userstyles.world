@@ -43,7 +43,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	jwt, err := utils.NewJWTToken().
+	JWTToken, err := utils.NewJWTToken().
 		SetClaim("username", strings.ToLower(u.Username)).
 		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).
@@ -57,7 +57,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/verify/" + utils.PrepareText(jwt, utils.AEAD_CRYPTO)
+	link := c.BaseURL() + "/verify/" + utils.PrepareText(JWTToken, utils.AEAD_CRYPTO)
 
 	PlainPart := utils.NewPart().
 		SetBody("Verify your UserStyles.world account by clicking the link below.\n" +
