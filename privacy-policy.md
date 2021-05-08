@@ -4,7 +4,7 @@ Last updated May 5, 2021
 
 ## INTRODUCTION
 
-Thank you for choosing to be part of our community at userstyles world (“company”, “we”, “us”, or “our”). 
+Thank you for choosing to be part of our community at userstyles world (“we”, “us”, or “our”). 
 We are committed to protecting your personal information and your right to privacy. 
 If you have any questions or concerns about our policy, or our practices with regards to your personal information, 
 please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world).
@@ -12,68 +12,72 @@ please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.worl
 When you visit our website userstyles.world (“Site”) and use our services, 
 you trust us with your personal information. We take your privacy very seriously.
 In this privacy notice, we describe our privacy policy. We seek to explain to you in the clearest way 
-possible what information we collect, how we use it and what rights you have in relation to it. 
+possible what information we store, how we use it and what rights you have in relation to it. 
 We hope you take some time to read through it carefully, as it is important. 
 If there are any terms in this privacy policy that you do not agree with, please discontinue use of our site and our services.
 
-This privacy policy applies to all information collected through our websites such as https://userstyles.world/, and/or any related services.
+This privacy policy applies to all information strored through our Site, and/or any related services.
 Please read this privacy policy carefully as it will help you make informed decisions about sharing your personal information with us.
 
 Table of contents:  
-    1. WHAT INFORMATION DO WE COLLECT?  
+    1. WHAT INFORMATION DO WE STORE?  
     2. HOW DO WE USE YOUR INFORMATION?  
     3. WILL YOUR INFORMATION BE SHARED WITH ANYONE?  
     4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?  
-    5. DO WE USE GOOGLE MAPS?  
-    6. HOW DO WE HANDLE YOUR SOCIAL LOGINS?  
-    7. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?  
-    8. WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?  
-    9. HOW LONG DO WE KEEP YOUR INFORMATION?  
-    10. HOW DO WE KEEP YOUR INFORMATION SAFE?  
-    11. DO WE COLLECT INFORMATION FROM MINORS?  
-    12. WHAT ARE YOUR PRIVACY RIGHTS?  
-    13. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?  
-    14. DO WE MAKE UPDATES TO THIS POLICY?  
-    15. HOW CAN YOU CONTACT US ABOUT THIS POLICY?  
+    5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?  
+    6. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?  
+    7. WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?  
+    8. HOW LONG DO WE KEEP YOUR INFORMATION?  
+    9. HOW DO WE KEEP YOUR INFORMATION SAFE?  
+    10. DO WE COLLECT INFORMATION FROM MINORS?  
+    11. WHAT ARE YOUR PRIVACY RIGHTS?  
+    12. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?  
+    13. DO WE MAKE UPDATES TO THIS POLICY?  
+    14. HOW CAN YOU CONTACT US ABOUT THIS POLICY?  
 
-## WHAT INFORMATION DO WE COLLECT? 
+## WHAT INFORMATION DO WE STORE? 
 
 ### **Personal information you disclose to us**
 
-_In Short: We collect personal information that you provide to us such as email-address._  
+_In Short: We store personal information that you provide to us such as email-address._  
 
-We collect personal information that you voluntarily provide to us when registering at the Site, 
+We store personal information that you voluntarily provide to us when registering at the Site, 
 and further on by editing your profile at the Site.
-The personal information that we collect depends on the context of your interactions 
-with us and the Sites, the choices you make and the products and features you use. The personal information we collect can include the following: 
-Name and Contact Data. We collect username, email address and social media username.
-Credentials. We collect passwords. All of the Credentials are hashed and original values not stored.
-All personal information that you provide to us must be true, complete and accurate, and you must 
-notify us of any changes to such personal information.
+The personal information that we store depends on the context of your interactions 
+with us and the Site, the choices you make and the products and features you use. The personal information we store can include the following: 
 
-### **Information automatically collected**  
+- We store username, email address and social media usernames. Username and email address are mandatory.
+- Credentials. We store passwords. All of the Credentials are hashed and original values not stored.
+- All personal information that you provide to us must be true, complete and accurate, and you must notify us of any changes to such personal information.
 
-_In Short: Some information – such as IP address and/or browser and device characteristics – is collected automatically when you visit our websites._  
+### **Information automatically stored**  
 
-We automatically collect certain information when you visit, use or navigate the Site. This information does not reveal your specific identity (like your name or contact information) but may include device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, referring URLs, device name, country, location, information about how and when you use our Site and other technical information. This information is primarily needed to maintain the security and operation of our Sites, and for our internal analytic and reporting purposes. 
+_In Short: Certain information – such as IP address and/or browser and device characteristics – is stored automatically when you visit our websites._  
 
+We automatically store certain information when you visit, use or navigate the Site. This information does not reveal your specific identity (like your name or contact information) but may include device and usage information, such as your IP address, browser and device characteristics, operating system, information about how and when you use our Site and other technical information. This information is primarily needed to maintain the security and operation of our Site, and for our internal analytic and reporting purposes.  
+
+
+We'd like to state that there are 2 different automatic storing mechanism:
+
+The first one is, server logs which has this certain infromation stored and are flushed every 24 hours.
+This is primarily needed for security and maintaining the operation of our Site.
+
+The second one is targetted for analytics, this mechanism on happen on certain portions of the site. This mechanism, only stores an hashed version of your IP.
 
 ## HOW DO WE USE YOUR INFORMATION? 
 
 _In Short: We process your information for purposes based on legitimate business interests, the fulfillment of our contract with you, compliance with our legal obligations, and/or your consent._  
 
-We use personal information collected via our Site for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate services interests ("Service Purposes"), in order to enter into or perform a contract with you ("Contractual"), with your consent ("Consent"), and/or for compliance with our legal obligations ("Legal Reasons"). We indicate the specific processing grounds we rely on next to each purpose listed below. 
-We use the information we collect or receive:  
+We use personal information stored via our Site for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate services interests ("Service Purposes"), in order to enter into or perform a contract with you ("Contractual"), with your consent ("Consent"), and/or for compliance with our legal obligations ("Legal Reasons"). We indicate the specific processing grounds we rely on next to each purpose listed below. 
+We use the information we store or receive:  
 
-    • To facilitate account creation and logon process [with your Consent]: If you choose to link your account with us to a third party account *(such as your Github or Codeberg account), we use the information you allowed us to collect from those third parties to facilitate account creation and logon process. See the section below headed "Social Logins" for further information. 
+    • To facilitate account creation and login process [with your Consent]: If you choose to link your account with us to a third party account *(such as your Github, GitLab, or Codeberg account), we use the information you allowed us to collect from those third parties to facilitate account creation and login process. See the section below headed "Social Logins" for further information. 
 
     • To send administrative information to you [for Service Purposes, Legal Reasons and/or possibly Contractual]: We may use your personal information to send you product, service and new feature information and/or information about changes to our terms, conditions, and policies.
 
-    • Request Feedback [for our Service Purposes and/or with your Consent]: We may use your information to request feedback and to contact you about your use of our Sites 
+    • Request feedback [for our Service Purposes and/or with your Consent]: We may use your information to request feedback and/or to contact you about your use of our Site.
 
-    • To protect our Sites [for Service Purposes and/or Legal Reasons]: We may use your information as part of our efforts to keep our Sites safe and secure (for example, for fraud monitoring and prevention).
-
-    • To enable user-to-user communications [with your consent]: We may use your information in order to enable user-to-user communications with each user's consent.
+    • To protect our Site [for Service Purposes and/or Legal Reasons]: We may use your information as part of our efforts to keep our Site safe and secure (for example, for fraud monitoring and prevention).
 
     • To enforce our terms, conditions and policies [for Service Purposes, Legal Reasons and/or possibly Contractual].
 
@@ -90,38 +94,36 @@ We only share and disclose your information in the following situations:
 
     • Vital Interests and Legal Rights. We may disclose your information where we believe it is necessary to investigate, prevent, or take action regarding potential violations of our policies, suspected fraud, situations involving potential threats to the safety of any person and illegal activities, or as evidence in litigation in which we are involved. 
 
-    • With your Consent. We may disclose your personal information for any other purpose with your consent.
-
-    • Other Users. When you share personal information (for example, by posting comments, contributions or other content to the Site) or otherwise interact with public areas of the Site. such personal information may be viewed by all users and may be publicly distributed outside the Site in perpetuity. Similarly, other users will be able to view descriptions of your activity, communicate with you within our Site, and view your profile.
+    • Other Users. When you share personal information (for example, by posting comments, contributions or other content to the Site) or otherwise interact with public areas of the Site. Such personal information may be viewed by all users and may be publicly distributed outside the Site in perpetuity. Similarly, other users will be able to view descriptions of your activity, communicate with you within our Site, and view your profile.
 
 ## DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES? 
 
-_In Short: No_
+_In Short: No._
 
-We don't use cookies for tracking technologies, however we uses the cookie to ensure
-authorization between the User and our Site.
+We don't use cookies for tracking technologies, however we use cookies to ensure
+authorization between the User and our Site, only when the user is logged in.
 
 
 ## HOW DO WE HANDLE YOUR SOCIAL LOGINS?
 
 _In Short: If you choose to register or log in to our websites using a social media account, we may have access to certain information about you._
 
-Our Sites offers you the ability to register and login using your third party social media account details (like your Github or Codeberg logins). Where you choose to do this, we will receive certain profile information about you from your social media provider. The profile Information we receive may vary depending on the social media provider concerned, but will often include your name, e-mail address, follower list, profile picture as well as other information you choose to make public.
+Our Site offers you the ability to register and login using your third party social media account details (like your Github, Gitlab, or Codeberg logins). When you choose to do this, we will receive certain profile information about you from your social media provider. The profile Information we receive may vary depending on the social media provider concerned, but will often include your name, email address, follower list, profile picture as well as other information you choose to make public, of which only username and email address will be used on the Site.
 
-We will use the information we receive only for the purposes that are described in this privacy policy or that are otherwise made clear to you on the Site. Please note that we do not control, and are not responsible for, other uses of your personal information by your third party social media provider. We recommend that you review their privacy policy to understand how they collect, use and share your personal information, and how you can set your privacy preferences on their sites and apps.
+We will use the information we receive only for the purposes that are described in this privacy policy or that are otherwise made clear to you on the Site. Please note that we do not control, and are not responsible for, other uses of your personal information by your third party social media provider. We recommend that you review their privacy policy to understand how they store, use and share your personal information, and how you can set your privacy preferences on their Site and apps.
 
 ## IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?
 
-_In Short: No, not to our knowingly._
+_In Short: No, not to our knowledge._
 
-Our server is provided by vultr.com, we recommend that you review their privacy policy to understand how they collect, use and share your personal information. Our server is located in Amsterdam, NL. All traffic from userstyles.world are processed by this server.
-If you arem’t a resident in the European Economic Area, then these countries may not have data protection or other laws as comprehensive as those in your country. We will however take all necessary measures to protect your personal information in accordance with this privacy policy and applicable law. 
+Our server is provided by vultr.com, we recommend that you review their privacy policy to understand how they collect, use and share your personal information. Our server is located in Amsterdam, Netherlands. All traffic from userstyles.world is processed by this server.
+If you aren’t a resident in the European Economic Area, then these countries may not have data protection or other laws as comprehensive as those in your country. We will however take all necessary measures to protect your personal information in accordance with this privacy policy and applicable law. 
 
 ## WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?
 
-_In Short: We are not responsible for the safety of any information that you share with third-party providers who advertise, but are not affiliated with, our websites._
+_In Short: We are not responsible for the safety of any information that you share with third-party providers who advertise, but are not affiliated with, our website._
 
-The Sites may contain advertisements from third parties that are not affiliated with us and which may link to other websites, online services or mobile applications. We cannot guarantee the safety and privacy of data you provide to any third parties. Any data collected by third parties is not covered by this privacy policy. We are not responsible for the content or privacy and security practices and policies of any third parties, including other websites, services or applications that may be linked to or from the Sites. You should review the policies of such third parties and contact them directly to respond to your questions.
+The Site may contain advertisements from third parties that are not affiliated with us and which may link to other websites, online services, or mobile applications. We cannot guarantee the safety and privacy of data you provide to any third parties. Any data collected by third parties is not covered by this privacy policy. We are not responsible for the content or privacy and security practices and policies of any third parties, including other websites, services, or applications that may be linked to or from the Site. You should review the policies of such third parties and contact them directly to respond to your questions.
 
 ## HOW LONG DO WE KEEP YOUR INFORMATION? 
 
@@ -135,7 +137,7 @@ When we have no ongoing legitimate business need to process your personal inform
 
 _In Short: We aim to protect your personal information through a system of organizational and technical security measures._
 
-We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, please also remember that we cannot guarantee that the internet itself is 100% secure. Although we will do our best to protect your personal information, transmission of personal information to and from our Sites is at your own risk. You should only access the services within a secure environment. 
+We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, please also remember that we cannot guarantee that the internet itself is 100% secure. Although we will do our best to protect your personal information, transmission of personal information to and from our Site is at your own risk. You should only access the service within a secure environment. 
 
 ## DO WE COLLECT INFORMATION FROM MINORS? 
 
