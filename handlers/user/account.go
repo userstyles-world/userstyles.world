@@ -15,15 +15,15 @@ import (
 func setSocials(u *models.User, k, v string) models.User {
 	switch k {
 	case "github":
-		if v != u.Socials.Github {
+		if v != "" {
 			u.Socials.Github = v
 		}
 	case "gitlab":
-		if v != u.Socials.Gitlab {
+		if v != "" {
 			u.Socials.Gitlab = v
 		}
 	case "codeberg":
-		if v != u.Socials.Codeberg {
+		if v != "" {
 			u.Socials.Codeberg = v
 		}
 	}
