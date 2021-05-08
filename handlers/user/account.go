@@ -2,6 +2,7 @@ package user
 
 import (
 	"log"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -77,7 +78,7 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	name := c.FormValue("name")
+	name := strings.TrimSpace(c.FormValue("name"))
 	if name != "" {
 		prev := user.DisplayName
 		user.DisplayName = name
@@ -87,17 +88,25 @@ func EditAccount(c *fiber.Ctx) error {
 			log.Println("Validation errors:", errors)
 			user.DisplayName = prev
 
+			l, e := len(name), ""
+			switch {
+			case l < 5 || l > 20:
+				e = "Display name must be between 5 and 20 characters."
+			default:
+				e = "Make sure your input contains valid characters."
+			}
+
 			return c.Render("account", fiber.Map{
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
 				"Styles": styles,
-				"Error":  "Display name must be longer than 5 and shorter than 20 characters.",
+				"Error":  e,
 			})
 		}
 	}
 
-	bio := c.FormValue("bio")
+	bio := strings.TrimSpace(c.FormValue("bio"))
 	if bio != "" {
 		prev := user.Biography
 		user.Biography = bio

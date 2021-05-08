@@ -19,7 +19,7 @@ func InitializeValidator() {
 		panic(err)
 	}
 
-	if err := v.RegisterValidation("displayName", usernameValidation); err != nil {
+	if err := v.RegisterValidation("displayName", displayNameValidation); err != nil {
 		log.Println("Cannot register displayName validation")
 		panic(err)
 	}
