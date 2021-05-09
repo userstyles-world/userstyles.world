@@ -53,13 +53,20 @@ type APIStyle struct {
 }
 
 func getDBSession(db *gorm.DB) (tx *gorm.DB) {
-	if config.DB_DEBUG == "info" {
-		return db.Session(&gorm.Session{
-			Logger: db.Logger.LogMode(logger.Info),
-		})
+	var log logger.LogLevel
+	switch config.DB_DEBUG {
+	case "error":
+		log = logger.Error
+	case "warn":
+		log = logger.Warn
+	case "info":
+		log = logger.Info
+	default:
+		log = logger.Silent
 	}
+
 	return db.Session(&gorm.Session{
-		Logger: db.Logger.LogMode(logger.Silent),
+		Logger: db.Logger.LogMode(log),
 	})
 }
 
