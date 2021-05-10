@@ -44,9 +44,9 @@ func StyleEditGet(c *fiber.Ctx) error {
 
 func StyleEditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	StyleID, t := c.Params("id"), new(models.Style)
+	styleID, t := c.Params("id"), new(models.Style)
 
-	s, err := models.GetStyleByID(database.DB, StyleID)
+	s, err := models.GetStyleByID(database.DB, styleID)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -74,8 +74,8 @@ func StyleEditPost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	if PreviewFormValue, _ := c.FormFile("preview"); PreviewFormValue != nil {
-		image, err := PreviewFormValue.Open()
+	if previewFormValue, _ := c.FormFile("preview"); previewFormValue != nil {
+		image, err := previewFormValue.Open()
 		if err != nil {
 			log.Println("Opening image , err:", err)
 			return c.Render("err", fiber.Map{
@@ -84,7 +84,7 @@ func StyleEditPost(c *fiber.Ctx) error {
 			})
 		}
 		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+StyleID+".original", data, 0644)
+		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0644)
 		if err != nil {
 			log.Println("Style creation failed, err:", err)
 			return c.Render("err", fiber.Map{
@@ -94,21 +94,21 @@ func StyleEditPost(c *fiber.Ctx) error {
 		}
 		// Either it's removed or it didn't exist.
 		// So we don't care about the error.
-		_ = os.Remove(images.CacheFolder + StyleID + ".jpeg")
-		_ = os.Remove(images.CacheFolder + StyleID + ".webp")
+		_ = os.Remove(images.CacheFolder + styleID + ".jpeg")
+		_ = os.Remove(images.CacheFolder + styleID + ".webp")
 
-		q.Preview = "https://userstyles.world/api/preview/" + StyleID + ".jpeg"
+		q.Preview = "https://userstyles.world/api/preview/" + styleID + ".jpeg"
 	}
 
 	if q.Preview != s.Preview {
-		_ = os.Remove(images.CacheFolder + StyleID + ".original")
-		_ = os.Remove(images.CacheFolder + StyleID + ".jpeg")
-		_ = os.Remove(images.CacheFolder + StyleID + ".webp")
+		_ = os.Remove(images.CacheFolder + styleID + ".original")
+		_ = os.Remove(images.CacheFolder + styleID + ".jpeg")
+		_ = os.Remove(images.CacheFolder + styleID + ".webp")
 	}
 
 	err = database.DB.
 		Model(t).
-		Where("id", StyleID).
+		Where("id", styleID).
 		Updates(q).
 		// GORM doesn't update non-zero values in structs.
 		Update("mirror_code", c.FormValue("mirrorCode") == "on").

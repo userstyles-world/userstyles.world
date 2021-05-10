@@ -1,7 +1,6 @@
 package images
 
 import (
-	"fmt"
 	"io"
 	"io/fs"
 	"log"
@@ -20,9 +19,7 @@ type ImageInfo struct {
 	WebP     fs.FileInfo
 }
 
-var (
-	CacheFolder = "./data/images/"
-)
+var CacheFolder = "./data/images/"
 
 func Initialize() {
 	if fileInfo := fileExist(CacheFolder); fileInfo == nil {
@@ -60,7 +57,7 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 
 		req, err := http.Get(style.Preview)
 		if err != nil {
-			fmt.Println("Error fetching URL:", err)
+			log.Println("Error fetching URL:", err)
 			return ImageInfo{}, err
 		}
 		defer req.Body.Close()
@@ -69,13 +66,13 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 		data, _ := io.ReadAll(req.Body)
 		err = os.WriteFile(original, data, 0644)
 		if err != nil {
-			fmt.Println("Error processing:", err)
+			log.Println("Error processing:", err)
 			return ImageInfo{}, err
 		}
 
 		err = DecodeImage(original, jpeg, vips.ImageTypeJPEG)
 		if err != nil {
-			fmt.Println("Error processing:", err)
+			log.Println("Error processing:", err)
 			return ImageInfo{}, err
 		}
 

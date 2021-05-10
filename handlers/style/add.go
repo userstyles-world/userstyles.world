@@ -18,7 +18,7 @@ import (
 	"userstyles.world/models"
 )
 
-func StyleCreateGet(c *fiber.Ctx) error {
+func CreateGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
 	return c.Render("add", fiber.Map{
@@ -28,7 +28,7 @@ func StyleCreateGet(c *fiber.Ctx) error {
 	})
 }
 
-func StyleCreatePost(c *fiber.Ctx) error {
+func CreatePost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
 	s := &models.Style{
@@ -86,9 +86,9 @@ func StyleCreatePost(c *fiber.Ctx) error {
 	}
 
 	if image != nil {
-		ID := strconv.FormatUint(uint64(s.ID), 10)
+		styleID := strconv.FormatUint(uint64(s.ID), 10)
 		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+ID+".original", data, 0644)
+		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0644)
 		if err != nil {
 			log.Println("Style creation failed, err:", err)
 			return c.Render("err", fiber.Map{
@@ -97,10 +97,10 @@ func StyleCreatePost(c *fiber.Ctx) error {
 			})
 		}
 		if s.Preview == "" {
-			s.Preview = "https://userstyles.world/api/preview/" + ID + ".jpeg"
+			s.Preview = "https://userstyles.world/api/preview/" + styleID + ".jpeg"
 			database.DB.
 				Model(new(models.Style)).
-				Where("id", ID).
+				Where("id", styleID).
 				Updates(s)
 		}
 	}

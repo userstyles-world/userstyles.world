@@ -62,6 +62,7 @@ func (mp *MimePart) SetContentTransferEncoding(contentTransferEncoding string) *
 	mp.ContentTransferEncoding = contentTransferEncoding
 	return mp
 }
+
 func (mp *MimePart) SetBody(body string) *MimePart {
 	mp.Body = body
 	return mp
@@ -79,7 +80,9 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 
 	if partsLen > 1 {
 		output += "Content-Type: multipart/alternative; boundary=\"" + eb.boundary + "\"\n\n"
-	} else if partsLen == 1 {
+	} else if partsLen == 0 {
+		return "", errors.New("no parts were detected")
+	} else {
 		part0 := eb.Parts[0]
 		if part0.ContentTransferEncoding == "" {
 			part0.ContentTransferEncoding = "8bit"
@@ -89,8 +92,6 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 		}
 		output += "Content-Type: " + part0.ContentType + "charset=\"utf-8\"\n" +
 			"Content-Transfer-Encoding: " + part0.ContentTransferEncoding + "\n\n"
-	} else {
-		return "", errors.New("no parts were detected")
 	}
 
 	for i := 0; i < partsLen; i++ {

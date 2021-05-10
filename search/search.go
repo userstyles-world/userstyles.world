@@ -27,15 +27,15 @@ func SearchText(text string) ([]MinimalStyle, error) {
 		if err != nil {
 			return nil, err
 		}
-		StyleInfo := MinimalStyle{}
-		StyleInfo.Name = hit.Fields["name"].(string)
-		StyleInfo.ID = hit.Fields["id"].(string)
-		StyleInfo.Description = hit.Fields["description"].(string)
-		StyleInfo.Preview = hit.Fields["preview"].(string)
-		StyleInfo.Notes = hit.Fields["notes"].(string)
-		StyleInfo.Username = hit.Fields["username"].(string)
+		styleInfo := MinimalStyle{}
+		styleInfo.Name = hit.Fields["name"].(string)
+		styleInfo.ID = hit.Fields["id"].(string)
+		styleInfo.Description = hit.Fields["description"].(string)
+		styleInfo.Preview = hit.Fields["preview"].(string)
+		styleInfo.Notes = hit.Fields["notes"].(string)
+		styleInfo.Username = hit.Fields["username"].(string)
 
-		returnResult = append(returnResult, StyleInfo)
+		returnResult = append(returnResult, styleInfo)
 	}
 	return returnResult, nil
 }

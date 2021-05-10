@@ -43,13 +43,12 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	JWTToken, err := utils.NewJWTToken().
+	signedJWTToken, err := utils.NewJWTToken().
 		SetClaim("username", strings.ToLower(u.Username)).
 		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.VerifySigningKey)
-
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
@@ -57,14 +56,14 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/verify/" + utils.PrepareText(JWTToken, utils.AEAD_CRYPTO)
+	link := c.BaseURL() + "/verify/" + utils.PrepareText(signedJWTToken, utils.AEAD_CRYPTO)
 
-	PlainPart := utils.NewPart().
+	partPlain := utils.NewPart().
 		SetBody("Verify your UserStyles.world account by clicking the link below.\n" +
 			"The link will expire in 2 hours\n\n" +
 			link + "\n\n" +
 			"You can safely ignore this e-mail if you never made an account for UserStyles.world.")
-	HTMLPart := utils.NewPart().
+	partHTML := utils.NewPart().
 		SetBody("<p>Verify your UserStyles.world account by clicking the link below.</p>\n" +
 			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
@@ -76,8 +75,8 @@ func RegisterPost(c *fiber.Ctx) error {
 	err = utils.NewEmail().
 		SetTo(u.Email).
 		SetSubject("Verify your email address").
-		AddPart(*PlainPart).
-		AddPart(*HTMLPart).
+		AddPart(*partPlain).
+		AddPart(*partHTML).
 		SendEmail()
 
 	if err != nil {

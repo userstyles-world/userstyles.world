@@ -53,19 +53,19 @@ func indexStyles(index bleve.Index, data []models.APIStyle) error {
 	startTime := time.Now()
 	batch := index.NewBatch()
 	batchCount := 0
-	var Error error
+	var err error
 	for _, styleEntry := range data {
-		ID := strconv.FormatUint(uint64(styleEntry.ID), 10)
-		Error = batch.Index(ID, MinimalStyle{
+		styleID := strconv.FormatUint(uint64(styleEntry.ID), 10)
+		err = batch.Index(styleID, MinimalStyle{
 			Name:        styleEntry.Name,
-			ID:          ID,
+			ID:          styleID,
 			Preview:     styleEntry.Preview,
 			Description: styleEntry.Description,
 			Notes:       styleEntry.Notes,
 			Username:    styleEntry.Username,
 		})
-		if Error != nil {
-			log.Fatal(Error)
+		if err != nil {
+			return err
 		}
 
 		batchCount++

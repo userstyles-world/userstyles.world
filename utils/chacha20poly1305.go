@@ -46,7 +46,6 @@ func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 
 	// Decrypt the message and check it wasn't tampered with.
 	return aead.Open(nil, S2b(nonce), S2b(ciphertext), nil)
-
 }
 
 func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
@@ -78,5 +77,4 @@ func DecodePreparedText(preparedText string, aead cipher.AEAD) (string, error) {
 	}
 
 	return B2s(decryptedText), nil
-
 }

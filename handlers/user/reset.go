@@ -147,7 +147,6 @@ func RecoverPost(c *fiber.Ctx) error {
 		SetClaim("email", u.Email).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.VerifySigningKey)
-
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
@@ -157,12 +156,12 @@ func RecoverPost(c *fiber.Ctx) error {
 
 	link := c.BaseURL() + "/reset/" + utils.PrepareText(jwt, utils.AEAD_CRYPTO)
 
-	PlainPart := utils.NewPart().
+	partPlain := utils.NewPart().
 		SetBody("We have received a request to reset the password for your UserStyles.world account.\n\n" +
 			"The link will expire in 2 hours\n\n" +
 			link + "\n\n" +
 			"You can safely ignore this e-mail if you didn't request to reset your password.")
-	HTMLPart := utils.NewPart().
+	partHTML := utils.NewPart().
 		SetBody("<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
 			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
@@ -174,8 +173,8 @@ func RecoverPost(c *fiber.Ctx) error {
 	emailErr := utils.NewEmail().
 		SetTo(u.Email).
 		SetSubject("Reset your password").
-		AddPart(*PlainPart).
-		AddPart(*HTMLPart).
+		AddPart(*partPlain).
+		AddPart(*partHTML).
 		SendEmail()
 
 	if emailErr != nil {

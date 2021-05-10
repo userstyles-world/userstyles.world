@@ -27,16 +27,18 @@ type SiteStats struct {
 	WeeklyInstalls, MonthlyInstalls, TotalInstalls int64
 }
 
-func generateHashedRecord(id, ip string) string {
+func generateHashedRecord(id, ip string) (string, error) {
 	// Merge it here before using.
 	record := ip + " " + id
 
 	// Generate unique hash.
 	h := hmac.New(sha512.New, []byte(config.STATS_KEY))
-	h.Write([]byte(record))
+	if _, err := h.Write([]byte(record)); err != nil {
+		return "", err
+	}
 	s := hex.EncodeToString(h.Sum(nil))
 
-	return s
+	return s, nil
 }
 
 func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
@@ -48,39 +50,32 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	}
 
 	// Set values.
-	s.Hash = generateHashedRecord(id, ip)
+	s.Hash, err = generateHashedRecord(id, ip)
 	s.StyleID = styleID
-
-	if install {
-		s.Install = install // Initial install.
-		err = db.
-			Debug().
-			Model(s).
-			Clauses(clause.OnConflict{
-				Columns: []clause.Column{{Name: "hash"}},
-				DoUpdates: clause.Assignments(map[string]interface{}{
-					"updated_at": time.Now(),
-					"install":    true,
-				}),
-			}).
-			Create(s).
-			Error
-	} else {
-		s.View = true // Initial view.
-		err = db.
-			Debug().
-			Model(s).
-			Clauses(clause.OnConflict{
-				Columns: []clause.Column{{Name: "hash"}},
-				DoUpdates: clause.Assignments(map[string]interface{}{
-					"updated_at": time.Now(),
-					"view":       true,
-				}),
-			}).
-			Create(s).
-			Error
+	if err != nil {
+		return *s, err
 	}
 
+	assignment := map[string]interface{}{
+		"updated_at": time.Now(),
+	}
+	if install {
+		s.Install = true
+		assignment["install"] = true
+	} else {
+		s.View = true
+		assignment["view"] = true
+	}
+
+	err = db.
+		Debug().
+		Model(s).
+		Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "hash"}},
+			DoUpdates: clause.Assignments(assignment),
+		}).
+		Create(s).
+		Error
 	if err != nil {
 		return *s, err
 	}

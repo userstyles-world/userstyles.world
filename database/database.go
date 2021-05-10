@@ -16,6 +16,7 @@ import (
 )
 
 var (
+	// DB holds the current pointer to active database connection.
 	DB      *gorm.DB
 	user    models.User
 	style   models.Style
@@ -23,7 +24,7 @@ var (
 	history models.History
 )
 
-func Connect() {
+func connect() {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
@@ -36,7 +37,6 @@ func Connect() {
 	db, err := gorm.Open(sqlite.Open(config.DB), &gorm.Config{
 		Logger: newLogger,
 	})
-
 	if err != nil {
 		log.Println("Failed to connect database.")
 		panic(err)
@@ -46,29 +46,30 @@ func Connect() {
 	log.Println("Database successfully connected.")
 }
 
-func Migrate(tables ...interface{}) error {
+func migrate(tables ...interface{}) error {
 	log.Println("Migrating database tables.")
 	return DB.AutoMigrate(tables...)
 }
 
+// Initialize the database connection.
 func Initialize() {
-	Connect()
+	connect()
 
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		log.Println("Dropping database tables.")
-		if err := Drop(&user, &style, &stats, &history); err != nil {
+		if err := drop(&user, &style, &stats, &history); err != nil {
 			log.Printf("Warning: Couldn't drop table due to error: %s", err.Error())
 		}
-		defer Seed()
+		defer seed()
 	}
 
-	if err := Migrate(&user, &style, &stats, &history); err != nil {
+	if err := migrate(&user, &style, &stats, &history); err != nil {
 		log.Printf("Warning: Couldn't migrate due to error: %s", err.Error())
 	}
 }
 
-func Drop(dst ...interface{}) error {
+func drop(dst ...interface{}) error {
 	return DB.Migrator().DropTable(dst...)
 }
 
@@ -105,7 +106,7 @@ func generateData(amount int) ([]models.Style, []models.User) {
 	return styleStructs, userStructs
 }
 
-func Seed() {
+func seed() {
 	users := []models.User{
 		{
 			Username:  "vednoc",
