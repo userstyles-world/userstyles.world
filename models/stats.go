@@ -13,6 +13,13 @@ import (
 	"userstyles.world/config"
 )
 
+const (
+	totalViews     = "view = 1"
+	weeklyViews    = "view = 1 and created_at > ?"
+	totalInstalls  = "install = 1"
+	weeklyInstalls = "install = 1 and created_at > ?"
+)
+
 type Stats struct {
 	gorm.Model
 	Hash    string `gorm:"unique"`
@@ -23,8 +30,9 @@ type Stats struct {
 }
 
 type SiteStats struct {
-	UserCount, StyleCount, WeeklyViews, TotalViews int64
-	WeeklyInstalls, MonthlyInstalls, TotalInstalls int64
+	UserCount, StyleCount         int64
+	WeeklyViews, TotalViews       int64
+	WeeklyInstalls, TotalInstalls int64
 }
 
 func generateHashedRecord(id, ip string) (string, error) {
@@ -113,19 +121,17 @@ func GetTotalViewsForStyle(db *gorm.DB, id string) (total int64) {
 }
 
 func GetHomepageStatistics(db *gorm.DB) *SiteStats {
-	p := new(SiteStats)
-	i, t := "install = ?", "install = ? and updated_at > ?"
+	p, s := SiteStats{}, Stats{}
 
 	// TODO: Replace last day with last week when we get enough data.
 	lastDay := time.Now().AddDate(0, 0, -1)
 
 	db.Model(User{}).Where("id").Count(&p.UserCount)
 	db.Model(Style{}).Where("id").Count(&p.StyleCount)
-	db.Model(Stats{}).Where(i, false).Count(&p.TotalViews)
-	db.Debug().Model(Stats{}).Where(t, false, lastDay).Count(&p.WeeklyViews)
-	db.Debug().Model(Stats{}).Where(t, true, lastDay).Count(&p.WeeklyInstalls)
-	// db.Model(Stats{}).Where(t, true, lastMonth).Count(&p.MonthlyInstalls)
-	db.Model(Stats{}).Where(i, true).Count(&p.TotalInstalls)
+	db.Model(&s).Where(totalViews).Count(&p.TotalViews)
+	db.Model(&s).Where(weeklyViews, lastDay).Count(&p.WeeklyViews)
+	db.Model(&s).Where(weeklyInstalls, lastDay).Count(&p.WeeklyInstalls)
+	db.Model(&s).Where(totalInstalls).Count(&p.TotalInstalls)
 
-	return p
+	return &p
 }
