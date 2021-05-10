@@ -20,7 +20,25 @@
         }
     }
 
-    .screenshot img { border-radius: var(--br-3) }
+    .screenshot {
+        overflow: hidden;
+        position: relative;
+        border-radius: var(--br-3);
+
+        img {
+            border-radius: var(--br-3);
+            object-fit: contain;
+        }
+
+        .blurred {
+            position: absolute;
+            top: -16px;
+            right: -16px;
+            bottom: -16px;
+            left: -16px;
+            filter: blur(16px) brightness(0.6);
+        }
+    }
 
     picture {
         padding-top: 56.25%;
@@ -34,7 +52,7 @@
             position: absolute;
             border-radius: var(--br-3) var(--br-3) 0 0;
             object-position: center top;
-            object-fit: contain;
+            object-fit: cover;
         }
 
         &.no-screenshot svg {
