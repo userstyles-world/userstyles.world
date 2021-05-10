@@ -39,7 +39,7 @@ func OauthMakeURL(service string) string {
 	var nonsenseState string
 	switch service {
 	case "github":
-		nonsenseState = B2s(RandStringBytesMaskImprSrcUnsafe(16))
+		nonsenseState = UnsafeString(RandStringBytesMaskImprSrcUnsafe(16))
 		// Base URL.
 		oauthURL = "https://github.com/login/oauth/authorize"
 		// Add our app client ID.
@@ -142,7 +142,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		if err != nil {
 			return OAuthResponse{}, err
 		}
-		req.Body = ioutil.NopCloser(strings.NewReader(B2s(bodyString)))
+		req.Body = ioutil.NopCloser(strings.NewReader(UnsafeString(bodyString)))
 		req.ContentLength = int64(len(bodyString))
 		req.Header.Set("Content-Type", "application/json")
 	}

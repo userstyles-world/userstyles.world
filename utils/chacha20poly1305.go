@@ -34,7 +34,7 @@ func InitalizeCrypto() {
 func SealText(text string, aead cipher.AEAD) []byte {
 	nonce := RandStringBytesMaskImprSrcUnsafe(aead.NonceSize())
 
-	return aead.Seal(nonce, nonce, S2b(text), nil)
+	return aead.Seal(nonce, nonce, UnsafeBytes(text), nil)
 }
 
 func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
@@ -45,7 +45,7 @@ func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 	nonce, ciphertext := encryptedMsg[:aead.NonceSize()], encryptedMsg[aead.NonceSize():]
 
 	// Decrypt the message and check it wasn't tampered with.
-	return aead.Open(nil, S2b(nonce), S2b(ciphertext), nil)
+	return aead.Open(nil, UnsafeBytes(nonce), UnsafeBytes(ciphertext), nil)
 }
 
 func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
@@ -71,10 +71,10 @@ func DecodePreparedText(preparedText string, aead cipher.AEAD) (string, error) {
 		return "", err
 	}
 
-	decryptedText, err := OpenText(B2s(enryptedText), aead)
+	decryptedText, err := OpenText(UnsafeString(enryptedText), aead)
 	if err != nil {
 		return "", err
 	}
 
-	return B2s(decryptedText), nil
+	return UnsafeString(decryptedText), nil
 }

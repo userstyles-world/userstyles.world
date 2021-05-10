@@ -9,34 +9,29 @@ import (
 // This file is pure for functions.
 // That mimick originial behaviour, just faster.
 
-func B2s(msg []byte) string {
-	return *(*string)(unsafe.Pointer(&msg))
+// UnsafeString returns a string pointer without allocation
+func UnsafeString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
 }
 
-// Note it may break if string and/or slice header will change
-// in the future go versions.
-func S2b(str string) []byte {
-	var b []byte
-	byteHeader := (*reflect.SliceHeader)(unsafe.Pointer(&b))
-	byteHeader.Data = (*reflect.StringHeader)(unsafe.Pointer(&str)).Data
-
-	// This reference is important as without it their is an chance
-	// That the str get GC'ed.
-	l := len(str)
-	byteHeader.Len = l
-	byteHeader.Cap = l
-
-	return b
+// UnsafeBytes returns a byte pointer without allocation
+func UnsafeBytes(s string) (bs []byte) {
+	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
+	bh := (*reflect.SliceHeader)(unsafe.Pointer(&bs))
+	bh.Data = sh.Data
+	bh.Len = sh.Len
+	bh.Cap = sh.Len
+	return bs
 }
 
 func EncodeToString(src []byte) string {
 	buf := make([]byte, (len(src)*8+5)/6)
 	base64.RawURLEncoding.Encode(buf, src)
-	return B2s(buf)
+	return UnsafeString(buf)
 }
 
 func DecodeString(s string) ([]byte, error) {
 	dbuf := make([]byte, len(s)*6/8)
-	n, err := base64.RawURLEncoding.Decode(dbuf, S2b(s))
+	n, err := base64.RawURLEncoding.Decode(dbuf, UnsafeBytes(s))
 	return dbuf[:n], err
 }
