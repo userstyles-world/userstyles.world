@@ -56,13 +56,15 @@ _In Short: Certain information – such as IP address and/or browser and device 
 
 We automatically store certain information when you visit, use or navigate the Site. This information does not reveal your specific identity (like your name or contact information) but may include device and usage information, such as your IP address, browser and device characteristics, operating system, information about how and when you use our Site and other technical information. This information is primarily needed to maintain the security and operation of our Site, and for our internal analytic and reporting purposes.  
 
+We'd like to state that there are 2 different automatic storing mechanisms:
 
-We'd like to state that there are 2 different automatic storing mechanism:
+The first one is default server log which contains this information, and is flushed every 24 hours.
+This is primarily needed for security and maintaining the operation of the Site.
 
-The first one is, server logs which has this certain infromation stored and are flushed every 24 hours.
-This is primarily needed for security and maintaining the operation of our Site.
-
-The second one is targetted for analytics, this mechanism on happen on certain portions of the site. This mechanism, only stores an hashed version of your IP.
+The second one is used by style statistics and only happens on certain portions of the site:
+- `https://userstyles.world/style/:id/:name`
+- `https://userstyles.world/api/style/:id.user.css`
+By visiting the relative links stated above, we save a unique hash combined of your IP address, the style ID, reffered within the relative link as `:id`, and a secret key. This unique hash is not easily reversible without brute-forcing all public IP addresses in IPv4 address space and our secret key. This provides decently accurate style statistics while still respecting your privacy. 
 
 ## HOW DO WE USE YOUR INFORMATION? 
 
