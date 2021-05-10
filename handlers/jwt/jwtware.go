@@ -22,7 +22,10 @@ func KeyFuncion(t *jwt.Token) (interface{}, error) {
 }
 
 func New() fiber.Handler {
-	extractors := []func(c *fiber.Ctx) (string, bool){jwtFromCookie(fiber.HeaderAuthorization), jwtFromHeader(fiber.HeaderAuthorization)}
+	extractors := []func(c *fiber.Ctx) (string, bool){
+		jwtFromCookie(fiber.HeaderAuthorization),
+		jwtFromHeader(fiber.HeaderAuthorization),
+	}
 
 	return func(c *fiber.Ctx) error {
 		var auth string

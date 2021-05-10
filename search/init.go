@@ -83,7 +83,8 @@ func indexStyles(index bleve.Index, data []models.APIStyle) error {
 			indexDuration := time.Since(startTime)
 			indexDurationSeconds := float64(indexDuration) / float64(time.Second)
 			timePerDoc := float64(indexDuration) / float64(count)
-			log.Printf("Indexed %d documents, in %.2fs (average %.2fms/doc)", count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
+			log.Printf("Indexed %d documents, in %.2fs (average %.2fms/doc)",
+				count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
 		}
 	}
 	// flush the last batch
@@ -96,7 +97,8 @@ func indexStyles(index bleve.Index, data []models.APIStyle) error {
 	indexDuration := time.Since(startTime)
 	indexDurationSeconds := float64(indexDuration) / float64(time.Second)
 	timePerDoc := float64(indexDuration) / float64(count)
-	log.Printf("Indexed %d documents, in %.2fs (average %.2fms/doc)", count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
+	log.Printf("Indexed %d documents, in %.2fs (average %.2fms/doc)",
+		count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
 
 	return nil
 }

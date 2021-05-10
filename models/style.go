@@ -66,11 +66,11 @@ func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 	err := getDBSession(db).
 		Model(t).
-		Select("styles.id, styles.name, styles.description, styles.notes, styles.category, styles.preview, u.username, u.display_name").
+		Select("styles.id, styles.name, styles.description, styles.notes, " +
+			"styles.category, styles.preview, u.username, u.display_name").
 		Joins("join users u on u.id = styles.user_id").
 		Find(q).
 		Error
-
 	if err != nil {
 		return nil, errors.New("styles not found")
 	}
@@ -85,7 +85,6 @@ func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
 		Select("styles.id").
 		Find(q).
 		Error
-
 	if err != nil {
 		return nil, errors.New("styles not found")
 	}
@@ -105,7 +104,6 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 		Joins("join users u on u.id = styles.user_id").
 		Find(q).
 		Error
-
 	if err != nil {
 		return nil, errors.New("styles not found")
 	}
@@ -121,7 +119,6 @@ func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
 		Select("styles.id, styles.name, styles.preview, u.username, u.display_name").
 		Find(q, "styles.featured = ?", true).
 		Error
-
 	if err != nil {
 		return nil, errors.New("no featured styles")
 	}
@@ -135,7 +132,6 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 		Model(t).
 		Find(q, "styles.original <> '' and styles.mirror_code = ?", true).
 		Error
-
 	if err != nil {
 		return nil, errors.New("no imported styles")
 	}
@@ -168,7 +164,6 @@ func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
 		Joins("join users u on u.id = styles.user_id").
 		Find(q, "u.username = ?", username).
 		Error
-
 	if err != nil {
 		return nil, errors.New("styles not found")
 	}
@@ -180,7 +175,6 @@ func CreateStyle(db *gorm.DB, s *Style) (*Style, error) {
 	err := getDBSession(db).
 		Create(&s).
 		Error
-
 	if err != nil {
 		return s, err
 	}
@@ -195,7 +189,6 @@ func UpdateStyle(db *gorm.DB, s *Style) error {
 		Where("id", s.ID).
 		Updates(s).
 		Error
-
 	if err != nil {
 		return err
 	}
@@ -211,7 +204,6 @@ func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
 		Joins("join users u on u.id = styles.user_id").
 		First(q, "styles.id = ?", id).
 		Error
-
 	if err != nil {
 		log.Printf("Problem with style id %s, err: %v", id, err)
 		return q, err

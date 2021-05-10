@@ -134,11 +134,12 @@ func seed() {
 			Name:        "Dark-GitHub",
 			Description: "Customizable dark theme for GitHub.",
 			Notes:       "Some notes go here.",
-			Preview:     "https://user-images.githubusercontent.com/18245694/102033688-57232880-3dbc-11eb-8131-2eb21239160d.png",
-			Code:        "https://raw.githubusercontent.com/vednoc/dark-github/main/github.user.styl",
-			Homepage:    "https://github.com/vednoc/dark-github",
-			Category:    "github.com",
-			Featured:    true,
+			Preview: "https://user-images.githubusercontent.com/" +
+				"18245694/102033688-57232880-3dbc-11eb-8131-2eb21239160d.png",
+			Code:     "https://raw.githubusercontent.com/vednoc/dark-github/main/github.user.styl",
+			Homepage: "https://github.com/vednoc/dark-github",
+			Category: "github.com",
+			Featured: true,
 		},
 		{
 			UserID:      1,
@@ -157,11 +158,13 @@ func seed() {
 			Description: "Customizable dark theme for WhatsApp.",
 			Notes:       "Some notes go here.",
 			Preview:     "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/images/preview.png",
-			Code:        "/* ==UserStyle==\n@name           Example\n@namespace      example.com\n@version        1.0.0\n@description    A new userstyle\n@author         Me\n==/UserStyle== */\n@-moz-document domain('example.com') {\n/** Your code goes here! */\n}",
-			Homepage:    "https://github.com/vednoc/dark-whatsapp",
-			Category:    "web.whatsapp.com",
-			Featured:    true,
-			Original:    "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/wa.user.styl",
+			Code: "/* ==UserStyle==\n@name           Example\n@namespace      example.com\n@version        1.0.0\n" +
+				"@description    A new userstyle\n@author         Me" +
+				"\n==/UserStyle== */\n@-moz-document domain('example.com') {\n/** Your code goes here! */\n}",
+			Homepage: "https://github.com/vednoc/dark-whatsapp",
+			Category: "web.whatsapp.com",
+			Featured: true,
+			Original: "https://raw.githubusercontent.com/vednoc/dark-whatsapp/master/wa.user.styl",
 		},
 		{
 			UserID:   2,
