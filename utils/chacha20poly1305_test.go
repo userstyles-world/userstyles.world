@@ -19,16 +19,16 @@ func TestSimpleKey(t *testing.T) {
 	}
 
 	sealedText := SealText(jwtToken, AEAD_CRYPTO)
-	unSealedText, err := OpenText(B2s(sealedText), AEAD_CRYPTO)
+	unSealedText, err := OpenText(UnsafeString(sealedText), AEAD_CRYPTO)
 	if err != nil {
 		t.Error(err)
 	}
-	token, err := jwt.Parse(B2s(unSealedText), VerifyJwtKeyFunction)
+	token, err := jwt.Parse(UnsafeString(unSealedText), VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(S2b(jwtToken), unSealedText) {
+	if !bytes.Equal(UnsafeBytes(jwtToken), unSealedText) {
 		t.Error("Originial and Unsealed aren't the same string.")
 	}
 }
@@ -39,7 +39,7 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = SealText(B2s(buf[:]), AEAD_CRYPTO)
+		_ = SealText(UnsafeString(buf[:]), AEAD_CRYPTO)
 	}
 }
 
@@ -47,11 +47,11 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte) {
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := SealText(B2s(buf[:]), AEAD_CRYPTO)
+	ct := SealText(UnsafeString(buf[:]), AEAD_CRYPTO)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = OpenText(B2s(ct[:]), AEAD_CRYPTO)
+		_, _ = OpenText(UnsafeString(ct[:]), AEAD_CRYPTO)
 	}
 }
 
@@ -61,7 +61,7 @@ func benchamarkPrepareText(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = PrepareText(B2s(buf[:]), AEAD_CRYPTO)
+		_ = PrepareText(UnsafeString(buf[:]), AEAD_CRYPTO)
 	}
 }
 
@@ -69,7 +69,7 @@ func benchamarkDecodePreparedText(b *testing.B, buf []byte) {
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := PrepareText(B2s(buf[:]), AEAD_CRYPTO)
+	ct := PrepareText(UnsafeString(buf[:]), AEAD_CRYPTO)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
