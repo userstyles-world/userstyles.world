@@ -1,16 +1,13 @@
 package models
 
 import (
-	"crypto/hmac"
-	"crypto/sha512"
-	"encoding/hex"
 	"strconv"
 	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"userstyles.world/config"
+	"userstyles.world/utils/crypto"
 )
 
 const (
@@ -35,20 +32,6 @@ type SiteStats struct {
 	WeeklyInstalls, TotalInstalls int64
 }
 
-func generateHashedRecord(id, ip string) (string, error) {
-	// Merge it here before using.
-	record := ip + " " + id
-
-	// Generate unique hash.
-	h := hmac.New(sha512.New, []byte(config.STATS_KEY))
-	if _, err := h.Write([]byte(record)); err != nil {
-		return "", err
-	}
-	s := hex.EncodeToString(h.Sum(nil))
-
-	return s, nil
-}
-
 func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	s := new(Stats)
 
@@ -58,7 +41,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	}
 
 	// Set values.
-	s.Hash, err = generateHashedRecord(id, ip)
+	s.Hash, err = crypto.CreateHashedRecord(id, ip)
 	s.StyleID = styleID
 	if err != nil {
 		return *s, err
