@@ -68,11 +68,11 @@ func renderEngine() *html.Engine {
 	engine.AddFunc("Role", func(i models.Role) template.HTML {
 		r := ""
 		switch i {
-		case 0:
+		case models.Regular:
 			r = "Regular"
-		case 1:
+		case models.Moderator:
 			r = "Moderator"
-		case 2:
+		case models.Admin:
 			r = "Admin"
 		}
 		return template.HTML(r)
