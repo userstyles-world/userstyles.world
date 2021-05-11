@@ -167,10 +167,10 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		return OAuthResponse{}, err
 	}
 	// Move the collecting of information.
-	return getUserInformation(service, responseJson)
+	return getUserInformation(service, responseJSON)
 }
 
-func getUserInformation(service string, responseJson OAuthTokenResponse) (OAuthResponse, error) {
+func getUserInformation(service string, responseJSON OAuthTokenResponse) (OAuthResponse, error) {
 	client := &http.Client{}
 	var userEndpoint string
 	switch service {

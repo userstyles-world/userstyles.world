@@ -40,6 +40,6 @@ func DecodeString(s string) ([]byte, error) {
 	return dbuf[:n], err
 }
 
-func JsonEncoder(value interface{}) ([]byte, error) {
-	return S2b(oj.JSON(value, jsonEncoderOptions)), nil
+func JSONEncoder(value interface{}) ([]byte, error) {
+	return UnsafeBytes(oj.JSON(value, jsonEncoderOptions)), nil
 }

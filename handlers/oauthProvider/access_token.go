@@ -1,18 +1,21 @@
-package oauth_provider
+package oauthprovider
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+
 	"userstyles.world/database"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
 
 func AccessTokenPost(c *fiber.Ctx) error {
-	clientID, clientSecret, stateQuery, tCode := c.FormValue("client_id"), c.FormValue("client_secret"), c.FormValue("state"), c.FormValue("code")
+	clientID, clientSecret, stateQuery, tCode :=
+		c.FormValue("client_id"), c.FormValue("client_secret"), c.FormValue("state"), c.FormValue("code")
 
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
@@ -22,7 +25,6 @@ func AccessTokenPost(c *fiber.Ctx) error {
 	}
 	if tCode == "" {
 		return errorMessage(c, 400, "No code specified")
-
 	}
 
 	OAuth, err := models.GetOAuthByClientID(database.DB, clientID)
@@ -35,25 +37,35 @@ func AccessTokenPost(c *fiber.Ctx) error {
 
 	unsealedText, err := utils.DecodePreparedText(tCode, utils.AEAD_OAUTHP)
 	if err != nil {
-		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
-		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	claims := token.Claims.(jwt.MapClaims)
 
-	state, userID := claims["state"].(string), uint(claims["userID"].(float64))
+	state, ok := claims["state"].(string)
+	if !ok {
+		log.Println("Error: couldn't type convert state to string")
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
+	var userID uint
+	if floatUserID, ok := claims["userID"].(float64); ok {
+		userID = uint(floatUserID)
+	} else {
+		log.Println("Error: couldn't type convert userID to float64")
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
 
 	fStyleID, ok := claims["styleID"].(float64)
 	if !ok {
 		fStyleID = 0
 	}
-	styleID := uint(fStyleID)
 
 	if stateQuery != state {
 		return errorMessage(c, 500, "State doesn't match.")
@@ -66,7 +78,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 
 	var jwt string
 
-	if styleID != 0 {
+	if styleID := uint(fStyleID); styleID != 0 {
 		jwt, err = utils.NewJWTToken().
 			SetClaim("styleID", styleID).
 			SetClaim("userID", user.ID).
@@ -90,5 +102,4 @@ func AccessTokenPost(c *fiber.Ctx) error {
 	}
 
 	return c.SendString(jwt + "&token_type=Bearer")
-
 }

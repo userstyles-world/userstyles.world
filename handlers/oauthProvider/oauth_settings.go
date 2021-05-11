@@ -1,12 +1,12 @@
-package oauth_provider
+package oauthprovider
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+
 	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -19,7 +19,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	isEdit := id != ""
 
 	var method string
-	var oauth *models.APIOAuth = nil
+	var oauth *models.APIOAuth
 	var err error
 	if isEdit {
 		method = "edit"
@@ -29,7 +29,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	}
 
 	if err != nil {
-		fmt.Printf("Failed to oauth, err: %#+v\n", err)
+		log.Printf("Failed to oauth, err: %#+v\n", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
 			"User":  u,
@@ -43,7 +43,6 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 				"User":  u,
 			})
 		}
-
 	}
 	oauths, err := models.ListOAuthsOfUser(database.DB, u.Username)
 	if err != nil {
@@ -125,8 +124,8 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	if id != "" {
 		err = models.UpdateOAuth(database.DB, &q)
 	} else {
-		q.ClientID = utils.B2s((utils.RandStringBytesMaskImprSrcUnsafe(32)))
-		q.ClientSecret = utils.B2s((utils.RandStringBytesMaskImprSrcUnsafe(128)))
+		q.ClientID = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(32)))
+		q.ClientSecret = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(128)))
 		_, err = models.CreateOAuth(database.DB, &q)
 	}
 
@@ -139,5 +138,4 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	}
 
 	return c.Redirect("/oauth_settings/"+id, fiber.StatusSeeOther)
-
 }

@@ -2,7 +2,7 @@ package utils
 
 import "reflect"
 
-// Checks if every entry of slice fulfills condition.
+// Every function checks if every entry of slice fulfills condition.
 func Every(arr interface{}, cond func(interface{}) bool) bool {
 	contentValue := reflect.ValueOf(arr)
 
@@ -14,7 +14,7 @@ func Every(arr interface{}, cond func(interface{}) bool) bool {
 	return true
 }
 
-// Check if array contains certain entry.
+// Contains func check if array contains certain entry.
 func Contains(arr []string, entry string) bool {
 	for _, possibleEntry := range arr {
 		if possibleEntry == entry {
@@ -24,7 +24,7 @@ func Contains(arr []string, entry string) bool {
 	return false
 }
 
-// Filtering an slice well "preserving" the type with the reflect package.
+// Filter an slice while "preserving" the type with the reflect package.
 func Filter(arr interface{}, cond func(interface{}) bool) interface{} {
 	contentType := reflect.TypeOf(arr)
 	contentValue := reflect.ValueOf(arr)

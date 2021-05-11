@@ -35,7 +35,7 @@ type APIOAuth struct {
 }
 
 // Custom []string time for the GORM.
-// As gorm highly dislike slices, we have to impliment, this ourself.
+// As gorm highly dislike slices, we have to implement, this ourself.
 type StringList []string
 
 func (s StringList) Value() (driver.Value, error) {
@@ -70,7 +70,6 @@ func ListOAuthsOfUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
 		Joins("join users u on u.id = o_auths.user_id").
 		Find(q, "u.username = ?", username).
 		Error
-
 	if err != nil {
 		return nil, errors.New("oauth not found")
 	}
@@ -118,7 +117,6 @@ func CreateOAuth(db *gorm.DB, o *OAuth) (*OAuth, error) {
 	err := getDBSession(db).
 		Create(&o).
 		Error
-
 	if err != nil {
 		return o, err
 	}
@@ -133,7 +131,6 @@ func UpdateOAuth(db *gorm.DB, o *OAuth) error {
 		Where("id", o.ID).
 		Updates(o).
 		Error
-
 	if err != nil {
 		return err
 	}

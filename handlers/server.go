@@ -21,7 +21,7 @@ import (
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
 	jwtware "userstyles.world/handlers/jwt"
-	"userstyles.world/handlers/oauth_provider"
+	oauthprovider "userstyles.world/handlers/oauthProvider"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
 	"userstyles.world/models"
@@ -72,7 +72,7 @@ func Initialize() {
 	app := fiber.New(fiber.Config{
 		Views:       renderEngine(),
 		ProxyHeader: proxyHeader(),
-		JSONEncoder: utils.JsonEncoder,
+		JSONEncoder: utils.JSONEncoder,
 	})
 
 	if !config.Production {
@@ -123,8 +123,8 @@ func Initialize() {
 	app.Get("/edit/:id", jwtware.Protected, style.EditGet)
 	app.Post("/edit/:id", jwtware.Protected, style.EditPost)
 	app.Post("/style/:id/promote", jwtware.Protected, style.Promote)
-	app.Get("/oauth_settings/:id?", jwtware.Protected, oauth_provider.OAuthSettingsGet)
-	app.Post("/oauth_settings/:id?", jwtware.Protected, oauth_provider.OAuthSettingsPost)
+	app.Get("/oauth_settings/:id?", jwtware.Protected, oauthprovider.OAuthSettingsGet)
+	app.Post("/oauth_settings/:id?", jwtware.Protected, oauthprovider.OAuthSettingsPost)
 	app.Get("/monitor", jwtware.Protected, core.Monitor)
 
 	v1 := app.Group("/api", api.ParseAPIJWT)
@@ -143,11 +143,11 @@ func Initialize() {
 	v1.Delete("/style/:id", api.ProtectedAPI, api.DeleteStyle)
 
 	oauthV1 := app.Group("/oauth")
-	oauthV1.Get("/authorize", jwtware.Protected, oauth_provider.AuthorizeGet)
-	oauthV1.Get("/authorize_style", jwtware.Protected, oauth_provider.AuthorizeStyleGet)
-	oauthV1.Post("/authorize_style", jwtware.Protected, oauth_provider.AuthorizeStylePost)
-	oauthV1.Post("/authorize/:id/:token", jwtware.Protected, oauth_provider.AuthorizePost)
-	oauthV1.Post("/access_token", oauth_provider.AccessTokenPost)
+	oauthV1.Get("/authorize", jwtware.Protected, oauthprovider.AuthorizeGet)
+	oauthV1.Get("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStyleGet)
+	oauthV1.Post("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStylePost)
+	oauthV1.Post("/authorize/:id/:token", jwtware.Protected, oauthprovider.AuthorizePost)
+	oauthV1.Post("/access_token", oauthprovider.AccessTokenPost)
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.

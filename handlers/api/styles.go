@@ -2,11 +2,13 @@ package api
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ohler55/ojg/oj"
 	"github.com/vednoc/go-usercss-parser"
+
 	"userstyles.world/database"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -33,7 +35,6 @@ func StylesGet(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"data": styles,
 	})
-
 }
 
 // JSONParser defined options.
@@ -101,9 +102,8 @@ func StylePost(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"data": "Succesful edited style!",
+		"data": "Successful edited style!",
 	})
-
 }
 
 func DeleteStyle(c *fiber.Ctx) error {
@@ -147,7 +147,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		fmt.Printf("Failed to delete style, err: %#+v\n", err)
+		log.Printf("Failed to delete style, err: %#+v\n", err)
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "Error: Couldn't delete style",
@@ -155,7 +155,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"data": "Succesful removed the style!",
+		"data": "Successful removed the style!",
 	})
 }
 
@@ -172,7 +172,7 @@ func NewStyle(c *fiber.Ctx) error {
 	var postStyle models.Style
 	err := JSONParser.Unmarshal(c.Body(), &postStyle)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "Error: Couldn't convert style to struct.",
@@ -218,6 +218,6 @@ func NewStyle(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"data": "Succesful added the style! With ID: " + fmt.Sprintf("%d", newStyle.ID),
+		"data": "Successful added the style! With ID: " + fmt.Sprintf("%d", newStyle.ID),
 	})
 }

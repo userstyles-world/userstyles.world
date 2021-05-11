@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+
 	"userstyles.world/database"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -11,13 +12,14 @@ import (
 
 func roleToString(role models.Role) string {
 	switch role {
-	case 1:
+	case models.Moderator:
 		return "Moderator"
-	case 2:
+	case models.Admin:
 		return "Admin"
-	default:
+	case models.Regular:
 		return "Regular"
 	}
+	return "Invalid User"
 }
 
 func UserGet(c *fiber.Ctx) error {

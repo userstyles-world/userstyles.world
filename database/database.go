@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -209,8 +208,7 @@ func seed() {
 	for i := range styles {
 		DB.Create(&styles[i])
 	}
-	for _, oauth := range OAuths {
-		fmt.Println(oauth)
-		DB.Create(&oauth)
+	for i := range OAuths {
+		DB.Create(&OAuths[i])
 	}
 }

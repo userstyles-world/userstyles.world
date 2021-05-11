@@ -1,11 +1,13 @@
-package oauth_provider
+package oauthprovider
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+
 	"userstyles.world/database"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -39,15 +41,14 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.OAuthPSigningKey)
-
 	if err != nil {
-		fmt.Println("Error: Couldn't make a JWT Token due to:", err.Error())
+		log.Println("Error: Couldn't make a JWT Token due to:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, please notify the admins.")
 	}
 
 	styles, err := models.GetStylesByUser(database.DB, u.Username)
 	if err != nil {
-		fmt.Println("Error: Mo styles find for user", err.Error())
+		log.Println("Error: Mo styles find for user", err.Error())
 		return errorMessage(c, 500, "Couldn't retrieve styles of user")
 	}
 
@@ -110,7 +111,6 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 		SetClaim("styleID", style.ID).
 		SetExpiration(time.Now().Add(time.Minute * 10)).
 		GetSignedString(utils.OAuthPSigningKey)
-
 	if err != nil {
 		fmt.Println("Error: Couldn't create JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
