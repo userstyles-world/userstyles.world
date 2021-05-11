@@ -5,7 +5,7 @@ Last updated May 5, 2021
 
 ## AGREEMENT TO TERMS
 
-These Terms of Service constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and Userstyles world (“we,” “us” or “our”), concerning your access to and use of the userstyles.world website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto (collectively, the “Site”). 
+These Terms of Service constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and UserStyles.world (“we,” “us” or “our”), concerning your access to and use of the userstyles.world website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto (collectively, the “Site”). 
 
 You agree that by accessing the Site, you have read, understood, and agree to be bound by all of these Terms of Service. If you do not agree with all of these Terms of Service, then you are expressly prohibited from using the Site and you must discontinue use immediately.
 
@@ -100,7 +100,7 @@ Any use of the Site in violation of the foregoing violates these Terms of Servic
  
 ## CONTRIBUTION LICENSE
 
-By posting your Contributions to any part of the Site, you automatically grant, and you represent and warrant that you have the right to grant, to us an unrestricted, unlimited, irrevocable, perpetual, non-exclusive, transferable, royalty-free, fully-paid, worldwide right, and license to host, use, copy, reproduce, disclose, resell, publish, broadcast, retitle, archive, store, cache, publicly perform, publicly display, reformat, translate, transmit, excerpt (in whole or in part), and distribute such Contributions (including, without limitation, your image and voice) for any purpose, commercial, advertising, or otherwise, and to prepare derivative works of, or incorporate into other works, such Contributions, and grant and authorize sublicenses of the foregoing. The use and distribution may occur in any media formats and through any media channels. 
+By posting your Contributions to any part of the Site, you automatically grant, and you represent and warrant that you have the right to grant, to us an unrestricted, unlimited, irrevocable, perpetual, non-exclusive, transferable, royalty-free, fully-paid, worldwide right, and license to host, use, copy, reproduce, disclose, publish, broadcast, retitle, archive, store, cache, publicly perform, publicly display, reformat, translate, transmit, excerpt (in whole or in part), and distribute such Contributions (including, without limitation, your image and voice) for any purpose, and to prepare derivative works of, or incorporate into other works, such Contributions, and grant and authorize sublicenses of the foregoing. The use and distribution may occur in any media formats and through any media channels. 
 
 This license will apply to any form, media, or technology now known or hereafter developed, and includes our use of your name, company name, and franchise name, as applicable, and any of the trademarks, service marks, trade names, logos, and personal and commercial images you provide. You waive all moral rights in your Contributions, and you warrant that moral rights have not otherwise been asserted in your Contributions. 
 
@@ -161,7 +161,7 @@ We reserve the right, but not the obligation, to:
 
 ## PRIVACY POLICY
 
-We care about data privacy and security. Please review our Privacy Policy https://userstyles.world/legal/privacy-policy. By using the Site, you agree to be bound by our Privacy Policy, which is incorporated into these Terms of Service. Please be advised the Site is hosted in the United States. 
+We care about data privacy and security. Please review our Privacy Policy https://userstyles.world/legal/privacy-policy. By using the Site, you agree to be bound by our Privacy Policy, which is incorporated into these Terms of Service. Please be advised the Site is hosted in the Netherlands.
  
 ## COPYRIGHT INFRINGEMENTS
 

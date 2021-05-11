@@ -4,7 +4,7 @@ Last updated May 5, 2021
 
 ## INTRODUCTION
 
-Thank you for choosing to be part of our community at userstyles world (“we”, “us”, or “our”). 
+Thank you for choosing to be part of our community at UserStyles.world (“we”, “us”, or “our”). 
 We are committed to protecting your personal information and your right to privacy. 
 If you have any questions or concerns about our policy, or our practices with regards to your personal information, 
 please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world).
