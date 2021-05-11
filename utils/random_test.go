@@ -1,15 +1,19 @@
-package utils
+package utils_test
 
-import "testing"
+import (
+	"testing"
+
+	"userstyles.world/utils"
+)
 
 func BenchmarkRandomNonce(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		RandStringBytesMaskImprSrcUnsafe(24)
+		utils.RandStringBytesMaskImprSrcUnsafe(24)
 	}
 }
 
 func BenchmarkRandomBoundary(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		RandStringBytesMaskImprSrcUnsafe(30)
+		utils.RandStringBytesMaskImprSrcUnsafe(30)
 	}
 }

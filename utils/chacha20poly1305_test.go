@@ -1,4 +1,4 @@
-package utils
+package utils_test
 
 import (
 	"bytes"
@@ -6,29 +6,30 @@ import (
 	"testing"
 
 	"github.com/form3tech-oss/jwt-go"
+	"userstyles.world/utils"
 )
 
 func TestSimpleKey(t *testing.T) {
-	InitalizeCrypto()
+	utils.InitalizeCrypto()
 
-	jwtToken, err := NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("email", "vednoc@usw.local").
-		GetSignedString(VerifySigningKey)
+		GetSignedString(utils.VerifySigningKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	sealedText := SealText(jwtToken, AEAD_CRYPTO)
-	unSealedText, err := OpenText(UnsafeString(sealedText), AEAD_CRYPTO)
+	sealedText := utils.SealText(jwtToken, utils.AEAD_CRYPTO)
+	unSealedText, err := utils.OpenText(utils.UnsafeString(sealedText), utils.AEAD_CRYPTO)
 	if err != nil {
 		t.Error(err)
 	}
-	token, err := jwt.Parse(UnsafeString(unSealedText), VerifyJwtKeyFunction)
+	token, err := jwt.Parse(utils.UnsafeString(unSealedText), utils.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(UnsafeBytes(jwtToken), unSealedText) {
+	if !bytes.Equal(utils.UnsafeBytes(jwtToken), unSealedText) {
 		t.Error("Originial and Unsealed aren't the same string.")
 	}
 }
@@ -39,7 +40,7 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = SealText(UnsafeString(buf[:]), AEAD_CRYPTO)
+		_ = utils.SealText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
 	}
 }
 
@@ -47,11 +48,11 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte) {
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := SealText(UnsafeString(buf[:]), AEAD_CRYPTO)
+	ct := utils.SealText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = OpenText(UnsafeString(ct[:]), AEAD_CRYPTO)
+		_, _ = utils.OpenText(utils.UnsafeString(ct[:]), utils.AEAD_CRYPTO)
 	}
 }
 
@@ -61,7 +62,7 @@ func benchamarkPrepareText(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = PrepareText(UnsafeString(buf[:]), AEAD_CRYPTO)
+		_ = utils.PrepareText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
 	}
 }
 
@@ -69,16 +70,16 @@ func benchamarkDecodePreparedText(b *testing.B, buf []byte) {
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := PrepareText(UnsafeString(buf[:]), AEAD_CRYPTO)
+	ct := utils.PrepareText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = DecodePreparedText(ct, AEAD_CRYPTO)
+		_, _ = utils.DecodePreparedText(ct, utils.AEAD_CRYPTO)
 	}
 }
 
 func BenchmarkPureChaCha20Poly1305(b *testing.B) {
-	InitalizeCrypto()
+	utils.InitalizeCrypto()
 	b.ResetTimer()
 	for _, length := range []int{215, 1350, 8 * 1024} {
 		b.Run("Open-"+strconv.Itoa(length)+"-X", func(b *testing.B) {
@@ -91,7 +92,7 @@ func BenchmarkPureChaCha20Poly1305(b *testing.B) {
 }
 
 func BenchmarkPrepareText(b *testing.B) {
-	InitalizeCrypto()
+	utils.InitalizeCrypto()
 	b.ResetTimer()
 	for _, length := range []int{215, 1350, 8 * 1024} {
 		b.Run("Prepare-"+strconv.Itoa(length), func(b *testing.B) {
