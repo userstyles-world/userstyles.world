@@ -74,8 +74,8 @@ func EditPost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	if previewFormValue, _ := c.FormFile("preview"); previewFormValue != nil {
-		image, err := previewFormValue.Open()
+	if preview, _ := c.FormFile("preview"); preview != nil {
+		image, err := preview.Open()
 		if err != nil {
 			log.Println("Opening image , err:", err)
 			return c.Render("err", fiber.Map{
