@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	jwt_processer "github.com/form3tech-oss/jwt-go"
+	jwt_processor "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/models"
@@ -18,12 +18,12 @@ var Protected = func(c *fiber.Ctx) error {
 	return c.Next()
 }
 
-func MapClaim(c *fiber.Ctx) jwt_processer.MapClaims {
-	user, ok := c.Locals("user").(*jwt_processer.Token)
+func MapClaim(c *fiber.Ctx) jwt_processor.MapClaims {
+	user, ok := c.Locals("user").(*jwt_processor.Token)
 	if !ok {
 		return nil
 	}
-	claims := user.Claims.(jwt_processer.MapClaims)
+	claims := user.Claims.(jwt_processor.MapClaims)
 
 	return claims
 }

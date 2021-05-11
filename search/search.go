@@ -13,7 +13,7 @@ type MinimalStyle struct {
 	Notes       string `json:"notes"`
 }
 
-func SearchText(text string) ([]MinimalStyle, error) {
+func FindStylesByText(text string) ([]MinimalStyle, error) {
 	query := bleve.NewFuzzyQuery(text)
 	searchRequest := bleve.NewSearchRequestOptions(query, 99, 0, false)
 	searchRequest.Fields = []string{"*"}
@@ -22,7 +22,8 @@ func SearchText(text string) ([]MinimalStyle, error) {
 	if err != nil {
 		return nil, err
 	}
-	var returnResult []MinimalStyle
+
+	returnResult := make([]MinimalStyle, 0, len(sr.Hits))
 	for _, hit := range sr.Hits {
 		if err != nil {
 			return nil, err

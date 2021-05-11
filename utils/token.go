@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
+
 	"userstyles.world/config"
 )
 

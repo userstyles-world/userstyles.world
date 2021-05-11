@@ -8,7 +8,7 @@ import (
 	"userstyles.world/models"
 )
 
-func StylePromote(c *fiber.Ctx) error {
+func Promote(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("id")
 

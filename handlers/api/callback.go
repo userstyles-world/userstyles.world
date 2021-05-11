@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+
 	"userstyles.world/config"
 	"userstyles.world/database"
 	"userstyles.world/models"

@@ -7,7 +7,7 @@ import (
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
-func buildIndexMapping() (mapping.IndexMapping, error) {
+func buildIndexMapping() mapping.IndexMapping {
 	englishTextFieldMapping := bleve.NewTextFieldMapping()
 	englishTextFieldMapping.Analyzer = en.AnalyzerName
 
@@ -26,5 +26,5 @@ func buildIndexMapping() (mapping.IndexMapping, error) {
 	indexMapping.TypeField = "type"
 	indexMapping.DefaultAnalyzer = "en"
 
-	return indexMapping, nil
+	return indexMapping
 }

@@ -28,7 +28,7 @@ var (
 	CODEBERG_CLIENT_ID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	CODEBERG_CLIENT_SECRET = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
 
-	// Used for various "feature flags".
+	// Production is used for various "feature flags".
 	Production = DB != "dev.db"
 )
 

@@ -16,10 +16,10 @@ import (
 type Stats struct {
 	gorm.Model
 	Hash    string `gorm:"unique"`
-	Install bool   `gorm:"default:false"`
-	View    bool   `gorm:"default:false"`
-	StyleID int
 	Style   Style
+	StyleID int
+	Install bool `gorm:"default:false"`
+	View    bool `gorm:"default:false"`
 }
 
 type SiteStats struct {

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
+
 	"userstyles.world/config"
 )
 

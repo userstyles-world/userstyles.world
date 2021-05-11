@@ -13,7 +13,7 @@ import (
 	"userstyles.world/utils"
 )
 
-func setSocials(u *models.User, k, v string) models.User {
+func setSocials(u *models.User, k, v string) {
 	switch k {
 	case "github":
 		if v != "" {
@@ -28,8 +28,6 @@ func setSocials(u *models.User, k, v string) models.User {
 			u.Socials.Codeberg = v
 		}
 	}
-
-	return *u
 }
 
 func Account(c *fiber.Ctx) error {
@@ -88,7 +86,8 @@ func EditAccount(c *fiber.Ctx) error {
 			log.Println("Validation errors:", errors)
 			user.DisplayName = prev
 
-			l, e := len(name), ""
+			l := len(name)
+			var e string
 			switch {
 			case l < 5 || l > 20:
 				e = "Display name must be between 5 and 20 characters."

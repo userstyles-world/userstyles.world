@@ -7,32 +7,33 @@ import (
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+
 	"userstyles.world/config"
 )
 
 type Style struct {
 	gorm.Model
-	UserID      uint
-	User        User `gorm:"foreignKey:ID"`
+	Original    string
+	Homepage    string
+	Category    string `gorm:"not null"`
 	Name        string
 	Description string
 	Notes       string
 	Code        string
 	License     string
 	Preview     string
-	Homepage    string
-	Archived    bool   `gorm:"default:false"`
-	Featured    bool   `gorm:"default:false"`
-	Category    string `gorm:"not null"`
-	MirrorCode  bool   `gorm:"default:false"`
-	MirrorMeta  bool   `gorm:"default:false"`
-	Original    string
+	User        User `gorm:"foreignKey:ID"`
+	UserID      uint
+	Archived    bool `gorm:"default:false"`
+	Featured    bool `gorm:"default:false"`
+	MirrorCode  bool `gorm:"default:false"`
+	MirrorMeta  bool `gorm:"default:false"`
 }
 
 type APIStyle struct {
-	ID          uint
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	Category    string
 	Name        string
 	Description string
 	Notes       string
@@ -40,15 +41,15 @@ type APIStyle struct {
 	License     string
 	Preview     string
 	Homepage    string
-	Archived    bool
-	Featured    bool
-	Category    string
+	Username    string
 	Original    string
+	DisplayName string
+	UserID      uint
+	ID          uint
+	Featured    bool
 	MirrorCode  bool
 	MirrorMeta  bool
-	UserID      uint
-	Username    string
-	DisplayName string
+	Archived    bool
 }
 
 func getDBSession(db *gorm.DB) (tx *gorm.DB) {

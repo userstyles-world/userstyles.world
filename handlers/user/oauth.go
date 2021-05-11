@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/utils"
 )

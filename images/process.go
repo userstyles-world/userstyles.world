@@ -28,7 +28,7 @@ func DecodeImage(input, output string, imageType vips.ImageType) error {
 		return err
 	}
 
-	err = os.WriteFile(output, newImage, 0644)
+	err = os.WriteFile(output, newImage, 0o600)
 	if err != nil {
 		return err
 	}

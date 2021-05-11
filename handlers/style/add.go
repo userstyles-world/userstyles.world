@@ -88,7 +88,7 @@ func CreatePost(c *fiber.Ctx) error {
 	if image != nil {
 		styleID := strconv.FormatUint(uint64(s.ID), 10)
 		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0644)
+		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
 		if err != nil {
 			log.Println("Style creation failed, err:", err)
 			return c.Render("err", fiber.Map{

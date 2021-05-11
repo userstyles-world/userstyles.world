@@ -189,10 +189,10 @@ func seed() {
 		users = append(users, u...)
 	}
 
-	for _, user := range users {
-		DB.Create(&user)
+	for i := range users {
+		DB.Create(&users[i])
 	}
-	for _, style := range styles {
-		DB.Create(&style)
+	for i := range styles {
+		DB.Create(&styles[i])
 	}
 }

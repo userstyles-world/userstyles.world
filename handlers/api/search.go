@@ -9,7 +9,7 @@ import (
 func GetSearchResult(c *fiber.Ctx) error {
 	q := c.Params("query")
 
-	styles, err := search.SearchText(q)
+	styles, err := search.FindStylesByText(q)
 	if err != nil {
 		return c.JSON(fiber.Map{"data": "no styles found"})
 	}

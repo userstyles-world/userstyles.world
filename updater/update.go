@@ -38,17 +38,17 @@ func UpdateBatch(batch *models.Style) {
 
 	// Update style metadata if style comes from USo-archive.
 	if isUSo(batch.Original) && batch.MirrorMeta {
-		new, err := utils.ImportFromArchive(batch.Original, models.APIUser{})
+		importedStyle, err := utils.ImportFromArchive(batch.Original, models.APIUser{})
 		if err != nil {
 			log.Printf("Updater: Failed to ImportFromArchive, err: %v\n", err)
 		}
 
 		// Run update if fields differ.
-		if updateMeta(batch, new) {
-			s.Name = new.Name
-			s.Notes = new.Notes
-			s.Preview = new.Preview
-			s.Description = new.Description
+		if updateMeta(batch, importedStyle) {
+			s.Name = importedStyle.Name
+			s.Notes = importedStyle.Notes
+			s.Preview = importedStyle.Preview
+			s.Description = importedStyle.Description
 
 			if err = models.UpdateStyle(database.DB, s); err != nil {
 				log.Printf("Updater: Mirroring meta for %d failed, err: %s", batch.ID, err)

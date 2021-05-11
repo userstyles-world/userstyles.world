@@ -10,9 +10,8 @@ import (
 func Search(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-
 	q := c.Query("q")
-	s, _ := search.SearchText(q)
+	s, _ := search.FindStylesByText(q)
 
 	return c.Render("search", fiber.Map{
 		"Title":  "Home",

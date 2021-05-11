@@ -51,7 +51,7 @@ func ResetGet(c *fiber.Ctx) error {
 	})
 }
 
-// Todo: Send email that password has been changed.
+// TODO: Send email that password has been changed.
 func ResetPost(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
 		log.Printf("User %d has set session, redirecting.", u.ID)

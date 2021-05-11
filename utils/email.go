@@ -7,6 +7,7 @@ import (
 
 	"github.com/emersion/go-sasl"
 	"github.com/emersion/go-smtp"
+
 	"userstyles.world/config"
 )
 
@@ -20,8 +21,8 @@ type EmailBuilder struct {
 	To       string
 	From     string
 	Subject  string
-	Parts    []MimePart
 	boundary string
+	Parts    []MimePart
 }
 
 type MimePart struct {
@@ -78,10 +79,12 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 	boundary := "--" + eb.boundary
 	partsLen := len(eb.Parts)
 
+	if partsLen == 0 {
+		return "", errors.New("no parts were detected")
+	}
+
 	if partsLen > 1 {
 		output += "Content-Type: multipart/alternative; boundary=\"" + eb.boundary + "\"\n\n"
-	} else if partsLen == 0 {
-		return "", errors.New("no parts were detected")
 	} else {
 		part0 := eb.Parts[0]
 		if part0.ContentTransferEncoding == "" {

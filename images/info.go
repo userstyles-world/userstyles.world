@@ -23,7 +23,7 @@ var CacheFolder = "./data/images/"
 
 func Initialize() {
 	if fileInfo := fileExist(CacheFolder); fileInfo == nil {
-		if err := os.Mkdir(CacheFolder, 0755); err != nil {
+		if err := os.Mkdir(CacheFolder, 0o755); err != nil {
 			log.Fatalln(err)
 		}
 	}
@@ -64,7 +64,7 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 
 		// Make sure to received the full body before processing it.
 		data, _ := io.ReadAll(req.Body)
-		err = os.WriteFile(original, data, 0644)
+		err = os.WriteFile(original, data, 0o600)
 		if err != nil {
 			log.Println("Error processing:", err)
 			return ImageInfo{}, err

@@ -11,14 +11,14 @@ import (
 )
 
 type USoFormat struct {
-	ID             uint   `json:"i"`
+	Author         string `json:"an"`
 	Name           string `json:"n"`
 	Category       string `json:"c"`
-	UpdatedAt      int64  `json:"u"` // Requires Unix timestamp
+	Screenshot     string `json:"sn"`
+	UpdatedAt      int64  `json:"u"`
 	TotalInstalls  int64  `json:"t"`
 	WeeklyInstalls int64  `json:"w"`
-	Author         string `json:"an"`
-	Screenshot     string `json:"sn"`
+	ID             uint   `json:"i"`
 }
 
 func convertToUSoFormat(s models.APIStyle) USoFormat {
@@ -55,10 +55,8 @@ func fixCategory(cat string) string {
 		if strings.Count(cat, ".") >= 1 {
 			cat = strings.Split(cat, ".")[1]
 		}
-	} else {
-		if strings.Count(cat, ".") >= 2 {
-			cat = strings.Join(strings.Split(cat, ".")[1:], ".")
-		}
+	} else if strings.Count(cat, ".") >= 2 {
+		cat = strings.Join(strings.Split(cat, ".")[1:], ".")
 	}
 
 	return cat

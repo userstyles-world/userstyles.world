@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/form3tech-oss/jwt-go"
+
 	"userstyles.world/utils"
 )
 
@@ -44,7 +45,7 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = utils.SealText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
+		_ = utils.SealText(utils.UnsafeString(buf), utils.AEAD_CRYPTO)
 	}
 }
 
@@ -54,11 +55,11 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte) {
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := utils.SealText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
+	ct := utils.SealText(utils.UnsafeString(buf), utils.AEAD_CRYPTO)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = utils.OpenText(utils.UnsafeString(ct[:]), utils.AEAD_CRYPTO)
+		_, _ = utils.OpenText(utils.UnsafeString(ct), utils.AEAD_CRYPTO)
 	}
 }
 
@@ -70,7 +71,7 @@ func benchamarkPrepareText(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = utils.PrepareText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
+		_ = utils.PrepareText(utils.UnsafeString(buf), utils.AEAD_CRYPTO)
 	}
 }
 
@@ -80,7 +81,7 @@ func benchamarkDecodePreparedText(b *testing.B, buf []byte) {
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := utils.PrepareText(utils.UnsafeString(buf[:]), utils.AEAD_CRYPTO)
+	ct := utils.PrepareText(utils.UnsafeString(buf), utils.AEAD_CRYPTO)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {

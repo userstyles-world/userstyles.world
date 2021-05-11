@@ -1,6 +1,7 @@
 package search
 
 import (
+	"errors"
 	"log"
 	"strconv"
 	"time"
@@ -18,21 +19,17 @@ var (
 
 func Initialize() {
 	stylesIndex, err := bleve.Open("styles.bleve")
-	if err == bleve.ErrorIndexPathDoesNotExist {
+	if errors.Is(err, bleve.ErrorIndexPathDoesNotExist) {
 		log.Println("Creating new index...")
-		indexMapping, err := buildIndexMapping()
-		if err != nil {
-			log.Fatal(err)
-		}
+		indexMapping := buildIndexMapping()
 		stylesIndex, err = bleve.New("styles.bleve", indexMapping)
 		if err != nil {
 			log.Fatal(err)
 		}
 	} else if err != nil {
 		log.Fatal(err)
-	} else {
-		log.Println("Opening existing index...")
 	}
+	log.Println("Opening existing index...")
 
 	StyleIndex = stylesIndex
 

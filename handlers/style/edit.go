@@ -14,7 +14,7 @@ import (
 	"userstyles.world/models"
 )
 
-func StyleEditGet(c *fiber.Ctx) error {
+func EditGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("id")
 
@@ -42,7 +42,7 @@ func StyleEditGet(c *fiber.Ctx) error {
 	})
 }
 
-func StyleEditPost(c *fiber.Ctx) error {
+func EditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	styleID, t := c.Params("id"), new(models.Style)
 
@@ -84,7 +84,7 @@ func StyleEditPost(c *fiber.Ctx) error {
 			})
 		}
 		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0644)
+		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
 		if err != nil {
 			log.Println("Style creation failed, err:", err)
 			return c.Render("err", fiber.Map{

@@ -3,6 +3,7 @@ package core
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
+
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )

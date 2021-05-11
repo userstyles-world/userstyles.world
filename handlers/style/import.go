@@ -14,7 +14,7 @@ import (
 	"userstyles.world/utils"
 )
 
-func StyleImportGet(c *fiber.Ctx) error {
+func ImportGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
 	return c.Render("import", fiber.Map{
@@ -23,7 +23,7 @@ func StyleImportGet(c *fiber.Ctx) error {
 	})
 }
 
-func StyleImportPost(c *fiber.Ctx) error {
+func ImportPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	r := c.FormValue("import")
 	s := new(models.Style)

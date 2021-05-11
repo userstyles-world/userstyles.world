@@ -9,12 +9,12 @@ import (
 // This file is pure for functions.
 // That mimick originial behaviour, just faster.
 
-// UnsafeString returns a string pointer without allocation
+// UnsafeString returns a string pointer without allocation.
 func UnsafeString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-// UnsafeBytes returns a byte pointer without allocation
+// UnsafeBytes returns a byte pointer without allocation.
 func UnsafeBytes(s string) (bs []byte) {
 	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
 	bh := (*reflect.SliceHeader)(unsafe.Pointer(&bs))

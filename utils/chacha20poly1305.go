@@ -7,6 +7,7 @@ import (
 
 	"github.com/form3tech-oss/jwt-go"
 	"golang.org/x/crypto/chacha20poly1305"
+
 	"userstyles.world/config"
 )
 
