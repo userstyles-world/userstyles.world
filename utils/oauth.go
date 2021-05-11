@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	Codeberg = "codeberg"
-	Gitlab   = "gitlab"
-	Github   = "github"
+	codeberg = "codeberg"
+	gitlab   = "gitlab"
+	github   = "github"
 )
 
 type OAuthTokenResponse struct {
@@ -44,7 +44,7 @@ func OauthMakeURL(service string) string {
 	oauthURL := ""
 	var nonsenseState string
 	switch service {
-	case Github:
+	case github:
 		nonsenseState = UnsafeString(RandStringBytesMaskImprSrcUnsafe(16))
 		// Base URL.
 		oauthURL = "https://github.com/login/oauth/authorize"
@@ -54,7 +54,7 @@ func OauthMakeURL(service string) string {
 		oauthURL += "&scope=" + url.QueryEscape("read:user")
 		// Our non-guessable state of 16 characters.
 		oauthURL += "&state=" + nonsenseState
-	case Gitlab:
+	case gitlab:
 		// Base URL.
 		oauthURL = "https://gitlab.com/oauth/authorize"
 		// Add our app client ID.
@@ -63,7 +63,7 @@ func OauthMakeURL(service string) string {
 		oauthURL += "&response_type=code"
 		// Add read_user scope.
 		oauthURL += "&scope=read_user"
-	case Codeberg:
+	case codeberg:
 		// Base URL.
 		oauthURL = "https://codeberg.org/login/oauth/authorize"
 		// Add our app client ID.
@@ -80,7 +80,7 @@ func OauthMakeURL(service string) string {
 	// And than have the actual value. Also we use this to specify
 	// From which site the callback was from.
 	redirectURL := config.OAuthURL()
-	if service == Github {
+	if service == github {
 		redirectURL += PrepareText(nonsenseState, AEAD_OAUTH) + "/"
 	} else {
 		redirectURL += service + "/"
@@ -105,13 +105,13 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	var authURL string
 	var body GiteaLikeAccessJSON
 	switch service {
-	case Github:
+	case github:
 		authURL = "https://github.com/login/oauth/access_token"
 		authURL += "?client_id=" + config.GITHUB_CLIENT_ID
 		authURL += "&client_secret=" + config.GITHUB_CLIENT_SECRET
 		// Add the nonsense state we uses earlier.
 		authURL += "&state=" + state
-	case Gitlab:
+	case gitlab:
 		authURL = "https://gitlab.com/oauth/token"
 		authURL += "?client_id=" + config.GITLAB_CLIENT_ID
 		authURL += "&client_secret=" + config.GITLAB_CLIENT_SECRET
@@ -119,7 +119,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		authURL += "&grant_type=authorization_code"
 		// Specify the the redirect uri? It is required
 		authURL += "&redirect_uri=" + url.PathEscape(config.OAuthURL()+"gitlab/")
-	case Codeberg:
+	case codeberg:
 		authURL = "https://codeberg.org/login/oauth/access_token"
 		body = GiteaLikeAccessJSON{
 			ClientID:     config.CODEBERG_CLIENT_ID,
@@ -168,18 +168,18 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	}
 	var userEndpoint string
 	switch service {
-	case Github:
+	case github:
 		userEndpoint = "https://api.github.com/user"
-	case Gitlab:
+	case gitlab:
 		userEndpoint = "https://gitlab.com/api/v4/user"
-	case Codeberg:
+	case codeberg:
 		userEndpoint = "https://codeberg.org/api/v1/user"
 	}
 	userInformationReq, err := http.NewRequest("GET", userEndpoint, nil)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
-	if service == Github {
+	if service == github {
 		// Recommended
 		userInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
 	}
