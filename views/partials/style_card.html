@@ -1,9 +1,13 @@
-<a class="card col gap animate bd:o" href="/style/{{ .ID }}/{{ .Name | Slug }}">
-    <div class="thumbnail">
+{{- $styleURL := printf "/style/%d/%s" .ID (.Name | Slug) -}}
+
+<div class="card col gap animate bd:o">
+    <a class="card-header thumbnail" href="{{ $styleURL }}">
         {{ template "partials/preview_image" . }}
+    </a>
+    <div class="card-body f:col p:m bd:t">
+        <a class="fg:1 f:h3 f:b" href="{{ $styleURL }}">{{ .Name }}</a>
+        <span class="fg:4">
+            by <a class="fg:2" href="/user/{{ .Username }}">{{ . | Author }}</a>
+        </span>
     </div>
-    <div class="flex cwrap px:m bd:t fg:1 py:m">
-        <span class="f:h3 f:b my:0">{{- .Name -}}</span>
-        <span class="fg:4 my:0">by {{ . | Author -}}</span>
-    </div>
-</a>
+</div>

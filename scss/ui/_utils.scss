@@ -58,6 +58,8 @@
 }
 
 .p {
+    &\:m { padding: 1rem }
+
     &x {
         &\:m { padding-left: 1rem; padding-right: 1rem }
         &\:0 { padding-left: 0rem; padding-right: 0rem }
