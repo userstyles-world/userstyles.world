@@ -10,6 +10,8 @@ import (
 )
 
 func TestSimpleKey(t *testing.T) {
+	t.Parallel()
+
 	utils.InitalizeCrypto()
 
 	jwtToken, err := utils.NewJWTToken().
