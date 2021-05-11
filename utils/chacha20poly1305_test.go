@@ -35,6 +35,8 @@ func TestSimpleKey(t *testing.T) {
 }
 
 func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte) {
+	b.Helper()
+
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
@@ -45,6 +47,8 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte) {
 }
 
 func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte) {
+	b.Helper()
+
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
@@ -57,6 +61,8 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte) {
 }
 
 func benchamarkPrepareText(b *testing.B, buf []byte) {
+	b.Helper()
+
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
@@ -67,6 +73,8 @@ func benchamarkPrepareText(b *testing.B, buf []byte) {
 }
 
 func benchamarkDecodePreparedText(b *testing.B, buf []byte) {
+	b.Helper()
+
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
