@@ -12,9 +12,15 @@
 .f {
     &g\:4 { color: var(--fg-4) }
     &g\:3 { color: var(--fg-3) }
+    &g\:2 { color: var(--fg-2) }
     &g\:1 { color: var(--fg-1) }
     &\:h3 { font-size: 1.125em }
     &\:b { font-weight: bold }
+
+    &\:col {
+        display: flex;
+        flex-flow: column wrap;
+    }
 }
 
 .m {

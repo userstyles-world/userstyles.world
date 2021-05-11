@@ -5,8 +5,8 @@
         {{ template "partials/preview_image" . }}
     </a>
     <div class="card-body f:col p:m bd:t">
-        <a class="fg:1 f:h3 f:b" href="{{ $styleURL }}">{{ .Name }}</a>
-        <span class="fg:4">
+        <a class="name fg:1 f:h3 f:b" href="{{ $styleURL }}">{{ .Name }}</a>
+        <span class="author fg:4">
             by <a class="fg:2" href="/user/{{ .Username }}">{{ . | Author }}</a>
         </span>
     </div>

@@ -102,6 +102,15 @@
             }
         }
     }
+
+    &-body {
+        .name {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: pre;
+        }
+    }
 }
 
 // TODO: Figure out how to deal with responsive design.
