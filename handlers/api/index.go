@@ -65,8 +65,6 @@ func fixCategory(cat string) string {
 }
 
 func GetStyleIndex(c *fiber.Ctx) error {
-	format := c.Params("format")
-
 	styles, err := models.GetAllStylesForIndexAPI(database.DB)
 	if err != nil {
 		return c.JSON(fiber.Map{
@@ -75,7 +73,7 @@ func GetStyleIndex(c *fiber.Ctx) error {
 	}
 
 	// Used by Stylus integration.
-	if format == "uso-format" {
+	if c.Params("format") == "uso-format" {
 		formattedStyles := make([]USoFormat, len(*styles))
 		for i, style := range *styles {
 			formattedStyles[i] = convertToUSoFormat(style)
