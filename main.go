@@ -6,7 +6,6 @@ import (
 	"userstyles.world/images"
 	"userstyles.world/search"
 	"userstyles.world/services/cron"
-	"userstyles.world/services/update"
 	"userstyles.world/utils"
 )
 
@@ -16,7 +15,6 @@ func main() {
 	database.Initialize()
 	cron.Initialize()
 	search.Initialize()
-	update.Initialize()
 	images.Initialize()
 	handlers.Initialize()
 }
