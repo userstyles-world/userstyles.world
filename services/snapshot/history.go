@@ -1,23 +1,12 @@
-package cron
+package snapshot
 
 import (
 	"log"
 	"time"
 
-	"github.com/go-co-op/gocron"
-
 	"userstyles.world/database"
 	"userstyles.world/models"
 )
-
-func Initialize() {
-	s := gocron.NewScheduler(time.Local)
-	s.WaitForScheduleAll()
-	s.StartAsync()
-
-	job, err := s.Cron("59 23 * * *").Do(func() { snapshotStats() })
-	log.Printf("job: %v, err: %v\n", job, err)
-}
 
 func getViews(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
@@ -51,7 +40,7 @@ func getInstalls(id int64) (i int64) {
 	return i
 }
 
-func snapshotStats() {
+func StyleStatistics() {
 	styles, err := models.GetAllStyleIDs(database.DB)
 	if err != nil {
 		log.Fatalln(err)
