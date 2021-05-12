@@ -52,10 +52,9 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     }
 
     &.primary {
-        color: var(--inverse);
+        color: var(--fg-1);
         border-color: var(--ac-3);
-        background-color: var(--ac-4);
-
+        background-color: var(--ac-5);
         &:hover {
             background-color: var(--ac-3);
         }
