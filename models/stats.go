@@ -41,8 +41,8 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	}
 
 	// Set values.
-	s.Hash, err = crypto.CreateHashedRecord(id, ip)
 	s.StyleID = styleID
+	s.Hash, err = crypto.CreateHashedRecord(id, ip)
 	if err != nil {
 		return *s, err
 	}
@@ -75,11 +75,11 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 }
 
 func GetWeeklyInstallsForStyle(db *gorm.DB, id string) (weekly int64) {
-	lastWeek := time.Now().AddDate(0, -1, 0)
-	q := "style_id = ? and install = ? and updated_at > ?"
+	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
+	q := "style_id = ? and install = 1 and created_at > ?"
 	db.
 		Model(Stats{}).
-		Where(q, id, true, lastWeek).
+		Where(q, id, lastWeek).
 		Count(&weekly)
 
 	return weekly
@@ -88,7 +88,7 @@ func GetWeeklyInstallsForStyle(db *gorm.DB, id string) (weekly int64) {
 func GetTotalInstallsForStyle(db *gorm.DB, id string) (total int64) {
 	db.
 		Model(Stats{}).
-		Where("style_id = ? and install = ?", id, true).
+		Where("style_id = ? and install = 1", id).
 		Count(&total)
 
 	return total
@@ -97,7 +97,7 @@ func GetTotalInstallsForStyle(db *gorm.DB, id string) (total int64) {
 func GetTotalViewsForStyle(db *gorm.DB, id string) (total int64) {
 	db.
 		Model(Stats{}).
-		Where("style_id = ?", id).
+		Where("style_id = ? and view = 1", id).
 		Count(&total)
 
 	return total
