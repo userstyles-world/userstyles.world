@@ -28,7 +28,15 @@ func updateMeta(a, b *models.Style) bool {
 	return true
 }
 
-func UpdateBatch(batch *models.Style) {
+func getSourceCode(style models.Style) string {
+	if style.MirrorURL != "" {
+		return style.MirrorURL
+	}
+
+	return style.Original
+}
+
+func UpdateBatch(batch models.Style) {
 	if batch.Archived {
 		return
 	}
@@ -44,7 +52,7 @@ func UpdateBatch(batch *models.Style) {
 		}
 
 		// Run update if fields differ.
-		if updateMeta(batch, importedStyle) {
+		if updateMeta(&batch, importedStyle) {
 			s.Name = importedStyle.Name
 			s.Notes = importedStyle.Notes
 			s.Preview = importedStyle.Preview
@@ -57,11 +65,13 @@ func UpdateBatch(batch *models.Style) {
 	}
 
 	// Get new style source code.
-	style, err := usercss.ParseFromURL(batch.Original)
+	style, err := usercss.ParseFromURL(getSourceCode(batch))
 	if err != nil {
 		log.Printf("Updater: Cannot fetch style %d.\n", batch.ID)
 		return
 	}
+
+	// Exit if source code doesn't pass validation.
 	if errs := usercss.BasicMetadataValidation(style); errs != nil {
 		log.Printf("Updater: Cannot validate style %d.\n", batch.ID)
 		return
@@ -71,7 +81,7 @@ func UpdateBatch(batch *models.Style) {
 	if style.Version != usercss.ParseFromString(batch.Code).Version {
 		log.Printf("Updater: Style %d was changed.\n", batch.ID)
 		s.Code = style.SourceCode
-		if err = models.UpdateStyle(database.DB, s); err != nil {
+		if err := models.UpdateStyle(database.DB, s); err != nil {
 			log.Printf("Updater: Mirroring code for %d failed, err: %s", batch.ID, err)
 		}
 	}

@@ -71,6 +71,7 @@ func EditPost(c *fiber.Ctx) error {
 		Preview:     c.FormValue("previewUrl"),
 		License:     strings.TrimSpace(c.FormValue("license", "No License")),
 		Category:    strings.TrimSpace(c.FormValue("category", "unset")),
+		MirrorURL:   strings.TrimSpace(c.FormValue("mirrorURL")),
 		UserID:      u.ID,
 	}
 

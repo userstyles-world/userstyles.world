@@ -14,6 +14,7 @@ import (
 type Style struct {
 	gorm.Model
 	Original    string
+	MirrorURL   string
 	Homepage    string
 	Category    string `gorm:"not null"`
 	Name        string
@@ -43,6 +44,7 @@ type APIStyle struct {
 	Homepage    string
 	Username    string
 	Original    string
+	MirrorURL   string
 	DisplayName string
 	UserID      uint
 	ID          uint
@@ -138,7 +140,7 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 	t, q := new(Style), new([]Style)
 	err := getDBSession(db).
 		Model(t).
-		Find(q, "styles.original <> '' and styles.mirror_code = ?", true).
+		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
 		Error
 	if err != nil {
 		return nil, errors.New("no imported styles")
