@@ -1,16 +1,17 @@
+{{ $sourceCode := "https://github.com/userstyles-world/userstyles.world" }}
 
 <footer>
     <div class="wrapper ai:c py:m flex">
-        <span>2020–2021</span>
+        <span class="copyright mr:a">2020–2021</span>
         {{ if eq GitCommit "dev" }}
-            <span>DevEnv</span>
+            <li><span class="env">DevEnv</span></li>
         {{ else }}
-            <a href="https://github.com/userstyles-world/userstyles.world/commit/{{ GitCommit }}">
+            <li><a class="latest-commit" href="{{ $sourceCode }}/commit/{{ GitCommit }}">
                 {{- printf "Version %.8s" GitCommit -}}
-            </a>
+            </a></li>
         {{ end }}
-        <a href="https://github.com/userstyles-world/userstyles.world">Source code</a>
-        <a href="/legal/privacy-policy">Privacy Policy</a>
-        <a href="/legal/terms-of-service">Terms of Service</a>
+        <li><a class="source" href="{{ $sourceCode }}">Source code</a></li>
+        <li><a class="privacy-policy" href="/legal/privacy-policy">Privacy Policy</a></li>
+        <li><a class="terms-of-service" href="/legal/terms-of-service">Terms of Service</a></li>
     </div>
 </footer>

@@ -2,9 +2,19 @@ footer {
     border-top: 1px solid var(--bg-4);
     background-color: var(--bg-2);
 
+    li {
+        list-style: none;
+        &:not(:last-child)::after {
+            content: "/";
+            padding: 0 0.5rem;
+            color: var(--fg-5);
+        }
+    }
+
     a {
         color: var(--fg-1);
         text-decoration: none;
+        &:hover { color: var(--ac-1) }
     }
 
     .wrapper { justify-content: space-between }
