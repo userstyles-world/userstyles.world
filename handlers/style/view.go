@@ -45,13 +45,14 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 
 	return c.Render("style", fiber.Map{
-		"Title": data.Name,
-		"User":  u,
-		"Style": data,
-		"Views": models.GetTotalViewsForStyle(database.DB, id),
-		"Total": models.GetTotalInstallsForStyle(database.DB, id),
-		"Week":  models.GetWeeklyInstallsForStyle(database.DB, id),
-		"Url":   fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
-		"Slug":  c.Path(),
+		"Title":          data.Name,
+		"User":           u,
+		"Style":          data,
+		"TotalViews":     models.GetTotalViewsForStyle(database.DB, id),
+		"TotalInstalls":  models.GetTotalInstallsForStyle(database.DB, id),
+		"WeeklyInstalls": models.GetWeeklyInstallsForStyle(database.DB, id),
+		"WeeklyUpdates":  models.GetWeeklyUpdatesForStyle(database.DB, id),
+		"Url":            fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
+		"Slug":           c.Path(),
 	})
 }
