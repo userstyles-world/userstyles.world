@@ -54,6 +54,18 @@ type APIStyle struct {
 	Archived    bool
 }
 
+type StyleCard struct {
+	gorm.Model
+	Views       int64
+	Installs    int64
+	Name        string
+	Preview     string
+	DisplayName string
+	Username    string
+	User        User `gorm:"foreignKey:ID"`
+	UserID      uint
+}
+
 func getDBSession(db *gorm.DB) (tx *gorm.DB) {
 	var log logger.LogLevel
 	switch config.DB_DEBUG {
@@ -121,19 +133,48 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 	return q, nil
 }
 
-func GetAllFeaturedStyles(db *gorm.DB) (*[]APIStyle, error) {
-	t, q := new(Style), new([]APIStyle)
-	err := getDBSession(db).
-		Model(t).
-		Joins("join users u on u.id = styles.user_id").
-		Select("styles.id, styles.name, styles.preview, u.username, u.display_name").
-		Find(q, "styles.featured = ?", true).
-		Error
-	if err != nil {
-		return nil, errors.New("no featured styles")
+func GetAllAvailableStyles(db *gorm.DB) ([]StyleCard, error) {
+	q := new([]StyleCard)
+	stmt := `
+select
+	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
+	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+from
+	styles
+join
+	users u on u.id = styles.user_id
+where
+	styles.deleted_at is null
+`
+
+	if err := getDBSession(db).Raw(stmt).Find(q).Error; err != nil {
+		return nil, err
 	}
 
-	return q, nil
+	return *q, nil
+}
+
+func GetAllFeaturedStyles(db *gorm.DB) ([]StyleCard, error) {
+	q := new([]StyleCard)
+	stmt := `
+select
+	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
+	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+from
+	styles
+join
+	users u on u.id = styles.user_id
+where
+	styles.deleted_at is null and styles.featured = 1
+`
+
+	if err := getDBSession(db).Raw(stmt).Find(q).Error; err != nil {
+		return nil, err
+	}
+
+	return *q, nil
 }
 
 func GetImportedStyles(db *gorm.DB) ([]Style, error) {
@@ -166,19 +207,27 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 	return q, nil
 }
 
-func GetStylesByUser(db *gorm.DB, username string) (*[]APIStyle, error) {
-	t, q := new(Style), new([]APIStyle)
-	err := getDBSession(db).
-		Model(t).
-		Select("styles.id, styles.name, styles.preview, u.username, u.display_name").
-		Joins("join users u on u.id = styles.user_id").
-		Find(q, "u.username = ?", username).
-		Error
-	if err != nil {
-		return nil, errors.New("styles not found")
+func GetStylesByUser(db *gorm.DB, username string) ([]StyleCard, error) {
+	q := new([]StyleCard)
+	stmt := `
+select
+	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
+	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+from
+	styles
+join
+	users u on u.id = styles.user_id
+where
+	styles.deleted_at is null and u.username = ?
+`
+
+	if err := getDBSession(db).Raw(stmt, username).Find(q).Error; err != nil {
+		return nil, err
 	}
 
-	return q, nil
+
+	return *q, nil
 }
 
 func CreateStyle(db *gorm.DB, s *Style) (*Style, error) {
@@ -194,7 +243,6 @@ func CreateStyle(db *gorm.DB, s *Style) (*Style, error) {
 
 func UpdateStyle(db *gorm.DB, s *Style) error {
 	err := getDBSession(db).
-		Debug().
 		Model(Style{}).
 		Where("id", s.ID).
 		Updates(s).

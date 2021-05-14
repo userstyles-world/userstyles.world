@@ -37,7 +37,7 @@ func renderEngine() *html.Engine {
 		return template.HTML(u.Username)
 	})
 
-	engine.AddFunc("Author", func(s models.APIStyle) template.HTML {
+	engine.AddFunc("Author", func(s models.StyleCard) template.HTML {
 		if s.DisplayName != "" {
 			return template.HTML(s.DisplayName)
 		}

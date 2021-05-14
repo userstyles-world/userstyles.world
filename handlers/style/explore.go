@@ -11,7 +11,7 @@ import (
 func GetExplore(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	data, err := models.GetAllStyles(database.DB)
+	data, err := models.GetAllAvailableStyles(database.DB)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Styles not found",
