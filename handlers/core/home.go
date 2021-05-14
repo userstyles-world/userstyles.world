@@ -10,7 +10,13 @@ import (
 
 func Home(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	p := models.GetHomepageStatistics(database.DB)
+
+	// Skip stats if user is logged in.
+	// TODO: Combine this with a new dashboard.
+	var p *models.SiteStats
+	if u.ID == 0 {
+		p = models.GetHomepageStatistics(database.DB)
+	}
 
 	styles, err := models.GetAllFeaturedStyles(database.DB)
 	if err != nil {
