@@ -127,6 +127,7 @@ func GetHomepageStatistics(db *gorm.DB) *SiteStats {
 	db.Model(&s).Where(totalViews).Count(&p.TotalViews)
 	db.Model(&s).Where(weeklyViews, lastDay).Count(&p.WeeklyViews)
 	db.Model(&s).Where(weeklyInstalls, lastDay).Count(&p.WeeklyInstalls)
+	db.Model(&s).Where(weeklyUpdates, lastDay).Count(&p.WeeklyUpdates)
 	db.Model(&s).Where(totalInstalls).Count(&p.TotalInstalls)
 
 	return &p

@@ -20,8 +20,9 @@
                             users and {{ .Params.StyleCount }} userstyles.
 
                             Styles have been viewed {{ printf "%d " .Params.WeeklyViews -}}
-                            time(s) and installed {{ printf "%d " .Params.WeeklyInstalls -}}
-                            time(s) in the last 24 hours, for a total of
+                            times, installed {{ printf "%d " .Params.WeeklyInstalls -}}
+                            times, and updated {{ printf "%d " .Params.WeeklyUpdates -}}
+                            times in the last 24 hours, for a total of
                             {{- printf " %d " .Params.TotalViews -}} views and
                             {{- printf " %d " .Params.TotalInstalls }} installs.
                         </p>
