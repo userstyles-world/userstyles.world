@@ -133,7 +133,7 @@
                                 {{- if .Style.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
                                 <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
                                 <p class="fg:3"><i>Only available to styles imported from USo-archive.</i></p>
-                                <input type="checkbox" name="mirrorMeta" {{ $mirrorMeta }}>
+                                <input type="checkbox" name="mirrorMeta">
                             </div>
                             <div class="ta:l">
                                 {{- $mirrorCode := "" -}}

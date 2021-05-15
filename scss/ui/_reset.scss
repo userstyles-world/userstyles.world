@@ -59,8 +59,8 @@ button {
     font-size: inherit;
     line-height: inherit;
     color: var(--fg-1);
-    background: var(--bg-1);
-    border: 1px solid var(--bg-3);
+    background-color: var(--bg-3);
+    border: 1px solid var(--bg-4);
     border-radius: var(--br-3);
 
     &:hover {
@@ -70,7 +70,7 @@ button {
     &:focus {
         border-color: var(--ac-3);
         outline-color: transparent;
-        box-shadow: 0 0 0 0.2rem var(--ac-5);
+        box-shadow: 0 0 0 0.25rem var(--ac-5);
     }
 
     &:-moz-focusring {
@@ -87,15 +87,16 @@ textarea {
     font-family: var(--font-mono);
     color: var(--fg-1);
     border: 1px solid var(--bg-4);
-    background-color: var(--bg-1);
+    background-color: var(--bg-3);
     border-radius: var(--br-3);
 
     &[readonly] { background-color: var(--bg-2) }
+    &:hover:not([readonly]) { border-color: var(--bg-5) }
 
     &:focus:not([readonly]) {
         border-color: var(--ac-3);
         outline-color: transparent;
-        box-shadow: 0 0 0 0.2rem var(--ac-5);
+        box-shadow: 0 0 0 0.25rem var(--ac-5);
     }
 
     &.raw {
@@ -143,7 +144,7 @@ form {
             &:not(:focus):placeholder-shown { box-shadow: none }
             &:not(:placeholder-shown) {
                 border-color: #f00a;
-                box-shadow: 0 0 0 0.2rem #f003;
+                box-shadow: 0 0 0 0.25rem #f003;
             }
         }
     }

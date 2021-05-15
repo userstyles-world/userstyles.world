@@ -35,27 +35,28 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
 
     &:hover {
         color: var(--fg-2);
-        border-color: var(--bg-5);
-        background-color: var(--bg-3);
+        border-color: var(--bg-4);
     }
 
     &:not(.active):focus {
         color: var(--fg-2);
-        border-color: var(--bg-4);
+        border-color: var(--bg-5);
         box-shadow: 0 0 0 0.25rem var(--bg-2);
     }
 
     &.active {
         color: var(--fg-1);
         border-color: var(--bg-5);
-        background-color: var(--bg-4);
+        background-color: var(--bg-3);
     }
 
     &.primary {
         color: var(--fg-1);
         border-color: var(--ac-3);
         background-color: var(--ac-5);
+
         &:hover {
+            border-color: var(--ac-2);
             background-color: var(--ac-3);
         }
 
@@ -69,10 +70,15 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     &.stylus {
         color: var(--inverse);
         border-color: var(--st-3);
-        background-color: var(--st-4);
+        background-color: var(--st-5);
 
         &::after { color: var(--inverse) }
-        &:hover { background-color: var(--st-3) }
+
+        &:hover {
+            border-color: var(--st-2);
+            background-color: var(--st-3);
+        }
+
         &:not(.active):focus {
             color: var(--inverse);
             border-color: var(--st-2);
@@ -83,7 +89,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
             border-color: var(--st-5);
             &:not(.active):focus {
                 border-color: var(--st-5);
-                box-shadow: 0 0 0 0.2rem var(--st-2);
+                box-shadow: 0 0 0 0.25rem var(--st-2);
             }
         }
     }
@@ -126,8 +132,13 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
 input[type="checkbox"],
 label[for="remember"] {
     width: unset;
-    margin: 0 0 1.5rem 0;
-    display: inline-flex;
+
+    @media (prefers-color-scheme: dark) {
+        @at-root input[type="checkbox"] {
+            box-shadow: none;
+            filter: invert(0.9) hue-rotate(180deg);
+        }
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
