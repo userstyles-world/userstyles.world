@@ -1,7 +1,6 @@
 package search
 
 import (
-	"regexp"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
@@ -10,8 +9,6 @@ import (
 const (
 	timeFormat = "2006-01-02T15:04:05Z"
 )
-
-var normalCharacters = regexp.MustCompile(`[a-zA-Z0-9]+`)
 
 type MinimalStyle struct {
 	ID          int       `json:"id"`
