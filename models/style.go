@@ -32,26 +32,26 @@ type Style struct {
 }
 
 type APIStyle struct {
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	Category    string
-	Name        string
-	Description string
-	Notes       string
-	Code        string
-	License     string
-	Preview     string
-	Homepage    string
-	Username    string
-	Original    string
-	MirrorURL   string
-	DisplayName string
-	UserID      uint
-	ID          uint
-	Featured    bool
-	MirrorCode  bool
-	MirrorMeta  bool
-	Archived    bool
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	Category    string    `json:"category"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Notes       string    `json:"notes"`
+	Code        string    `json:"-"`
+	License     string    `json:"license"`
+	Preview     string    `json:"preview_url"`
+	Homepage    string    `json:"homepage"`
+	Username    string    `json:"username"`
+	Original    string    `json:"original"`
+	MirrorURL   string    `json:"mirror_url"`
+	DisplayName string    `json:"display_name"`
+	UserID      uint      `json:"user_id"`
+	ID          uint      `json:"id"`
+	Featured    bool      `json:"-"`
+	MirrorCode  bool      `json:"-"`
+	MirrorMeta  bool      `json:"-"`
+	Archived    bool      `json:"-"`
 }
 
 type StyleCard struct {
@@ -118,7 +118,9 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 
 	s := "styles.id, styles.name, styles.created_at, styles.updated_at, "
-	s += "styles.description, styles.notes, styles.category, styles.preview, u.username"
+	s += "styles.description, styles.notes, styles.license, styles.homepage, "
+	s += "styles.original, styles.category, styles.preview, styles.user_id, "
+	s += "styles.homepage, styles.mirror_url, u.username, u.display_name"
 
 	err := getDBSession(db).
 		Model(t).
