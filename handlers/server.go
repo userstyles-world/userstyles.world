@@ -100,6 +100,7 @@ func Initialize() {
 		app.Use(logger.New())
 	}
 
+	app.Use(core.HSTSMiddleware)
 	app.Use(compress.New())
 	if config.Production {
 		app.Use(limiter.New(limiter.Config{Max: 300}))
