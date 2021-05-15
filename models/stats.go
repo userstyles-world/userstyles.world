@@ -15,7 +15,7 @@ const (
 	weeklyViews    = "view = 1 and created_at > ?"
 	totalInstalls  = "install = 1"
 	weeklyInstalls = "install = 1 and created_at > ?"
-	weeklyUpdates  = "install = 1 and updated_at > ?"
+	weeklyUpdates  = "install = 1 and updated_at > ? and created_at < ?"
 )
 
 type Stats struct {
@@ -107,10 +107,10 @@ func GetTotalViewsForStyle(db *gorm.DB, id string) (total int64) {
 
 func GetWeeklyUpdatesForStyle(db *gorm.DB, id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and install = 1 and updated_at > ?"
+	q := "style_id = ? and install = 1 and updated_at > ? and created_at < ?"
 	db.
 		Model(Stats{}).
-		Where(q, id, lastWeek).
+		Where(q, id, lastWeek, lastWeek).
 		Count(&weekly)
 
 	return weekly
@@ -127,7 +127,7 @@ func GetHomepageStatistics(db *gorm.DB) *SiteStats {
 	db.Model(&s).Where(totalViews).Count(&p.TotalViews)
 	db.Model(&s).Where(weeklyViews, lastDay).Count(&p.WeeklyViews)
 	db.Model(&s).Where(weeklyInstalls, lastDay).Count(&p.WeeklyInstalls)
-	db.Model(&s).Where(weeklyUpdates, lastDay).Count(&p.WeeklyUpdates)
+	db.Model(&s).Where(weeklyUpdates, lastDay, lastDay).Count(&p.WeeklyUpdates)
 	db.Model(&s).Where(totalInstalls).Count(&p.TotalInstalls)
 
 	return &p
