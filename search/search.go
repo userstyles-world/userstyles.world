@@ -1,6 +1,7 @@
 package search
 
 import (
+	"regexp"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
@@ -9,6 +10,8 @@ import (
 const (
 	timeFormat = "2006-01-02T15:04:05Z"
 )
+
+var normalCharacters = regexp.MustCompile(`[a-zA-Z0-9]+`)
 
 type MinimalStyle struct {
 	ID          int       `json:"id"`
@@ -32,8 +35,13 @@ func (s MinimalStyle) Author() string {
 }
 
 func FindStylesByText(text string) ([]MinimalStyle, error) {
-	query := bleve.NewFuzzyQuery(text)
-	searchRequest := bleve.NewSearchRequestOptions(query, 99, 0, false)
+	// See https://github.com/blevesearch/bleve/issues/1290
+	// FuzzySearch won't work the way I'd like the search to behave.
+	// This way it will be more "loslly" and actually uses the tokenizers.
+	// That we provide withing the mappings.go and provide better results.
+	sanitzedQuery := bleve.NewMatchQuery(text)
+
+	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, 99, 0, false)
 	searchRequest.Fields = []string{"*"}
 
 	sr, err := StyleIndex.Search(searchRequest)
