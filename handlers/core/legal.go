@@ -9,12 +9,15 @@ import (
 func GetLegal(c *fiber.Ctx) error {
 	document := c.Params("document")
 
+	var title string
 	var content []byte
 	switch document {
 	case "privacy-policy":
-		content, _ = os.ReadFile("privacy-policy.md")
+		content, _ = os.ReadFile("docs/privacy-policy.md")
+		title = "Privacy Policy"
 	case "terms-of-service":
-		content, _ = os.ReadFile("terms-of-service.md")
+		content, _ = os.ReadFile("docs/terms-of-service.md")
+		title = "Terms of Service"
 	}
 
 	if len(content) == 0 {
@@ -24,6 +27,7 @@ func GetLegal(c *fiber.Ctx) error {
 	}
 
 	return c.Render("legal", fiber.Map{
+		"Title":   title,
 		"content": string(content),
 	})
 }

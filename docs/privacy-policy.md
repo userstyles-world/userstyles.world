@@ -1,50 +1,49 @@
 # GDPR PRIVACY POLICY OF USERSTYLES.WORLD
-Last updated May 5, 2021
+Last updated May 15, 2021
 
 
 ## INTRODUCTION
 
 Thank you for choosing to be part of our community at UserStyles.world (“we”, “us”, or “our”). 
-We are committed to protecting your personal information and your right to privacy. 
-If you have any questions or concerns about our policy, or our practices with regards to your personal information, 
-please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world).
 
-When you visit our website userstyles.world (“Site”) and use our services, 
-you trust us with your personal information. We take your privacy very seriously.
-In this privacy notice, we describe our privacy policy. We seek to explain to you in the clearest way 
-possible what information we store, how we use it and what rights you have in relation to it. 
-We hope you take some time to read through it carefully, as it is important. 
+We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world).
+
+When you visit our website userstyles.world (“Site”) and use our services, you trust us with your personal information. We take your privacy very seriously.
+
+In this privacy notice, we describe our privacy policy. We seek to explain to you in the clearest way possible what information we store, how we use it and what rights you have in relation to it. We hope you take some time to read through it carefully, as it is important. 
+
 If there are any terms in this privacy policy that you do not agree with, please discontinue use of our site and our services.
 
 This privacy policy applies to all information strored through our Site, and/or any related services.
+
 Please read this privacy policy carefully as it will help you make informed decisions about sharing your personal information with us.
 
-Table of contents:  
-    1. WHAT INFORMATION DO WE STORE?  
-    2. HOW DO WE USE YOUR INFORMATION?  
-    3. WILL YOUR INFORMATION BE SHARED WITH ANYONE?  
-    4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?  
-    5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?  
-    6. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?  
-    7. WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?  
-    8. HOW LONG DO WE KEEP YOUR INFORMATION?  
-    9. HOW DO WE KEEP YOUR INFORMATION SAFE?  
-    10. DO WE COLLECT INFORMATION FROM MINORS?  
-    11. WHAT ARE YOUR PRIVACY RIGHTS?  
-    12. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?  
-    13. DO WE MAKE UPDATES TO THIS POLICY?  
-    14. HOW CAN YOU CONTACT US ABOUT THIS POLICY?  
+Table of contents:
+
+1. WHAT INFORMATION DO WE STORE?
+2. HOW DO WE USE YOUR INFORMATION?
+3. WILL YOUR INFORMATION BE SHARED WITH ANYONE?
+4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?
+5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?
+6. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?
+7. WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?
+8. HOW LONG DO WE KEEP YOUR INFORMATION?
+9. HOW DO WE KEEP YOUR INFORMATION SAFE?
+10. DO WE COLLECT INFORMATION FROM MINORS?
+11. WHAT ARE YOUR PRIVACY RIGHTS?
+12. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?
+13. DO WE MAKE UPDATES TO THIS POLICY?
+14. HOW CAN YOU CONTACT US ABOUT THIS POLICY?
 
 ## WHAT INFORMATION DO WE STORE? 
 
 ### **Personal information you disclose to us**
 
-_In Short: We store personal information that you provide to us such as email-address._  
+_In Short: We store personal information that you provide to us such as email address._
 
-We store personal information that you voluntarily provide to us when registering at the Site, 
-and further on by editing your profile at the Site.
-The personal information that we store depends on the context of your interactions 
-with us and the Site, the choices you make and the products and features you use. The personal information we store can include the following: 
+We store personal information that you voluntarily provide to us when registering at the Site, and further on by editing your profile at the Site.
+
+The personal information that we store depends on the context of your interactions with us and the Site, the choices you make and the products and features you use. The personal information we store can include the following: 
 
 - We store username, email address and social media usernames. Username and email address are mandatory.
 - Credentials. We store passwords. All of the Credentials are hashed and original values not stored.
@@ -62,8 +61,10 @@ The first one is default server log which contains this information, and is flus
 This is primarily needed for security and maintaining the operation of the Site.
 
 The second one is used by style statistics and only happens on certain portions of the site:
+
 - `https://userstyles.world/style/:id/:name`
 - `https://userstyles.world/api/style/:id.user.css`
+
 By visiting the relative links stated above, we save a unique hash combined of your IP address, the style ID, reffered within the relative link as `:id`, and a secret key. This unique hash is not easily reversible without brute-forcing all public IP addresses in IPv4 address space and our secret key. This provides decently accurate style statistics while still respecting your privacy. 
 
 ## HOW DO WE USE YOUR INFORMATION? 
@@ -73,17 +74,12 @@ _In Short: We process your information for purposes based on legitimate business
 We use personal information stored via our Site for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate services interests ("Service Purposes"), in order to enter into or perform a contract with you ("Contractual"), with your consent ("Consent"), and/or for compliance with our legal obligations ("Legal Reasons"). We indicate the specific processing grounds we rely on next to each purpose listed below. 
 We use the information we store or receive:  
 
-    • To facilitate account creation and login process [with your Consent]: If you choose to link your account with us to a third party account *(such as your Github, GitLab, or Codeberg account), we use the information you allowed us to collect from those third parties to facilitate account creation and login process. See the section below headed "Social Logins" for further information. 
-
-    • To send administrative information to you [for Service Purposes, Legal Reasons and/or possibly Contractual]: We may use your personal information to send you product, service and new feature information and/or information about changes to our terms, conditions, and policies.
-
-    • Request feedback [for our Service Purposes and/or with your Consent]: We may use your information to request feedback and/or to contact you about your use of our Site.
-
-    • To protect our Site [for Service Purposes and/or Legal Reasons]: We may use your information as part of our efforts to keep our Site safe and secure (for example, for fraud monitoring and prevention).
-
-    • To enforce our terms, conditions and policies [for Service Purposes, Legal Reasons and/or possibly Contractual].
-
-    • To respond to legal requests and prevent harm [for Legal Reasons]: If we receive a subpoena or other legal request, we may need to inspect the data we hold to determine how to respond.
+- To facilitate account creation and login process [with your Consent]: If you choose to link your account with us to a third party account *(such as your Github, GitLab, or Codeberg account), we use the information you allowed us to collect from those third parties to facilitate account creation and login process. See the section below headed "Social Logins" for further information;
+- To send administrative information to you [for Service Purposes, Legal Reasons and/or possibly Contractual]: We may use your personal information to send you product, service and new feature information and/or information about changes to our terms, conditions, and policies;
+- Request feedback [for our Service Purposes and/or with your Consent]: We may use your information to request feedback and/or to contact you about your use of our Site.
+- To protect our Site [for Service Purposes and/or Legal Reasons]: We may use your information as part of our efforts to keep our Site safe and secure (for example, for fraud monitoring and prevention);
+- To enforce our terms, conditions and policies [for Service Purposes, Legal Reasons and/or possibly Contractual];
+- To respond to legal requests and prevent harm [for Legal Reasons]: If we receive a subpoena or other legal request, we may need to inspect the data we hold to determine how to respond.
 
 
 ## WILL YOUR INFORMATION BE SHARED WITH ANYONE? 
@@ -92,18 +88,15 @@ _In Short: We only share information with your consent, to comply with laws, to 
 
 We only share and disclose your information in the following situations:
 
-    • Compliance with Laws. We may disclose your information where we are legally required to do so in order to comply with applicable law, governmental requests, a judicial proceeding, court order, or legal process, such as in response to a court order or a subpoena (including in response to public authorities to meet national security or law enforcement requirements).
-
-    • Vital Interests and Legal Rights. We may disclose your information where we believe it is necessary to investigate, prevent, or take action regarding potential violations of our policies, suspected fraud, situations involving potential threats to the safety of any person and illegal activities, or as evidence in litigation in which we are involved. 
-
-    • Other Users. When you share personal information (for example, by posting comments, contributions or other content to the Site) or otherwise interact with public areas of the Site. Such personal information may be viewed by all users and may be publicly distributed outside the Site in perpetuity. Similarly, other users will be able to view descriptions of your activity, communicate with you within our Site, and view your profile.
+- Compliance with Laws. We may disclose your information where we are legally required to do so in order to comply with applicable law, governmental requests, a judicial proceeding, court order, or legal process, such as in response to a court order or a subpoena (including in response to public authorities to meet national security or law enforcement requirements).
+- Vital Interests and Legal Rights. We may disclose your information where we believe it is necessary to investigate, prevent, or take action regarding potential violations of our policies, suspected fraud, situations involving potential threats to the safety of any person and illegal activities, or as evidence in litigation in which we are involved. 
+- Other Users. When you share personal information (for example, by posting comments, contributions or other content to the Site) or otherwise interact with public areas of the Site. Such personal information may be viewed by all users and may be publicly distributed outside the Site in perpetuity. Similarly, other users will be able to view descriptions of your activity, communicate with you within our Site, and view your profile.
 
 ## DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES? 
 
 _In Short: No._
 
-We don't use cookies for tracking technologies, however we use cookies to ensure
-authorization between the User and our Site, only when the user is logged in.
+We don't use cookies for tracking technologies, however we use cookies to ensure authorization between the User and our Site, only when the user is logged in.
 
 
 ## HOW DO WE HANDLE YOUR SOCIAL LOGINS?
@@ -119,6 +112,7 @@ We will use the information we receive only for the purposes that are described 
 _In Short: No, not to our knowledge._
 
 Our server is provided by vultr.com, we recommend that you review their privacy policy to understand how they collect, use and share your personal information. Our server is located in Amsterdam, Netherlands. All traffic from userstyles.world is processed by this server.
+
 If you aren’t a resident in the European Economic Area, then these countries may not have data protection or other laws as comprehensive as those in your country. We will however take all necessary measures to protect your personal information in accordance with this privacy policy and applicable law. 
 
 ## WHAT IS OUR STANCE ON THIRD-PARTY WEBSITES?
@@ -145,7 +139,7 @@ We have implemented appropriate technical and organizational security measures d
 
 _In Short: We do not knowingly collect data from or market to children under 18 years of age._
 
-We do not knowingly solicit data from or market to children under 18 years of age. By using the Site, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s use of the Site. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we have collected from children under age 18, please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world)
+We do not knowingly solicit data from or market to children under 18 years of age. By using the Site, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s use of the Site. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we have collected from children under age 18, please contact us at [feedback@userstyles.world](mailto:feedback@userstyles.world).
 
 ## WHAT ARE YOUR PRIVACY RIGHTS?
 
@@ -160,9 +154,8 @@ If you are resident in the European Economic Area and you believe we are unlawfu
 ### Account Information
 You may at any time review or change the information in your account or terminate your account by:
 
-    • Logging into your account settings and updating your account
-
-    • Contacting us using the contact information provided below
+- Logging into your account settings and updating your account
+- Contacting us using the contact information provided below
 
 Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, some information may be retained in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with legal requirements.
 

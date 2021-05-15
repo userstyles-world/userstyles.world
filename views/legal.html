@@ -4,6 +4,9 @@
         {{ template "partials/head" . }}
     </head>
     <body>
+        <style type="text/css" media="screen">
+            .md p, .md li { margin-bottom: 0.5rem }
+        </style>
         <main>
             <div class="wrapper py:l">
                 <div class="md">{{ .content | Markdown }}</div>

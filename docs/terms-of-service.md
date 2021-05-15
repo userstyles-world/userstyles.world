@@ -1,6 +1,6 @@
 
 # TERMS OF SERVICE OF USERSTYLES.WORLD
-Last updated May 5, 2021
+Last updated May 15, 2021
 
 
 ## AGREEMENT TO TERMS
@@ -19,16 +19,16 @@ All users who are minors in the jurisdiction in which they reside (generally und
 
 ## USER REPRESENTATIONS
 
-By using the Site, you represent and warrant that: 
+By using the Site, you represent and warrant that:
 
-(1) all registration information you submit will be true, accurate, current, and complete;
-(2) you will maintain the accuracy of such information and promptly update such registration information as necessary;
-(3) you have the legal capacity and you agree to comply with these Terms of Service; 
-(4) you are not under the age of 13;
-(5) not a minor in the jurisdiction in which you reside, or if a minor, you have received parental permission to use the Site; 
-(6) you will not access the Site through automated or non-human means, whether through a bot, script, or otherwise with an exception trough our provided API on intended usage; 
-(7) you will not use the Site for any illegal or unauthorized purpose; 
-(8) your use of the Site will not violate any applicable law or regulation.  
+1. All registration information you submit will be true, accurate, current, and complete;
+2. You will maintain the accuracy of such information and promptly update such registration information as necessary;
+3. You have the legal capacity and you agree to comply with these Terms of Service;
+4. You are not under the age of 13;
+5. You are not a minor in the jurisdiction in which you reside, or if a minor, you have received parental permission to use the Site;
+6. You will not access the Site through automated or non-human means, whether through a bot, script, or otherwise with an exception trough our provided API on intended usage;
+7. You will not use the Site for any illegal or unauthorized purpose;
+8. Your use of the Site will not violate any applicable law or regulation.
 
 If you provide any information that is untrue, inaccurate, not current, or incomplete, we have the right to suspend or terminate your account and refuse any and all current or future use of the Site.
 
@@ -42,25 +42,25 @@ You may not access or use the Site for any purpose other than that for which we 
 
 As a user of the Site, you agree not to:
 
-    1. systematically retrieve data or other content from the Site to create or compile, directly or indirectly, a collection, compilation, database, or directory without written permission from us.
-    2. make any unauthorized use of the Site, including collecting usernames and/or email addresses of users by electronic or other means for the purpose of sending unsolicited email, or creating user accounts by automated means or under false pretenses.
-    3. use a buying agent or purchasing agent to make purchases on the Site.
-    4. use the Site to advertise or offer to sell goods and services.
-    5. circumvent, disable, or otherwise interfere with security-related features of the Site, including features that prevent or restrict the use or copying of any Content or enforce limitations on the use of the Site and/or the Content contained therein.
-    6. engage in unauthorized framing of or linking to the Site.
-    7. trick, defraud, or mislead us and other users, especially in any attempt to learn sensitive account information such as user passwords.
-    8. make improper use of our support services or submit false reports of abuse or misconduct.
-    10. interfere with, disrupt, or create an undue burden on the Site or the networks or services connected to the Site.
-    11. attempt to impersonate another user or person or use the username of another user.
-    12. use any information obtained from the Site in order to harass, abuse, or harm another person.
-    13. use the Site as part of any effort to use the Content for any revenue-generating endeavor or commercial enterprise.
-    14. attempt to bypass any measures of the Site designed to prevent or restrict access to the Site, or any portion of the Site.
-    15. harass, annoy, intimidate, or threaten any of our employees or agents engaged in providing any portion of the Site to you.
-    16. delete the copyright or other proprietary rights notice from any Content.
-    17. upload or transmit (or attempt to upload or to transmit) any material that acts as a passive or active information collection or transmission mechanism, including without limitation, clear graphics interchange formats (“gifs”), 1×1 pixels, web bugs, cookies, or other similar devices (sometimes referred to as “spyware” or “passive collection mechanisms” or “pcms”).
-    18. except as may be the result of standard search engine or Internet browser usage, use, launch, develop, or distribute any automated system, including without limitation, any spider, robot, cheat utility, scraper, or offline reader that accesses the Site, or using or launching any unauthorized script or other software.
-    19. disparage, tarnish, or otherwise harm, in our opinion, us and/or the Site.
-    20. use the Site in a manner inconsistent with any applicable laws or regulations.
+1. Systematically retrieve data or other content from the Site to create or compile, directly or indirectly, a collection, compilation, database, or directory without written permission from us;
+2. Make any unauthorized use of the Site, including collecting usernames and/or email addresses of users by electronic or other means for the purpose of sending unsolicited email, or creating user accounts by automated means or under false pretenses;
+3. Use a buying agent or purchasing agent to make purchases on the Site;
+4. Use the Site to advertise or offer to sell goods and services;
+5. Circumvent, disable, or otherwise interfere with security-related features of the Site, including features that prevent or restrict the use or copying of any Content or enforce limitations on the use of the Site and/or the Content contained therein;
+6. Engage in unauthorized framing of or linking to the Site;
+7. Trick, defraud, or mislead us and other users, especially in any attempt to learn sensitive account information such as user passwords;
+8. Make improper use of our support services or submit false reports of abuse or misconduct.
+10. Interfere with, disrupt, or create an undue burden on the Site or the networks or services connected to the Site;
+11. Attempt to impersonate another user or person or use the username of another user;
+12. Use any information obtained from the Site in order to harass, abuse, or harm another person;
+13. Use the Site as part of any effort to use the Content for any revenue-generating endeavor or commercial enterprise;
+14. Attempt to bypass any measures of the Site designed to prevent or restrict access to the Site, or any portion of the Site;
+15. Harass, annoy, intimidate, or threaten any of our employees or agents engaged in providing any portion of the Site to you;
+16. Delete the copyright or other proprietary rights notice from any Content;
+17. Upload or transmit (or attempt to upload or to transmit) any material that acts as a passive or active information collection or transmission mechanism, including without limitation, clear graphics interchange formats (“gifs”), 1×1 pixels, web bugs, cookies, or other similar devices (sometimes referred to as “spyware” or “passive collection mechanisms” or “pcms”);
+18. Except as may be the result of standard search engine or Internet browser usage, use, launch, develop, or distribute any automated system, including without limitation, any spider, robot, cheat utility, scraper, or offline reader that accesses the Site, or using or launching any unauthorized script or other software;
+19. Disparage, tarnish, or otherwise harm, in our opinion, us and/or the Site;
+20. Use the Site in a manner inconsistent with any applicable laws or regulations.
 
 ## USER GENERATED CONTRIBUTIONS
 
@@ -68,33 +68,20 @@ The Site may invite you to chat, contribute to and other functionality, and may 
 
 Contributions may be viewable by other users of the Site and through third-party websites. As such, any Contributions you transmit may be treated as non-confidential and non-proprietary. When you create or make available any Contributions, you thereby represent and warrant that:
 
-    1. the creation, distribution, transmission, public display, or performance, and the accessing, downloading, or copying of your Contributions do not and will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark, trade secret, or moral rights of any third party.
-
-    2. you are the creator and owner of or have the necessary licenses, rights, consents, releases, and permissions to use and to authorize us, the Site, and other users of the Site to use your Contributions in any manner contemplated by the Site and these Terms of Service.
-
-    3. you have the written consent, release, and/or permission of each and every identifiable individual person in your Contributions to use the name or likeness of each and every such identifiable individual person to enable inclusion and use of your Contributions in any manner contemplated by the Site and these Terms of Service.
-
-    4. your Contributions are not false, inaccurate, or misleading.
-
-    5. your Contributions are not unsolicited or unauthorized advertising, promotional materials, pyramid schemes, chain letters, spam, mass mailings, or other forms of solicitation.
-
-    6. your Contributions are not obscene, lewd, lascivious, filthy, violent, harassing, libelous, slanderous, or otherwise objectionable (as determined by us).
-
-    7. your Contributions do not ridicule, mock, disparage, intimidate, or abuse anyone.
-
-    8. your Contributions do not advocate the violent overthrow of any government or incite, encourage, or threaten physical harm against another.
-
-    9. your Contributions do not violate any applicable law, regulation, or rule.
-
-    10. your Contributions do not violate the privacy or publicity rights of any third party.
-
-    11. your Contributions do not contain any material that solicits personal information from anyone under the age of 18 or exploits people under the age of 18 in a sexual or violent manner.
-
-    12. your Contributions do not violate any federal or state law concerning child pornography, or otherwise intended to protect the health or well-being of minors.
-    
-    13. your Contributions do not include any offensive comments that are connected to race, national origin, gender, sexual preference, or physical handicap.
-
-    14. your Contributions do not otherwise violate, or link to material that violates, any provision of these Terms of Service, or any applicable law or regulation.
+1. The creation, distribution, transmission, public display, or performance, and the accessing, downloading, or copying of your Contributions do not and will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark, trade secret, or moral rights of any third party;
+2. You are the creator and owner of or have the necessary licenses, rights, consents, releases, and permissions to use and to authorize us, the Site, and other users of the Site to use your Contributions in any manner contemplated by the Site and these Terms of Service;
+3. You have the written consent, release, and/or permission of each and every identifiable individual person in your Contributions to use the name or likeness of each and every such identifiable individual person to enable inclusion and use of your Contributions in any manner contemplated by the Site and these Terms of Service;
+4. Your Contributions are not false, inaccurate, or misleading;
+5. Your Contributions are not unsolicited or unauthorized advertising, promotional materials, pyramid schemes, chain letters, spam, mass mailings, or other forms of solicitation;
+6. Your Contributions are not obscene, lewd, lascivious, filthy, violent, harassing, libelous, slanderous, or otherwise objectionable (as determined by us);
+7. Your Contributions do not ridicule, mock, disparage, intimidate, or abuse anyone.
+8. Your Contributions do not advocate the violent overthrow of any government or incite, encourage, or threaten physical harm against another;
+9. Your Contributions do not violate any applicable law, regulation, or rule;
+10. Your Contributions do not violate the privacy or publicity rights of any third party;
+11. Your Contributions do not contain any material that solicits personal information from anyone under the age of 18 or exploits people under the age of 18 in a sexual or violent manner;
+12. Your Contributions do not violate any federal or state law concerning child pornography, or otherwise intended to protect the health or well-being of minors;
+13. Your Contributions do not include any offensive comments that are connected to race, national origin, gender, sexual preference, or physical handicap;
+14. Your Contributions do not otherwise violate, or link to material that violates, any provision of these Terms of Service, or any applicable law or regulation.
 
 Any use of the Site in violation of the foregoing violates these Terms of Service and may result in, among other things, termination or suspension of your rights to use the Site. 
  
@@ -110,16 +97,16 @@ We have the right, in our sole and absolute discretion, (1) to edit, redact, or 
  
 ## GUIDELINES FOR REVIEWS
 
-We may provide you areas on the Site to leave reviews or ratings. When posting a review, you must comply with the following criteria: 
+We may provide you areas on the Site to leave reviews or ratings. When posting a review, you must comply with the following criteria:
 
-(1) you should have firsthand experience with the content being reviewed; 
-(2) your reviews should not contain offensive profanity, or abusive, racist, offensive, or hate language; 
-(3) your reviews should not contain discriminatory references based on religion, race, gender, national origin, age, marital status, sexual orientation, or disability; 
-(4) your reviews should not contain references to illegal activity; 
-(5) you should not be affiliated with competitors if posting negative reviews; 
-(6) you should not make any conclusions as to the legality of conduct; 
-(7) you may not post any false or misleading statements; 
-(8) you may not organize a campaign encouraging others to post reviews, whether positive or negative. 
+1. You should have firsthand experience with the content being reviewed;
+2. Your reviews should not contain offensive profanity, or abusive, racist, offensive, or hate language;
+3. Your reviews should not contain discriminatory references based on religion, race, gender, national origin, age, marital status, sexual orientation, or disability;
+4. Your reviews should not contain references to illegal activity;
+5. You should not be affiliated with competitors if posting negative reviews;
+6. You should not make any conclusions as to the legality of conduct;
+7. You may not post any false or misleading statements;
+8. You may not organize a campaign encouraging others to post reviews, whether positive or negative.
 
 We may accept, reject, or remove reviews in our sole discretion. We have absolutely no obligation to screen reviews or to delete reviews, even if anyone considers reviews objectionable or inaccurate. Reviews are not endorsed by us, and do not necessarily represent our opinions or the views of any of our affiliates or partners. 
 
@@ -149,15 +136,11 @@ You should review the applicable terms and policies, including privacy and data 
 
 We reserve the right, but not the obligation, to:
 
-(1) monitor the Site for violations of these Terms of Service; 
-
-(2) take appropriate legal action against anyone who, in our sole discretion, violates the law or these Terms of Service, including without limitation, reporting such user to law enforcement authorities; 
-
-(3) in our sole discretion and without limitation, refuse, restrict access to, limit the availability of, or disable (to the extent technologically feasible) any of your Contributions or any portion thereof; 
-
-(4) in our sole discretion and without limitation, notice, or liability, to remove from the Site or otherwise disable all files and content that are excessive in size or are in any way burdensome to our systems; 
-
-(5) otherwise manage the Site in a manner designed to protect our rights and property and to facilitate the proper functioning of the Site.
+1. Monitor the Site for violations of these Terms of Service;
+2. Take appropriate legal action against anyone who, in our sole discretion, violates the law or these Terms of Service, including without limitation, reporting such user to law enforcement authorities;
+3. In our sole discretion and without limitation, refuse, restrict access to, limit the availability of, or disable (to the extent technologically feasible) any of your Contributions or any portion thereof;
+4. In our sole discretion and without limitation, notice, or liability, to remove from the Site or otherwise disable all files and content that are excessive in size or are in any way burdensome to our systems;
+5. Otherwise manage the Site in a manner designed to protect our rights and property and to facilitate the proper functioning of the Site.
 
 ## PRIVACY POLICY
 
