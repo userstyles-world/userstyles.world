@@ -1,0 +1,19 @@
+# Emacs' REST client: https://github.com/pashky/restclient.el
+
+# Set base URL.
+:url = http://localhost:3000
+
+# Search endpoint.
+GET :url/api/search/dark
+
+# Index endpoint.
+GET :url/api/index
+
+# USo-archive formatted index.
+GET :url/api/index/uso-format
+
+# Get style source code.
+GET :url/api/style/1.user.css
+
+# Bad endpoint.
+GET :url/api/404
