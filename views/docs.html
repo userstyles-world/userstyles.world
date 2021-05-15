@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{ template "partials/head" . }}
+    </head>
+    <body>
+        {{ template "partials/nav" . }}
+
+        <main>
+            <div class="wrapper py:l">
+                <div class="md">{{ .content | Markdown }}</div>
+            </div>
+        </main>
+
+        {{ template "partials/footer" . }}
+    </body>
+</html>
