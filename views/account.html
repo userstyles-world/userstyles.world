@@ -63,7 +63,7 @@
                     <p>You can login via OAuth if you have an account on platforms listed below.</p>
                     <form class="socials ml:0" method="post" action="/account">
                         <label class="github" for="github">
-                            {{- template "partials/github_logo" . -}}
+                            {{- template "icons/github" . -}}
                             Github
                         </label>
                         <input
@@ -72,7 +72,7 @@
                             placeholder="e.g. username"
                             value="{{ .Params.Socials.Github }}"/>
                         <label class="gitlab" for="gitlab">
-                            {{- template "partials/gitlab_logo" . -}}
+                            {{- template "icons/gitlab" . -}}
                             Gitlab
                         </label>
                         <input
@@ -82,7 +82,7 @@
                             value="{{ .Params.Socials.Gitlab }}"/>
                         </input>
                         <label class="codeberg" for="codeberg">
-                            {{- template "partials/codeberg_logo" . -}}
+                            {{- template "icons/codeberg" . -}}
                             Codeberg
                         </label>
                         <input

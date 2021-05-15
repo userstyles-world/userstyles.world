@@ -32,7 +32,7 @@
                     {{- end -}}
                     {{ if .Params.Socials.Github }}
                         <div class="github flex mt:m">
-                            {{- template "partials/github_logo" -}}
+                            {{- template "icons/github" -}}
                             <a class="link" href="https://github.com/{{ .Params.Socials.Github }}">
                                 {{- .Params.Socials.Github -}}
                             </a>
@@ -40,7 +40,7 @@
                     {{ end }}
                     {{ if .Params.Socials.Gitlab }}
                         <div class="gitlab flex mt:m">
-                            {{- template "partials/gitlab_logo" -}}
+                            {{- template "icons/gitlab" -}}
                             <a class="link" href="https://gitlab.com/{{ .Params.Socials.Gitlab }}">
                                 {{- .Params.Socials.Gitlab -}}
                             </a>
@@ -48,7 +48,7 @@
                     {{ end }}
                     {{ if .Params.Socials.Codeberg }}
                         <div class="codeberg flex mt:m">
-                            {{- template "partials/codeberg_logo" -}}
+                            {{- template "icons/codeberg" -}}
                             <a class="link" href="https://Codeberg.org/{{ .Params.Socials.Codeberg }}">
                                 {{- .Params.Socials.Codeberg -}}
                             </a>
