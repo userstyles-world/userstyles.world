@@ -37,14 +37,6 @@ func renderEngine() *html.Engine {
 		return template.HTML(u.Username)
 	})
 
-	engine.AddFunc("Author", func(s models.StyleCard) template.HTML {
-		if s.DisplayName != "" {
-			return template.HTML(s.DisplayName)
-		}
-
-		return template.HTML(s.Username)
-	})
-
 	engine.AddFunc("Markdown", func(s string) template.HTML {
 		// Generate Markdown then sanitize it before returning HTML.
 		gen := blackfriday.Run([]byte(s), blackfriday.WithExtensions(blackfriday.HardLineBreak))

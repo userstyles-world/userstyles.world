@@ -14,7 +14,7 @@ func Search(c *fiber.Ctx) error {
 	s, _ := search.FindStylesByText(q)
 
 	return c.Render("search", fiber.Map{
-		"Title":  "Home",
+		"Title":  "Search",
 		"User":   u,
 		"Styles": s,
 		"Value":  q,

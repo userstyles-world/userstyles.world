@@ -18,11 +18,11 @@ var (
 )
 
 func Initialize() {
-	stylesIndex, err := bleve.Open("styles.bleve")
+	stylesIndex, err := bleve.Open("data/styles.bleve")
 	if errors.Is(err, bleve.ErrorIndexPathDoesNotExist) {
 		log.Println("Creating new index...")
 		indexMapping := buildIndexMapping()
-		stylesIndex, err = bleve.New("styles.bleve", indexMapping)
+		stylesIndex, err = bleve.New("data/styles.bleve", indexMapping)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -38,28 +38,32 @@ func Initialize() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = indexStyles(stylesIndex, *styleEntries)
+		err = indexStyles(stylesIndex, styleEntries)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
 }
 
-func indexStyles(index bleve.Index, data []models.APIStyle) error {
+func indexStyles(index bleve.Index, data []models.StyleSearch) error {
 	count := 0
 	startTime := time.Now()
 	batch := index.NewBatch()
 	batchCount := 0
 	var err error
 	for _, styleEntry := range data {
-		styleID := strconv.FormatUint(uint64(styleEntry.ID), 10)
-		err = batch.Index(styleID, MinimalStyle{
-			Name:        styleEntry.Name,
-			ID:          styleID,
-			Preview:     styleEntry.Preview,
-			Description: styleEntry.Description,
-			Notes:       styleEntry.Notes,
+		id := strconv.Itoa(styleEntry.ID)
+		err = batch.Index(id, MinimalStyle{
+			ID:          styleEntry.ID,
+			UpdatedAt:   styleEntry.UpdatedAt,
 			Username:    styleEntry.Username,
+			DisplayName: styleEntry.DisplayName,
+			Name:        styleEntry.Name,
+			Description: styleEntry.Description,
+			Preview:     styleEntry.Preview,
+			Notes:       styleEntry.Notes,
+			Installs:    styleEntry.Installs,
+			Views:       styleEntry.Views,
 		})
 		if err != nil {
 			return err

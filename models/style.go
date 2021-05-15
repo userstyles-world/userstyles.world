@@ -66,6 +66,29 @@ type StyleCard struct {
 	UserID      uint
 }
 
+type StyleSearch struct {
+	ID          int
+	UpdatedAt   time.Time
+	Name        string
+	Description string
+	Notes       string
+	Preview     string
+	DisplayName string
+	Username    string
+	Views       int
+	Installs    int
+	User        User `gorm:"foreignKey:ID"`
+	UserID      uint
+}
+
+func (s StyleCard) Author() string {
+	if s.DisplayName != "" {
+		return s.DisplayName
+	}
+
+	return s.Username
+}
+
 func getDBSession(db *gorm.DB) (tx *gorm.DB) {
 	var log logger.LogLevel
 	switch config.DB_DEBUG {
@@ -84,20 +107,28 @@ func getDBSession(db *gorm.DB) (tx *gorm.DB) {
 	})
 }
 
-func GetAllStyles(db *gorm.DB) (*[]APIStyle, error) {
-	t, q := new(Style), new([]APIStyle)
-	err := getDBSession(db).
-		Model(t).
-		Select("styles.id, styles.name, styles.description, styles.notes, " +
-			"styles.category, styles.preview, u.username, u.display_name").
-		Joins("join users u on u.id = styles.user_id").
-		Find(q).
-		Error
-	if err != nil {
-		return nil, errors.New("styles not found")
+func GetAllStyles(db *gorm.DB) ([]StyleSearch, error) {
+	q := new([]StyleSearch)
+
+	stmt := `
+select
+	styles.id, styles.updated_at, styles.name, styles.description, styles.notes,
+	styles.preview, u.username, u.display_name,
+	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+from
+	styles
+join
+	users u on u.id = styles.user_id
+where
+	styles.deleted_at is null
+`
+
+	if err := getDBSession(db).Raw(stmt).Find(q).Error; err != nil {
+		return nil, err
 	}
 
-	return q, nil
+	return *q, nil
 }
 
 func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
@@ -227,7 +258,6 @@ where
 	if err := getDBSession(db).Raw(stmt, username).Find(q).Error; err != nil {
 		return nil, err
 	}
-
 
 	return *q, nil
 }
