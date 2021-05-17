@@ -28,7 +28,9 @@
                     <p><span class="minw">ID</span>{{ .Params.ID }}</p>
                     <p><span class="minw">Role</span>{{ .Params.Role | Role }}</p>
                     <p><span class="minw">Username</span>{{ .Params.Username }}</p>
-                    <p><span class="minw">Display name</span>{{ .Params.DisplayName }}</p>
+                    {{ with .Params.DisplayName }}
+                        <p><span class="minw">Display name</span>{{ . }}</p>
+                    {{ end }}
                     {{ if .Params.Email -}}
                         <p><span class="minw">Email</span>{{ .Params.Email }}</p>
                     {{- end }}
