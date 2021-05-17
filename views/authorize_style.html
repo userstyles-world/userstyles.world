@@ -16,7 +16,7 @@
                         <p class="description">Please pick an existing style or a new style, that you'd like to link.</p>
                         <div class="grid  flex rwrap mx:r mt:m">
                             {{ range .Styles }}
-                                {{- $method := printf "oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
+                                {{- $method := printf "api/oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
                                 <div class="card col gap animate bd:o">
                                     <div class="thumbnail">
                                         {{ template "partials/preview_image" . }}

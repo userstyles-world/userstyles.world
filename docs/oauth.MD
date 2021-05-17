@@ -1,15 +1,15 @@
 # OAuth documentation
 
 This documentation is focussed on the OAuth workflow, you should find all steps/information about the OAuth of Userstyles world(USw)
-within this documentation and _most_ related coded is within the `oauth_provider/` folder.
+within this documentation and _most_ related coded is within the `handlers/oauthProvider/` folder.
 
 _**Note:** currently headless OAuth isn't supported._
 
 ## Basic OAuth workflow
 
-### 1 >> Let the user authorize with the given parameters  
+### 1 >> Let the user authorize with the given parameters
 ```
-GET https://usestyles.world/oauth/authorize
+GET https://usestyles.world/api/oauth/authorize
 ```
 
 #### Parameters
@@ -21,12 +21,12 @@ GET https://usestyles.world/oauth/authorize
 | scope | string | No | A comma-delimited list of the [[./oauth.MD#scopes][scopes]], when not specified the default scopes will be used based on the application's setting. |
 
 
-### 2 >> Users are sent to redirect_uri  
+### 2 >> Users are sent to redirect_uri
 
 _When the user accepts your request, USw redirects back to your site with a temporary code in a `code` parameter. This temporary code will expire after 10 minutes. When in the previous step the `state` parameter was provided, it will be sent back in the `state` parameter, When the states don't match, then a third party created the request, and you should abort the process._
 
 ```
-POST https://userstyles.world/oauth/access_token
+POST https://userstyles.world/api/oauth/access_token
 ```
 
 #### Parameters
@@ -41,7 +41,7 @@ POST https://userstyles.world/oauth/access_token
 
 #### Response
 
-Depending on the `Accept` header that was sent.  
+Depending on the `Accept` header that was sent.
 It will by default, send the `text/plain` format.
 
 ```
