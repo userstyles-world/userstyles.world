@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-color-scheme="light" lang="en">
     <head>
         {{ template "partials/head" . }}
     </head>
@@ -23,6 +23,7 @@
                 </section>
 
                 <section class="settings mt:l">
+                    <a class="ml:a" href="/user_settings">Change your user settings.</a>
                     <h2 class="sub-title td:d">Information</h2>
                     <p><span class="minw">ID</span>{{ .Params.ID }}</p>
                     <p><span class="minw">Role</span>{{ .Params.Role | Role }}</p>
@@ -93,6 +94,19 @@
                         </input>
                         <button class="flex btn primary" type="submit">Save</button>
                     </form>
+
+                    <h2 class="sub-title td:d mt:l">User settings</h1>
+                    <p>The use of user settings requires javascript.</p>
+                    <div class="ml:0 form-wrapper">
+                        <label>Color-scheme</label>
+                        <select id="usr-settings--color-scheme">
+                            <option value="follow-system">Follow system theme</option>
+                            <option value="dark">Dark mode</option>
+                            <option value="light">Light mode</option>
+                        </select>
+                        <button id="usr-settings--save" class="btn primary">Save settings</button>
+                    </div>
+
                 </section>
 
                 <section class="styles mt:l">

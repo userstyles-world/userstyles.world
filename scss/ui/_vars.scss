@@ -70,20 +70,22 @@ $mode: (
     --card-min-width: 300px;
     --form-max-width: 840px;
     --layout-max-width: 80rem;
+}
+
+[data-color-scheme="dark"] {
     @each $key, $val in map-get($mode, "dark") {
         --#{$key}: #{$val};
     }
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        @each $key, $val in map-get($mode, "light") {
-            --#{$key}: #{$val};
-        }
+[data-color-scheme="light"] {
+    @each $key, $val in map-get($mode, "light") {
+        --#{$key}: #{$val};
     }
 }
 
-[data-darkreader-scheme="dark"] .github svg { filter: invert(1) }
-@media (prefers-color-scheme: dark) {
-    .github svg { filter: invert(1) }
+[data-darkreader-scheme="dark"], [data-color-scheme="dark"] {
+    .github svg {
+        filter: invert(1);
+    }
 }

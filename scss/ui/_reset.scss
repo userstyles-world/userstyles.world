@@ -123,7 +123,8 @@ pre {
     height: 20rem;
 }
 
-form {
+form,
+.form-wrapper {
     margin: 1rem auto;
     padding: 1rem;
     max-width: var(--form-max-width);
@@ -134,7 +135,8 @@ form {
     label { display: flex }
 
     input,
-    textarea {
+    textarea,
+    select {
         width: 100%;
         display: flex;
         margin: 0.5rem 0 1.5rem;
@@ -147,6 +149,10 @@ form {
                 box-shadow: 0 0 0 0.25rem #f003;
             }
         }
+    }
+
+    select {
+        width: auto;
     }
 
     > button {

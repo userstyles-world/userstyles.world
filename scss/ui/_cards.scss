@@ -6,7 +6,7 @@
     &.col {
         picture {
             // Overlay the image on top of borders.
-            @media (prefers-color-scheme: light) {
+            [data-color-scheme="dark"] & {
                 margin: -1px;
             }
         }
