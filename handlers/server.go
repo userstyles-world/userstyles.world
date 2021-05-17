@@ -1,12 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"time"
 
-	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
@@ -84,12 +82,7 @@ func Initialize() {
 	if config.Production {
 		app.Use(limiter.New(limiter.Config{Max: 300}))
 	}
-	app.Use(jwtware.New("user", func(t *jwt.Token) (interface{}, error) {
-		if t.Method.Alg() != jwtware.SigningMethod {
-			return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
-		}
-		return jwtware.JWTSigningKey, nil
-	}))
+	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
 	app.Get("/", core.Home)
 	app.Get("/search", core.Search)
@@ -97,7 +90,7 @@ func Initialize() {
 	app.Post("/login", user.LoginPost)
 	app.Get("/register", user.RegisterGet)
 	app.Post("/register", user.RegisterPost)
-	app.Get("/oauth_login/:type", user.AuthLoginGet)
+	app.Get("/oauth/:type", user.AuthLoginGet)
 	app.Get("/verify/:key", user.VerifyGet)
 	app.Get("/recover", user.RecoverGet)
 	app.Post("/recover", user.RecoverPost)
@@ -142,7 +135,7 @@ func Initialize() {
 	v1.Post("/style/:id", api.ProtectedAPI, api.StylePost)
 	v1.Delete("/style/:id", api.ProtectedAPI, api.DeleteStyle)
 
-	oauthV1 := app.Group("/oauth")
+	oauthV1 := app.Group("/api/oauth")
 	oauthV1.Get("/authorize", jwtware.Protected, oauthprovider.AuthorizeGet)
 	oauthV1.Get("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStyleGet)
 	oauthV1.Post("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStylePost)

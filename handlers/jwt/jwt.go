@@ -1,11 +1,21 @@
 package jwt
 
 import (
+	"fmt"
+
+	"github.com/form3tech-oss/jwt-go"
 	lib "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/models"
 )
+
+var NormalJWTSigning = func(t *jwt.Token) (interface{}, error) {
+	if t.Method.Alg() != SigningMethod {
+		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+	}
+	return JWTSigningKey, nil
+}
 
 var Protected = func(c *fiber.Ctx) error {
 	if _, ok := User(c); !ok {
