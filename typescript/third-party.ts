@@ -3,17 +3,17 @@ const onMessage = (ev: MessageEvent<any>) => {
         return;
     }
     switch (ev.data.type) {
-        case "usw-remove-stylus-button": {
+        case 'usw-remove-stylus-button': {
             document.querySelector('a#stylus').remove();
         }
     }
-}
+};
 
-window.addEventListener("message", onMessage)
+window.addEventListener('message', onMessage);
 
 export function BroadcastReady() {
     window.dispatchEvent(new MessageEvent('message', {
-        data: {type: "usw-ready"},
-        origin: "https://userstyles.world"
+        data: {type: 'usw-ready'},
+        origin: 'https://userstyles.world'
     }));
 }

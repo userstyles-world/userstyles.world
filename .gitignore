@@ -1,6 +1,9 @@
 userstyles.world
+yarn-error.log
 styles.bleve/
+node_modules/
 image_cache/
+.eslintcache
 .vscode/
 public/
 .idea/
