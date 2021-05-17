@@ -70,6 +70,10 @@ func renderEngine() *html.Engine {
 		return template.HTML(r)
 	})
 
+	engine.AddFunc("Date", func(time time.Time) template.HTML {
+		return template.HTML(time.Format("January 02, 2006 15:04"))
+	})
+
 	if !config.Production {
 		engine.Reload(true)
 	}
