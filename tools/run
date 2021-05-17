@@ -57,7 +57,7 @@ drop() {
         DB_COLOR="true" \
         DB_DEBUG="${2:-silent}" \
         DB_RANDOM_DATA="${3:-false}" \
-        air
+        air -c tools/air.toml
 }
 
 dev() {
@@ -68,7 +68,7 @@ dev() {
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
         DB_COLOR="true" \
-        air -c air.toml
+        air -c tools/air.toml
 }
 
 # This option builds USw executable for use in production.
