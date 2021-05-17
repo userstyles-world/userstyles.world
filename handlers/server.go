@@ -70,6 +70,10 @@ func renderEngine() *html.Engine {
 		return template.HTML(r)
 	})
 
+	if !config.Production {
+		engine.Reload(true)
+	}
+
 	return engine
 }
 
