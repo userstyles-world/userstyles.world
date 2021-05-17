@@ -35,7 +35,7 @@ func FindStylesByText(text string) ([]MinimalStyle, error) {
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
 	// This way it will be more "loslly" and actually uses the tokenizers.
-	// That we provide withing the mappings.go and provide better results.
+	// That we provide within the mappings.go and provide better results.
 	sanitzedQuery := bleve.NewMatchQuery(text)
 
 	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, 99, 0, false)

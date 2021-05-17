@@ -6,7 +6,7 @@ var (
 	header = []byte("Strict-Transport-Security")
 	// Make it so that that the max-age is 2 years, it's high enough.
 	// We also say that every subdomain has HTTPS://
-	// And we say that we are preload(on browser's list)/
+	// And we say that we are preload(on browser's list).
 	value = []byte("max-age=63072000; includeSubDomains; preload")
 )
 

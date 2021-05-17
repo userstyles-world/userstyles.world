@@ -8,9 +8,7 @@ import (
 	"userstyles.world/models"
 )
 
-var (
-	size = 5
-)
+var size = 5
 
 func ImportedStyles() {
 	styles, err := models.GetImportedStyles(database.DB)

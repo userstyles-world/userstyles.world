@@ -1,7 +1,7 @@
 package style
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -37,7 +37,7 @@ func DeleteByID(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		fmt.Printf("Failed to delete style, err: %#+v\n", err)
+		log.Printf("Failed to delete style, err: %#+v\n", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
 			"User":  u,
