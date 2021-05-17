@@ -13,8 +13,7 @@ func GetDocs(c *fiber.Ctx) error {
 	document := c.Params("document")
 
 	var content []byte
-	switch document {
-	case "changelog":
+	if document == "changelog" {
 		content, _ = os.ReadFile("docs/changelog.md")
 	}
 
