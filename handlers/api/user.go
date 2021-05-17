@@ -46,11 +46,7 @@ func UserGet(c *fiber.Ctx) error {
 			"email":     user.Email,
 			"biography": user.Biography,
 			"role":      roleToString(user.Role),
-			"socials": fiber.Map{
-				"github":   user.Socials.Github,
-				"gitlab":   user.Socials.Gitlab,
-				"codeberg": user.Socials.Codeberg,
-			},
+			"socials":   user.Socials,
 		},
 	})
 }
@@ -77,11 +73,7 @@ func SpecificUserGet(c *fiber.Ctx) error {
 			"username":  user.Username,
 			"biography": user.Biography,
 			"role":      roleToString(user.Role),
-			"socials": fiber.Map{
-				"github":   user.Socials.Github,
-				"gitlab":   user.Socials.Gitlab,
-				"codeberg": user.Socials.Codeberg,
-			},
+			"socials":   user.Socials,
 		},
 	})
 }
