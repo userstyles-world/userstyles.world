@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "baseUrl": ".",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "lib": [
+            "es2015",
+            "es2017",
+            "dom",
+            "dom.iterable"
+        ],
+        "downlevelIteration": true,
+        "noEmit": true,
+        "incremental": true,
+        "isolatedModules": true
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

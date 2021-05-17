@@ -68,7 +68,7 @@ dev() {
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
         DB_COLOR="true" \
-        air
+        air -c air.toml
 }
 
 # This option builds USw executable for use in production.
@@ -82,11 +82,20 @@ build() {
         -buildmode pie -tags 'osusergo netgo static_build'
 }
 
+ts() {
+    log "Compiling typescript"
+
+    env DEBUG="${2:-false}" \
+        WATCH="${3:-false}" \
+        go run ./typescript/run.go
+}
+
 case "$1" in
     build) build "$@" ;;
     dev)  dev    "$@" ;;
     drop) drop   "$@" ;;
     prod) prod   "$@" ;;
     sass) sass   "$@" ;;
+    ts) ts       "$@" ;;
     *) invalid   "$@" ;;
 esac

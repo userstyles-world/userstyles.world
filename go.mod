@@ -7,6 +7,7 @@ require (
 	github.com/davidbyttow/govips/v2 v2.6.0
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
+	github.com/evanw/esbuild v0.11.23
 	github.com/form3tech-oss/jwt-go v3.2.2+incompatible
 	github.com/go-co-op/gocron v1.5.0
 	github.com/go-playground/validator/v10 v10.6.0
