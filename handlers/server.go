@@ -21,21 +21,12 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
-	"userstyles.world/models"
 	"userstyles.world/utils"
 )
 
 // TODO: Refactor this as a separate package.
 func renderEngine() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
-
-	engine.AddFunc("Name", func(u models.User) template.HTML {
-		if u.DisplayName != "" {
-			return template.HTML(u.DisplayName)
-		}
-
-		return template.HTML(u.Username)
-	})
 
 	engine.AddFunc("Markdown", func(s string) template.HTML {
 		// Generate Markdown then sanitize it before returning HTML.

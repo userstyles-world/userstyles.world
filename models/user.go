@@ -43,10 +43,20 @@ type APIUser struct {
 	Role        Role
 }
 
+// Check if user set any social media.
 func (u User) HasSocials() bool {
 	return u.Socials.Codeberg != "" ||
 		u.Socials.Gitlab != "" ||
 		u.Socials.Github != ""
+}
+
+// Return display name if it is set.
+func (u User) Name() string {
+	if u.DisplayName != "" {
+		return u.DisplayName
+	}
+
+	return u.Username
 }
 
 // Return user's role in string format.

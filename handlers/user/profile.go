@@ -45,7 +45,7 @@ func Profile(c *fiber.Ctx) error {
 	}*/
 
 	return c.Render("profile", fiber.Map{
-		"Title":  user.Username + "'s profile",
+		"Title":  user.Name() + "'s profile",
 		"User":   u,
 		"Params": user,
 		"Styles": styles,

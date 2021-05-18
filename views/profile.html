@@ -9,7 +9,7 @@
         <main>
             <div class="wrapper py:l">
                 <section class="welcome">
-                    <h1 class="title mb:m">{{ .Params | Name }}'s profile</h1>
+                    <h1 class="title mb:m">{{ .Params.Name }}'s profile</h1>
                     <p class="id"><span class="minw">ID</span>{{ .Params.ID }}</p>
                     <p class="role"><span class="minw">Role</span>{{ .Params.RoleString }}</p>
                     <p class="username"><span class="minw">Username</span>{{ .Params.Username }}</p>
