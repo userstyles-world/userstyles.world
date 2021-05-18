@@ -49,6 +49,19 @@ func (u User) HasSocials() bool {
 		u.Socials.Github != ""
 }
 
+// Return user's role in string format.
+func (u User) RoleString() (s string) {
+	switch u.Role {
+	case Regular:
+		s = "Regular"
+	case Moderator:
+		s = "Moderator"
+	case Admin:
+		s = "Admin"
+	}
+	return s
+}
+
 func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 	user := new(User)
 

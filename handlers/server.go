@@ -57,19 +57,6 @@ func renderEngine() *html.Engine {
 		return template.HTML(config.GIT_COMMIT)
 	})
 
-	engine.AddFunc("Role", func(i models.Role) template.HTML {
-		r := ""
-		switch i {
-		case models.Regular:
-			r = "Regular"
-		case models.Moderator:
-			r = "Moderator"
-		case models.Admin:
-			r = "Admin"
-		}
-		return template.HTML(r)
-	})
-
 	engine.AddFunc("Date", func(time time.Time) template.HTML {
 		return template.HTML(time.Format("January 02, 2006 15:04"))
 	})
