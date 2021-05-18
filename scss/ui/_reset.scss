@@ -39,14 +39,6 @@ html {
     }
     h1 { font-size: 2.5em }
     img { width: 100% }
-
-    @at-root {
-        ::-webkit-scrollbar {
-            width: 12px;
-            &-thumb { background-color: var(--bg-5) }
-            &-track { background-color: var(--bg-2) }
-        }
-    }
 }
 
 h2, h3 { margin: 1em 0 0.5em }

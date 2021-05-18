@@ -1,0 +1,8 @@
+// Show native dark elements in Chromium v90 or later.
+@supports not (overflow: clip) {
+    ::-webkit-scrollbar {
+        width: 12px;
+        &-thumb { background-color: var(--bg-5) }
+        &-track { background-color: var(--bg-2) }
+    }
+}
