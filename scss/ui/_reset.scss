@@ -39,6 +39,12 @@ html {
     }
     h1 { font-size: 2.5em }
     img { width: 100% }
+
+    mark {
+        display: inline-flex;
+        color: var(--inverse);
+        background-color: var(--ac-4);
+    }
 }
 
 h2, h3 { margin: 1em 0 0.5em }
