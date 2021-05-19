@@ -18,12 +18,12 @@ import (
 	"userstyles.world/config"
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
+	"userstyles.world/handlers/jwt"
 	jwtware "userstyles.world/handlers/jwt"
 	oauthprovider "userstyles.world/handlers/oauthProvider"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
-	"userstyles.world/models"
-	"userstyles.world/oauth_provider"
+	"userstyles.world/utils"
 )
 
 // TODO: Refactor this as a separate package.
