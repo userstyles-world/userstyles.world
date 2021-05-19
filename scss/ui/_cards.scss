@@ -104,11 +104,11 @@
     }
 
     &-body {
-        .name {
+        > * {
             width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: pre;
+            white-space: nowrap;
         }
     }
 }
