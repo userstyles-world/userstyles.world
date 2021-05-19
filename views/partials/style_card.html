@@ -1,14 +1,12 @@
-{{- $styleURL := printf "/style/%d/%s" .ID (.Name | Slug) -}}
-
 <div class="card col gap animate bd:o">
-    <a href="{{ $styleURL }}"
+    <a href="{{ .StyleURL }}"
         class="card-header thumbnail"
         aria-label="{{ .Name }} screenshot">
         {{ template "partials/preview_image" . }}
     </a>
 
     <div class="card-body f:col p:m bd:t">
-        <a class="name fg:1 f:h3 f:b" href="{{ $styleURL }}">{{ .Name }}</a>
+        <a class="name fg:1 f:h3 f:b" href="{{ .StyleURL }}">{{ .Name }}</a>
         <span class="author fg:4">
             by <a class="fg:2" href="/user/{{ .Username }}">{{ .Author }}</a>
         </span>

@@ -9,7 +9,7 @@ import (
 	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
-	"userstyles.world/utils"
+	"userstyles.world/utils/strings"
 )
 
 func GetStylePage(c *fiber.Ctx) error {
@@ -26,7 +26,8 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 
 	// Create slugged URL.
-	slug := utils.SlugifyURL(data.Name)
+	// TODO: Refactor after GetStyleByID switches away from APIStyle.
+	slug := strings.SlugifyURL(data.Name)
 
 	// Always redirect to correct slugged URL.
 	if name != slug {

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 
 	"userstyles.world/config"
 	"userstyles.world/errors_helper"
+	"userstyles.world/utils/strings"
 )
 
 type Style struct {
@@ -79,6 +81,14 @@ type StyleSearch struct {
 	Installs    int
 	User        User `gorm:"foreignKey:ID"`
 	UserID      uint
+}
+
+func (s StyleCard) Slug() string {
+	return strings.SlugifyURL(s.Name)
+}
+
+func (s StyleCard) StyleURL() string {
+	return fmt.Sprintf("style/%d/%s", s.ID, s.Slug())
 }
 
 func (s StyleCard) Author() string {
