@@ -8,23 +8,27 @@
     </a>
 
     <div class="card-body f:col p:m bd:t">
-        <small class="date fg:4">
-            {{- printf "Updated %v" (.UpdatedAt | Date) -}}
-        </small>
         <a class="name fg:1 f:h3 f:b" href="{{ $styleURL }}">{{ .Name }}</a>
         <span class="author fg:4">
             by <a class="fg:2" href="/user/{{ .Username }}">{{ .Author }}</a>
         </span>
     </div>
 
-    <div class="card-footer flex jc:a bd:t py:m px:m">
+    <div class="card-footer flex jc:b bd:t py:m px:m">
         <small class="fg:3 flex ai:c">
-            {{ template "icons/view" "mr:s" }}
-            {{ .Views }} views
+            {{ template "icons/calendar" "16" }}
+            {{ $date := .UpdatedAt.Format "2006-01-02 15:04:05" }}
+            <time datetime="{{ $date }}" class="ml:s">
+                {{- .UpdatedAt.Format "Jan 2" -}}
+            </time>
         </small>
-        <small class="fg:3 flex ai:c ml:m">
-            {{ template "icons/download" "mr:s" }}
-            {{ .Installs }} installs
+        <small class="fg:3 flex ai:c ml:s">
+            {{ template "icons/view" "16" }}
+            <span class="ml:s">{{ .Views }} views</span>
+        </small>
+        <small class="fg:3 flex ai:c ml:s">
+            {{ template "icons/download" "16" }}
+            <span class="ml:s">{{ .Installs }} installs</span>
         </small>
     </div>
 </div>

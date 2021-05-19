@@ -111,6 +111,10 @@
             white-space: nowrap;
         }
     }
+
+    &-footer {
+        small { font-size: 75% }
+    }
 }
 
 // TODO: Figure out how to deal with responsive design.
