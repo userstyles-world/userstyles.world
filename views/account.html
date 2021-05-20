@@ -44,7 +44,7 @@
                             type="text" name="name"
                             pattern="^[a-zA-Z0-9-_ ]{5,20}$"
                             value="{{ .Params.DisplayName }}">
-                        <button class="flex btn primary" type="submit">Save</button>
+                        <button class="btn primary" type="submit">Save</button>
                     </form>
 
                     <h2 class="sub-title td:d mt:l">Biography</h2>
@@ -58,7 +58,7 @@
                             placeholder="e.g. I'd often make styles.">
                             {{- .Params.Biography -}}
                         </textarea>
-                        <button class="flex btn primary" type="submit">Save</button>
+                        <button class="btn primary" type="submit">Save</button>
                     </form>
 
                     <h2 class="sub-title td:d mt:l">Socials</h2>
@@ -93,7 +93,7 @@
                             placeholder="e.g. username"
                             value="{{ .Params.Socials.Codeberg }}"/>
                         </input>
-                        <button class="flex btn primary" type="submit">Save</button>
+                        <button class="btn primary" type="submit">Save</button>
                     </form>
 
                     <h2 class="sub-title td:d mt:l">User settings</h1>
