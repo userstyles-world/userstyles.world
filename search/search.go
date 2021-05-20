@@ -1,9 +1,12 @@
 package search
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+
+	"userstyles.world/utils/strings"
 )
 
 const (
@@ -21,6 +24,14 @@ type MinimalStyle struct {
 	Notes       string    `json:"notes"`
 	Views       int       `json:"views"`
 	Installs    int       `json:"installs"`
+}
+
+func (s MinimalStyle) Slug() string {
+	return strings.SlugifyURL(s.Name)
+}
+
+func (s MinimalStyle) StyleURL() string {
+	return fmt.Sprintf("style/%d/%s", s.ID, s.Slug())
 }
 
 func (s MinimalStyle) Author() string {
