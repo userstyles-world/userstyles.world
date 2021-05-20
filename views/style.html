@@ -17,6 +17,8 @@
                     {{- end }}
                     <div class="card bd:o">
                         <div class="screenshot">
+                            {{ $webp := printf "/api/style/preview/%d.webp" .Style.ID }}
+                            <img class="blurred" src="{{ $webp }}">
                             {{- template "partials/preview_image" .Style -}}
                         </div>
                     </div>

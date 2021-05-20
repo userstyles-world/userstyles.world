@@ -1,6 +1,5 @@
 {{ $webp := printf "/api/style/preview/%d.webp" .ID }}
 {{ if .Preview }}
-    <div class="blurred" style="background-image: url({{ $webp }})"></div>
     <picture>
         <source srcset="{{ $webp }}" type="image/webp">
         <img src="/api/style/preview/{{ .ID }}.jpeg"
