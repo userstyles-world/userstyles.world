@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
-	"userstyles.world/errors_helper"
+	"userstyles.world/modules/errors"
 )
 
 type Role int
@@ -80,7 +80,7 @@ func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 	}
 
 	if user.ID == 0 {
-		return nil, errors_helper.ErrUserNotFound
+		return nil, errors.UserNotFound
 	}
 
 	return user, nil
@@ -98,7 +98,7 @@ func FindUserByName(db *gorm.DB, name string) (*User, error) {
 	}
 
 	if user.ID == 0 {
-		return nil, errors_helper.ErrUserNotFound
+		return nil, errors.UserNotFound
 	}
 
 	return user, nil

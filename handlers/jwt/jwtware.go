@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/config"
-	"userstyles.world/errors_helper"
+	"userstyles.world/modules/errors"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 
 func KeyFuncion(t *jwt.Token) (interface{}, error) {
 	if t.Method.Alg() != signingMethod {
-		return nil, errors_helper.ErrUnexpectedSigningMethod(t.Method.Alg())
+		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}
 	return signingKey, nil
 }

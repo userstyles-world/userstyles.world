@@ -8,7 +8,7 @@ import (
 	"github.com/emersion/go-smtp"
 
 	"userstyles.world/config"
-	"userstyles.world/errors_helper"
+	"userstyles.world/modules/errors"
 )
 
 var (
@@ -80,7 +80,7 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 	partsLen := len(eb.Parts)
 
 	if partsLen == 0 {
-		return "", errors_helper.ErrNoParts
+		return "", errors.NoParts
 	}
 
 	if partsLen > 1 {
@@ -101,7 +101,7 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 		part := eb.Parts[i]
 
 		if part.Body == "" {
-			return "", errors_helper.ErrNoPartBody
+			return "", errors.NoPartBody
 		}
 		if part.ContentTransferEncoding == "" {
 			part.ContentTransferEncoding = "8bit"
@@ -133,11 +133,11 @@ func (eb *EmailBuilder) SendEmail() error {
 	}
 
 	if eb.To == "" {
-		return errors_helper.ErrNoToParameter
+		return errors.NoToParameter
 	}
 
 	if eb.Subject == "" {
-		return errors_helper.ErrNoSubject
+		return errors.NoSubject
 	}
 
 	bodyMessage, err := eb.parseMultiPart()

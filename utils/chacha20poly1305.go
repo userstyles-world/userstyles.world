@@ -7,7 +7,7 @@ import (
 	"golang.org/x/crypto/chacha20poly1305"
 
 	"userstyles.world/config"
-	"userstyles.world/errors_helper"
+	"userstyles.world/modules/errors"
 )
 
 var (
@@ -39,7 +39,7 @@ func SealText(text string, aead cipher.AEAD) []byte {
 
 func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 	if len(encryptedMsg) < aead.NonceSize() {
-		return nil, errors_helper.ErrMessageSmall
+		return nil, errors.MessageSmall
 	}
 	// Split nonce and ciphertext.
 	nonce, ciphertext := encryptedMsg[:aead.NonceSize()], encryptedMsg[aead.NonceSize():]
@@ -50,7 +50,7 @@ func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 
 func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
 	if t.Method.Alg() != verifySigningMethod {
-		return nil, errors_helper.ErrUnexpectedSigningMethod(t.Method.Alg())
+		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}
 	return VerifySigningKey, nil
 }

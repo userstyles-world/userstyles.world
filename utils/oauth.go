@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"userstyles.world/config"
-	"userstyles.world/errors_helper"
+	"userstyles.world/modules/errors"
 )
 
 const (
@@ -92,7 +92,7 @@ func OauthMakeURL(service string) string {
 
 func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	if service == "" {
-		return OAuthResponse{}, errors_helper.ErrNoServiceDetected
+		return OAuthResponse{}, errors.NoServiceDetected
 	}
 	// Now the hard part D:
 	// With our temp code and orignial state, we need to request the auth code.
@@ -130,7 +130,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		}
 	}
 	if authURL == "" {
-		return OAuthResponse{}, errors_helper.ErrNoAuthURL
+		return OAuthResponse{}, errors.NoAuthURL
 	}
 	if body.ClientID == "" {
 		// Add the temp code.
@@ -158,7 +158,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		return OAuthResponse{}, errors_helper.ErrNot200Ok
+		return OAuthResponse{}, errors.Not200Ok
 	}
 	var responseJSON OAuthTokenResponse
 
@@ -192,7 +192,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	}
 	defer resEmail.Body.Close()
 	if resEmail.StatusCode != 200 {
-		return OAuthResponse{}, errors_helper.ErrNot200Ok
+		return OAuthResponse{}, errors.Not200Ok
 	}
 
 	var oauthResponse OAuthResponse

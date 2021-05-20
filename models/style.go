@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/config"
-	"userstyles.world/errors_helper"
+	"userstyles.world/modules/errors"
 	"userstyles.world/utils/strings"
 )
 
@@ -158,7 +158,7 @@ func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
 		Find(q).
 		Error
 	if err != nil {
-		return nil, errors_helper.ErrStylesNotFound
+		return nil, errors.StylesNotFound
 	}
 
 	return *q, nil
@@ -179,7 +179,7 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 		Find(q).
 		Error
 	if err != nil {
-		return nil, errors_helper.ErrStylesNotFound
+		return nil, errors.StylesNotFound
 	}
 
 	return q, nil
@@ -236,7 +236,7 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
 		Error
 	if err != nil {
-		return nil, errors_helper.ErrNoImportedStyles
+		return nil, errors.NoImportedStyles
 	}
 
 	return *q, nil
@@ -253,7 +253,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 		Error
 
 	if err != nil || q.ID == 0 {
-		return nil, errors_helper.ErrStyleNotFound
+		return nil, errors.StyleNotFound
 	}
 
 	return q, nil
@@ -328,7 +328,7 @@ func CheckDuplicateStyle(db *gorm.DB, s *Style) error {
 		Error
 
 	if err == nil {
-		return errors_helper.ErrDuplicateStyle
+		return errors.DuplicateStyle
 	}
 
 	return nil
