@@ -2,14 +2,10 @@
     min-width: var(--card-min-width);
     border-radius: var(--br-3);
     background-color: var(--bg-2);
+    box-shadow: var(--sh-m);
 
-    &.col {
-        picture {
-            // Overlay the image on top of borders.
-            [data-color-scheme="dark"] & {
-                margin: -1px;
-            }
-        }
+    @media (prefers-color-scheme: light) {
+        background-color: var(--bg-1);
     }
 
     &.animate {

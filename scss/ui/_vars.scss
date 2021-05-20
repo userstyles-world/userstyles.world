@@ -33,6 +33,7 @@ $mode: (
         "st-4": darken($st-dark, 32%),
         "st-5": darken($st-dark, 40%),
         "bg-t": transparentize($bg-dark, 0.3),
+        "sh-m": "0 4px 12px -2px #0006, 0 6px 4px -4px #0002",
     ),
     "light": (
         "bg-1": darken($bg-light,  0%),
@@ -56,6 +57,7 @@ $mode: (
         "st-4": darken($st-light, 32%),
         "st-5": darken($st-light, 40%),
         "bg-t": transparentize($bg-light, 0.2),
+        "sh-m": "0 4px 16px -4px #0004, 0 4px 4px -4px #0001",
     ),
 );
 
@@ -63,9 +65,9 @@ $mode: (
     --font-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --font-sans: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Droid Sans", sans-serif;
     --font-mono: "Iosevka", "Fira Code", "Fira Mono", "Droid Mono", "Ubuntu Mono", Monaco, monospace;
-    --br-1: 1rem;
-    --br-2: 0.66rem;
-    --br-3: 0.33rem;
+    --br-1: 16px;
+    --br-2: 12px;
+    --br-3: 8px;
     --inverse: #ffffff;
     --card-min-width: 300px;
     --form-max-width: 840px;
