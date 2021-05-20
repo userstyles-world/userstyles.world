@@ -19,8 +19,8 @@
                     <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt | Date }}</p>
                     <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">
-                        {{- if .Params.Biography -}}
-                            {{- .Params.Biography | Markdown -}}
+                        {{- with .Params.Biography -}}
+                            {{- . | Markdown -}}
                         {{- else -}}
                             <p class="fg:3"><i>Biography isn't set.</i></p>
                         {{- end -}}
@@ -32,28 +32,22 @@
                     {{- if not .Params.HasSocials -}}
                         <p class="fg:3"><i>Socials aren't set.</i></p>
                     {{- end -}}
-                    {{ if .Params.Socials.Github }}
+                    {{ with .Params.Socials.Github }}
                         <div class="github flex mt:m">
                             {{- template "icons/github" -}}
-                            <a class="link" href="https://github.com/{{ .Params.Socials.Github }}">
-                                {{- .Params.Socials.Github -}}
-                            </a>
+                            <a class="link" href="https://github.com/{{ . }}">{{ . }}</a>
                         </div>
                     {{ end }}
-                    {{ if .Params.Socials.Gitlab }}
+                    {{ with .Params.Socials.Gitlab }}
                         <div class="gitlab flex mt:m">
                             {{- template "icons/gitlab" -}}
-                            <a class="link" href="https://gitlab.com/{{ .Params.Socials.Gitlab }}">
-                                {{- .Params.Socials.Gitlab -}}
-                            </a>
+                            <a class="link" href="https://gitlab.com/{{ . }}">{{ . }}</a>
                         </div>
                     {{ end }}
-                    {{ if .Params.Socials.Codeberg }}
+                    {{ with .Params.Socials.Codeberg }}
                         <div class="codeberg flex mt:m">
                             {{- template "icons/codeberg" -}}
-                            <a class="link" href="https://Codeberg.org/{{ .Params.Socials.Codeberg }}">
-                                {{- .Params.Socials.Codeberg -}}
-                            </a>
+                            <a class="link" href="https://codeberg.org/{{ . }}">{{ . }}</a>
                         </div>
                     {{ end }}
                 </section>
