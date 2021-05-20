@@ -1,6 +1,8 @@
 package models
 
 import (
+	"database/sql"
+	"log"
 	"strconv"
 	"time"
 
@@ -28,7 +30,7 @@ type Stats struct {
 }
 
 type SiteStats struct {
-	UserCount, StyleCount         int64
+	TotalUsers, TotalStyles       int64
 	WeeklyViews, TotalViews       int64
 	WeeklyInstalls, TotalInstalls int64
 	WeeklyUpdates                 int64
@@ -117,18 +119,31 @@ func GetWeeklyUpdatesForStyle(db *gorm.DB, id string) (weekly int64) {
 }
 
 func GetHomepageStatistics(db *gorm.DB) *SiteStats {
-	p, s := SiteStats{}, Stats{}
+	p := SiteStats{}
+	q := `
+SELECT
+	(SELECT count(*) FROM users
+	 WHERE users.deleted_at IS NULL) total_users,
+	(SELECT count(*) FROM styles
+	 WHERE styles.deleted_at IS NULL) total_styles,
+	(SELECT count(*) FROM stats s
+	 WHERE s.view = 1) total_views,
+	(SELECT count(*) FROM stats s
+	 WHERE s.install = 1) total_installs,
+	(SELECT count(*) FROM stats s
+	 WHERE s.view = 1 and s.created_at > @d) weekly_views,
+	(SELECT count(*) FROM stats s
+	 WHERE s.install = 1 and s.created_at > @d) weekly_installs,
+	(SELECT count(*) FROM stats s
+	 WHERE s.install = 1 and s.updated_at > @d and s.created_at < @d) weekly_updates
+`
 
 	// TODO: Replace last day with last week when we get enough data.
 	lastDay := time.Now().AddDate(0, 0, -1)
 
-	db.Model(User{}).Where("id").Count(&p.UserCount)
-	db.Model(Style{}).Where("id").Count(&p.StyleCount)
-	db.Model(&s).Where(totalViews).Count(&p.TotalViews)
-	db.Model(&s).Where(weeklyViews, lastDay).Count(&p.WeeklyViews)
-	db.Model(&s).Where(weeklyInstalls, lastDay).Count(&p.WeeklyInstalls)
-	db.Model(&s).Where(weeklyUpdates, lastDay, lastDay).Count(&p.WeeklyUpdates)
-	db.Model(&s).Where(totalInstalls).Count(&p.TotalInstalls)
+	if err := db.Raw(q, sql.Named("d", lastDay)).Scan(&p).Error; err != nil {
+		log.Printf("Failed to get homepage stats, err: %v\n", err)
+	}
 
 	return &p
 }
