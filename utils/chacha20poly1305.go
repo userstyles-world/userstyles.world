@@ -2,13 +2,12 @@ package utils
 
 import (
 	"crypto/cipher"
-	"errors"
-	"fmt"
 
 	"github.com/form3tech-oss/jwt-go"
 	"golang.org/x/crypto/chacha20poly1305"
 
 	"userstyles.world/config"
+	"userstyles.world/errors_helper"
 )
 
 var (
@@ -40,7 +39,7 @@ func SealText(text string, aead cipher.AEAD) []byte {
 
 func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 	if len(encryptedMsg) < aead.NonceSize() {
-		return nil, errors.New("message too small")
+		return nil, errors_helper.ErrMessageSmall
 	}
 	// Split nonce and ciphertext.
 	nonce, ciphertext := encryptedMsg[:aead.NonceSize()], encryptedMsg[aead.NonceSize():]
@@ -51,7 +50,7 @@ func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 
 func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
 	if t.Method.Alg() != verifySigningMethod {
-		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+		return nil, errors_helper.ErrUnexpectedSigningMethod(t.Method.Alg())
 	}
 	return VerifySigningKey, nil
 }

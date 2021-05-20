@@ -2,13 +2,13 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"userstyles.world/config"
+	"userstyles.world/errors_helper"
 )
 
 const (
@@ -92,7 +92,7 @@ func OauthMakeURL(service string) string {
 
 func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	if service == "" {
-		return OAuthResponse{}, errors.New("no service detected")
+		return OAuthResponse{}, errors_helper.ErrNoServiceDetected
 	}
 	// Now the hard part D:
 	// With our temp code and orignial state, we need to request the auth code.
@@ -130,7 +130,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		}
 	}
 	if authURL == "" {
-		return OAuthResponse{}, errors.New("no authURL was set")
+		return OAuthResponse{}, errors_helper.ErrNoAuthURL
 	}
 	if body.ClientID == "" {
 		// Add the temp code.
@@ -158,7 +158,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		return OAuthResponse{}, errors.New("status code returned wasn't OK 200")
+		return OAuthResponse{}, errors_helper.ErrNot200Ok
 	}
 	var responseJSON OAuthTokenResponse
 
@@ -192,7 +192,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	}
 	defer resEmail.Body.Close()
 	if resEmail.StatusCode != 200 {
-		return OAuthResponse{}, errors.New("status code returned for userInformationReq wasn't OK 200")
+		return OAuthResponse{}, errors_helper.ErrNot200Ok
 	}
 
 	var oauthResponse OAuthResponse

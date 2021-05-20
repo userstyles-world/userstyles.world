@@ -1,13 +1,13 @@
 package jwt
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/config"
+	"userstyles.world/errors_helper"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 
 func KeyFuncion(t *jwt.Token) (interface{}, error) {
 	if t.Method.Alg() != signingMethod {
-		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+		return nil, errors_helper.ErrUnexpectedSigningMethod(t.Method.Alg())
 	}
 	return signingKey, nil
 }

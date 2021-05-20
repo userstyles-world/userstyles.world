@@ -1,7 +1,6 @@
 package models
 
 import (
-	"errors"
 	"log"
 	"time"
 
@@ -9,6 +8,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/config"
+	"userstyles.world/errors_helper"
 )
 
 type Style struct {
@@ -139,7 +139,7 @@ func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
 		Find(q).
 		Error
 	if err != nil {
-		return nil, errors.New("styles not found")
+		return nil, errors_helper.ErrStylesNotFound
 	}
 
 	return *q, nil
@@ -160,7 +160,7 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 		Find(q).
 		Error
 	if err != nil {
-		return nil, errors.New("styles not found")
+		return nil, errors_helper.ErrStylesNotFound
 	}
 
 	return q, nil
@@ -217,7 +217,7 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
 		Error
 	if err != nil {
-		return nil, errors.New("no imported styles")
+		return nil, errors_helper.ErrNoImportedStyles
 	}
 
 	return *q, nil
@@ -234,7 +234,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 		Error
 
 	if err != nil || q.ID == 0 {
-		return nil, errors.New("style not found")
+		return nil, errors_helper.ErrStyleNotFound
 	}
 
 	return q, nil
@@ -309,7 +309,7 @@ func CheckDuplicateStyle(db *gorm.DB, s *Style) error {
 		Error
 
 	if err == nil {
-		return errors.New("duplicate style")
+		return errors_helper.ErrDuplicateStyle
 	}
 
 	return nil

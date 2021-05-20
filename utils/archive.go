@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/vednoc/go-usercss-parser"
 
+	"userstyles.world/errors_helper"
 	"userstyles.world/models"
 )
 
@@ -39,19 +39,19 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	s := &models.Style{}
 	if err != nil {
 		log.Printf("failed to extract id, err: %v\n", err)
-		return s, errors.New("failed to extract Style ID")
+		return s, errors_helper.ErrFailedProcessData
 	}
 
 	data, err := fetchJSON(id)
 	if err != nil {
 		log.Printf("failed to fetch json, err: %v\n", err)
-		return s, errors.New("failed to fetch Style data")
+		return s, errors_helper.ErrFailedFetch
 	}
 
 	res, err := unmarshalJSON(data)
 	if err != nil {
 		log.Printf("failed to unmarshal json, err: %v\n", err)
-		return s, errors.New("failed to process Style data")
+		return s, errors_helper.ErrFailedProcessData
 	}
 
 	// Fetch generated UserCSS format.
@@ -59,7 +59,7 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	uc, err := usercss.ParseFromURL(source)
 	if err != nil {
 		log.Printf("failed to parse style from URL, err: %v\n", err)
-		return s, errors.New("failed to fetch Style")
+		return s, errors_helper.ErrFailedFetch
 	}
 
 	s = &models.Style{
@@ -85,7 +85,7 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 
 func extractID(url string) (string, error) {
 	if !strings.HasPrefix(url, ArchiveURL) {
-		return "", errors.New("style isn't from uso-archive")
+		return "", errors_helper.ErrStyleNotFromUSO
 	}
 
 	// Trim everything except style id.
@@ -113,7 +113,7 @@ func fetchJSON(id string) ([]byte, error) {
 
 	// Return error if style doesn't exist.
 	if string(body) == "404: Not Found" {
-		return nil, errors.New("style not found")
+		return nil, errors_helper.ErrStyleNotFound
 	}
 
 	return body, nil
