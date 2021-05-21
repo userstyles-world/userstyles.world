@@ -27,13 +27,16 @@
                             required pattern="^[\S]{8,32}$"
                             type="password" name="password"
                             placeholder="Your password">
-                        <div class="ta:l">
+                        <div class="checkbox iflex mb:m">
+                            <input type="checkbox" name="remember" id="remember">
+                            {{ template "partials/checkboxes" }}
                             <label for="remember">Remember me</label>
-                            <input type="checkbox" name="remember">
                         </div>
-                        <span class="flex" style="align-items: center">
-                             <button class="btn primary" type="submit">Sign in</button>
-                             <a class="ml:a" href="/recover">Forgot your password?</a>
+                        <span class="flex ai:c">
+                            <button class="btn icon primary" type="submit">
+                                {{ template "icons/sign-in" 16 }} Sign in
+                            </button>
+                            <a class="ml:a" href="/recover">Forgot your password?</a>
                         </span>
                     </form>
                     <p class="form-tip ta:c">

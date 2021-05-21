@@ -50,6 +50,12 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
         background-color: var(--bg-3);
     }
 
+    &.icon {
+        display: flex;
+        align-items: center;
+        > svg { margin-right: 0.4rem }
+    }
+
     &.primary {
         color: var(--fg-1);
         border-color: var(--ac-3);
@@ -133,13 +139,6 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
 input[type="checkbox"],
 label[for="remember"] {
     width: unset;
-
-    [data-color-scheme="dark"] & {
-        @at-root input[type="checkbox"] {
-            box-shadow: none;
-            filter: invert(0.9) hue-rotate(180deg);
-        }
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
