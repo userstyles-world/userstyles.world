@@ -102,7 +102,10 @@ nav {
 @media screen and (max-width: 820px) {
     .menu {
         padding: 0;
-        form { margin: 1rem }
+        form {
+            margin: 1rem;
+            max-width: calc(100% - 2rem);
+        }
     }
     nav ul li {
         a {
