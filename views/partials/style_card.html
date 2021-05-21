@@ -5,14 +5,14 @@
         {{ template "partials/preview_image" . }}
     </a>
 
-    <div class="card-body f:col p:m bd:t">
+    <div class="card-body f:col p:m">
         <a class="name fg:1 f:h3 f:b" href="{{ .StyleURL }}">{{ .Name }}</a>
         <span class="author fg:4">
             by <a class="fg:2" href="/user/{{ .Username }}">{{ .Author }}</a>
         </span>
     </div>
 
-    <div class="card-footer flex jc:b bd:t py:m px:m">
+    <div class="card-footer flex jc:b py:m px:m">
         <small class="fg:3 flex ai:c">
             {{ template "icons/calendar" "16" }}
             {{ $date := .UpdatedAt.Format "2006-01-02 15:04:05" }}
