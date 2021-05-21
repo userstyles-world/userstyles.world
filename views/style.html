@@ -27,7 +27,7 @@
                 <section class="mt:l">
                     <div class="header flex mb:m ai:c">
                         {{ if .Slug }}
-                            <div class="share flex ai:c">
+                            <div class="share flex ai:c mr:m">
                                 <span class="mr:s">Share style</span>
                                 <input
                                     id="share"
@@ -46,16 +46,16 @@
                         <span class="actions flex ml:a">
                             {{ if eq .User.ID .Style.UserID }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}">
-                                    <button class="btn" type="submit">Delete</button>
+                                    <button class="btn mr:s" type="submit">Delete</button>
                                 </form>
                                 <a
                                     href="/edit/{{ .Style.ID }}"
-                                    class="btn ml:s"
+                                    class="btn mr:s"
                                 >Edit</a>
                             {{ end }}
                             {{ if ge .User.Role 1 }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
-                                    <button class="btn ml:s" type="submit"
+                                    <button class="btn mr:s" type="submit"
                                     tooltip-data='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
                                     >
                                     🌟</button>
@@ -66,20 +66,20 @@
                                     target="_blank"
                                     rel="noopener"
                                     href="{{ .Style.Homepage }}"
-                                    class="btn ml:s"
+                                    class="btn mr:s"
                                 >Project homepage</a>
                             {{ end }}
                             <a
                                 target="_blank"
                                 rel="noopener"
                                 href="/api/style/{{ .Style.ID }}.user.css"
-                                id="install" class="btn primary ml:s"
+                                id="install" class="btn primary mr:s"
                             >Install userstyle</a>
                             <a
                                 target="_blank"
                                 rel="noopener"
                                 href="https://github.com/openstyles/stylus/#readme"
-                                id="stylus" class="btn stylus ml:s"
+                                id="stylus" class="btn stylus"
                             >Get Stylus</a>
                         </span>
                     </div>

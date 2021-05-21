@@ -2,6 +2,10 @@ footer {
     border-top: 1px solid var(--bg-4);
     background-color: var(--bg-2);
 
+    ul {
+        flex-flow: row wrap;
+    }
+
     li {
         list-style: none;
         &:not(:last-child)::after {
