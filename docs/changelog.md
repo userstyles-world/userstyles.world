@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/userstyles-world/userstyles.world/compare/v1.0.0...v1.1.0) (2021-05-21)
+
+### Features
+
+* **build:** exclude templates and scss from air ([48b388b](https://github.com/userstyles-world/userstyles.world/commit/48b388bf2e849d68c83c5f242d9a77ed903bd3f8))
+* **css:** enable color-scheme meta in Chromium ([9953239](https://github.com/userstyles-world/userstyles.world/commit/995323943105c599b1b986b297af5b78449f6d19)), closes [#59](https://github.com/userstyles-world/userstyles.world/issues/59)
+* **css:** improve responsive design for bars ([c496da7](https://github.com/userstyles-world/userstyles.world/commit/c496da750f8c598263983997c5e235d505b387a3))
+* **css:** improve styles for card images ([b79ee27](https://github.com/userstyles-world/userstyles.world/commit/b79ee27300816ee22e327ce64869db44942a2372))
+* **css:** improve the look of style cards ([2badb7a](https://github.com/userstyles-world/userstyles.world/commit/2badb7ac15142cec533282ee8d240703f2dbb0bf))
+* **html:** add confirm page for style deletion ([3046537](https://github.com/userstyles-world/userstyles.world/commit/30465376450d3f14eb308f28c442eea43fa44ce5))
+* **html:** add custom checkboxes on sign in page ([b56728d](https://github.com/userstyles-world/userstyles.world/commit/b56728d0eccca0b5b9974cbb32732bcd8a3a5b2a))
+* **html:** add new checkboxes on style edit page ([8067200](https://github.com/userstyles-world/userstyles.world/commit/8067200f4a21a3b2ad3eec7b2abfb8e38ceaa8e8))
+* **html:** move updated date to card footer ([fd2cc79](https://github.com/userstyles-world/userstyles.world/commit/fd2cc79bd077052f5a61de290bdba407b372c7cb))
+* **html:** truncate source code from large styles ([15e7620](https://github.com/userstyles-world/userstyles.world/commit/15e7620669ee917b12194ca3a87d4c8dc2b70209))
+* **ts:** add user settings + programmatic color-scheme ([37be14a](https://github.com/userstyles-world/userstyles.world/commit/37be14a12c4f8643f21cb2fa0627a1b7d4ac32ac))
+* **ts:** change color-scheme meta ([1254d50](https://github.com/userstyles-world/userstyles.world/commit/1254d504e0be4119222c21f5c81eb31ed4c38995))
+* **ts:** add ESLint ([194a320](https://github.com/userstyles-world/userstyles.world/commit/194a320b5acfa2b2e77f247a87de0ea7acb590ae))
+* **ts:** add typescript workflow ([12593be](https://github.com/userstyles-world/userstyles.world/commit/12593be806a27ee57f5f0feac15282129fe1fdde))
+
+
+### Bug Fixes
+
+* **css:** improve auto fill colors across browsers ([5e255c5](https://github.com/userstyles-world/userstyles.world/commit/5e255c5cb23bddf599ba3eefaf40fcad764caaaf))
+* **css:** improve max-width for search in nav menu ([c21d246](https://github.com/userstyles-world/userstyles.world/commit/c21d246cc9704a8299bddabdbdac9b4b68e54047))
+* **css:** improve position for short screenshots ([9b9f916](https://github.com/userstyles-world/userstyles.world/commit/9b9f916e84c1c3335994c096b2f5c4dc8cd58eeb))
+* **css:** truncate author names in style cards ([e98b41f](https://github.com/userstyles-world/userstyles.world/commit/e98b41fb4cab320e9a61b2808f958ca4b654bb1e))
+* **html:** hide unset display name fields ([f8cd137](https://github.com/userstyles-world/userstyles.world/commit/f8cd13787409ad9f2d105eea97d2021cb6ec0007))
+* **html:** remove blurred preview image from cards ([928467d](https://github.com/userstyles-world/userstyles.world/commit/928467dd1f9eacfeef057f372eadcfd0e5b3b67e))
+* **html:** remove useless element ([c8c1ab7](https://github.com/userstyles-world/userstyles.world/commit/c8c1ab7b3c0c12c6e091488ac9e001100bd78593))
+* **html:** resolve bad text alignment in buttons ([9e50327](https://github.com/userstyles-world/userstyles.world/commit/9e5032708ff7d422fbc61de92dad3a545c651e1a))
+* **models:** add missing methods to MinimalStyle ([dd0d748](https://github.com/userstyles-world/userstyles.world/commit/dd0d748f437e8319d5b43389a86a0d17696095b2))
+* **tools:** don't watch for data folder ([2c089e2](https://github.com/userstyles-world/userstyles.world/commit/2c089e2e5c6d31d5eb9dfcb894a5114f683089db))
+* **ts:** yoda-compatible ([224c3d4](https://github.com/userstyles-world/userstyles.world/commit/224c3d49c364f6445deaa77cf862ad148305ec4a))
+* **ts:** don't error that esbuild isn't used ([85f616c](https://github.com/userstyles-world/userstyles.world/commit/85f616c5c054e3a6146da22d611d6dee0743ea38))
+
 ## [1.0.0](https://github.com/userstyles-world/userstyles.world/compare/fef3eb9...v1.0.0) (2021-05-16)
 
 ### Features
