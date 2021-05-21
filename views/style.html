@@ -45,13 +45,8 @@
 
                         <span class="actions flex ml:a">
                             {{ if eq .User.ID .Style.UserID }}
-                                <form class="unset" method="post" action="/style/{{ .Style.ID }}">
-                                    <button class="btn mr:s" type="submit">Delete</button>
-                                </form>
-                                <a
-                                    href="/edit/{{ .Style.ID }}"
-                                    class="btn mr:s"
-                                >Edit</a>
+                                <a href="/delete/{{ .Style.ID }}" class="btn mr:s">Delete</a>
+                                <a href="/edit/{{ .Style.ID }}" class="btn mr:s">Edit</a>
                             {{ end }}
                             {{ if ge .User.Role 1 }}
                                 <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
