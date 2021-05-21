@@ -131,15 +131,21 @@
                             <div class="ta:l">
                                 {{- $mirrorMeta := "" -}}
                                 {{- if .Style.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
-                                <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
-                                <p class="fg:3"><i>Only available to styles imported from USo-archive.</i></p>
-                                <input type="checkbox" name="mirrorMeta">
+                                <div class="checkbox iflex mb:m">
+                                    <input type="checkbox" name="mirrorMeta" id="mirrorMeta" {{ $mirrorMeta }}>
+                                    {{ template "partials/checkboxes" }}
+                                    <label for="mirrorMeta">Mirror style metadata (only for styles from USo-archive)</label>
+                                </div>
                             </div>
+
                             <div class="ta:l">
                                 {{- $mirrorCode := "" -}}
                                 {{- if .Style.MirrorCode -}}{{- $mirrorCode = "checked" -}}{{- end -}}
-                                <label for="mirrorCode">Mirror source code updates</label>
-                                <input type="checkbox" name="mirrorCode" {{ $mirrorCode }}>
+                                <div class="checkbox iflex mb:m">
+                                    <input type="checkbox" name="mirrorCode" id="mirrorCode" {{ $mirrorCode }}>
+                                    {{ template "partials/checkboxes" }}
+                                    <label for="mirrorCode">Mirror source code updates</label>
+                                </div>
                             </div>
                         {{ end }}
 
