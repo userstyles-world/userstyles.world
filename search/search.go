@@ -31,7 +31,7 @@ func (s MinimalStyle) Slug() string {
 }
 
 func (s MinimalStyle) StyleURL() string {
-	return fmt.Sprintf("style/%d/%s", s.ID, s.Slug())
+	return fmt.Sprintf("/style/%d/%s", s.ID, s.Slug())
 }
 
 func (s MinimalStyle) Author() string {

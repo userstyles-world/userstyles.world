@@ -88,7 +88,7 @@ func (s StyleCard) Slug() string {
 }
 
 func (s StyleCard) StyleURL() string {
-	return fmt.Sprintf("style/%d/%s", s.ID, s.Slug())
+	return fmt.Sprintf("/style/%d/%s", s.ID, s.Slug())
 }
 
 func (s StyleCard) Author() string {
