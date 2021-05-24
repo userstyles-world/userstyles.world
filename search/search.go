@@ -15,6 +15,7 @@ const (
 
 type MinimalStyle struct {
 	ID          int       `json:"id"`
+	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Username    string    `json:"username"`
 	DisplayName string    `json:"display_name"`
@@ -63,12 +64,18 @@ func FindStylesByText(text string) ([]MinimalStyle, error) {
 			return nil, err
 		}
 
+		created, err := time.Parse(timeFormat, hit.Fields["created_at"].(string))
+		if err != nil {
+			return nil, err
+		}
+
 		updated, err := time.Parse(timeFormat, hit.Fields["updated_at"].(string))
 		if err != nil {
 			return nil, err
 		}
 
 		styleInfo := MinimalStyle{
+			CreatedAt:   created,
 			UpdatedAt:   updated,
 			ID:          int(hit.Fields["id"].(float64)),
 			Username:    hit.Fields["username"].(string),
@@ -83,5 +90,6 @@ func FindStylesByText(text string) ([]MinimalStyle, error) {
 
 		returnResult = append(returnResult, styleInfo)
 	}
+
 	return returnResult, nil
 }

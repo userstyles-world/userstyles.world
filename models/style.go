@@ -70,6 +70,7 @@ type StyleCard struct {
 
 type StyleSearch struct {
 	ID          int
+	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	Name        string
 	Description string
@@ -131,7 +132,7 @@ func GetAllStyles(db *gorm.DB) ([]StyleSearch, error) {
 
 	stmt := `
 select
-	styles.id, styles.updated_at, styles.name, styles.description, styles.notes,
+	styles.id, styles.created_at, styles.updated_at, styles.name, styles.description, styles.notes,
 	styles.preview, u.username, u.display_name,
 	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
 	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views

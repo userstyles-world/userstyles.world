@@ -55,6 +55,7 @@ func indexStyles(index bleve.Index, data []models.StyleSearch) error {
 		id := strconv.Itoa(styleEntry.ID)
 		err = batch.Index(id, MinimalStyle{
 			ID:          styleEntry.ID,
+			CreatedAt:   styleEntry.CreatedAt,
 			UpdatedAt:   styleEntry.UpdatedAt,
 			Username:    styleEntry.Username,
 			DisplayName: styleEntry.DisplayName,

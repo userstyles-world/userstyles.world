@@ -191,3 +191,46 @@ form,
         }
     }
 }
+
+.form-wrapper.advanced {
+    &.plain {
+        padding: 0px;
+        border: none;
+        max-width: none;
+        background: none;
+    }
+
+    select {
+        margin: 0;
+        padding: 0.4rem 2.0rem 0.4rem 0.8rem;
+        font-size: 1rem;
+        min-height: 42px;
+        line-height: 26px;
+        color: var(--fg-1);
+        border: 1px solid var(--bg-4);
+        background-color: var(--bg-3);
+        border-radius: var(--br-3);
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+
+        &:hover { border-color: var(--bg-5) }
+        &:focus {
+            border-color: var(--ac-3);
+            box-shadow: 0 0 0 0.25rem var(--ac-5);
+        }
+
+        + svg {
+            margin-left: -32px;
+            pointer-events: none;
+        }
+    }
+
+    .sort { margin: 0.5rem 0 1.5rem }
+
+    .section {
+        @screen and (min-width: 1000px) {
+            flex-direction: column !important;
+        }
+    }
+}
