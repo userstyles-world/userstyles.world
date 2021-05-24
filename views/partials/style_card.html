@@ -16,17 +16,26 @@
         <small class="fg:3 flex ai:c">
             {{ template "icons/calendar" "16" }}
             {{ $date := .UpdatedAt.Format "2006-01-02 15:04:05" }}
-            <time datetime="{{ $date }}" class="ml:s">
+            <time
+                datetime="{{ $date }}" class="ml:s"
+                tooltip-data="Last time updated {{ $date }}"
+            >
                 {{- .UpdatedAt.Format "Jan 2" -}}
             </time>
         </small>
         <small class="fg:3 flex ai:c ml:s">
             {{ template "icons/view" "16" }}
-            <span class="ml:s">{{ .Views }} views</span>
+            <span
+                class="ml:s"
+                tooltip-data="{{ .Views }}x viewed in total"
+            >{{ .Views }} views</span>
         </small>
         <small class="fg:3 flex ai:c ml:s">
             {{ template "icons/download" "16" }}
-            <span class="ml:s">{{ .Installs }} installs</span>
+            <span
+                class="ml:s"
+                tooltip-data="{{ .Installs }}x installed in total"
+            >{{ .Installs }} installs</span>
         </small>
     </div>
 </div>
