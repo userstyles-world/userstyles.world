@@ -15,8 +15,9 @@ func Search(c *fiber.Ctx) error {
 	q := c.Query("q")
 	s, _ := search.FindStylesByText(q)
 
+	fv := c.Query("sort")
 	sort.Slice(s, func(i, j int) bool {
-		switch c.Query("sort") {
+		switch fv {
 		case "created":
 			return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix()
 		case "updated":
@@ -36,5 +37,6 @@ func Search(c *fiber.Ctx) error {
 		"Styles": s,
 		"Value":  q,
 		"Root":   c.OriginalURL() == "/search",
+		"Sort":   fv,
 	})
 }

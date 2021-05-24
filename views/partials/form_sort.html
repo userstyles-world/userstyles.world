@@ -1,0 +1,10 @@
+<label for="sort">Order</label>
+<div class="sort flex ai:c">
+    <select id="sort" name="sort">
+        <option {{ with eq .Sort "created" }}selected{{ end }} value="created">By created date</option>
+        <option {{ with eq .Sort "updated" }}selected{{ end }} value="updated">By updated date</option>
+        <option {{ with eq .Sort "installs" }}selected{{ end }} value="installs">By install count</option>
+        <option {{ with eq .Sort "views" }}selected{{ end }} value="views">By view count</option>
+    </select>
+    {{ template "icons/chevrons-up-down" 18 }}
+</div>

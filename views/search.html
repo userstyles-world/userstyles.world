@@ -24,16 +24,7 @@
                         </div>
 
                         <div class="section">
-                            <label for="sort">Sort</label>
-                            <div class="sort flex ai:c">
-                                <select id="sort" name="sort">
-                                    <option value="created">From oldest to newest created</option>
-                                    <option value="updated">From oldest to newest updated</option>
-                                    <option value="installs">From most to least installed</option>
-                                    <option value="views">From most to least viewed</option>
-                                </select>
-                                {{ template "icons/chevrons-up-down" 18 }}
-                            </div>
+                            {{ template "partials/form_sort" . }}
                         </div>
 
                         <button class="btn primary" type="submit">Search</button>

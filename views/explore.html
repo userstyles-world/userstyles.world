@@ -16,16 +16,7 @@
                 <section class="mt:l">
                     <form class="form-wrapper plain advanced flex" method="get" action="/explore">
                         <div class="section flex ai:c ml:a mr:m">
-                            <label for="sort">Sort</label>
-                            <div class="sort flex ai:c" style="margin: 0 0 0 1rem">
-                                <select id="sort" name="sort">
-                                    <option value="created">From oldest to newest created</option>
-                                    <option value="updated">From oldest to newest updated</option>
-                                    <option value="installs">From most to least installed</option>
-                                    <option value="views">From most to least viewed</option>
-                                </select>
-                                {{ template "icons/chevrons-up-down" 18 }}
-                            </div>
+                            {{ template "partials/form_sort" . }}
                         </div>
 
                         <button class="btn primary ml:m" type="submit">Sort</button>

@@ -21,8 +21,9 @@ func GetExplore(c *fiber.Ctx) error {
 		})
 	}
 
+	fv := c.Query("sort")
 	sort.Slice(s, func(i, j int) bool {
-		switch c.Query("sort") {
+		switch fv {
 		case "created":
 			return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix()
 		case "updated":
@@ -40,5 +41,6 @@ func GetExplore(c *fiber.Ctx) error {
 		"Title":  "Explore",
 		"User":   u,
 		"Styles": s,
+		"Sort":   fv,
 	})
 }
