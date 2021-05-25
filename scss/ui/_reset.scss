@@ -87,6 +87,7 @@ textarea {
     border: 1px solid var(--bg-4);
     background-color: var(--bg-3);
     border-radius: var(--br-3);
+    resize: vertical;
 
     &[readonly] { background-color: var(--bg-2) }
     &:hover:not([readonly]) { border-color: var(--bg-5) }
