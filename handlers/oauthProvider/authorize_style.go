@@ -105,6 +105,11 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Couldn't retrieve style of user")
 	}
 
+	if style.UserID != u.ID {
+		fmt.Println("WARNING!: Invalid style's user ID")
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
+
 	jwt, err := utils.NewJWTToken().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
