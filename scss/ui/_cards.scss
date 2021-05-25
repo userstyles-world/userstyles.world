@@ -4,7 +4,7 @@
     background-color: var(--bg-2);
     box-shadow: var(--sh-m);
 
-    @media (prefers-color-scheme: light) {
+    @at-root [data-color-scheme="light"] .card {
         background-color: var(--bg-1);
     }
 
