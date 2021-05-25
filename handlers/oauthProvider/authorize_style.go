@@ -122,6 +122,7 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 	}
 
 	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
+	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state
 	}
