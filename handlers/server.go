@@ -106,7 +106,6 @@ func Initialize() {
 	app.Get("/logout", jwtware.Protected, user.Logout)
 	app.Get("/account", jwtware.Protected, user.Account)
 	app.Post("/account", jwtware.Protected, user.EditAccount)
-	app.Post("/style/:id", jwtware.Protected, style.DeleteByID)
 	app.Get("/add", jwtware.Protected, style.CreateGet)
 	app.Post("/add", jwtware.Protected, style.CreatePost)
 	app.Get("/delete/:id", jwt.Protected, style.DeleteGet)

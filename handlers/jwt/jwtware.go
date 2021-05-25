@@ -7,7 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/config"
-	"userstyles.world/modules/errors"
 )
 
 var (

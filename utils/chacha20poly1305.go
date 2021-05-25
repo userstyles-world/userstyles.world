@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/cipher"
+	"fmt"
 
 	"github.com/form3tech-oss/jwt-go"
 	"golang.org/x/crypto/chacha20poly1305"
@@ -60,7 +61,7 @@ func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 }
 
 func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
-	if t.Method.Alg() != verifySigningMethod {
+	if t.Method.Alg() != signingMethod {
 		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}
 	return VerifySigningKey, nil

@@ -121,7 +121,7 @@ func FindUserByID(db *gorm.DB, id string) (*User, error) {
 	}
 
 	if user.ID == 0 {
-		return nil, errors.New("user not found")
+		return nil, errors.UserNotFound
 	}
 
 	return user, nil
