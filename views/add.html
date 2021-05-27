@@ -55,7 +55,7 @@
                     <form class="{{ $method }}" method="post" action="/{{ $method }}" enctype="multipart/form-data">
                         <label for="name">Name</label>
                         <input
-                            required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
+                            required pattern=".+"
                             type="text" name="name" value="{{ .Style.Name }}"
                             placeholder="e.g. UserStyles.world tweaks">
 
