@@ -16,7 +16,7 @@
 
                 <section class="login limit mx:a">
                     {{- template "partials/btn_oauth" . -}}
-                    <form class="form-wrapper" method="post" action="/login">
+                    <form class="form-wrapper" method="post" action="/login{{- .AfterLogin -}}">
                         <label for="email">E-mail</label>
                         <input
                             required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"

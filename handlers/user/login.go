@@ -2,6 +2,7 @@ package user
 
 import (
 	"log"
+	"net/url"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -19,10 +20,18 @@ func LoginGet(c *fiber.Ctx) error {
 		log.Printf("User %d has set session, redirecting.", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
-
-	return c.Render("login", fiber.Map{
+	arguments := fiber.Map{
 		"Title": "Login",
-	})
+	}
+
+	afterLogin := c.Query("after_login")
+	if afterLogin != "" {
+		println(afterLogin)
+		arguments["AfterLogin"] = "?after_login=" + url.QueryEscape(afterLogin)
+		arguments["Error"] = "You must log in to do this action."
+	}
+
+	return c.Render("login", arguments)
 }
 
 func LoginPost(c *fiber.Ctx) error {
@@ -100,6 +109,18 @@ func LoginPost(c *fiber.Ctx) error {
 		HTTPOnly: true,
 		SameSite: "strict",
 	})
+
+	afterLogin := c.Query("after_login")
+	if afterLogin != "" {
+		path, err := url.QueryUnescape(afterLogin)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).
+				Render("err", fiber.Map{
+					"Title": "Internal server error.",
+				})
+		}
+		return c.Redirect(path, fiber.StatusSeeOther)
+	}
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }

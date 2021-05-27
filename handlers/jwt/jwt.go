@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/form3tech-oss/jwt-go"
 	lib "github.com/form3tech-oss/jwt-go"
@@ -19,11 +20,12 @@ var NormalJWTSigning = func(t *jwt.Token) (interface{}, error) {
 
 var Protected = func(c *fiber.Ctx) error {
 	if _, ok := User(c); !ok {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("login", fiber.Map{
-			"Title": "Login is required",
-			"Error": "You must log in to do this action.",
-		})
+		redirectUri := c.Request().URI().String()
+		if c.Context().QueryArgs().Len() != 0 {
+			redirectUri += "?" + c.Context().QueryArgs().String()
+		}
+
+		return c.Redirect("/login?after_login=" + url.QueryEscape(redirectUri))
 	}
 	return c.Next()
 }
