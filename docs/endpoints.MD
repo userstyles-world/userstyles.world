@@ -5,9 +5,9 @@ URL's are referred as ex. `/user` and thereby will mean the endpoint is located 
 
 ## Basic information
 
-All requests are returned as `application/json` regardless of the `Accept` header.  
-All responses are compressed by default, based on the `Accept-Encoding` header.  
-All _correct_ GET-response are returned within a `data` property of the returned JSON,  
+All requests are returned as `application/json` regardless of the `Accept` header.
+All responses are compressed by default, based on the `Accept-Encoding` header.
+All _correct_ GET-response are returned within a `data` property of the returned JSON,
 please note that the example response won't show this.
 
 
@@ -39,7 +39,7 @@ _**Note:** The email field can be empty when a user has registered through an OA
 
 ### Retrieve a specific user's information
 ```
-GET /user/<id> 
+GET /user/<id>
 ```
 or
 ```
@@ -156,7 +156,7 @@ POST /style/<id>
 ```
 
 Edit a user's style specified with the style's ID.
-The only changes that will be changing are the ones that are being sent,  
+The only changes that will be changing are the ones that are being sent,
 this means you can send partial information.
 
 Example request
@@ -212,7 +212,6 @@ Status: 200
     "info": "Succesful added the style! With ID: 69"
 }
 ```
-```
 
 ### Delete a style
 
@@ -248,7 +247,7 @@ Returns strong ETAG header of specified style.
 ```
 GET /style/<id>.user.css
 ```
-Returns raw source code of specified style,  
+Returns raw source code of specified style,
 this is normally used as updateURL and installation URL.
 
 ### Get style's preview
@@ -265,7 +264,7 @@ List all available styles on USw.
 When format(_optional_) is specified it will go through formating:
 ```JSON
 `uso-format`
-Special format that the USo-Archive uses as well. 
+Special format that the USo-Archive uses as well.
 Meant for stylus
 [
     {
@@ -315,4 +314,29 @@ Example response query=userstyles-world
       "notes": ""
     }
 ]
+```
+
+### Get current style information
+
+**Authorization is required**
+**only accessable from authorize_style token**
+```
+GET /style
+```
+
+Get information about the style that the token has access to
+
+Example response
+```JSON
+{
+    "name": "The name of the style",
+    "description": "A wordy description of the new style",
+    "notes": "Hey, if you install this make sure to remember X",
+    "code": "Some actually valid UserCSS code here",
+    "preview": "https://i.ytimg.com/vi/-Cv68B-F5B0/maxresdefault.jpg",
+    "homepage": "https://github.com/userstyles-world/userstyles.world/",
+    "license": "WTFPL",
+    "category": "youtube.com",
+    "id": "2", // StyleID
+}
 ```

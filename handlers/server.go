@@ -133,6 +133,7 @@ func Initialize() {
 	v1.Post("/style/new", api.ProtectedAPI, api.NewStyle)
 	v1.Post("/style/:id", api.ProtectedAPI, api.StylePost)
 	v1.Delete("/style/:id", api.ProtectedAPI, api.DeleteStyle)
+	v1.Get("/style", api.ProtectedAPI, api.StyleGet)
 
 	oauthV1 := app.Group("/api/oauth")
 	oauthV1.Get("/authorize", jwtware.Protected, oauthprovider.AuthorizeGet)
