@@ -20,6 +20,7 @@
             <div class="wrapper py:l">
                 <section class="mt:m ta:c">
                     <h1>{{ .Title }}</h1>
+                    <p class="fg:3">Add OAuth application</p>
                 </section>
 
                 <section class="alert">
@@ -30,7 +31,6 @@
                 </section>
 
                 <section class="">
-                    <h1>Add OAuth</h1>
                     <form class="{{ $method }}" method="post" action="/{{ $method }}">
                         <label for="name">Name</label>
                         <input
@@ -47,7 +47,7 @@
                         >{{ .OAuth.Description }}</textarea>
 
                         <label>Scopes</label>
-                        // Ehhh when in EDIT Mode we somehow need to check thesee...
+                        <!-- Ehhh when in EDIT Mode we somehow need to check thesee... -->
                         <div class="flex">
                             <input type="checkbox" name="user" value="user"
                                 {{ if .Scope_user }}

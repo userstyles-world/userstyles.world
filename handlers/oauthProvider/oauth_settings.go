@@ -102,7 +102,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		UserID: u.ID,
 	}
 
-	if err := utils.Validate().Struct(q); err != nil {
+	if err := utils.Validate().StructPartial(q, "Name", "Description"); err != nil {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 

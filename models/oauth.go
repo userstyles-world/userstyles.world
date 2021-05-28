@@ -14,8 +14,8 @@ type OAuth struct {
 	gorm.Model
 	UserID       uint
 	User         User       `gorm:"foreignKey:ID"`
-	Name         string     `gorm:"unique;not null" validate:"required,name,min=5,max=256"`
-	Description  string     `gorm:"unique" validate:"required,name,min=0,max=1028"`
+	Name         string     `gorm:"unique;not null" validate:"required,min=1,max=256"`
+	Description  string     `validate:"required,min=0,max=1028"`
 	Scopes       StringList `gorm:"type:varchar(255);"`
 	RedirectURI  string
 	ClientID     string
