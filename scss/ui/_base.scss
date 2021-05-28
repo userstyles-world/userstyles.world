@@ -176,15 +176,27 @@ label[for="remember"] {
     margin-right: 1rem;
 }
 
-#share { min-width: 300px }
+.share {
+    flex-flow: row wrap;
+    #share {
+        min-width: 300px;
+        border-color: var(--bg-3);
+        box-shadow: none;
+    }
+    @media screen and (max-width: 560px) {
+        > span {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+}
 
 @media screen and (max-width: 1180px) {
     .header {
         flex-flow: row wrap;
         > .share { width: 100% }
         > .actions {
-            order: -1;
-            margin: 0 0 1rem;
+            margin: 1rem 0 0;
             flex-flow: row wrap;
             .btn { margin-bottom: 0.5rem }
         }
