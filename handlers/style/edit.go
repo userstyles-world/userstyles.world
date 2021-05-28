@@ -62,6 +62,14 @@ func EditPost(c *fiber.Ctx) error {
 		})
 	}
 
+	// Check if userstyle name is empty.
+	if strings.TrimSpace(c.FormValue("name")) == "" {
+		return c.Render("err", fiber.Map{
+			"Title": "Style name can't be empty",
+			"User":  u,
+		})
+	}
+
 	q := models.Style{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),

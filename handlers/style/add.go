@@ -31,6 +31,14 @@ func CreateGet(c *fiber.Ctx) error {
 func CreatePost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
+	// Check if userstyle name is empty.
+	if strings.TrimSpace(c.FormValue("name")) == "" {
+		return c.Render("err", fiber.Map{
+			"Title": "Style name can't be empty",
+			"User":  u,
+		})
+	}
+
 	s := &models.Style{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
