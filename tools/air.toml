@@ -2,4 +2,4 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-exclude_dir = ["scss", "typescript", "views", "data", "node_modules"]
+exclude_dir = ["scss", "typescript", "views", "data", "node_modules", "static"]
