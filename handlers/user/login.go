@@ -24,10 +24,10 @@ func LoginGet(c *fiber.Ctx) error {
 		"Title": "Login",
 	}
 
-	afterLogin := c.Query("after_login")
-	if afterLogin != "" {
-		println(afterLogin)
-		arguments["AfterLogin"] = "?after_login=" + url.QueryEscape(afterLogin)
+	DestinationURL := c.Query("destination_url")
+	if DestinationURL != "" {
+		println(DestinationURL)
+		arguments["DestinationURL"] = "?destination_url=" + url.QueryEscape(DestinationURL)
 		arguments["Error"] = "You must log in to do this action."
 	}
 
@@ -110,9 +110,9 @@ func LoginPost(c *fiber.Ctx) error {
 		SameSite: "strict",
 	})
 
-	afterLogin := c.Query("after_login")
-	if afterLogin != "" {
-		path, err := url.QueryUnescape(afterLogin)
+	DestinationURL := c.Query("destination_url")
+	if DestinationURL != "" {
+		path, err := url.QueryUnescape(DestinationURL)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).
 				Render("err", fiber.Map{
