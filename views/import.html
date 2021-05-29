@@ -38,13 +38,18 @@
                             placeholder="e.g userstyles">
 
                         <div class="ta:l">
-                            <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
-                            <p class="fg:3"><i>Only available to styles imported from USo-archive.</i></p>
-                            <input type="checkbox" name="mirrorMeta">
-                        </div>
-                        <div class="ta:l">
-                            <label for="mirrorCode">Mirror source code</label>
-                            <input type="checkbox" name="mirrorCode">
+                            <p class="mb:s fg:3"><i>Only available to styles imported from USo-archive.</i></p>
+                            <div class="checkbox flex mb:m">
+                                <input type="checkbox" name="mirrorMeta" id="mirrorMeta">
+                                {{ template "partials/checkboxes" }}
+                                <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
+                            </div>
+                            <p class="mb:s fg:3"><i>Available to all imported styles. You can set a custom mirror URL later.</i></p>
+                            <div class="checkbox flex mb:m">
+                                <input type="checkbox" name="mirrorCode" id="mirrorCode">
+                                {{ template "partials/checkboxes" }}
+                                <label for="mirrorCode">Mirror source code</label>
+                            </div>
                         </div>
 
                         <button class="btn primary" type="submit">Import userstyle</button>
