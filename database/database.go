@@ -66,7 +66,8 @@ func Initialize() {
 	}
 
 	if err := migrate(&user, &style, &stats, &oauth, &history); err != nil {
-		log.Printf("Warning: Couldn't migrate due to error: %s", err.Error())
+		log.Println("Failed to migrate tables to new schema, err:")
+		panic(err)
 	}
 }
 
