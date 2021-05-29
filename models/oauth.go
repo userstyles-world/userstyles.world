@@ -62,12 +62,17 @@ func (s *StringList) Scan(src interface{}) (err error) {
 	return nil
 }
 
+// Override table name.
+func (OAuth) TableName() string {
+	return "oauths"
+}
+
 func ListOAuthsOfUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
 	t, q := new(OAuth), new([]APIOAuth)
 	err := getDBSession(db).
 		Model(t).
-		Select("o_auths.id, o_auths.name, u.username").
-		Joins("join users u on u.id = o_auths.user_id").
+		Select("oauths.id, oauths.name, u.username").
+		Joins("join users u on u.id = oauths.user_id").
 		Find(q, "u.username = ?", username).
 		Error
 	if err != nil {
@@ -83,9 +88,9 @@ func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 	err := getDBSession(db).
 		Debug().
 		Model(t).
-		Select("o_auths.*,  u.username").
-		Joins("join users u on u.id = o_auths.user_id").
-		First(q, "o_auths.id = ?", id).
+		Select("oauths.*,  u.username").
+		Joins("join users u on u.id = oauths.user_id").
+		First(q, "oauths.id = ?", id).
 		Error
 
 	if err != nil || q.ID == 0 {
@@ -101,9 +106,9 @@ func GetOAuthByClientID(db *gorm.DB, clientID string) (*APIOAuth, error) {
 	err := getDBSession(db).
 		Debug().
 		Model(t).
-		Select("o_auths.*,  u.username").
-		Joins("join users u on u.id = o_auths.user_id").
-		First(q, "o_auths.client_id = ?", clientID).
+		Select("oauths.*,  u.username").
+		Joins("join users u on u.id = oauths.user_id").
+		First(q, "oauths.client_id = ?", clientID).
 		Error
 
 	if err != nil || q.ID == 0 {
