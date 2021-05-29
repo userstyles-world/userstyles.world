@@ -122,7 +122,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 
 	var err error
 	if id != "" {
-		err = models.UpdateOAuth(database.DB, &q)
+		err = models.UpdateOAuth(database.DB, &q, id)
 	} else {
 		q.ClientID = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(32)))
 		q.ClientSecret = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(128)))

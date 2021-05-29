@@ -120,6 +120,7 @@ func GetOAuthByClientID(db *gorm.DB, clientID string) (*APIOAuth, error) {
 
 func CreateOAuth(db *gorm.DB, o *OAuth) (*OAuth, error) {
 	err := getDBSession(db).
+		Debug().
 		Create(&o).
 		Error
 	if err != nil {
@@ -129,11 +130,11 @@ func CreateOAuth(db *gorm.DB, o *OAuth) (*OAuth, error) {
 	return o, nil
 }
 
-func UpdateOAuth(db *gorm.DB, o *OAuth) error {
+func UpdateOAuth(db *gorm.DB, o *OAuth, id string) error {
 	err := getDBSession(db).
 		Debug().
 		Model(OAuth{}).
-		Where("id", o.ID).
+		Where("id = ?", id).
 		Updates(o).
 		Error
 	if err != nil {
