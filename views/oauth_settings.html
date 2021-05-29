@@ -46,23 +46,20 @@
                             placeholder="Allow integration between the extension and Userstyles.world"
                         >{{ .OAuth.Description }}</textarea>
 
-                        <label>Scopes</label>
-                        <!-- Ehhh when in EDIT Mode we somehow need to check thesee... -->
-                        <div class="flex">
-                            <input type="checkbox" name="user" value="user"
-                                {{ if .Scope_user }}
-                                    checked
-                                {{ end }}
+                        <label class="mb:s">Scopes</label>
+                        <div class="checkbox flex mb:s">
+                            <input type="checkbox" name="user" id="user"
+                                {{ if .Scope_user }}checked{{ end }}
                             >
-                            <label class="ml:m" for="user">User</label>
+                            {{ template "partials/checkboxes" }}
+                            <label class="ml:s" for="user">User</label>
                         </div>
-                        <div class="flex">
-                            <input type="checkbox" name="style" value="style"
-                                {{ if .Scope_style }}
-                                    checked
-                                {{ end }}
+                        <div class="checkbox flex mb:m">
+                            <input type="checkbox" name="style" id="style"
+                                {{ if .Scope_style }}checked{{ end }}
                             >
-                            <label class="ml:m" for="style">Style</label>
+                            {{ template "partials/checkboxes" }}
+                            <label class="ml:s" for="style">Style</label>
                         </div>
 
                         <label for="redirect_uri">Redirect URI</label>
