@@ -102,11 +102,7 @@ func (s StyleCard) Author() string {
 
 // Truncate large styles to prevent long loading times.
 func (s APIStyle) TruncateCode() bool {
-	if len(s.Code) > 150_000 {
-		return true
-	}
-
-	return false
+	return len(s.Code) > 150_000
 }
 
 func getDBSession(db *gorm.DB) (tx *gorm.DB) {
