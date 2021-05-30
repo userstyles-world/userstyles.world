@@ -33,7 +33,7 @@ func GetExplore(c *fiber.Ctx) error {
 		case "views":
 			return s[i].Views > s[j].Views
 		default:
-			return s[i].Installs > s[j].Installs
+			return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix()
 		}
 	})
 
