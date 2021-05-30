@@ -21,12 +21,12 @@ var NormalJWTSigning = func(t *jwt.Token) (interface{}, error) {
 
 var Protected = func(c *fiber.Ctx) error {
 	if _, ok := User(c); !ok {
-		redirectUri := utils.UnsafeString(c.Request().URI().Path())
+		redirectURI := utils.UnsafeString(c.Request().URI().Path())
 		if c.Context().QueryArgs().Len() != 0 {
-			redirectUri += "?" + c.Context().QueryArgs().String()
+			redirectURI += "?" + c.Context().QueryArgs().String()
 		}
 
-		return c.Redirect("/login?destination_url=" + url.QueryEscape(redirectUri))
+		return c.Redirect("/login?destination_url=" + url.QueryEscape(redirectURI))
 	}
 	return c.Next()
 }
