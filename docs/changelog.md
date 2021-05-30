@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/userstyles-world/userstyles.world/compare/v1.2.0...v1.2.1) (2021-05-30)
+
+
+### Features
+
+* **oauthP:** show all oauth of user ([76b832b](https://github.com/userstyles-world/userstyles.world/commit/76b832b1379969f6dddeda9cd62c26a345dca674))
+* **oauthP:** show clientID + clientSecret  ([5491705](https://github.com/userstyles-world/userstyles.world/commit/54917053a6bda3dd8e09d0b3a8ecca63b89b8cd9))
+
+
+### Bug Fixes
+
+* **core:** sort by created date by default ([9611b53](https://github.com/userstyles-world/userstyles.world/commit/9611b536bfe7cd817157d0468e25327962ab591e))
+* **css:** add back hints to various links ([62949f4](https://github.com/userstyles-world/userstyles.world/commit/62949f48bbc5236ee3a584c2e2436288d21bd588))
+* **html:** add custom checkbox to register page ([c2d39c3](https://github.com/userstyles-world/userstyles.world/commit/c2d39c336293a3f9f0064b029e9ab356360ed281))
+* **oauth:** redirect to oauth after creation ([e080ea6](https://github.com/userstyles-world/userstyles.world/commit/e080ea6684d03b9abe30bdfa06e9f902bd1dd8de))
+* **tools:** don't watch static folder ([df9c0b3](https://github.com/userstyles-world/userstyles.world/commit/df9c0b36900829354f55f909caef858e7a76136b))
+
 ## [1.2.0](https://github.com/userstyles-world/userstyles.world/compare/v1.1.0...v1.2.0) (2021-05-29)
 
 
