@@ -32,10 +32,13 @@
                             required pattern="^[\S]{8,32}$"
                             type="password" name="password"
                             placeholder="(8–32 characters)">
-                        <label for="agreement">You hereby agree to the <a style="margin-left: 0.5ch" href="/legal/terms-of-service">Terms of Service</a>.</label>
-                        <input
-                            required
-                            type="checkbox" name="agreement">
+
+                        <div class="checkbox flex mb:m">
+                            <input required type="checkbox" name="agreement" id="agreement">
+                            {{ template "partials/checkboxes" }}
+                            <label for="agreement">You hereby agree to the <a class="ml:s" href="/legal/terms-of-service">Terms of Service</a>.</label>
+                        </div>
+
                         <button class="btn primary" type="submit">Register</button>
                     </form>
                     <p class="form-tip ta:c">
