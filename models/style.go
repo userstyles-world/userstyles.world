@@ -147,6 +147,29 @@ where
 	return *q, nil
 }
 
+func GetStyleForIndex(db *gorm.DB, id string) (StyleSearch, error) {
+	q := new(StyleSearch)
+
+	stmt := `
+select
+	styles.id, styles.created_at, styles.updated_at, styles.name, styles.description, styles.notes,
+	styles.preview, u.username, u.display_name,
+	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+from
+	styles
+join
+	users u on u.id = styles.user_id
+where
+	styles.deleted_at is null and styles.id = ?
+`
+	if err := getDBSession(db).Raw(stmt, id).First(q).Error; err != nil {
+		return *q, err
+	}
+
+	return *q, nil
+}
+
 func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 	err := getDBSession(db).

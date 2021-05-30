@@ -11,6 +11,7 @@ import (
 
 	"userstyles.world/database"
 	"userstyles.world/models"
+	"userstyles.world/search"
 	"userstyles.world/utils"
 )
 
@@ -101,6 +102,10 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
+	if err = search.IndexStyle(postStyle.ID); err != nil {
+		log.Printf("Re-indexing style %d failed, err: %s", postStyle.ID, err.Error())
+	}
+
 	return c.JSON(fiber.Map{
 		"data": "Successful edited style!",
 	})
@@ -152,6 +157,10 @@ func DeleteStyle(c *fiber.Ctx) error {
 			JSON(fiber.Map{
 				"data": "Error: Couldn't delete style",
 			})
+	}
+
+	if err = search.DeleteStyle(style.ID); err != nil {
+		log.Printf("Couldn't delete style %d failed, err: %s", style.ID, err.Error())
 	}
 
 	return c.JSON(fiber.Map{
@@ -215,6 +224,10 @@ func NewStyle(c *fiber.Ctx) error {
 			JSON(fiber.Map{
 				"data": "Error: Couldn't save style",
 			})
+	}
+
+	if err = search.IndexStyle(postStyle.ID); err != nil {
+		log.Printf("Re-indexing style %d failed, err: %s", postStyle.ID, err.Error())
 	}
 
 	return c.JSON(fiber.Map{

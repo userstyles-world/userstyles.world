@@ -16,6 +16,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/images"
 	"userstyles.world/models"
+	"userstyles.world/search"
 )
 
 func CreateGet(c *fiber.Ctx) error {
@@ -111,6 +112,10 @@ func CreatePost(c *fiber.Ctx) error {
 				Where("id", styleID).
 				Updates(s)
 		}
+	}
+
+	if err = search.IndexStyle(s.ID); err != nil {
+		log.Printf("Re-indexing style %d failed, err: %s", s.ID, err.Error())
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)

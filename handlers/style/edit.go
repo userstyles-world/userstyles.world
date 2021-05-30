@@ -12,6 +12,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/images"
 	"userstyles.world/models"
+	"userstyles.world/search"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -130,6 +131,10 @@ func EditPost(c *fiber.Ctx) error {
 			"Title": "Internal server error.",
 			"User":  u,
 		})
+	}
+
+	if err = search.IndexStyle(s.ID); err != nil {
+		log.Printf("Re-indexing style %d failed, err: %s", s.ID, err.Error())
 	}
 
 	return c.Redirect("/style/"+c.Params("id"), fiber.StatusSeeOther)

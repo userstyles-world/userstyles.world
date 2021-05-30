@@ -8,6 +8,7 @@ import (
 	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/search"
 )
 
 func DeleteGet(c *fiber.Ctx) error {
@@ -64,6 +65,10 @@ func DeletePost(c *fiber.Ctx) error {
 			"Title": "Internal server error",
 			"User":  u,
 		})
+	}
+
+	if err = search.DeleteStyle(s.ID); err != nil {
+		log.Printf("Couldn't delete style %d failed, err: %s", s.ID, err.Error())
 	}
 
 	return c.Redirect("/account", fiber.StatusSeeOther)

@@ -8,6 +8,7 @@ import (
 
 	"userstyles.world/database"
 	"userstyles.world/models"
+	"userstyles.world/search"
 	"userstyles.world/utils"
 )
 
@@ -60,6 +61,9 @@ func UpdateBatch(batch models.Style) {
 
 			if err = models.UpdateStyle(database.DB, s); err != nil {
 				log.Printf("Updater: Mirroring meta for %d failed, err: %s", batch.ID, err)
+			}
+			if err = search.IndexStyle(s.ID); err != nil {
+				log.Printf("Re-indexing style %d failed, err: %s", s.ID, err.Error())
 			}
 		}
 	}
