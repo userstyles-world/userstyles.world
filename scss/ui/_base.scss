@@ -8,10 +8,10 @@ a {
         font-size: 0.7rem;
         vertical-align: super;
         color: var(--fg-3);
-        &[href^='http'] { content: '[\01F517]' }
-        &[href^='java'] { content: '{JS}' }
-        &[href^='mail'] { content: '[📧]' }
     }
+    &[href^='http']::after { content: '[\01F517]' }
+    &[href^='java']::after { content: '{JS}' }
+    &[href^='mail']::after { content: '[📧]' }
 }
 
 h1 { font-size: 2.5em }
