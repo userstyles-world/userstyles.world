@@ -79,6 +79,20 @@
                         <button class="flex btn primary" type="submit">{{ $btn }}</button>
                     </form>
                 </section>
+
+                <section class="styles mt:l">
+                    <h2 class="sub-title td:d">OAuths applications</h2>
+                    {{ if ne (len .OAuths) 0 }}
+                        <p class="description">{{ len .OAuths }} styles in total.</p>
+                        <div class="grid  flex rwrap mx:r mt:m">
+                            {{ range .OAuths }}
+                                {{ template "partials/oauth_card" . }}
+                            {{ end }}
+                        </div>
+                    {{ else }}
+                        <p class="fg:3"><i>No OAuths found.</i></p>
+                    {{ end }}
+                </section>
             </div>
         </main>
 
