@@ -30,6 +30,13 @@
                     {{ template "partials/alert" . }}
                 </section>
 
+                {{ if .OAuth }}
+                    <section class="form-wrapper">
+                        <h2 class="sub-title td:d">Confidential information</h2>
+                        <p class="long-text">Client ID: {{ .OAuth.ClientID }} </p>
+                        <p class="long-text">Client secret: {{ .OAuth.ClientSecret }}</p>
+                    </section>
+                {{ end }}
                 <section class="">
                     <form class="{{ $method }}" method="post" action="/{{ $method }}">
                         <label for="name">Name</label>
