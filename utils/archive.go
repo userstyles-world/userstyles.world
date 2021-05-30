@@ -20,7 +20,7 @@ const (
 	PreviewURL = ArchiveURL + "screenshots/"
 )
 
-// Using only the data that we need.
+// Data struct contains only the data that we need.
 type Data struct {
 	Info struct {
 		Description    string

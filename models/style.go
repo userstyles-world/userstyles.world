@@ -100,7 +100,7 @@ func (s StyleCard) Author() string {
 	return s.Username
 }
 
-// Truncate large styles to prevent long loading times.
+// TruncateCode returns if it should the style, to prevent long loading times.
 func (s APIStyle) TruncateCode() bool {
 	return len(s.Code) > 150_000
 }
@@ -239,7 +239,7 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 	return *q, nil
 }
 
-// Using ID as a string is fine in this case.
+// GetStyleByID note: Using ID as a string is fine in this case.
 func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
 	err := getDBSession(db).

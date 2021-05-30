@@ -46,14 +46,14 @@ type APIUser struct {
 	Scopes      StringList
 }
 
-// Check if user set any social media.
+// HasSocials checks if user set any social media.
 func (u User) HasSocials() bool {
 	return u.Socials.Codeberg != "" ||
 		u.Socials.Gitlab != "" ||
 		u.Socials.Github != ""
 }
 
-// Return display name if it is set.
+// Name Return display name if it is set.
 func (u User) Name() string {
 	if u.DisplayName != "" {
 		return u.DisplayName
@@ -62,7 +62,7 @@ func (u User) Name() string {
 	return u.Username
 }
 
-// Return user's role in string format.
+// RoleString Return user's role in string format.
 func (u User) RoleString() (s string) {
 	switch u.Role {
 	case Regular:

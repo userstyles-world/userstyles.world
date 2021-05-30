@@ -62,7 +62,7 @@ func (s *StringList) Scan(src interface{}) (err error) {
 	return nil
 }
 
-// Override table name.
+// TableName specify the table name that should be used.
 func (OAuth) TableName() string {
 	return "oauths"
 }
@@ -82,7 +82,7 @@ func ListOAuthsOfUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
 	return q, nil
 }
 
-// Using ID as a string is fine in this case.
+// GetOAuthByID note: Using ID as a string is fine in this case.
 func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 	t, q := new(OAuth), new(APIOAuth)
 	err := getDBSession(db).
@@ -100,7 +100,7 @@ func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 	return q, nil
 }
 
-// Using ID as a string is fine in this case.
+// GetOAuthByClientID note: Using ID as a string is fine in this case.
 func GetOAuthByClientID(db *gorm.DB, clientID string) (*APIOAuth, error) {
 	t, q := new(OAuth), new(APIOAuth)
 	err := getDBSession(db).
