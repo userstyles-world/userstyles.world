@@ -2,6 +2,7 @@ package oauthprovider
 
 import (
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -121,12 +122,13 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	}
 
 	var err error
+	var dbOAuth *models.OAuth
 	if id != "" {
 		err = models.UpdateOAuth(database.DB, &q, id)
 	} else {
 		q.ClientID = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(32)))
 		q.ClientSecret = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(128)))
-		_, err = models.CreateOAuth(database.DB, &q)
+		dbOAuth, err = models.CreateOAuth(database.DB, &q)
 	}
 
 	if err != nil {
@@ -137,5 +139,6 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Redirect("/oauth_settings/"+id, fiber.StatusSeeOther)
+	OAuthID := strconv.FormatUint(uint64(dbOAuth.ID), 10)
+	return c.Redirect("/oauth_settings/"+OAuthID, fiber.StatusSeeOther)
 }
