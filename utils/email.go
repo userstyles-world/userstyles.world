@@ -80,7 +80,7 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 	partsLen := len(eb.Parts)
 
 	if partsLen == 0 {
-		return "", errors.NoParts
+		return "", errors.ErrNoParts
 	}
 
 	if partsLen > 1 {
@@ -101,7 +101,7 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 		part := eb.Parts[i]
 
 		if part.Body == "" {
-			return "", errors.NoPartBody
+			return "", errors.ErrNoPartBody
 		}
 		if part.ContentTransferEncoding == "" {
 			part.ContentTransferEncoding = "8bit"
@@ -133,11 +133,11 @@ func (eb *EmailBuilder) SendEmail() error {
 	}
 
 	if eb.To == "" {
-		return errors.NoToParameter
+		return errors.ErrNoToParameter
 	}
 
 	if eb.Subject == "" {
-		return errors.NoSubject
+		return errors.ErrNoSubject
 	}
 
 	bodyMessage, err := eb.parseMultiPart()

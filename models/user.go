@@ -83,7 +83,7 @@ func FindUserByEmail(db *gorm.DB, email string) (*User, error) {
 	}
 
 	if user.ID == 0 {
-		return nil, errors.UserNotFound
+		return nil, errors.ErrUserNotFound
 	}
 
 	return user, nil
@@ -101,7 +101,7 @@ func FindUserByName(db *gorm.DB, name string) (*User, error) {
 	}
 
 	if user.ID == 0 {
-		return nil, errors.UserNotFound
+		return nil, errors.ErrUserNotFound
 	}
 
 	return user, nil
@@ -121,7 +121,7 @@ func FindUserByID(db *gorm.DB, id string) (*User, error) {
 	}
 
 	if user.ID == 0 {
-		return nil, errors.UserNotFound
+		return nil, errors.ErrUserNotFound
 	}
 
 	return user, nil

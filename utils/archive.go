@@ -9,8 +9,8 @@ import (
 
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/modules/errors"
 	"userstyles.world/models"
+	"userstyles.world/modules/errors"
 )
 
 const (
@@ -39,19 +39,19 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	s := &models.Style{}
 	if err != nil {
 		log.Printf("failed to extract id, err: %v\n", err)
-		return s, errors.FailedProcessData
+		return s, errors.ErrFailedProcessData
 	}
 
 	data, err := fetchJSON(id)
 	if err != nil {
 		log.Printf("failed to fetch json, err: %v\n", err)
-		return s, errors.FailedFetch
+		return s, errors.ErrFailedFetch
 	}
 
 	res, err := unmarshalJSON(data)
 	if err != nil {
 		log.Printf("failed to unmarshal json, err: %v\n", err)
-		return s, errors.FailedProcessData
+		return s, errors.ErrFailedProcessData
 	}
 
 	// Fetch generated UserCSS format.
@@ -59,7 +59,7 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	uc, err := usercss.ParseFromURL(source)
 	if err != nil {
 		log.Printf("failed to parse style from URL, err: %v\n", err)
-		return s, errors.FailedFetch
+		return s, errors.ErrFailedFetch
 	}
 
 	s = &models.Style{
@@ -85,7 +85,7 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 
 func extractID(url string) (string, error) {
 	if !strings.HasPrefix(url, ArchiveURL) {
-		return "", errors.StyleNotFromUSO
+		return "", errors.ErrStyleNotFromUSO
 	}
 
 	// Trim everything except style id.
@@ -113,7 +113,7 @@ func fetchJSON(id string) ([]byte, error) {
 
 	// Return error if style doesn't exist.
 	if string(body) == "404: Not Found" {
-		return nil, errors.StyleNotFound
+		return nil, errors.ErrStyleNotFound
 	}
 
 	return body, nil

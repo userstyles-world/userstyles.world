@@ -92,7 +92,7 @@ func OauthMakeURL(service string) string {
 
 func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	if service == "" {
-		return OAuthResponse{}, errors.NoServiceDetected
+		return OAuthResponse{}, errors.ErrNoServiceDetected
 	}
 	// Now the hard part D:
 	// With our temp code and orignial state, we need to request the auth code.
@@ -130,7 +130,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 		}
 	}
 	if authURL == "" {
-		return OAuthResponse{}, errors.NoAuthURL
+		return OAuthResponse{}, errors.ErrNoAuthURL
 	}
 	if body.ClientID == "" {
 		// Add the temp code.
@@ -158,7 +158,7 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		return OAuthResponse{}, errors.Not200Ok
+		return OAuthResponse{}, errors.ErrNot200Ok
 	}
 	var responseJSON OAuthTokenResponse
 
@@ -198,7 +198,7 @@ func getUserInformation(service string, responseJSON OAuthTokenResponse) (OAuthR
 	}
 	defer resUserInformation.Body.Close()
 	if resUserInformation.StatusCode != 200 {
-		return OAuthResponse{}, errors.Not200Ok
+		return OAuthResponse{}, errors.ErrNot200Ok
 	}
 
 	var oauthResponse OAuthResponse

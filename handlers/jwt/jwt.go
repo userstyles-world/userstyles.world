@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"fmt"
 	"net/url"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -9,12 +8,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/errors"
 	"userstyles.world/utils"
 )
 
 var NormalJWTSigning = func(t *jwt.Token) (interface{}, error) {
 	if t.Method.Alg() != SigningMethod {
-		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}
 	return JWTSigningKey, nil
 }

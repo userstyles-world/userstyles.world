@@ -155,7 +155,7 @@ func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
 		Find(q).
 		Error
 	if err != nil {
-		return nil, errors.StylesNotFound
+		return nil, errors.ErrStylesNotFound
 	}
 
 	return *q, nil
@@ -176,7 +176,7 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 		Find(q).
 		Error
 	if err != nil {
-		return nil, errors.StylesNotFound
+		return nil, errors.ErrStylesNotFound
 	}
 
 	return q, nil
@@ -233,7 +233,7 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
 		Error
 	if err != nil {
-		return nil, errors.NoImportedStyles
+		return nil, errors.ErrNoImportedStyles
 	}
 
 	return *q, nil
@@ -250,7 +250,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 		Error
 
 	if err != nil || q.ID == 0 {
-		return nil, errors.StyleNotFound
+		return nil, errors.ErrStyleNotFound
 	}
 
 	return q, nil
@@ -325,7 +325,7 @@ func CheckDuplicateStyle(db *gorm.DB, s *Style) error {
 		Error
 
 	if err == nil {
-		return errors.DuplicateStyle
+		return errors.ErrDuplicateStyle
 	}
 
 	return nil

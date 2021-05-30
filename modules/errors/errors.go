@@ -6,58 +6,64 @@ import (
 )
 
 var (
-	// StylesNotFound errors that styles were not found.
-	StylesNotFound = errors.New("styles not found")
+	// ErrStylesNotFound errors that styles were not found.
+	ErrStylesNotFound = errors.New("styles not found")
 
-	// Not200Ok errors that the returned status code wasnt 200 Ok.
-	Not200Ok = errors.New("status code wasn't OK 200")
+	// ErrNot200Ok errors that the returned status code wasnt 200 Ok.
+	ErrNot200Ok = errors.New("status code wasn't OK 200")
 
-	// NoAuthURL errors that the the paramater authURL was not set.
-	NoAuthURL = errors.New("no authURL was set")
+	// ErrNoAuthURL errors that the the paramater authURL was not set.
+	ErrNoAuthURL = errors.New("no authURL was set")
 
-	// NoServiceDetected errors that the the paramater service was not set.
-	NoServiceDetected = errors.New("no service detected")
+	// ErrNoServiceDetected errors that the the paramater service was not set.
+	ErrNoServiceDetected = errors.New("no service detected")
 
-	// NoSubject errors that the email builder didn't set the subject.
-	NoSubject = errors.New("subject parameter is missing")
+	// ErrNoSubject errors that the email builder didn't set the subject.
+	ErrNoSubject = errors.New("subject parameter is missing")
 
-	// NoToParameter errors that the email builder didn't set the to.
-	NoToParameter = errors.New("to parameter is missing")
+	// ErrNoToParameter errors that the email builder didn't set the to.
+	ErrNoToParameter = errors.New("to parameter is missing")
 
-	// NoParts errors that the email builder didn't specify any parts.
-	NoParts = errors.New("no parts were detected")
+	// ErrNoParts errors that the email builder didn't specify any parts.
+	ErrNoParts = errors.New("no parts were detected")
 
-	// NoPartBody errors that the email builder didn't specify the part's body.
-	NoPartBody = errors.New("part doesn't contain body")
+	// ErrNoPartBody errors that the email builder didn't specify the part's body.
+	ErrNoPartBody = errors.New("part doesn't contain body")
 
-	// MessageSmall errors the given string is too small.
-	MessageSmall = errors.New("message too small")
+	// ErrMessageSmall errors the given string is too small.
+	ErrMessageSmall = errors.New("message too small")
 
-	// StyleNotFound errors the style hasn't been found.
-	StyleNotFound = errors.New("style not found")
+	// ErrStyleNotFound errors the style hasn't been found.
+	ErrStyleNotFound = errors.New("style not found")
 
-	// UserNotFound errors the user hasn't been found.
-	UserNotFound = errors.New("user not found")
+	// ErrUserNotFound errors the user hasn't been found.
+	ErrUserNotFound = errors.New("user not found")
 
-	// StyleNotFromUSO errors that the style being fetched isn't from the uso-archive.
-	StyleNotFromUSO = errors.New("style isn't from uso-archive")
+	// ErrStyleNotFromUSO errors that the style being fetched isn't from the uso-archive.
+	ErrStyleNotFromUSO = errors.New("style isn't from uso-archive")
 
-	// DuplicateStyle errors that an duplicate style has been found.
-	DuplicateStyle = errors.New("duplicate style")
+	// ErrDuplicateStyle errors that an duplicate style has been found.
+	ErrDuplicateStyle = errors.New("duplicate style")
 
-	// NoImportedStyles error that there has not found importeded styles.
-	NoImportedStyles = errors.New("no imported styles")
+	// ErrNoImportedStyles error that there has not found importeded styles.
+	ErrNoImportedStyles = errors.New("no imported styles")
 
-	// FailedFetch errors that the fetch has failed to do it's operation.
-	FailedFetch = errors.New("failed to fetch style")
+	// ErrFailedFetch errors that the fetch has failed to do it's operation.
+	ErrFailedFetch = errors.New("failed to fetch style")
 
-	// FailedProcessData errors that it couldn't process the given style data.
-	FailedProcessData = errors.New("failed to process style data")
+	// ErrFailedProcessData errors that it couldn't process the given style data.
+	ErrFailedProcessData = errors.New("failed to process style data")
 
-	unexpectedSigningMethod = errors.New("unexpected jwt signing method")
+	// ErrOAuthNotFound errors that the OAuth couldn't be found.
+	ErrOAuthNotFound = errors.New("oauth not found")
+
+	// ErrIncompatibleType errors that the given scope wasn't compatible.
+	ErrIncompatibleType = errors.New("incompatible type for Scopes")
+
+	errUnexpectedSigningMethod = errors.New("unexpected jwt signing method")
 )
 
 // UnexpectedSigningMethod errors that a unexpected jwt signing method was used.
 func UnexpectedSigningMethod(message string) error {
-	return fmt.Errorf("%w=%s", unexpectedSigningMethod, message)
+	return fmt.Errorf("%w=%s", errUnexpectedSigningMethod, message)
 }

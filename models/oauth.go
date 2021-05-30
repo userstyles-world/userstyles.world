@@ -2,12 +2,12 @@ package models
 
 import (
 	"database/sql/driver"
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/ohler55/ojg/oj"
 	"gorm.io/gorm"
+	"userstyles.world/modules/errors"
 )
 
 type OAuth struct {
@@ -53,7 +53,7 @@ func (s *StringList) Scan(src interface{}) (err error) {
 	case []byte:
 		err = oj.Unmarshal(src, &scopes)
 	default:
-		return errors.New("incompatible type for Scopes")
+		return errors.ErrIncompatibleType
 	}
 	if err != nil {
 		return
@@ -76,7 +76,7 @@ func ListOAuthsOfUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
 		Find(q, "u.username = ?", username).
 		Error
 	if err != nil {
-		return nil, errors.New("oauth not found")
+		return nil, errors.ErrOAuthNotFound
 	}
 
 	return q, nil
@@ -94,7 +94,7 @@ func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 		Error
 
 	if err != nil || q.ID == 0 {
-		return nil, errors.New("oauth not found")
+		return nil, errors.ErrOAuthNotFound
 	}
 
 	return q, nil
@@ -112,7 +112,7 @@ func GetOAuthByClientID(db *gorm.DB, clientID string) (*APIOAuth, error) {
 		Error
 
 	if err != nil || q.ID == 0 {
-		return nil, errors.New("oauth not found")
+		return nil, errors.ErrOAuthNotFound
 	}
 
 	return q, nil
