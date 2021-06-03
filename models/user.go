@@ -107,6 +107,24 @@ func FindUserByName(db *gorm.DB, name string) (*User, error) {
 	return user, nil
 }
 
+func FindUserByNameOrEmail(db *gorm.DB, name, email string) (*User, error) {
+	user := new(User)
+
+	err := getDBSession(db).
+		Where("username = ? or email = ?", strings.ToLower(name), email).
+		First(&user).
+		Error
+	if err != nil {
+		return nil, err
+	}
+
+	if user.ID == 0 {
+		return nil, errors.ErrUserNotFound
+	}
+
+	return user, nil
+}
+
 func FindUserByID(db *gorm.DB, id string) (*User, error) {
 	user := new(User)
 

@@ -60,19 +60,20 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	user, err := models.FindUserByName(database.DB, response.UserName)
+	user, err := models.FindUserByNameOrEmail(database.DB, response.Username, response.Email)
 	if err != nil {
 		if err.Error() != "User not found." && err.Error() != "record not found" {
 			return c.Next()
 		}
 		user = &models.User{
-			Username:      response.UserName,
+			Username:      response.Username,
+			Email:         response.Email,
 			OAuthProvider: service,
 		}
 		regErr := database.DB.Create(user)
 
 		if regErr.Error != nil {
-			log.Printf("Failed to register %s, error: %s", response.UserName, regErr.Error)
+			log.Printf("Failed to register %s, error: %s", response.Username, regErr.Error)
 			return c.Status(fiber.StatusInternalServerError).
 				JSON(fiber.Map{
 					"data": "Internal Error.",
@@ -82,7 +83,7 @@ func CallbackGet(c *fiber.Ctx) error {
 
 	// TODO: Simplify this logic.
 	if (user.OAuthProvider == "none" || user.OAuthProvider != service) &&
-		!strings.EqualFold(getSocialMediaValue(user, service), response.UserName) {
+		!strings.EqualFold(getSocialMediaValue(user, service), response.Username) {
 		log.Println("User detected but the social media value wasn't set of this user.")
 		return c.Next()
 	}

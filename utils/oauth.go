@@ -22,11 +22,31 @@ type OAuthTokenResponse struct {
 	TokenType  string `json:"token_type"`
 }
 
-type OAuthResponse struct {
+type userResponse struct {
 	// Gitlab returns "username" for the username
 	UserName string `json:"username"`
 	// Github/Gitea-based returns "login" for the username
 	LoginName string `json:"login"`
+
+	// Gitlab has this bug with the email :)
+	// BUt does include within the /user endpoint.
+	Email string `json:"email"`
+}
+
+type OAuthResponse struct {
+	Email    string
+	Username string
+}
+
+type emailResponseStruct struct {
+	Email string `json:email`
+
+	// Github & Gitea
+	Verified bool `json:verified`
+	Primary  bool `json:primary`
+
+	// Gitlab
+	ConfirmedAt string `json:confirmed_at`
 }
 
 type GiteaLikeAccessJSON struct {
@@ -51,7 +71,7 @@ func OauthMakeURL(service string) string {
 		// Add our app client ID.
 		oauthURL += "?client_id=" + config.GITHUB_CLIENT_ID
 		// Add email scope.
-		oauthURL += "&scope=" + url.QueryEscape("read:user")
+		oauthURL += "&scope=" + url.QueryEscape("read:user user:email")
 		// Our non-guessable state of 16 characters.
 		oauthURL += "&state=" + nonsenseState
 	case gitlab:
@@ -201,14 +221,75 @@ func getUserInformation(service string, responseJSON OAuthTokenResponse) (OAuthR
 		return OAuthResponse{}, errors.ErrNot200Ok
 	}
 
+	var UserResponse userResponse
 	var oauthResponse OAuthResponse
-	err = json.NewDecoder(resUserInformation.Body).Decode(&oauthResponse)
+	err = json.NewDecoder(resUserInformation.Body).Decode(&UserResponse)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
 
-	if oauthResponse.LoginName != "" {
-		oauthResponse.UserName = oauthResponse.LoginName
+	oauthResponse.Username = UserResponse.UserName
+	if UserResponse.LoginName != "" {
+		oauthResponse.Username = UserResponse.LoginName
+	}
+	oauthResponse.Username = strings.ToLower(oauthResponse.Username)
+
+	if service == "gitlab" {
+		if UserResponse.Email == "" {
+			return OAuthResponse{}, errors.ErrPrimaryEmailNotVerified
+		}
+		oauthResponse.Email = UserResponse.Email
+		return oauthResponse, nil
+	}
+
+	return getUserEmail(service, responseJSON, oauthResponse)
+}
+
+func getUserEmail(service string, responseJSON OAuthTokenResponse, oauthResponse OAuthResponse) (OAuthResponse, error) {
+	client := &http.Client{}
+	var emailEndpoint string
+	switch service {
+	case github:
+		emailEndpoint = "https://api.github.com/user/emails"
+	case codeberg:
+		emailEndpoint = "https://codeberg.org/api/v1/user/emails"
+	}
+	emailInformationReq, err := http.NewRequest("GET", emailEndpoint, nil)
+	if err != nil {
+		return OAuthResponse{}, err
+	}
+	if service == github {
+		// Recommended
+		emailInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
+	}
+
+	emailInformationReq.Header.Set("Authorization", responseJSON.TokenType+" "+responseJSON.AccesToken)
+
+	resEmailInformation, err := client.Do(emailInformationReq)
+	if err != nil {
+		return OAuthResponse{}, err
+	}
+	defer resEmailInformation.Body.Close()
+	if resEmailInformation.StatusCode != 200 {
+		return OAuthResponse{}, errors.ErrNot200Ok
+	}
+	var emailResponse []emailResponseStruct
+	err = json.NewDecoder(resEmailInformation.Body).Decode(&emailResponse)
+	if err != nil {
+		return OAuthResponse{}, err
+	}
+
+	// Check if primary email is verified
+	var email emailResponseStruct
+	for i := 0; i < len(emailResponse); i++ {
+		email = emailResponse[i]
+		if email.Verified && email.Primary {
+			oauthResponse.Email = email.Email
+			break
+		}
+	}
+	if oauthResponse.Email == "" {
+		return OAuthResponse{}, errors.ErrPrimaryEmailNotVerified
 	}
 
 	return oauthResponse, nil
