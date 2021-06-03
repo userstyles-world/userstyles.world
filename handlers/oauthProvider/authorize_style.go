@@ -1,12 +1,13 @@
 package oauthprovider
 
 import (
-	"fmt"
 	"log"
+	"net/url"
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ohler55/ojg/oj"
 
 	"userstyles.world/database"
 	jwtware "userstyles.world/handlers/jwt"
@@ -22,7 +23,7 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 	c.Response().Header.Set("X-Frame-Options", "DENY")
 
-	clientID, state := c.Query("client_id"), c.Query("state")
+	clientID, state, styleInfo := c.Query("client_id"), c.Query("state"), c.Query("styleInfo")
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
 	}
@@ -52,10 +53,12 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Couldn't retrieve styles of user")
 	}
 
+	log.Println(styleInfo)
 	arguments := fiber.Map{
 		"User":        u,
 		"Styles":      styles,
 		"OAuth":       OAuth,
+		"StyleInfo":   url.QueryEscape(styleInfo),
 		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP),
 	}
 	for _, v := range OAuth.Scopes {
@@ -76,37 +79,37 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 
 	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP)
 	if err != nil {
-		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
-		fmt.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 	claims := token.Claims.(jwt.MapClaims)
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {
-		fmt.Println("WARNING!: Invalid userID")
+		log.Println("WARNING!: Invalid userID")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	state, ok := claims["state"].(string)
 	if !ok {
-		fmt.Println("WARNING!: Invalid state")
+		log.Println("WARNING!: Invalid state")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	style, err := models.GetStyleByID(database.DB, styleID)
 	if err != nil {
-		fmt.Println("Error: Style wasn't found, due to: ", err.Error())
+		log.Println("Error: Style wasn't found, due to: ", err.Error())
 		return errorMessage(c, 500, "Couldn't retrieve style of user")
 	}
 
 	if style.UserID != u.ID {
-		fmt.Println("WARNING!: Invalid style's user ID")
+		log.Println("WARNING!: Invalid style's user ID")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
@@ -117,7 +120,7 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 		SetExpiration(time.Now().Add(time.Minute * 10)).
 		GetSignedString(utils.OAuthPSigningKey)
 	if err != nil {
-		fmt.Println("Error: Couldn't create JWT Token:", err.Error())
+		log.Println("Error: Couldn't create JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
@@ -128,4 +131,58 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 	}
 
 	return c.Redirect(OAuth.RedirectURI + "/" + returnCode)
+}
+
+// jsonParser defined options.
+var jsonParser = &oj.Parser{Reuse: true}
+
+func AuthorizeStyleNewGet(c *fiber.Ctx) error {
+	u, _ := jwtware.User(c)
+	styleInfo, oauthID, secureToken := c.Query("styleInfo"), c.Query("oauthID"), c.Query("token")
+
+	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
+	if err != nil || OAuth.ID == 0 {
+		return errorMessage(c, 400, "Incorrect oauthID specified")
+	}
+
+	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP)
+	if err != nil {
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
+
+	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
+	if err != nil || !token.Valid {
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
+	claims := token.Claims.(jwt.MapClaims)
+
+	userID, ok := claims["userID"].(float64)
+	if !ok || userID != float64(u.ID) {
+		log.Println("WARNING!: Invalid userID")
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
+
+	_, ok = claims["state"].(string)
+	if !ok {
+		log.Println("WARNING!: Invalid state")
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
+
+	log.Println(styleInfo)
+	var emptyStyle models.Style
+	if err = jsonParser.Unmarshal(utils.UnsafeBytes(styleInfo), &emptyStyle); err != nil {
+		log.Println("WARNING!: Error with parsing: ", err.Error())
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
+
+	return c.Render("add", fiber.Map{
+		"Title":       "Add userstyle",
+		"User":        u,
+		"Style":       emptyStyle,
+		"Method":      "add_api",
+		"OAuthID":     oauthID,
+		"SecureToken": secureToken,
+	})
 }

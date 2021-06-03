@@ -8,19 +8,22 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/database"
-	"userstyles.world/handlers/jwt"
+	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/images"
 	"userstyles.world/models"
 	"userstyles.world/search"
+	"userstyles.world/utils"
 )
 
 func CreateGet(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
+	u, _ := jwtware.User(c)
 
 	return c.Render("add", fiber.Map{
 		"Title":  "Add userstyle",
@@ -30,7 +33,8 @@ func CreateGet(c *fiber.Ctx) error {
 }
 
 func CreatePost(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
+	u, _ := jwtware.User(c)
+	secureToken, OAuthID := c.Query("token"), c.Query("oauthID")
 
 	// Check if userstyle name is empty.
 	if strings.TrimSpace(c.FormValue("name")) == "" {
@@ -54,13 +58,19 @@ func CreatePost(c *fiber.Ctx) error {
 
 	code := usercss.ParseFromString(c.FormValue("code"))
 	if errs := usercss.BasicMetadataValidation(code); errs != nil {
-		return c.Render("add", fiber.Map{
+		arguments := fiber.Map{
 			"Title":  "Add userstyle",
 			"User":   u,
 			"Style":  s,
 			"Method": "add",
 			"Errors": errs,
-		})
+		}
+		if OAuthID != "" {
+			arguments["Method"] = "add_api"
+			arguments["OAuthID"] = OAuthID
+			arguments["SecureToken"] = secureToken
+		}
+		return c.Render("add", arguments)
 	}
 
 	// Prevent adding multiples of the same style.
@@ -94,8 +104,8 @@ func CreatePost(c *fiber.Ctx) error {
 		})
 	}
 
+	styleID := strconv.FormatUint(uint64(s.ID), 10)
 	if image != nil {
-		styleID := strconv.FormatUint(uint64(s.ID), 10)
 		data, _ := io.ReadAll(image)
 		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
 		if err != nil {
@@ -118,5 +128,88 @@ func CreatePost(c *fiber.Ctx) error {
 		log.Printf("Re-indexing style %d failed, err: %s", s.ID, err.Error())
 	}
 
+	if OAuthID != "" {
+		return handleAPIStyle(c, secureToken, OAuthID, styleID, s)
+	}
+
 	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
+}
+
+func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *models.Style) error {
+	u, _ := jwtware.User(c)
+
+	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
+	if err != nil || OAuth.ID == 0 {
+		return c.Status(400).
+			JSON(fiber.Map{
+				"data": "Incorrect oauthID specified",
+			})
+	}
+
+	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP)
+	if err != nil {
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
+	if err != nil || !token.Valid {
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "JWT Token error, please notify the admins.",
+			})
+	}
+	claims := token.Claims.(jwt.MapClaims)
+
+	userID, ok := claims["userID"].(float64)
+	if !ok || userID != float64(u.ID) {
+		log.Println("WARNING!: Invalid userID")
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	state, ok := claims["state"].(string)
+	if !ok {
+		log.Println("WARNING!: Invalid state")
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	if style.UserID != u.ID {
+		log.Println("WARNING!: Invalid style's user ID")
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	jwt, err := utils.NewJWTToken().
+		SetClaim("state", state).
+		SetClaim("userID", u.ID).
+		SetClaim("styleID", style.ID).
+		SetExpiration(time.Now().Add(time.Minute * 10)).
+		GetSignedString(utils.OAuthPSigningKey)
+	if err != nil {
+		log.Println("Error: Couldn't create JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "JWT Token error, please notify the admins.",
+			})
+	}
+
+	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
+	returnCode += "&style_id=" + styleID
+	if state != "" {
+		returnCode += "&state=" + state
+	}
+
+	return c.Redirect(OAuth.RedirectURI + "/" + returnCode)
 }

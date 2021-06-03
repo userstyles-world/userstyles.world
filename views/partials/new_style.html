@@ -1,0 +1,7 @@
+{{- $method := printf "api/oauth/authorize_style/new?styleInfo=%s&token=%s&oauthID=%d" .StyleInfo .SecureToken .OAuth.ID -}}
+<div class="card col gap animate">
+    <a href="/{{ $method }}"
+        class="card-header thumbnail">
+        Add new style
+    </a>
+</div>
