@@ -68,6 +68,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		user = &models.User{
 			Username:      response.Username,
 			Email:         response.Email,
+			Role:          models.Regular,
 			OAuthProvider: service,
 		}
 		regErr := database.DB.Create(user)
