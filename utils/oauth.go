@@ -71,7 +71,7 @@ func OauthMakeURL(service string) string {
 		// Add our app client ID.
 		oauthURL += "?client_id=" + config.GITHUB_CLIENT_ID
 		// Add email scope.
-		oauthURL += "&scope=" + url.QueryEscape("read:user user:email")
+		oauthURL += "&scope=" + url.QueryEscape("user:email")
 		// Our non-guessable state of 16 characters.
 		oauthURL += "&state=" + nonsenseState
 	case gitlab:
