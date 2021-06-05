@@ -19,7 +19,7 @@ const onMessage = (ev: MessageEvent<any>) => {
             document.querySelector('a#stylus').remove();
         }
         case 'usw-fill-new-style': {
-            if ('/api/oauth/authorize_style/new' !== window.location.pathname) {
+            if ('/api/oauth/authorize_style/new' !== window.location.pathname || !data) {
                 return;
             }
             // TODO figure out which fields we can use more.
