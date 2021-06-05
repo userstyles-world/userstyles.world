@@ -136,7 +136,7 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 // jsonParser defined options.
 var jsonParser = &oj.Parser{Reuse: true}
 
-func AuthorizeStyleNewGet(c *fiber.Ctx) error {
+func AuthorizeStyleNewPost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	styleInfo, oauthID, secureToken := c.Query("styleInfo"), c.Query("oauthID"), c.Query("token")
 
