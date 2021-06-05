@@ -27,7 +27,7 @@ export function InitalizeColorScheme(colorScheme: UserSettings['colorScheme']) {
     switch (colorScheme) {
         case 'follow-system': {
             handleColorScheme();
-            setColorSchemeMeta("dark light");
+            setColorSchemeMeta('dark light');
             // As it follows the system we should listen for any changes.
             if (isMatchMediaChangeEventListenerSupported) {
                 lightScheme.addEventListener('change', handleColorScheme);

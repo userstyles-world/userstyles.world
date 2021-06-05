@@ -138,7 +138,7 @@ var jsonParser = &oj.Parser{Reuse: true}
 
 func AuthorizeStyleNewPost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
-	styleInfo, oauthID, secureToken := c.Query("styleInfo"), c.Query("oauthID"), c.Query("token")
+	oauthID, secureToken := c.Query("oauthID"), c.Query("token")
 
 	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
 	if err != nil || OAuth.ID == 0 {
@@ -170,17 +170,9 @@ func AuthorizeStyleNewPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	log.Println(styleInfo)
-	var emptyStyle models.Style
-	if err = jsonParser.Unmarshal(utils.UnsafeBytes(styleInfo), &emptyStyle); err != nil {
-		log.Println("WARNING!: Error with parsing: ", err.Error())
-		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
-	}
-
 	return c.Render("add", fiber.Map{
 		"Title":       "Add userstyle",
 		"User":        u,
-		"Style":       emptyStyle,
 		"Method":      "add_api",
 		"OAuthID":     oauthID,
 		"SecureToken": secureToken,
