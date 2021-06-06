@@ -21,9 +21,6 @@ func GetDocs(c *fiber.Ctx) error {
 	case "privacy-policy":
 		content, _ = os.ReadFile("docs/privacy-policy.md")
 		title = "Privacy Policy"
-	case "terms-of-service":
-		content, _ = os.ReadFile("docs/terms-of-service.md")
-		title = "Terms of Service"
 	}
 
 	if len(content) == 0 {
