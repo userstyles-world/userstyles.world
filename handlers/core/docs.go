@@ -10,11 +10,20 @@ import (
 
 func GetDocs(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	document := c.Params("document")
 
+	var title string
 	var content []byte
-	if document == "changelog" {
+
+	switch c.Params("document") {
+	case "changelog":
 		content, _ = os.ReadFile("docs/changelog.md")
+		title = "Changelog"
+	case "privacy-policy":
+		content, _ = os.ReadFile("docs/privacy-policy.md")
+		title = "Privacy Policy"
+	case "terms-of-service":
+		content, _ = os.ReadFile("docs/terms-of-service.md")
+		title = "Terms of Service"
 	}
 
 	if len(content) == 0 {
@@ -25,7 +34,7 @@ func GetDocs(c *fiber.Ctx) error {
 	}
 
 	return c.Render("docs", fiber.Map{
-		"Title":   "Changelog",
+		"Title":   title,
 		"User":    u,
 		"content": string(content),
 	})

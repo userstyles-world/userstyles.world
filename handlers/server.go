@@ -100,7 +100,6 @@ func Initialize() {
 	app.Get("/style/:id/:name?", style.GetStylePage)
 	app.Get("/user/:name", user.Profile)
 	app.Get("~:name", user.Profile)
-	app.Get("/legal/:document", core.GetLegal)
 	app.Get("/docs/:document", core.GetDocs)
 
 	app.Get("/logout", jwtware.Protected, user.Logout)
