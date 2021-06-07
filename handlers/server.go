@@ -26,17 +26,22 @@ import (
 	"userstyles.world/utils"
 )
 
+var headings = blackfriday.CommonExtensions | blackfriday.AutoHeadingIDs
+
 // TODO: Refactor this as a separate package.
 func renderEngine() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
+
+	engine.AddFunc("MarkdownNew", func(s string) template.HTML {
+		gen := blackfriday.Run([]byte(s), blackfriday.WithExtensions(headings))
+		return template.HTML(gen)
+	})
 
 	engine.AddFunc("Markdown", func(s string) template.HTML {
 		// Generate Markdown then sanitize it before returning HTML.
 		gen := blackfriday.Run(
 			[]byte(s),
 			blackfriday.WithExtensions(blackfriday.HardLineBreak),
-			blackfriday.WithExtensions(blackfriday.AutoHeadingIDs),
-			blackfriday.WithExtensions(blackfriday.Extensions(blackfriday.CodeBlock)),
 		)
 		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
 
