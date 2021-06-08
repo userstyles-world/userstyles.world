@@ -1,4 +1,4 @@
-import { removeElement } from './utils/dom';
+import {removeElement} from './utils/dom';
 
 const fillInformationOnForm = (key: string, value: string) => {
     if (!value) {
