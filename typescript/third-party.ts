@@ -1,3 +1,5 @@
+import { removeElement } from './utils/dom';
+
 const fillInformationOnForm = (key: string, value: string) => {
     if (!value) {
         return;
@@ -16,7 +18,7 @@ const onMessage = (ev: MessageEvent<any>) => {
     const {type, data} = ev.data;
     switch (type) {
         case 'usw-remove-stylus-button': {
-            document.querySelector('a#stylus').remove();
+            removeElement(document.querySelector('a#stylus'));
         }
         case 'usw-fill-new-style': {
             if ('/api/oauth/authorize_style/new' !== window.location.pathname || !data) {

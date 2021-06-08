@@ -13,3 +13,7 @@ if (!isDOMReady()) {
     };
     document.addEventListener('readystatechange', onReadyStateChange);
 }
+
+export const removeElement = (element: HTMLElement) => {
+    element && element.remove();
+};
