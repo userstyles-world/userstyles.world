@@ -1,9 +1,9 @@
 package main
 
 import (
-	"userstyles.world/database"
 	"userstyles.world/handlers"
 	"userstyles.world/images"
+	"userstyles.world/modules/database"
 	"userstyles.world/search"
 	"userstyles.world/services/cron"
 	"userstyles.world/utils"

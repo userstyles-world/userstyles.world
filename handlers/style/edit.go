@@ -8,18 +8,17 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/images"
 	"userstyles.world/models"
-	"userstyles.world/search"
 )
 
 func EditGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("id")
 
-	s, err := models.GetStyleByID(database.DB, p)
+	s, err := models.GetStyleByID(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -47,7 +46,7 @@ func EditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	styleID, t := c.Params("id"), new(models.Style)
 
-	s, err := models.GetStyleByID(database.DB, styleID)
+	s, err := models.GetStyleByID(styleID)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -116,7 +115,7 @@ func EditPost(c *fiber.Ctx) error {
 		_ = os.Remove(images.CacheFolder + styleID + ".webp")
 	}
 
-	err = database.DB.
+	err = database.Conn.
 		Model(t).
 		Where("id", styleID).
 		Updates(q).
@@ -131,10 +130,6 @@ func EditPost(c *fiber.Ctx) error {
 			"Title": "Internal server error.",
 			"User":  u,
 		})
-	}
-
-	if err = search.IndexStyle(s.ID); err != nil {
-		log.Printf("Re-indexing style %d failed, err: %s", s.ID, err.Error())
 	}
 
 	return c.Redirect("/style/"+c.Params("id"), fiber.StatusSeeOther)

@@ -14,10 +14,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/database"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/images"
 	"userstyles.world/models"
+	"userstyles.world/config/database"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )
@@ -74,7 +74,7 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 
 	// Prevent adding multiples of the same style.
-	err := models.CheckDuplicateStyle(database.DB, s)
+	err := models.CheckDuplicateStyle(s)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": err,
@@ -95,7 +95,7 @@ func CreatePost(c *fiber.Ctx) error {
 			}
 		}
 	}
-	s, err = models.CreateStyle(database.DB, s)
+	s, err = models.CreateStyle(s)
 	if err != nil {
 		log.Println("Style creation failed, err:", err)
 		return c.Render("err", fiber.Map{
@@ -117,7 +117,7 @@ func CreatePost(c *fiber.Ctx) error {
 		}
 		if s.Preview == "" {
 			s.Preview = "https://userstyles.world/api/preview/" + styleID + ".jpeg"
-			database.DB.
+			database.Conn.
 				Model(new(models.Style)).
 				Where("id", styleID).
 				Updates(s)
@@ -138,7 +138,7 @@ func CreatePost(c *fiber.Ctx) error {
 func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *models.Style) error {
 	u, _ := jwtware.User(c)
 
-	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
+	OAuth, err := models.GetOAuthByID(oauthID)
 	if err != nil || OAuth.ID == 0 {
 		return c.Status(400).
 			JSON(fiber.Map{

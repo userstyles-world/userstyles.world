@@ -9,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/config"
-	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -52,7 +51,7 @@ func LoginPost(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := models.FindUserByEmail(database.DB, form.Email)
+	user, err := models.FindUserByEmail(form.Email)
 	if err != nil {
 		log.Printf("Failed to find %s, error: %s", form.Email, err)
 

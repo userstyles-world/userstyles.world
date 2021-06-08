@@ -7,7 +7,6 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/errors"
@@ -61,7 +60,7 @@ func APIUser(c *fiber.Ctx) (*JWTAPIUser, bool) {
 	}
 	userID := strconv.Itoa(int(fUserID))
 
-	user, err := models.FindUserByID(database.DB, userID)
+	user, err := models.FindUserByID(userID)
 	if err != nil || user.ID == 0 {
 		return u, false
 	}

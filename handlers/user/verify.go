@@ -6,7 +6,7 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -48,7 +48,7 @@ func VerifyGet(c *fiber.Ctx) error {
 
 	claims := token.Claims.(jwt.MapClaims)
 
-	regErr := database.DB.Create(&models.User{
+	regErr := database.Conn.Create(&models.User{
 		Username: claims["username"].(string),
 		Password: utils.GenerateHashedPassword(claims["password"].(string)),
 		Email:    claims["email"].(string),

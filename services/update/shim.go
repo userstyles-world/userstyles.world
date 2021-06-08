@@ -6,7 +6,6 @@ import (
 
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 	"userstyles.world/search"
 	"userstyles.world/utils"
@@ -59,7 +58,7 @@ func UpdateBatch(batch models.Style) {
 			s.Preview = importedStyle.Preview
 			s.Description = importedStyle.Description
 
-			if err = models.UpdateStyle(database.DB, s); err != nil {
+			if err = models.UpdateStyle(s); err != nil {
 				log.Printf("Updater: Mirroring meta for %d failed, err: %s", batch.ID, err)
 			}
 			if err = search.IndexStyle(s.ID); err != nil {
@@ -85,7 +84,7 @@ func UpdateBatch(batch models.Style) {
 	if style.Version != usercss.ParseFromString(batch.Code).Version {
 		log.Printf("Updater: Style %d was changed.\n", batch.ID)
 		s.Code = style.SourceCode
-		if err := models.UpdateStyle(database.DB, s); err != nil {
+		if err := models.UpdateStyle(s); err != nil {
 			log.Printf("Updater: Mirroring code for %d failed, err: %s", batch.ID, err)
 		}
 	}

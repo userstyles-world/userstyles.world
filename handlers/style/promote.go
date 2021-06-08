@@ -3,7 +3,7 @@ package style
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
@@ -20,7 +20,7 @@ func Promote(c *fiber.Ctx) error {
 		})
 	}
 
-	style, err := models.GetStyleByID(database.DB, p)
+	style, err := models.GetStyleByID(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
@@ -28,7 +28,7 @@ func Promote(c *fiber.Ctx) error {
 		})
 	}
 
-	err = database.DB.
+	err = database.Conn.
 		Model(models.Style{}).
 		Where("id = ?", p).
 		Update("featured", !style.Featured).

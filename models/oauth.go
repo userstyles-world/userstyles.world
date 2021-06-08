@@ -67,9 +67,9 @@ func (OAuth) TableName() string {
 	return "oauths"
 }
 
-func ListOAuthsOfUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
+func ListOAuthsOfUser(username string) (*[]APIOAuth, error) {
 	t, q := new(OAuth), new([]APIOAuth)
-	err := getDBSession(db).
+	err := getDBSession().
 		Model(t).
 		Select("oauths.id, oauths.name, u.username").
 		Joins("join users u on u.id = oauths.user_id").
@@ -83,9 +83,9 @@ func ListOAuthsOfUser(db *gorm.DB, username string) (*[]APIOAuth, error) {
 }
 
 // GetOAuthByID note: Using ID as a string is fine in this case.
-func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
+func GetOAuthByID(id string) (*APIOAuth, error) {
 	t, q := new(OAuth), new(APIOAuth)
-	err := getDBSession(db).
+	err := getDBSession().
 		Debug().
 		Model(t).
 		Select("oauths.*,  u.username").
@@ -101,9 +101,9 @@ func GetOAuthByID(db *gorm.DB, id string) (*APIOAuth, error) {
 }
 
 // GetOAuthByClientID note: Using ID as a string is fine in this case.
-func GetOAuthByClientID(db *gorm.DB, clientID string) (*APIOAuth, error) {
+func GetOAuthByClientID(clientID string) (*APIOAuth, error) {
 	t, q := new(OAuth), new(APIOAuth)
-	err := getDBSession(db).
+	err := getDBSession().
 		Debug().
 		Model(t).
 		Select("oauths.*,  u.username").
@@ -118,8 +118,8 @@ func GetOAuthByClientID(db *gorm.DB, clientID string) (*APIOAuth, error) {
 	return q, nil
 }
 
-func CreateOAuth(db *gorm.DB, o *OAuth) (*OAuth, error) {
-	err := getDBSession(db).
+func CreateOAuth(o *OAuth) (*OAuth, error) {
+	err := getDBSession().
 		Debug().
 		Create(&o).
 		Error
@@ -130,8 +130,8 @@ func CreateOAuth(db *gorm.DB, o *OAuth) (*OAuth, error) {
 	return o, nil
 }
 
-func UpdateOAuth(db *gorm.DB, o *OAuth, id string) error {
-	err := getDBSession(db).
+func UpdateOAuth(o *OAuth, id string) error {
+	err := getDBSession().
 		Debug().
 		Model(OAuth{}).
 		Where("id = ?", id).

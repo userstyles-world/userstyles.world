@@ -9,7 +9,6 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -55,12 +54,12 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
 	}
-	OAuth, err := models.GetOAuthByClientID(database.DB, clientID)
+	OAuth, err := models.GetOAuthByClientID(clientID)
 	if err != nil || OAuth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
 
-	user, err := models.FindUserByName(database.DB, u.Username)
+	user, err := models.FindUserByName(u.Username)
 	if err != nil {
 		return errorMessage(c, 500, "Notify the admins.")
 	}
@@ -111,7 +110,7 @@ func AuthorizePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	oauthID, secureToken := c.Params("id"), c.Params("token")
 
-	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
+	OAuth, err := models.GetOAuthByID(oauthID)
 	if err != nil || OAuth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
@@ -135,14 +134,14 @@ func AuthorizePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	user, err := models.FindUserByName(database.DB, u.Username)
+	user, err := models.FindUserByName(u.Username)
 	if err != nil {
 		log.Println("Error: Couldn't retrieve user:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	user.AuthorizedOAuth = append(user.AuthorizedOAuth, oauthID)
-	if err = models.UpdateUser(database.DB, user); err != nil {
+	if err = models.UpdateUser(user); err != nil {
 		log.Println("Error: couldn't update user:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}

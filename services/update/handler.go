@@ -4,14 +4,13 @@ import (
 	"log"
 	"time"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
 var size = 5
 
 func ImportedStyles() {
-	styles, err := models.GetImportedStyles(database.DB)
+	styles, err := models.GetImportedStyles()
 	if err != nil {
 		log.Printf("Failed to find imported styles, err: %v", err)
 		return // stop if error occurs

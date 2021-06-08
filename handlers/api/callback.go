@@ -8,8 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/config"
-	"userstyles.world/database"
 	"userstyles.world/models"
+	"userstyles.world/config/database"
 	"userstyles.world/utils"
 )
 
@@ -60,7 +60,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	user, err := models.FindUserByNameOrEmail(database.DB, response.Username, response.Email)
+	user, err := models.FindUserByNameOrEmail(response.Username, response.Email)
 	if err != nil {
 		if err.Error() != "User not found." && err.Error() != "record not found" {
 			return c.Next()
@@ -71,7 +71,7 @@ func CallbackGet(c *fiber.Ctx) error {
 			Role:          models.Regular,
 			OAuthProvider: service,
 		}
-		regErr := database.DB.Create(user)
+		regErr := database.Conn.Create(user)
 
 		if regErr.Error != nil {
 			log.Printf("Failed to register %s, error: %s", response.Username, regErr.Error)

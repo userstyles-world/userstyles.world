@@ -9,7 +9,6 @@ import (
 
 	"github.com/davidbyttow/govips/v2/vips"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
@@ -50,7 +49,7 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 	jpeg := template + ".jpeg"
 	webp := template + ".webp"
 	if fileExist(original) == nil {
-		style, err := models.GetStyleByID(database.DB, id)
+		style, err := models.GetStyleByID(id)
 		if err != nil || style.Preview == "" {
 			return ImageInfo{}, err
 		}

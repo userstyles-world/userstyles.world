@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
+	"userstyles.world/config/database"
 	"userstyles.world/utils/crypto"
 )
 
@@ -36,7 +37,7 @@ type SiteStats struct {
 	WeeklyUpdates                 int64
 }
 
-func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
+func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
 	s := new(Stats)
 
 	styleID, err := strconv.Atoi(id)
@@ -62,7 +63,7 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 		assignment["view"] = true
 	}
 
-	err = db.
+	err = database.Conn.
 		Debug().
 		Model(s).
 		Clauses(clause.OnConflict{
@@ -78,10 +79,10 @@ func AddStatsToStyle(db *gorm.DB, id, ip string, install bool) (Stats, error) {
 	return *s, nil
 }
 
-func GetWeeklyInstallsForStyle(db *gorm.DB, id string) (weekly int64) {
+func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
 	q := "style_id = ? and install = 1 and created_at > ?"
-	db.
+	database.Conn.
 		Model(Stats{}).
 		Where(q, id, lastWeek).
 		Count(&weekly)
@@ -89,8 +90,8 @@ func GetWeeklyInstallsForStyle(db *gorm.DB, id string) (weekly int64) {
 	return weekly
 }
 
-func GetTotalInstallsForStyle(db *gorm.DB, id string) (total int64) {
-	db.
+func GetTotalInstallsForStyle(id string) (total int64) {
+	database.Conn.
 		Model(Stats{}).
 		Where("style_id = ? and install = 1", id).
 		Count(&total)
@@ -98,8 +99,8 @@ func GetTotalInstallsForStyle(db *gorm.DB, id string) (total int64) {
 	return total
 }
 
-func GetTotalViewsForStyle(db *gorm.DB, id string) (total int64) {
-	db.
+func GetTotalViewsForStyle(id string) (total int64) {
+	database.Conn.
 		Model(Stats{}).
 		Where("style_id = ? and view = 1", id).
 		Count(&total)
@@ -107,10 +108,10 @@ func GetTotalViewsForStyle(db *gorm.DB, id string) (total int64) {
 	return total
 }
 
-func GetWeeklyUpdatesForStyle(db *gorm.DB, id string) (weekly int64) {
+func GetWeeklyUpdatesForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
 	q := "style_id = ? and install = 1 and updated_at > ? and created_at < ?"
-	db.
+	database.Conn.
 		Model(Stats{}).
 		Where(q, id, lastWeek, lastWeek).
 		Count(&weekly)
@@ -118,7 +119,7 @@ func GetWeeklyUpdatesForStyle(db *gorm.DB, id string) (weekly int64) {
 	return weekly
 }
 
-func GetHomepageStatistics(db *gorm.DB) *SiteStats {
+func GetHomepageStatistics() *SiteStats {
 	p := SiteStats{}
 	q := `
 SELECT
@@ -141,7 +142,7 @@ SELECT
 	// TODO: Replace last day with last week when we get enough data.
 	lastDay := time.Now().AddDate(0, 0, -1)
 
-	if err := db.Raw(q, sql.Named("d", lastDay)).Scan(&p).Error; err != nil {
+	if err := database.Conn.Raw(q, sql.Named("d", lastDay)).Scan(&p).Error; err != nil {
 		log.Printf("Failed to get homepage stats, err: %v\n", err)
 	}
 

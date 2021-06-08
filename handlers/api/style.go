@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
@@ -19,7 +18,7 @@ func StyleGet(c *fiber.Ctx) error {
 			})
 	}
 
-	currentStyle, err := models.GetStyleByID(database.DB, strconv.FormatUint(uint64(u.StyleID), 10))
+	currentStyle, err := models.GetStyleByID(strconv.FormatUint(uint64(u.StyleID), 10))
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{

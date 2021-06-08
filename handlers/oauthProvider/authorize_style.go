@@ -10,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ohler55/ojg/oj"
 
-	"userstyles.world/database"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -28,7 +27,7 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
 	}
-	OAuth, err := models.GetOAuthByClientID(database.DB, clientID)
+	OAuth, err := models.GetOAuthByClientID(clientID)
 	if err != nil || OAuth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
@@ -49,7 +48,7 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 	}
 	secureToken := utils.PrepareText(jwt, utils.AEAD_OAUTHP)
 
-	styles, err := models.GetStylesByUser(database.DB, u.Username)
+	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
 		log.Println("Error: Mo styles find for user", err.Error())
 		return errorMessage(c, 500, "Couldn't retrieve styles of user")
@@ -79,7 +78,7 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	styleID, oauthID, secureToken := c.Query("styleID"), c.Query("oauthID"), c.Query("token")
 
-	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
+	OAuth, err := models.GetOAuthByID(oauthID)
 	if err != nil || OAuth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
@@ -109,7 +108,7 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	style, err := models.GetStyleByID(database.DB, styleID)
+	style, err := models.GetStyleByID(styleID)
 	if err != nil {
 		log.Println("Error: Style wasn't found, due to: ", err.Error())
 		return errorMessage(c, 500, "Couldn't retrieve style of user")
@@ -147,7 +146,7 @@ func AuthorizeStyleNewPost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	oauthID, secureToken := c.Query("oauthID"), c.Query("token")
 
-	OAuth, err := models.GetOAuthByID(database.DB, oauthID)
+	OAuth, err := models.GetOAuthByID(oauthID)
 	if err != nil || OAuth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}

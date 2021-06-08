@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
@@ -13,7 +12,7 @@ import (
 func GetExplore(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	s, err := models.GetAllAvailableStyles(database.DB)
+	s, err := models.GetAllAvailableStyles()
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Styles not found",

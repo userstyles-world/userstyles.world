@@ -7,14 +7,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
 func GetStyleSource(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	style, err := models.GetStyleSourceCodeAPI(database.DB, id)
+	style, err := models.GetStyleSourceCodeAPI(id)
 	if err != nil {
 		return c.JSON(fiber.Map{"data": "style not found"})
 	}
@@ -26,7 +25,7 @@ func GetStyleSource(c *fiber.Ctx) error {
 	uc.OverrideUpdateURL(url)
 
 	// Count installs.
-	_, err = models.AddStatsToStyle(database.DB, id, c.IP(), true)
+	_, err = models.AddStatsToStyle(id, c.IP(), true)
 	if err != nil {
 		return c.JSON(fiber.Map{
 			"data": "Internal server error",
@@ -42,7 +41,7 @@ var normalizedHeaderETag = []byte("Etag")
 func GetStyleEtag(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	style, err := models.GetStyleSourceCodeAPI(database.DB, id)
+	style, err := models.GetStyleSourceCodeAPI(id)
 	if err != nil {
 		return c.JSON(fiber.Map{"data": "style not found"})
 	}

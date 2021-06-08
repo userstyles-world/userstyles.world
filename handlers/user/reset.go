@@ -8,7 +8,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -84,7 +84,7 @@ func ResetPost(c *fiber.Ctx) error {
 
 	claims := token.Claims.(jwt.MapClaims)
 
-	user, err := models.FindUserByEmail(database.DB, claims["email"].(string))
+	user, err := models.FindUserByEmail(claims["email"].(string))
 	if err != nil {
 		return renderError
 	}
@@ -92,7 +92,7 @@ func ResetPost(c *fiber.Ctx) error {
 	t := new(models.User)
 	user.Password = utils.GenerateHashedPassword(password)
 
-	err = database.DB.
+	err = database.Conn.
 		Model(t).
 		Where("id", user.ID).
 		Updates(user).
@@ -134,7 +134,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			})
 	}
 
-	if _, err := models.FindUserByEmail(database.DB, u.Email); err != nil {
+	if _, err := models.FindUserByEmail(u.Email); err != nil {
 		// We need to just say we have send an reset email.
 		// So that we can't leak if we have such email in our database ;).
 		return c.Render("send_email", fiber.Map{

@@ -3,7 +3,6 @@ package core
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
@@ -15,10 +14,10 @@ func Home(c *fiber.Ctx) error {
 	// TODO: Combine this with a new dashboard.
 	var p *models.SiteStats
 	if u.ID == 0 {
-		p = models.GetHomepageStatistics(database.DB)
+		p = models.GetHomepageStatistics()
 	}
 
-	styles, err := models.GetAllFeaturedStyles(database.DB)
+	styles, err := models.GetAllFeaturedStyles()
 	if err != nil {
 		return c.Render("index", fiber.Map{
 			"Title":  "Home",

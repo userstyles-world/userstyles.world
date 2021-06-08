@@ -8,7 +8,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -24,7 +23,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	var err error
 	if isEdit {
 		method = "edit"
-		oauth, err = models.GetOAuthByID(database.DB, id)
+		oauth, err = models.GetOAuthByID(id)
 	} else {
 		method = "add"
 	}
@@ -45,7 +44,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 			})
 		}
 	}
-	oauths, err := models.ListOAuthsOfUser(database.DB, u.Username)
+	oauths, err := models.ListOAuthsOfUser(u.Username)
 	if err != nil {
 		if isEdit {
 			arguments := fiber.Map{
@@ -124,11 +123,11 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	var err error
 	var dbOAuth *models.OAuth
 	if id != "" {
-		err = models.UpdateOAuth(database.DB, &q, id)
+		err = models.UpdateOAuth(&q, id)
 	} else {
 		q.ClientID = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(32)))
 		q.ClientSecret = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(128)))
-		dbOAuth, err = models.CreateOAuth(database.DB, &q)
+		dbOAuth, err = models.CreateOAuth(&q)
 	}
 
 	if err != nil {

@@ -6,7 +6,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils/strings"
@@ -17,7 +16,7 @@ func GetStylePage(c *fiber.Ctx) error {
 	id, name := c.Params("id"), c.Params("name")
 
 	// Check if style exists.
-	data, err := models.GetStyleByID(database.DB, id)
+	data, err := models.GetStyleByID(id)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -36,7 +35,7 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 
 	// Count views.
-	_, err = models.AddStatsToStyle(database.DB, id, c.IP(), false)
+	_, err = models.AddStatsToStyle(id, c.IP(), false)
 	if err != nil {
 		log.Println("Failed to add stats to style, err:", err)
 		return c.Render("err", fiber.Map{
@@ -49,10 +48,10 @@ func GetStylePage(c *fiber.Ctx) error {
 		"Title":          data.Name,
 		"User":           u,
 		"Style":          data,
-		"TotalViews":     models.GetTotalViewsForStyle(database.DB, id),
-		"TotalInstalls":  models.GetTotalInstallsForStyle(database.DB, id),
-		"WeeklyInstalls": models.GetWeeklyInstallsForStyle(database.DB, id),
-		"WeeklyUpdates":  models.GetWeeklyUpdatesForStyle(database.DB, id),
+		"TotalViews":     models.GetTotalViewsForStyle(id),
+		"TotalInstalls":  models.GetTotalInstallsForStyle(id),
+		"WeeklyInstalls": models.GetWeeklyInstallsForStyle(id),
+		"WeeklyUpdates":  models.GetWeeklyUpdatesForStyle(id),
 		"Url":            fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
 		"Slug":           c.Path(),
 	})

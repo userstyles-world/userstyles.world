@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/search"
@@ -15,7 +15,7 @@ func DeleteGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("id")
 
-	s, err := models.GetStyleByID(database.DB, p)
+	s, err := models.GetStyleByID(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -42,7 +42,7 @@ func DeletePost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("id")
 
-	s, err := models.GetStyleByID(database.DB, p)
+	s, err := models.GetStyleByID(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -59,7 +59,7 @@ func DeletePost(c *fiber.Ctx) error {
 	}
 
 	q := new(models.Style)
-	if err = database.DB.Delete(q, "styles.id = ?", p).Error; err != nil {
+	if err = database.Conn.Delete(q, "styles.id = ?", p).Error; err != nil {
 		log.Printf("Failed to delete style, err: %#+v\n", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",

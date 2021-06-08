@@ -6,7 +6,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
@@ -36,8 +35,8 @@ func convertToUSoFormat(s models.APIStyle) USoFormat {
 		Author:         s.Username,
 		Screenshot:     img,
 		UpdatedAt:      s.UpdatedAt.Unix(),
-		TotalInstalls:  models.GetTotalInstallsForStyle(database.DB, id),
-		WeeklyInstalls: models.GetWeeklyInstallsForStyle(database.DB, id),
+		TotalInstalls:  models.GetTotalInstallsForStyle(id),
+		WeeklyInstalls: models.GetWeeklyInstallsForStyle(id),
 	}
 }
 
@@ -63,7 +62,7 @@ func fixCategory(cat string) string {
 }
 
 func GetStyleIndex(c *fiber.Ctx) error {
-	styles, err := models.GetAllStylesForIndexAPI(database.DB)
+	styles, err := models.GetAllStylesForIndexAPI()
 	if err != nil {
 		return c.JSON(fiber.Map{
 			"data": "styles not found",

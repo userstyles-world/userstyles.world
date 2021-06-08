@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/config"
+	"userstyles.world/config/database"
 	"userstyles.world/modules/errors"
 	"userstyles.world/utils/strings"
 )
@@ -105,7 +106,7 @@ func (s APIStyle) TruncateCode() bool {
 	return len(s.Code) > 150_000
 }
 
-func getDBSession(db *gorm.DB) (tx *gorm.DB) {
+func getDBSession() (tx *gorm.DB) {
 	var log logger.LogLevel
 	switch config.DB_DEBUG {
 	case "error":
@@ -118,12 +119,12 @@ func getDBSession(db *gorm.DB) (tx *gorm.DB) {
 		log = logger.Silent
 	}
 
-	return db.Session(&gorm.Session{
-		Logger: db.Logger.LogMode(log),
+	return database.Conn.Session(&gorm.Session{
+		Logger: database.Conn.Logger.LogMode(log),
 	})
 }
 
-func GetAllStyles(db *gorm.DB) ([]StyleSearch, error) {
+func GetAllStyles() ([]StyleSearch, error) {
 	q := new([]StyleSearch)
 
 	stmt := `
@@ -140,14 +141,14 @@ where
 	styles.deleted_at is null
 `
 
-	if err := getDBSession(db).Raw(stmt).Find(q).Error; err != nil {
+	if err := getDBSession().Raw(stmt).Find(q).Error; err != nil {
 		return nil, err
 	}
 
 	return *q, nil
 }
 
-func GetStyleForIndex(db *gorm.DB, id string) (StyleSearch, error) {
+func GetStyleForIndex(id string) (StyleSearch, error) {
 	q := new(StyleSearch)
 
 	stmt := `
@@ -163,16 +164,16 @@ join
 where
 	styles.deleted_at is null and styles.id = ?
 `
-	if err := getDBSession(db).Raw(stmt, id).First(q).Error; err != nil {
+	if err := getDBSession().Raw(stmt, id).First(q).Error; err != nil {
 		return *q, err
 	}
 
 	return *q, nil
 }
 
-func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
+func GetAllStyleIDs() ([]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
-	err := getDBSession(db).
+	err := getDBSession().
 		Model(t).
 		Select("styles.id").
 		Find(q).
@@ -184,7 +185,7 @@ func GetAllStyleIDs(db *gorm.DB) ([]APIStyle, error) {
 	return *q, nil
 }
 
-func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
+func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
 	t, q := new(Style), new([]APIStyle)
 
 	s := "styles.id, styles.name, styles.created_at, styles.updated_at, "
@@ -192,7 +193,7 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 	s += "styles.original, styles.category, styles.preview, styles.user_id, "
 	s += "styles.homepage, styles.mirror_url, u.username, u.display_name"
 
-	err := getDBSession(db).
+	err := getDBSession().
 		Model(t).
 		Select(s).
 		Joins("join users u on u.id = styles.user_id").
@@ -205,7 +206,7 @@ func GetAllStylesForIndexAPI(db *gorm.DB) (*[]APIStyle, error) {
 	return q, nil
 }
 
-func GetAllAvailableStyles(db *gorm.DB) ([]StyleCard, error) {
+func GetAllAvailableStyles() ([]StyleCard, error) {
 	q := new([]StyleCard)
 	stmt := `
 select
@@ -220,14 +221,14 @@ where
 	styles.deleted_at is null
 `
 
-	if err := getDBSession(db).Raw(stmt).Find(q).Error; err != nil {
+	if err := getDBSession().Raw(stmt).Find(q).Error; err != nil {
 		return nil, err
 	}
 
 	return *q, nil
 }
 
-func GetAllFeaturedStyles(db *gorm.DB) ([]StyleCard, error) {
+func GetAllFeaturedStyles() ([]StyleCard, error) {
 	q := new([]StyleCard)
 	stmt := `
 select
@@ -242,16 +243,16 @@ where
 	styles.deleted_at is null and styles.featured = 1
 `
 
-	if err := getDBSession(db).Raw(stmt).Find(q).Error; err != nil {
+	if err := getDBSession().Raw(stmt).Find(q).Error; err != nil {
 		return nil, err
 	}
 
 	return *q, nil
 }
 
-func GetImportedStyles(db *gorm.DB) ([]Style, error) {
+func GetImportedStyles() ([]Style, error) {
 	t, q := new(Style), new([]Style)
-	err := getDBSession(db).
+	err := getDBSession().
 		Model(t).
 		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
 		Error
@@ -263,9 +264,9 @@ func GetImportedStyles(db *gorm.DB) ([]Style, error) {
 }
 
 // GetStyleByID note: Using ID as a string is fine in this case.
-func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
+func GetStyleByID(id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
-	err := getDBSession(db).
+	err := getDBSession().
 		Model(t).
 		Select("styles.*,  u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -279,7 +280,7 @@ func GetStyleByID(db *gorm.DB, id string) (*APIStyle, error) {
 	return q, nil
 }
 
-func GetStylesByUser(db *gorm.DB, username string) ([]StyleCard, error) {
+func GetStylesByUser(username string) ([]StyleCard, error) {
 	q := new([]StyleCard)
 	stmt := `
 select
@@ -294,15 +295,15 @@ where
 	styles.deleted_at is null and u.username = ?
 `
 
-	if err := getDBSession(db).Raw(stmt, username).Find(q).Error; err != nil {
+	if err := getDBSession().Raw(stmt, username).Find(q).Error; err != nil {
 		return nil, err
 	}
 
 	return *q, nil
 }
 
-func CreateStyle(db *gorm.DB, s *Style) (*Style, error) {
-	err := getDBSession(db).
+func CreateStyle(s *Style) (*Style, error) {
+	err := getDBSession().
 		Create(&s).
 		Error
 	if err != nil {
@@ -312,8 +313,8 @@ func CreateStyle(db *gorm.DB, s *Style) (*Style, error) {
 	return s, nil
 }
 
-func UpdateStyle(db *gorm.DB, s *Style) error {
-	err := getDBSession(db).
+func UpdateStyle(s *Style) error {
+	err := getDBSession().
 		Model(Style{}).
 		Where("id", s.ID).
 		Updates(s).
@@ -325,9 +326,9 @@ func UpdateStyle(db *gorm.DB, s *Style) error {
 	return nil
 }
 
-func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
+func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
 	t, q := new(Style), new(APIStyle)
-	err := getDBSession(db).
+	err := getDBSession().
 		Model(t).
 		Select("styles.*, u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -341,9 +342,9 @@ func GetStyleSourceCodeAPI(db *gorm.DB, id string) (*APIStyle, error) {
 	return q, nil
 }
 
-func CheckDuplicateStyle(db *gorm.DB, s *Style) error {
+func CheckDuplicateStyle(s *Style) error {
 	q := "styles.name = ? and styles.user_id = ? and styles.code = ?"
-	err := getDBSession(db).
+	err := getDBSession().
 		First(s, q, s.Name, s.UserID, s.Code).
 		Error
 

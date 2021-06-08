@@ -7,7 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -33,7 +33,7 @@ func setSocials(u *models.User, k, v string) {
 func Account(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	styles, err := models.GetStylesByUser(database.DB, u.Username)
+	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Server error",
@@ -41,7 +41,7 @@ func Account(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := models.FindUserByName(database.DB, u.Username)
+	user, err := models.FindUserByName(u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "User not found",
@@ -60,7 +60,7 @@ func Account(c *fiber.Ctx) error {
 func EditAccount(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	styles, err := models.GetStylesByUser(database.DB, u.Username)
+	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"User":  u,
@@ -68,7 +68,7 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := models.FindUserByName(database.DB, u.Username)
+	user, err := models.FindUserByName(u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "User not found",
@@ -129,7 +129,7 @@ func EditAccount(c *fiber.Ctx) error {
 	setSocials(user, "gitlab", c.FormValue("gitlab"))
 	setSocials(user, "codeberg", c.FormValue("codeberg"))
 
-	dbErr := database.DB.
+	dbErr := database.Conn.
 		Model(models.User{}).
 		Where("id", user.ID).
 		Updates(user).

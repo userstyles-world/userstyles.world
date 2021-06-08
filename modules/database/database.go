@@ -11,13 +11,12 @@ import (
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/config"
+	"userstyles.world/config/database"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
 
 var (
-	// DB holds the current pointer to active database connection.
-	DB      *gorm.DB
 	user    models.User
 	style   models.Style
 	stats   models.Stats
@@ -35,7 +34,7 @@ func connect() {
 		},
 	)
 
-	db, err := gorm.Open(sqlite.Open(config.DB), &gorm.Config{
+	conn, err := gorm.Open(sqlite.Open(database.File), &gorm.Config{
 		Logger: newLogger,
 	})
 	if err != nil {
@@ -43,13 +42,13 @@ func connect() {
 		panic(err)
 	}
 
-	DB = db
+	database.Conn = conn
 	log.Println("Database successfully connected.")
 }
 
 func migrate(tables ...interface{}) error {
 	log.Println("Migrating database tables.")
-	return DB.AutoMigrate(tables...)
+	return database.Conn.AutoMigrate(tables...)
 }
 
 // Initialize the database connection.
@@ -72,7 +71,7 @@ func Initialize() {
 }
 
 func drop(dst ...interface{}) error {
-	return DB.Migrator().DropTable(dst...)
+	return database.Conn.Migrator().DropTable(dst...)
 }
 
 func generateData(amount int) ([]models.Style, []models.User) {
@@ -204,12 +203,12 @@ func seed() {
 	}
 
 	for i := range users {
-		DB.Create(&users[i])
+		database.Conn.Create(&users[i])
 	}
 	for i := range styles {
-		DB.Create(&styles[i])
+		database.Conn.Create(&styles[i])
 	}
 	for i := range OAuths {
-		DB.Create(&OAuths[i])
+		database.Conn.Create(&OAuths[i])
 	}
 }

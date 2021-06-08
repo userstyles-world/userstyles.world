@@ -8,7 +8,6 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
@@ -27,7 +26,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "No code specified")
 	}
 
-	OAuth, err := models.GetOAuthByClientID(database.DB, clientID)
+	OAuth, err := models.GetOAuthByClientID(clientID)
 	if err != nil || OAuth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
@@ -71,7 +70,7 @@ func AccessTokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "State doesn't match.")
 	}
 
-	user, err := models.FindUserByID(database.DB, fmt.Sprintf("%d", userID))
+	user, err := models.FindUserByID(fmt.Sprintf("%d", userID))
 	if err != nil || user.ID == 0 {
 		return errorMessage(c, 500, "Couldn't find the user that was specified, please notify the admins.")
 	}

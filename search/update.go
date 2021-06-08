@@ -3,14 +3,13 @@ package search
 import (
 	"strconv"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
 func IndexStyle(id uint) error {
 	styleID := strconv.FormatUint(uint64(id), 10)
 
-	style, err := models.GetStyleForIndex(database.DB, styleID)
+	style, err := models.GetStyleForIndex(styleID)
 	if err != nil {
 		return err
 	}

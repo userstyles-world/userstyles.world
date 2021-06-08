@@ -4,13 +4,13 @@ import (
 	"log"
 	"time"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	"userstyles.world/models"
 )
 
 func getViews(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
-	database.DB.
+	database.Conn.
 		Model(models.Stats{}).
 		Where("style_id = ? and created_at > ? and view = ?", id, day, true).
 		Count(&i)
@@ -21,7 +21,7 @@ func getViews(id int64) (i int64) {
 func getUpdates(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
 	q := "style_id = ? and install = ? and updated_at > ?"
-	database.DB.
+	database.Conn.
 		Model(models.Stats{}).
 		Where(q, id, true, day).
 		Count(&i)
@@ -32,7 +32,7 @@ func getUpdates(id int64) (i int64) {
 func getInstalls(id int64) (i int64) {
 	day := time.Now().AddDate(0, 0, -1)
 	q := "style_id = ? and install = ? and created_at > ?"
-	database.DB.
+	database.Conn.
 		Model(models.Stats{}).
 		Where(q, id, true, day).
 		Count(&i)
@@ -41,7 +41,7 @@ func getInstalls(id int64) (i int64) {
 }
 
 func StyleStatistics() {
-	styles, err := models.GetAllStyleIDs(database.DB)
+	styles, err := models.GetAllStyleIDs()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -62,5 +62,5 @@ func StyleStatistics() {
 	}
 
 	log.Println("Stats history.")
-	database.DB.Debug().Create(stats)
+	database.Conn.Debug().Create(stats)
 }

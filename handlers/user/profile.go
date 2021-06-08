@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )
@@ -14,7 +13,7 @@ func Profile(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("name")
 
-	user, err := models.FindUserByName(database.DB, p)
+	user, err := models.FindUserByName(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "User not found",
@@ -27,7 +26,7 @@ func Profile(c *fiber.Ctx) error {
 		return c.Redirect("/user/"+strings.ToLower(p), fiber.StatusSeeOther)
 	}
 
-	styles, err := models.GetStylesByUser(database.DB, p)
+	styles, err := models.GetStylesByUser(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"User":  u,

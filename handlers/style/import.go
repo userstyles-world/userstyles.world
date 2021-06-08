@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
@@ -82,7 +81,7 @@ func ImportPost(c *fiber.Ctx) error {
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 
 	// Prevent importing multiples of the same style.
-	err := models.CheckDuplicateStyle(database.DB, s)
+	err := models.CheckDuplicateStyle(s)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": err,
@@ -90,7 +89,7 @@ func ImportPost(c *fiber.Ctx) error {
 		})
 	}
 
-	s, err = models.CreateStyle(database.DB, s)
+	s, err = models.CreateStyle(s)
 	if err != nil {
 		log.Println("Style import failed, err:", err)
 		return c.Render("err", fiber.Map{

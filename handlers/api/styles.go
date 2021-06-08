@@ -9,7 +9,7 @@ import (
 	"github.com/ohler55/ojg/oj"
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/database"
+	"userstyles.world/config/database"
 	"userstyles.world/models"
 	"userstyles.world/search"
 	"userstyles.world/utils"
@@ -25,7 +25,7 @@ func StylesGet(c *fiber.Ctx) error {
 			})
 	}
 
-	styles, err := models.GetStylesByUser(database.DB, u.Username)
+	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -67,7 +67,7 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
-	style, err := models.GetStyleByID(database.DB, sStyleID)
+	style, err := models.GetStyleByID(sStyleID)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -94,7 +94,7 @@ func StylePost(c *fiber.Ctx) error {
 	postStyle.UserID = u.ID
 	postStyle.Featured = style.Featured
 
-	err = models.UpdateStyle(database.DB, &postStyle)
+	err = models.UpdateStyle(&postStyle)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -123,7 +123,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	style, err := models.GetStyleByID(database.DB, sStyleID)
+	style, err := models.GetStyleByID(sStyleID)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -146,7 +146,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 	}
 
 	styleModel := new(models.Style)
-	err = database.DB.
+	err = database.Conn.
 		Debug().
 		Delete(styleModel, "styles.id = ?", sStyleID).
 		Error
@@ -210,7 +210,7 @@ func NewStyle(c *fiber.Ctx) error {
 	}
 
 	// Prevent adding multiples of the same style.
-	err = models.CheckDuplicateStyle(database.DB, &postStyle)
+	err = models.CheckDuplicateStyle(&postStyle)
 	if err != nil {
 		return c.Status(403).
 			JSON(fiber.Map{
@@ -218,7 +218,7 @@ func NewStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	newStyle, err := models.CreateStyle(database.DB, &postStyle)
+	newStyle, err := models.CreateStyle(&postStyle)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{

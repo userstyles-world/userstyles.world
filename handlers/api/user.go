@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
@@ -32,7 +31,7 @@ func UserGet(c *fiber.Ctx) error {
 			})
 	}
 
-	user, err := models.FindUserByName(database.DB, u.Username)
+	user, err := models.FindUserByName(u.Username)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -57,9 +56,9 @@ func SpecificUserGet(c *fiber.Ctx) error {
 	var user *models.User
 	var err error
 	if _, intErr := strconv.Atoi(identifier); intErr == nil {
-		user, err = models.FindUserByID(database.DB, identifier)
+		user, err = models.FindUserByID(identifier)
 	} else {
-		user, err = models.FindUserByName(database.DB, identifier)
+		user, err = models.FindUserByName(identifier)
 	}
 	if err != nil {
 		return c.Status(404).

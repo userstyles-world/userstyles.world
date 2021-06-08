@@ -8,7 +8,6 @@ import (
 
 	"github.com/blevesearch/bleve/v2"
 
-	"userstyles.world/database"
 	"userstyles.world/models"
 )
 
@@ -34,7 +33,7 @@ func Initialize() {
 	StyleIndex = stylesIndex
 
 	go func() {
-		styleEntries, err := models.GetAllStyles(database.DB)
+		styleEntries, err := models.GetAllStyles()
 		if err != nil {
 			log.Fatal(err)
 		}
