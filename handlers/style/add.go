@@ -17,7 +17,7 @@ import (
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/images"
 	"userstyles.world/models"
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )

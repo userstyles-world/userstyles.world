@@ -3,7 +3,7 @@ package style
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 )

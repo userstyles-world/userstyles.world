@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/models"
 )
 

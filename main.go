@@ -3,7 +3,7 @@ package main
 import (
 	"userstyles.world/handlers"
 	"userstyles.world/images"
-	"userstyles.world/modules/database"
+	database "userstyles.world/modules/database/init"
 	"userstyles.world/search"
 	"userstyles.world/services/cron"
 	"userstyles.world/utils"

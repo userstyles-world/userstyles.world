@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/utils/crypto"
 )
 

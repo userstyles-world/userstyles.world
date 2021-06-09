@@ -9,7 +9,7 @@ import (
 
 	"userstyles.world/config"
 	"userstyles.world/models"
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/utils"
 )
 

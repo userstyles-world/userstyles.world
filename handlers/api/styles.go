@@ -9,7 +9,7 @@ import (
 	"github.com/ohler55/ojg/oj"
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/models"
 	"userstyles.world/search"
 	"userstyles.world/utils"

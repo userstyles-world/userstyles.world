@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/config"
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 	"userstyles.world/utils/strings"
 )

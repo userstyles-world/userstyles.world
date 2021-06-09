@@ -1,4 +1,4 @@
-package database
+package init
 
 import (
 	"gorm.io/gorm/logger"

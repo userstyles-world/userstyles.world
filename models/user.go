@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
-	"userstyles.world/config/database"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
 
