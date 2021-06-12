@@ -1,6 +1,7 @@
 package oauthprovider
 
 import (
+	"fmt"
 	"log"
 	"net/url"
 	"time"
@@ -46,11 +47,17 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 		log.Println("Error: Couldn't make a JWT Token due to:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, please notify the admins.")
 	}
+	secureToken := utils.PrepareText(jwt, utils.AEAD_OAUTHP)
 
 	styles, err := models.GetStylesByUser(database.DB, u.Username)
 	if err != nil {
 		log.Println("Error: Mo styles find for user", err.Error())
 		return errorMessage(c, 500, "Couldn't retrieve styles of user")
+	}
+
+	//"add?token=%s&oauthID=%s" .SecureToken .OAuth.ID}
+	if len(styles) == 0 {
+		return c.Redirect(fmt.Sprintf("/api/oauth/authorize_style/new?token=%s&oauthID=%d", secureToken, OAuth.ID), fiber.StatusSeeOther)
 	}
 
 	log.Println(styleInfo)
@@ -59,7 +66,7 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 		"Styles":      styles,
 		"OAuth":       OAuth,
 		"StyleInfo":   url.QueryEscape(styleInfo),
-		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP),
+		"SecureToken": secureToken,
 	}
 	for _, v := range OAuth.Scopes {
 		arguments["Scope_"+v] = true

@@ -139,6 +139,7 @@ func Initialize() {
 	oauthV1.Get("/authorize", jwtware.Protected, oauthprovider.AuthorizeGet)
 	oauthV1.Get("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStyleGet)
 	oauthV1.Post("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStylePost)
+	oauthV1.Get("/authorize_style/new", jwtware.Protected, oauthprovider.AuthorizeStyleNewPost)
 	oauthV1.Post("/authorize_style/new", jwtware.Protected, oauthprovider.AuthorizeStyleNewPost)
 	oauthV1.Post("/authorize/:id/:token", jwtware.Protected, oauthprovider.AuthorizePost)
 	oauthV1.Post("/access_token", oauthprovider.AccessTokenPost)
