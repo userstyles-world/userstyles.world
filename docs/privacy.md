@@ -1,6 +1,6 @@
 # GDPR Privacy Policy of UserStyles.world
 
-Last updated June 06, 2021
+Last updated June 13, 2021
 
 Table of Content
 
@@ -12,7 +12,8 @@ Table of Content
 - [What are your data protection rights?](#what-are-your-data-protection-rights)
 - [What log data do we collect?](#what-log-data-do-we-collect)
 - [Do we use cookies?](#do-we-use-cookies)
-- [Do we use any external cookies?](#do-we-use-any-external-cookies)
+- [Do we use any third party cookies?](#do-we-use-any-third-party-cookies)
+- [Do we share your personal data with third parties?](#do-we-share-your-personal-data-with-third-parties)
 - [Privacy policies of other websites](#privacy-policies-of-other-websites)
 - [Changes to our privacy policy](#changes-to-our-privacy-policy)
 - [How to contact us](#how-to-contact-us)
@@ -23,13 +24,14 @@ Table of Content
 Thank you for choosing to be part of our community at UserStyles.world (“we”,
 “us”, or “our”).
 
+When you visit our website userstyles.world (“Site”) and use
+our services, you trust us with your personal information. We take your privacy
+very seriously.
+
 We are committed to protecting your personal information and your right to
 privacy. If you have any questions or concerns about our policy, or our
 practices with regards to your personal information, please contact us at
 [feedback@userstyles.world](mailto:feedback@userstyles.world).
-
-When you visit our website userstyles.world (“Site”) and use our services, you
-trust us with your personal information. We take your privacy very seriously.
 
 In this privacy notice, we describe our privacy policy. We seek to explain to
 you in the clearest way possible what information we store, how we use it and
@@ -37,7 +39,7 @@ what rights you have in relation to it. We hope you take some time to read
 through it carefully, as it is important.
 
 If there are any terms in this privacy policy that you do not agree with, please
-discontinue use of our site and our services.
+discontinue the use of our Site and our services.
 
 This privacy policy applies to all information stored through our Site, and/or
 any related services. Please read it carefully as it will help you make informed
@@ -50,8 +52,13 @@ We collect the following data:
 
 - Username
 - Email address
-- Visited userstyle pages
-- Visited userstyle install pages
+- Links to other platforms
+- Visited "userstyle details" pages
+- Visited "userstyle install" pages
+
+Additionally, we also collect the data supplied by OAuth providers. However, we
+only use the email address and username in order to create your account and
+discard the rest of the data that was provided.
 
 
 ## How do we collect your data?
@@ -77,10 +84,11 @@ We use your data in order to show userstyle statistics.
 We follow best practices when it comes to handling your data and store
 everything on our own server.
 
-The data used for userstyle statistics is stored as a unique hash, and is not
-easily reversible without brute-forcing all public IP addresses in IPv4 address
-space in combination with our secret key. This gives us decently accurate style
-statistics while respecting your privacy. The unique hash is formed like so:
+The data used for userstyle statistics is anonymizing the IP address through a
+hash function combined with a secret key, and is not easily reversible without
+brute-forcing all public IP addresses in IPv4 address space in combination with
+the said secret key. This gives us decently accurate style statistics while
+respecting your privacy. The unique hash is formed like so:
 
 ```pseudo
 # Formula:
@@ -105,14 +113,32 @@ Try it out online:
 
 ## What are your data protection rights?
 
-TODO: Add GDPR data protection rights.
+- The right to be informed – You have the right to know what personal data is
+  collected, why, how long it will be kept, how you can file a compmlaint, and
+  with whom we share the data.
+- The right of access – You have the right to request for copies of your personal
+  data.
+- The right of rectification – You have the right to request that we update any
+  inaccurate or incomplete data we have on you.
+- The right to be forgotten – You have the right to request that we erase your
+  personal data, under certain conditions.
+- The right to restrict processing – You have the right to request that we
+  restrict the processing of your personal data, under certain conditions.
+- The right to data portability – You have the right to request that we transfer
+  the data that we have collected to another organization, or directly to you,
+  under certain conditions.
+- The right to object to processing – You have the right to object to processing
+  of your personal data, under certain conditions.
+- The right in relation to automated decision making and profiling – You have
+  the right not to be subject to automated decision-making if it is producing a
+  legal effect that significantly affects you.
 
 
 ## What log data do we collect?
 
 We automatically store certain information when you use the Site, but this
 information doesn't reveal your identity. It comes from default NGINX server
-logs, which we flush every 24 hours, and includes the following data.
+logs, which we flush every 24 hours, and includes the following data:
 
 ```
 # IP        Date                         Visited page                  Browser Agent
@@ -129,9 +155,14 @@ Yes, we use cookies for the purpose of keeping you signed in and authorizing
 various actions on the Site that require an account.
 
 
-## Do we use any external cookies?
+## Do we use any third party cookies?
 
-No. And we never will.
+No.
+
+
+## Do we share your data with third parties?
+
+No.
 
 
 ## Privacy policies of other websites
