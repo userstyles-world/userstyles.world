@@ -84,11 +84,11 @@ We use your data in order to show userstyle statistics.
 We follow best practices when it comes to handling your data and store
 everything on our own server.
 
-The data used for userstyle statistics is anonymizing the IP address through a
-hash function combined with a secret key, and is not easily reversible without
-brute-forcing all public IP addresses in IPv4 address space in combination with
-the said secret key. This gives us decently accurate style statistics while
-respecting your privacy. The unique hash is formed like so:
+The data used for userstyle statistics is anonymized by using a hash function
+with a secret key. It is not easily reversible without brute-forcing all public
+IP addresses in IPv4 address space in combination with said secret key. This
+gives us decently accurate style statistics while respecting your privacy. The
+unique hash is formed like so:
 
 ```pseudo
 # Formula:
