@@ -18,8 +18,8 @@ func GetDocs(c *fiber.Ctx) error {
 	case "changelog":
 		content, _ = os.ReadFile("docs/changelog.md")
 		title = "Changelog"
-	case "privacy-policy":
-		content, _ = os.ReadFile("docs/privacy-policy.md")
+	case "privacy":
+		content, _ = os.ReadFile("docs/privacy.md")
 		title = "Privacy Policy"
 	}
 
