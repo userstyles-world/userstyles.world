@@ -30,6 +30,9 @@
             {{ end }}
             <li><a href="/explore">Explore</a></li>
             {{ if .User.Username }}
+                {{ if ge .User.Role 1 }}
+                    <li><a href="/dashboard">Dashboard</a></li>
+                {{ end }}
                 {{ if eq .User.Role 2 }}
                     <li><a href="/monitor">Monitor</a></li>
                 {{ end }}

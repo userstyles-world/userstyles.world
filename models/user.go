@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
+
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
@@ -74,6 +75,14 @@ func (u User) RoleString() (s string) {
 		s = "Admin"
 	}
 	return s
+}
+
+func FindAllUsers() (u []User, err error) {
+	if err = database.Conn.Debug().Find(&u).Error; err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 func FindUserByEmail(email string) (*User, error) {
