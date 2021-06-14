@@ -1,6 +1,6 @@
 # GDPR Privacy Policy of UserStyles.world
 
-Last updated June 13, 2021
+Last updated June 14, 2021
 
 Table of Content
 
@@ -12,8 +12,8 @@ Table of Content
 - [What are your data protection rights?](#what-are-your-data-protection-rights)
 - [What log data do we collect?](#what-log-data-do-we-collect)
 - [Do we use cookies?](#do-we-use-cookies)
-- [Do we use any third party cookies?](#do-we-use-any-third-party-cookies)
-- [Do we share your personal data with third parties?](#do-we-share-your-personal-data-with-third-parties)
+- [Do we use any third-party cookies?](#do-we-use-any-third-party-cookies)
+- [Do we share your data with third parties?](#do-we-share-your-data-with-third-parties)
 - [Privacy policies of other websites](#privacy-policies-of-other-websites)
 - [Changes to our privacy policy](#changes-to-our-privacy-policy)
 - [How to contact us](#how-to-contact-us)
@@ -82,11 +82,11 @@ We use your data in order to show userstyle statistics.
 ## How do we store your data?
 
 We follow best practices when it comes to handling your data and store
-everything on our own server.
+everything on our server.
 
 The data used for userstyle statistics is anonymized by using a hash function
 with a secret key. It is not easily reversible without brute-forcing all public
-IP addresses in IPv4 address space in combination with said secret key. This
+IP addresses in IPv4 address space in combination with the said secret key. This
 gives us decently accurate style statistics while respecting your privacy. The
 unique hash is formed like so:
 
@@ -114,7 +114,7 @@ Try it out online:
 ## What are your data protection rights?
 
 - The right to be informed – You have the right to know what personal data is
-  collected, why, how long it will be kept, how you can file a compmlaint, and
+  collected, why, how long it will be kept, how you can file a complaint, and
   with whom we share the data.
 - The right of access – You have the right to request for copies of your personal
   data.
@@ -145,8 +145,8 @@ logs, which we flush every 24 hours, and includes the following data:
 1.2.3.4 - - [06/Jun/2021:23:06:13 +0000] "GET / HTTP/1.1" 200 5217 "-" "Mozilla/5.0 ..."
 ```
 
-This information is necessary for maintaining the security and operation of
-our Site, and for our internal analytic and reporting purposes.
+This information is necessary for maintaining the security and operation of our
+Site, and for our internal analytics and reporting purposes.
 
 
 ## Do we use cookies?
@@ -155,7 +155,7 @@ Yes, we use cookies for the purpose of keeping you signed in and authorizing
 various actions on the Site that require an account.
 
 
-## Do we use any third party cookies?
+## Do we use any third-party cookies?
 
 No.
 
