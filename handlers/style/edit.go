@@ -8,10 +8,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/images"
 	"userstyles.world/models"
+	"userstyles.world/modules/database"
 )
 
 func EditGet(c *fiber.Ctx) error {

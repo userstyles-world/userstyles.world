@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/models"
+	"userstyles.world/modules/database"
 )
 
 func getViews(id int64) (i int64) {

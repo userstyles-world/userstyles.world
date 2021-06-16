@@ -9,8 +9,8 @@ import (
 	"github.com/ohler55/ojg/oj"
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/models"
+	"userstyles.world/modules/database"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )

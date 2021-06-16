@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"sort"
 
 	"github.com/gofiber/fiber/v2"

@@ -143,7 +143,6 @@ func FindUserByID(id string) (*User, error) {
 		Where("id = ?", id).
 		First(&user).
 		Error
-
 	if err != nil {
 		return nil, err
 	}
