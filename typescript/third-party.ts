@@ -40,9 +40,13 @@ const onMessage = (ev: MessageEvent<any>) => {
             if ('/api/oauth/authorize_style/new' !== window.location.pathname || !data) {
                 return;
             }
-            // TODO figure out which fields we can use more.
             fillInformationOnForm('name', data['name']);
-            fillInformationOnForm('description', data['description']);
+            const metaData = data['metadata'];
+            if (metaData) {
+                fillInformationOnForm('description', metaData['description']);
+                fillInformationOnForm('license', metaData['license']);
+                fillInformationOnForm('homepage', metaData['license']);
+            }
             handleSourceCode(data['sourceCode']);
 
         }
