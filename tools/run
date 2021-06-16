@@ -23,7 +23,7 @@ check_dir() {
 
 export_secrets() {
     set -a 
-    source ./.auth
+    . ./.auth
     set +a
 }
 
@@ -45,9 +45,21 @@ sass() {
     [ $? = 1 ] && exit
 
     check_dir
-    while inotifywait -r -e close_write scss; do
-        sassc --style compressed ./scss/main.scss ./static/css/main.css
-    done
+
+    # Sassc fails if directory doesn't exist.
+    mkdir -p ./static/css
+
+    if [ "$2" = "--watch" ]; then
+        while inotifywait -r -e close_write scss; do
+            _sass
+        done
+    else
+        _sass
+    fi
+}
+
+_sass() {
+    sassc --style compressed ./scss/main.scss ./static/css/main.css
 }
 
 drop() {
@@ -77,6 +89,13 @@ build() {
     log "build"
     check_dir
 
+    log "compiling sass"
+    sass
+
+    log "compiling typescript"
+    go run ./typescript/run.go
+
+    log "compiling executable"
     GOOS=linux go build \
         -ldflags '-s -w -extldflags "-fno-PIC -static"' \
         -buildmode pie -tags 'osusergo netgo static_build'

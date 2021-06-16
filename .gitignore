@@ -4,6 +4,7 @@ styles.bleve/
 node_modules/
 image_cache/
 .eslintcache
+static/*/
 .vscode/
 public/
 .idea/
