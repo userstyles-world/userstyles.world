@@ -26,6 +26,7 @@ const onMessage = (ev: MessageEvent<any>) => {
             }
             // TODO figure out which fields we can use more.
             fillInformationOnForm('name', data['name']);
+            fillInformationOnForm('description', data['description']);
             fillInformationOnForm('code', data['sourceCode']);
 
         }
