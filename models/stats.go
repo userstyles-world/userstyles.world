@@ -18,8 +18,8 @@ type Stats struct {
 	Hash    string `gorm:"unique"`
 	Style   Style
 	StyleID int
-	Install time.Time
-	View    time.Time
+	Install time.Time `gorm:"default:null"`
+	View    time.Time `gorm:"default:null"`
 }
 
 type SiteStats struct {
