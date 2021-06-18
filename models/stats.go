@@ -13,21 +13,13 @@ import (
 	"userstyles.world/utils/crypto"
 )
 
-const (
-	totalViews     = "view = 1"
-	weeklyViews    = "view = 1 and created_at > ?"
-	totalInstalls  = "install = 1"
-	weeklyInstalls = "install = 1 and created_at > ?"
-	weeklyUpdates  = "install = 1 and updated_at > ? and created_at < ?"
-)
-
 type Stats struct {
 	gorm.Model
 	Hash    string `gorm:"unique"`
 	Style   Style
 	StyleID int
-	Install bool `gorm:"default:false"`
-	View    bool `gorm:"default:false"`
+	Install time.Time
+	View    time.Time
 }
 
 type SiteStats struct {
@@ -52,15 +44,16 @@ func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
 		return *s, err
 	}
 
+	t := time.Now()
 	assignment := map[string]interface{}{
-		"updated_at": time.Now(),
+		"updated_at": t,
 	}
 	if install {
-		s.Install = true
-		assignment["install"] = true
+		s.Install = t
+		assignment["install"] = t
 	} else {
-		s.View = true
-		assignment["view"] = true
+		s.View = t
+		assignment["view"] = t
 	}
 
 	err = database.Conn.
@@ -81,10 +74,10 @@ func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
 
 func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and install = 1 and created_at > ?"
+	q := "style_id = ? and install > ? and created_at > ?"
 	database.Conn.
 		Model(Stats{}).
-		Where(q, id, lastWeek).
+		Where(q, id, lastWeek, lastWeek).
 		Count(&weekly)
 
 	return weekly
@@ -93,7 +86,7 @@ func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 func GetTotalInstallsForStyle(id string) (total int64) {
 	database.Conn.
 		Model(Stats{}).
-		Where("style_id = ? and install = 1", id).
+		Where("style_id = ? and install is not null", id).
 		Count(&total)
 
 	return total
@@ -102,7 +95,7 @@ func GetTotalInstallsForStyle(id string) (total int64) {
 func GetTotalViewsForStyle(id string) (total int64) {
 	database.Conn.
 		Model(Stats{}).
-		Where("style_id = ? and view = 1", id).
+		Where("style_id = ? and view is not null", id).
 		Count(&total)
 
 	return total
@@ -110,10 +103,10 @@ func GetTotalViewsForStyle(id string) (total int64) {
 
 func GetWeeklyUpdatesForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and install = 1 and updated_at > ? and created_at < ?"
+	q := "style_id = ? and install > ? and updated_at > ? and created_at < ?"
 	database.Conn.
 		Model(Stats{}).
-		Where(q, id, lastWeek, lastWeek).
+		Where(q, id, lastWeek, lastWeek, lastWeek).
 		Count(&weekly)
 
 	return weekly
