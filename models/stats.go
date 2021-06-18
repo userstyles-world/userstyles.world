@@ -125,11 +125,11 @@ SELECT
 	(SELECT count(*) FROM stats s
 	 WHERE s.install = 1) total_installs,
 	(SELECT count(*) FROM stats s
-	 WHERE s.view = 1 and s.created_at > @d) weekly_views,
+	 WHERE s.view > @d and s.created_at > @d) weekly_views,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install = 1 and s.created_at > @d) weekly_installs,
+	 WHERE s.install > @d and s.created_at > @d) weekly_installs,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install = 1 and s.updated_at > @d and s.created_at < @d) weekly_updates
+	 WHERE s.install > @d and s.updated_at > @d and s.created_at < @d) weekly_updates
 `
 
 	// TODO: Replace last day with last week when we get enough data.
