@@ -2,7 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [1.2.1](https://github.com/userstyles-world/userstyles.world/compare/v1.2.0...v1.2.1) (2021-05-30)
+## [1.3.0](https://github.com/userstyles-world/userstyles.world/compare/v1.2.1...v1.3.0) (2021-06-19)
+
+
+### Features
+
+* **dashboard:** add WIP moderation tools ([c2495ce](https://github.com/userstyles-world/userstyles.world/commit/c2495ce21e799366e320b7e26e1ef509d1dd759d))
+* **html:** enable more Markdown extensions ([fee7ced](https://github.com/userstyles-world/userstyles.world/commit/fee7ceda263b98303aace9881a0bd53429862ae1))
+* **oauth_login:** retrieve email from authorized user ([6f026ba](https://github.com/userstyles-world/userstyles.world/commit/6f026ba15ab99328a254454d1304cd9512f5526b))
+* **oauthP:** create new Style based off styleInfo ([31813da](https://github.com/userstyles-world/userstyles.world/commit/31813da30088eb9438299808ac3232f1e2c9fd5d))
+* **oauthP:** enable option to pre-fill information ([461ddb0](https://github.com/userstyles-world/userstyles.world/commit/461ddb03c703867d356235c90659a7f89f47df05))
+* **search:** sync with database ([e736e84](https://github.com/userstyles-world/userstyles.world/commit/e736e844e6447822940aefe2d72ed296771b0a7d))
+* **ts:** add more fields to auto-fill ([7d8c4c1](https://github.com/userstyles-world/userstyles.world/commit/7d8c4c124891f929d4fc191614a2f16a2ab1fa3b))
+* **ts:** allow description to be set ([5a5476e](https://github.com/userstyles-world/userstyles.world/commit/5a5476e0a5c5846237bc47cb020ec95ca8cda6d4))
+* **ts:** set default meta ([8e1405e](https://github.com/userstyles-world/userstyles.world/commit/8e1405ea4007c658155d3cdd51845ce5096ca986))
+
+
+### Bug Fixes
+
+* **css:** align thumbnails on the left side ([cef75dc](https://github.com/userstyles-world/userstyles.world/commit/cef75dc2a56ad4b28dc339096ace2f3ccd284fd0))
+* **css:** avoid resizing userstyle screenshots ([d9adc11](https://github.com/userstyles-world/userstyles.world/commit/d9adc1154840b689b109ac251d30b1acc70edbb8))
+* **db:** default to null instead of time.Time's default ([846fbec](https://github.com/userstyles-world/userstyles.world/commit/846fbec2c7390308c23a010587e403209ce1faad))
+* **history:** update queries for stat history ([2bb1110](https://github.com/userstyles-world/userstyles.world/commit/2bb1110eb261980bc711b27a5cdb77b14f705f79))
+* **js:** make sure data is an object ([71303e7](https://github.com/userstyles-world/userstyles.world/commit/71303e77b90ca71c081b30402eedfc003dc077eb))
+* **oauth_login:** set default role to regular ([2717bf6](https://github.com/userstyles-world/userstyles.world/commit/2717bf6f06e02518a66445d5768ffccbb55d9389))
+* **oauthP:** listen to POST request instead of GET ([869b69d](https://github.com/userstyles-world/userstyles.world/commit/869b69d615049c823e74ddc63657ee15c6e7a5c8))
+* **stats:** improve accuracy of style statistics ([d9910a1](https://github.com/userstyles-world/userstyles.world/commit/d9910a18c89d940443ce436f136103505247e12e))
+* **stats:** include data from previous scheme ([2bf7ce4](https://github.com/userstyles-world/userstyles.world/commit/2bf7ce44ef28c7c9c3983b0b89db14bcb0ed73b2))
+* **stats:** update queries on the home page ([17809dc](https://github.com/userstyles-world/userstyles.world/commit/17809dc2824715b06a7e15a8a035065430cd67a5))
+* **styles:** update queries for style cards ([2885dde](https://github.com/userstyles-world/userstyles.world/commit/2885dde32887eb4cbb2f288f21c78af9094d7a0a))
+* **ts:** compile production version ([c7f58e0](https://github.com/userstyles-world/userstyles.world/commit/c7f58e041f9080b4fb1a6eb159c68b4bbfccc8ca))
+* **ts:** safe remove of element ([30c2a39](https://github.com/userstyles-world/userstyles.world/commit/30c2a39ab87f27a28b95ec99d2b65fed97160191))
+
+## [1.2.1](https://github.com/userstyles-world/userstyles.world/compare/v1.2.0...v1.2.1) (2021-05-30)
 
 
 ### Features
