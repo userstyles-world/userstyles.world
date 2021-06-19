@@ -74,10 +74,10 @@ func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
 
 func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and install > ? and created_at > ?"
+	q := "style_id = ? and install > 0 and created_at > ?"
 	database.Conn.
 		Model(Stats{}).
-		Where(q, id, lastWeek, lastWeek).
+		Where(q, id, lastWeek).
 		Count(&weekly)
 
 	return weekly
@@ -86,7 +86,7 @@ func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 func GetTotalInstallsForStyle(id string) (total int64) {
 	database.Conn.
 		Model(Stats{}).
-		Where("style_id = ? and install is not null", id).
+		Where("style_id = ? and install > 0", id).
 		Count(&total)
 
 	return total
@@ -95,7 +95,7 @@ func GetTotalInstallsForStyle(id string) (total int64) {
 func GetTotalViewsForStyle(id string) (total int64) {
 	database.Conn.
 		Model(Stats{}).
-		Where("style_id = ? and view is not null", id).
+		Where("style_id = ? and view > 0", id).
 		Count(&total)
 
 	return total
@@ -103,10 +103,10 @@ func GetTotalViewsForStyle(id string) (total int64) {
 
 func GetWeeklyUpdatesForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and install > ? and updated_at > ? and created_at < ?"
+	q := "style_id = ? and install > 0 and updated_at > ? and created_at < ?"
 	database.Conn.
 		Model(Stats{}).
-		Where(q, id, lastWeek, lastWeek, lastWeek).
+		Where(q, id, lastWeek, lastWeek).
 		Count(&weekly)
 
 	return weekly
@@ -121,15 +121,15 @@ SELECT
 	(SELECT count(*) FROM styles
 	 WHERE styles.deleted_at IS NULL) total_styles,
 	(SELECT count(*) FROM stats s
-	 WHERE s.view = 1) total_views,
+	 WHERE s.view > 0) total_views,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install = 1) total_installs,
+	 WHERE s.install > 0) total_installs,
 	(SELECT count(*) FROM stats s
-	 WHERE s.view > @d and s.created_at > @d) weekly_views,
+	 WHERE s.view > 0 and s.created_at > @d) weekly_views,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install > @d and s.created_at > @d) weekly_installs,
+	 WHERE s.install > 0 and s.created_at > @d) weekly_installs,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install > @d and s.updated_at > @d and s.created_at < @d) weekly_updates
+	 WHERE s.install > 0 and s.updated_at > @d and s.created_at < @d) weekly_updates
 `
 
 	// TODO: Replace last day with last week when we get enough data.
