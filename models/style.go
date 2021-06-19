@@ -131,8 +131,8 @@ func GetAllStyles() ([]StyleSearch, error) {
 select
 	styles.id, styles.created_at, styles.updated_at, styles.name, styles.description, styles.notes,
 	styles.preview, u.username, u.display_name,
-	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
 	styles
 join
@@ -155,8 +155,8 @@ func GetStyleForIndex(id string) (StyleSearch, error) {
 select
 	styles.id, styles.created_at, styles.updated_at, styles.name, styles.description, styles.notes,
 	styles.preview, u.username, u.display_name,
-	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
 	styles
 join
@@ -211,8 +211,8 @@ func GetAllAvailableStyles() ([]StyleCard, error) {
 	stmt := `
 select
 	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
-	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
 	styles
 join
@@ -233,8 +233,8 @@ func GetAllFeaturedStyles() ([]StyleCard, error) {
 	stmt := `
 select
 	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
-	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
 	styles
 join
@@ -285,8 +285,8 @@ func GetStylesByUser(username string) ([]StyleCard, error) {
 	stmt := `
 select
 	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
-	(select count(*) from stats s where s.style_id = styles.id and s.install = 1) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view = 1) views
+	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
+	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
 	styles
 join
