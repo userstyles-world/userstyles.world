@@ -18,7 +18,7 @@ check_cmd() {
 
 check_dir() {
     pwd="$(pwd)"
-    cd "${pwd%/tools}"
+    cd "${pwd%/tools}" || exit
 }
 
 export_secrets() {
@@ -41,15 +41,16 @@ sass() {
     log "sass"
     check_cmd sassc
     [ $? = 1 ] && exit
-    check_cmd inotifywait
-    [ $? = 1 ] && exit
 
+    # Go to project root.
     check_dir
 
     # Sassc fails if directory doesn't exist.
     mkdir -p ./static/css
 
     if [ "$2" = "--watch" ]; then
+        check_cmd inotifywait
+        [ $? = 1 ] && exit
         while inotifywait -r -e close_write scss; do
             _sass
         done
