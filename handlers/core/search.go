@@ -31,7 +31,7 @@ func Search(c *fiber.Ctx) error {
 		}
 	})
 
-	return c.Render("search", fiber.Map{
+	return c.Render("core/search", fiber.Map{
 		"Title":  "Search",
 		"User":   u,
 		"Styles": s,

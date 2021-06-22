@@ -19,14 +19,14 @@ func Home(c *fiber.Ctx) error {
 
 	styles, err := models.GetAllFeaturedStyles()
 	if err != nil {
-		return c.Render("index", fiber.Map{
+		return c.Render("core/index", fiber.Map{
 			"Title":  "Home",
 			"User":   u,
 			"Styles": nil,
 		})
 	}
 
-	return c.Render("index", fiber.Map{
+	return c.Render("core/index", fiber.Map{
 		"Title":  "Home",
 		"User":   u,
 		"Styles": styles,

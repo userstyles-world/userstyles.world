@@ -36,7 +36,7 @@ func GetExplore(c *fiber.Ctx) error {
 		}
 	})
 
-	return c.Render("explore", fiber.Map{
+	return c.Render("core/explore", fiber.Map{
 		"Title":  "Explore",
 		"User":   u,
 		"Styles": s,

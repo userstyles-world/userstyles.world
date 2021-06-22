@@ -30,7 +30,7 @@ func GetDocs(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("docs", fiber.Map{
+	return c.Render("core/docs", fiber.Map{
 		"Title":   title,
 		"User":    u,
 		"content": string(content),

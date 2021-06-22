@@ -46,7 +46,7 @@ func Dashboard(c *fiber.Ctx) error {
 		return users[i].ID > users[j].ID
 	})
 
-	return c.Render("dashboard", fiber.Map{
+	return c.Render("core/dashboard", fiber.Map{
 		"Title":  "Dashboard",
 		"User":   u,
 		"Styles": styles,
