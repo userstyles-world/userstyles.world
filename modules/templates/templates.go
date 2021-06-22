@@ -17,12 +17,12 @@ var ext = md.CommonExtensions | md.AutoHeadingIDs
 func New() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
 
-	engine.AddFunc("MarkdownNew", func(s string) template.HTML {
+	engine.AddFunc("MarkdownSafe", func(s string) template.HTML {
 		gen := md.Run([]byte(s), md.WithExtensions(ext))
 		return template.HTML(gen)
 	})
 
-	engine.AddFunc("Markdown", func(s string) template.HTML {
+	engine.AddFunc("MarkdownUnsafe", func(s string) template.HTML {
 		// Generate Markdown then sanitize it before returning HTML.
 		gen := md.Run(
 			[]byte(s),

@@ -20,7 +20,7 @@
                     <h2 class="sub-title td:d mt:l">Biography</h2>
                     <div class="md">
                         {{- with .Params.Biography -}}
-                            {{- . | Markdown -}}
+                            {{- . | MarkdownUnsafe -}}
                         {{- else -}}
                             <p class="fg:3"><i>Biography isn't set.</i></p>
                         {{- end -}}

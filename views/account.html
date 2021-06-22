@@ -48,7 +48,7 @@
                     </form>
 
                     <h2 class="sub-title td:d mt:l">Biography</h2>
-                    <div class="md">{{- .Params.Biography | Markdown -}}</div>
+                    <div class="md">{{- .Params.Biography | MarkdownUnsafe -}}</div>
                     <form class="biography ml:0" method="post" action="/account">
                         <label for="name">Set your biography</label>
                         <i class="fg:3">Supports Markdown syntax.</i>

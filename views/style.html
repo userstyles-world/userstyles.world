@@ -96,7 +96,7 @@
                         <div class="mt:m">
                             <h2 class="td:d">Description</h2>
                             {{ if .Style.Description }}
-                                <div class="md">{{ .Style.Description | Markdown }}</div>
+                                <div class="md">{{ .Style.Description | MarkdownUnsafe }}</div>
                             {{ else }}
                                 <i>Userstyle doesn't have description.</i>
                             {{ end }}
@@ -104,7 +104,7 @@
                         <div class="mt:m">
                             <h2 class="td:d">Notes</h2>
                             {{ if .Style.Notes }}
-                                <div class="md">{{ .Style.Notes | Markdown }}</div>
+                                <div class="md">{{ .Style.Notes | MarkdownUnsafe }}</div>
                             {{ else }}
                                 <i>Userstyle doesn't have notes.</i>
                             {{ end }}
