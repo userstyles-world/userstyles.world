@@ -1,53 +1,39 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
+<div class="wrapper py:l">
+    <section class="header flex f-col ta:c">
+        <h1>Search</h1>
+        <p>Sorted from most to least relevant results.</p>
+    </section>
 
-        <main>
-            <div class="wrapper py:l">
-                <section class="header flex f-col ta:c">
-                    <h1>Search</h1>
-                    <p>Sorted from most to least relevant results.</p>
-                </section>
-
-                <section class="mt:l">
-                    <form class="form-wrapper advanced" method="get" action="/search">
-                        <div class="section">
-                            <label for="q">Search keyword</label>
-                            <input
-                                type="text" name="q" value="{{ .Value }}"
-                                required pattern=".+"
-                                placeholder="e.g. dark">
-                        </div>
-
-                        <div class="section">
-                            {{ template "partials/form_sort" . }}
-                        </div>
-
-                        <button class="btn primary" type="submit">Search</button>
-                    </form>
-                </section>
-
-                <section class="mt:l">
-                    {{ if gt (len .Styles) 0 }}
-                        {{/* template "utils/debug_styles" . */}}
-                        <div class="grid flex rwrap mx:r mt:m">
-                            {{ range .Styles }}
-                                {{ template "partials/style_card" . }}
-                            {{ end }}
-                        </div>
-                    {{ else if not .Root }}
-                        <div class="ta:c">
-                            <p>Couldn't find styles that matches your keywords.</p>
-                        </div>
-                    {{ end }}
-                </section>
+    <section class="mt:l">
+        <form class="form-wrapper advanced" method="get" action="/search">
+            <div class="section">
+                <label for="q">Search keyword</label>
+                <input
+                    type="text" name="q" value="{{ .Value }}"
+                    required pattern=".+"
+                    placeholder="e.g. dark">
             </div>
-        </main>
 
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+            <div class="section">
+                {{ template "partials/form_sort" . }}
+            </div>
+
+            <button class="btn primary" type="submit">Search</button>
+        </form>
+    </section>
+
+    <section class="mt:l">
+        {{ if gt (len .Styles) 0 }}
+            {{/* template "utils/debug_styles" . */}}
+            <div class="grid flex rwrap mx:r mt:m">
+                {{ range .Styles }}
+                    {{ template "partials/style_card" . }}
+                {{ end }}
+            </div>
+        {{ else if not .Root }}
+            <div class="ta:c">
+                <p>Couldn't find styles that matches your keywords.</p>
+            </div>
+        {{ end }}
+    </section>
+</div>

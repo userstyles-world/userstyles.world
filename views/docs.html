@@ -1,21 +1,3 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
-        <style type="text/css" media="screen">
-            .md p, .md li { margin-bottom: 0.5rem }
-            .md h1 + p { margin-bottom: 1.5rem }
-        </style>
-
-        <main>
-            <div class="wrapper py:l">
-                <div class="md">{{ .content | MarkdownSafe }}</div>
-            </div>
-        </main>
-
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+<div class="wrapper py:l">
+    <div class="md">{{ .content | MarkdownSafe }}</div>
+</div>

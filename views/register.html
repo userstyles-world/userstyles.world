@@ -1,47 +1,34 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
-        <main>
-            <div class="wrapper py:l">
-                <section class="ta:c">
-                    <h1>Register</h1>
-                    <p>Tip: Logging in uses your e-mail address, not username.</p>
-                </section>
+<div class="wrapper py:l">
+    <section class="ta:c">
+        <h1>Register</h1>
+        <p>Tip: Logging in uses your e-mail address, not username.</p>
+    </section>
 
-                {{ template "partials/alert" . }}
+    {{ template "partials/alert" . }}
 
-                <section class="register limit mx:a">
-                    {{- template "partials/btn_oauth" . -}}
-                    <form class="form-wrapper" method="post" action="/register">
-                        <label for="username">Username</label>
-                        <input
-                            required pattern="^[a-zA-Z0-9_]{5,20}$"
-                            type="text" name="username"
-                            placeholder="e.g. username (5–20 characters)">
-                        <label for="email">E-mail</label>
-                        <input
-                            required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
-                            type="text" name="email"
-                            placeholder="e.g. username@example.org">
-                        <label for="password">Password</label>
-                        <input
-                            required pattern="^[\S]{8,32}$"
-                            type="password" name="password"
-                            placeholder="(8–32 characters)">
+    <section class="register limit mx:a">
+        {{- template "partials/btn_oauth" . -}}
+        <form class="form-wrapper" method="post" action="/register">
+            <label for="username">Username</label>
+            <input
+                required pattern="^[a-zA-Z0-9_]{5,20}$"
+                type="text" name="username"
+                placeholder="e.g. username (5–20 characters)">
+            <label for="email">E-mail</label>
+            <input
+                required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
+                type="text" name="email"
+                placeholder="e.g. username@example.org">
+            <label for="password">Password</label>
+            <input
+                required pattern="^[\S]{8,32}$"
+                type="password" name="password"
+                placeholder="(8–32 characters)">
 
-                        <button class="btn primary" type="submit">Register</button>
-                    </form>
-                    <p class="form-tip ta:c">
-                        <i class="fg:3">Already have an account? Continue to <a href="/login">login page</a>.</i>
-                    </p>
-                </section>
-            </div>
-        </main>
-
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+            <button class="btn primary" type="submit">Register</button>
+        </form>
+        <p class="form-tip ta:c">
+            <i class="fg:3">Already have an account? Continue to <a href="/login">login page</a>.</i>
+        </p>
+    </section>
+</div>

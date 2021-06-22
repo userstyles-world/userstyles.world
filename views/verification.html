@@ -1,24 +1,11 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
-        <main>
-            <div class="wrapper py:l">
-                <section class="ta:c">
-                    <h1>{{ .Verification }}</h1>
-                </section>
+<div class="wrapper py:l">
+    <section class="ta:c">
+        <h1>{{ .Verification }}</h1>
+    </section>
 
-                <section class="ta:c">
-                    <p>
-                        {{ .Reason }}. Continue to the <a href="/login">login page</a>.
-                    </p>
-                </section>
-            </div>
-        </main>
-
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+    <section class="ta:c">
+        <p>
+            {{ .Reason }}. Continue to the <a href="/login">login page</a>.
+        </p>
+    </section>
+</div>

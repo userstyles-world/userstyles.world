@@ -1,132 +1,118 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
+<div class="wrapper py:l">
+    {{ template "partials/alert" . }}
+    <section class="welcome">
+        <h1 class="title mb:m">Hi, {{ .Params.Name }}!</h1>
+        <p>This is your dashboard. More features will be added soon!</p>
+        <p>
+            Since this is an early iteration, feedback would be
+            really helpful! If you're a userstyle author,
+            don't hesitate to reach out and let us know what
+            you'd like to see on this platform. You can do so
+            via <a href="https://github.com/userstyles-world/userstyles.world">GitHub</a>
+            or via <a href="mailto:feedback@userstyles.world">e-mail</a>.
+        </p>
+    </section>
 
-        <main>
-            <div class="wrapper py:l">
-                {{ template "partials/alert" . }}
-                <section class="welcome">
-                    <h1 class="title mb:m">Hi, {{ .Params.Name }}!</h1>
-                    <p>This is your dashboard. More features will be added soon!</p>
-                    <p>
-                        Since this is an early iteration, feedback would be
-                        really helpful! If you're a userstyle author,
-                        don't hesitate to reach out and let us know what
-                        you'd like to see on this platform. You can do so
-                        via <a href="https://github.com/userstyles-world/userstyles.world">GitHub</a>
-                        or via <a href="mailto:feedback@userstyles.world">e-mail</a>.
-                    </p>
-                </section>
+    <section class="settings mt:l">
+        <h2 class="sub-title td:d">Information</h2>
+        <p><span class="minw">ID</span>{{ .Params.ID }}</p>
+        <p><span class="minw">Role</span>{{ .Params.RoleString }}</p>
+        <p><span class="minw">Username</span>{{ .Params.Username }}</p>
+        {{ with .Params.DisplayName }}
+            <p><span class="minw">Display name</span>{{ . }}</p>
+        {{ end }}
+        {{ if .Params.Email -}}
+            <p><span class="minw">Email</span>{{ .Params.Email }}</p>
+        {{- end }}
+        <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt | Date }}</p>
+        <p class="updated"><span class="minw">Updated</span>{{ .Params.UpdatedAt | Date }}</p>
 
-                <section class="settings mt:l">
-                    <h2 class="sub-title td:d">Information</h2>
-                    <p><span class="minw">ID</span>{{ .Params.ID }}</p>
-                    <p><span class="minw">Role</span>{{ .Params.RoleString }}</p>
-                    <p><span class="minw">Username</span>{{ .Params.Username }}</p>
-                    {{ with .Params.DisplayName }}
-                        <p><span class="minw">Display name</span>{{ . }}</p>
-                    {{ end }}
-                    {{ if .Params.Email -}}
-                        <p><span class="minw">Email</span>{{ .Params.Email }}</p>
-                    {{- end }}
-                    <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt | Date }}</p>
-                    <p class="updated"><span class="minw">Updated</span>{{ .Params.UpdatedAt | Date }}</p>
+        <h2 class="sub-title td:d mt:l">Display name</h2>
+        <div class="md">{{ .Params.DisplayName }}</div>
+        <form class="name ml:0" method="post" action="/account">
+            <label for="name">Set your display name</label>
+            <input
+                type="text" name="name"
+                pattern="^[a-zA-Z0-9-_ ]{5,20}$"
+                value="{{ .Params.DisplayName }}">
+            <button class="btn primary" type="submit">Save</button>
+        </form>
 
-                    <h2 class="sub-title td:d mt:l">Display name</h2>
-                    <div class="md">{{ .Params.DisplayName }}</div>
-                    <form class="name ml:0" method="post" action="/account">
-                        <label for="name">Set your display name</label>
-                        <input
-                            type="text" name="name"
-                            pattern="^[a-zA-Z0-9-_ ]{5,20}$"
-                            value="{{ .Params.DisplayName }}">
-                        <button class="btn primary" type="submit">Save</button>
-                    </form>
+        <h2 class="sub-title td:d mt:l">Biography</h2>
+        <div class="md">{{- .Params.Biography | MarkdownUnsafe -}}</div>
+        <form class="biography ml:0" method="post" action="/account">
+            <label for="name">Set your biography</label>
+            <i class="fg:3">Supports Markdown syntax.</i>
+            <textarea
+                pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
+                type="text" name="bio"
+                placeholder="e.g. I'd often make styles.">
+                {{- .Params.Biography -}}
+            </textarea>
+            <button class="btn primary" type="submit">Save</button>
+        </form>
 
-                    <h2 class="sub-title td:d mt:l">Biography</h2>
-                    <div class="md">{{- .Params.Biography | MarkdownUnsafe -}}</div>
-                    <form class="biography ml:0" method="post" action="/account">
-                        <label for="name">Set your biography</label>
-                        <i class="fg:3">Supports Markdown syntax.</i>
-                        <textarea
-                            pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
-                            type="text" name="bio"
-                            placeholder="e.g. I'd often make styles.">
-                            {{- .Params.Biography -}}
-                        </textarea>
-                        <button class="btn primary" type="submit">Save</button>
-                    </form>
+        <h2 class="sub-title td:d mt:l">Socials</h2>
+        <p>You can login via OAuth if you have an account on platforms listed below.</p>
+        <form class="socials ml:0" method="post" action="/account">
+            <label class="github" for="github">
+                {{- template "icons/github" . -}}
+                Github
+            </label>
+            <input
+                pattern="^[a-zA-Z0-9_-]*$"
+                type="text" name="github"
+                placeholder="e.g. username"
+                value="{{ .Params.Socials.Github }}"/>
+            <label class="gitlab" for="gitlab">
+                {{- template "icons/gitlab" . -}}
+                Gitlab
+            </label>
+            <input
+                pattern="^[a-zA-Z0-9_-]*$"
+                type="text" name="gitlab"
+                placeholder="e.g. username"
+                value="{{ .Params.Socials.Gitlab }}"/>
+            </input>
+            <label class="codeberg" for="codeberg">
+                {{- template "icons/codeberg" . -}}
+                Codeberg
+            </label>
+            <input
+                pattern="^[a-zA-Z0-9_-]*$"
+                type="text" name="codeberg"
+                placeholder="e.g. username"
+                value="{{ .Params.Socials.Codeberg }}"/>
+            </input>
+            <button class="btn primary" type="submit">Save</button>
+        </form>
 
-                    <h2 class="sub-title td:d mt:l">Socials</h2>
-                    <p>You can login via OAuth if you have an account on platforms listed below.</p>
-                    <form class="socials ml:0" method="post" action="/account">
-                        <label class="github" for="github">
-                            {{- template "icons/github" . -}}
-                            Github
-                        </label>
-                        <input
-                            pattern="^[a-zA-Z0-9_-]*$"
-                            type="text" name="github"
-                            placeholder="e.g. username"
-                            value="{{ .Params.Socials.Github }}"/>
-                        <label class="gitlab" for="gitlab">
-                            {{- template "icons/gitlab" . -}}
-                            Gitlab
-                        </label>
-                        <input
-                            pattern="^[a-zA-Z0-9_-]*$"
-                            type="text" name="gitlab"
-                            placeholder="e.g. username"
-                            value="{{ .Params.Socials.Gitlab }}"/>
-                        </input>
-                        <label class="codeberg" for="codeberg">
-                            {{- template "icons/codeberg" . -}}
-                            Codeberg
-                        </label>
-                        <input
-                            pattern="^[a-zA-Z0-9_-]*$"
-                            type="text" name="codeberg"
-                            placeholder="e.g. username"
-                            value="{{ .Params.Socials.Codeberg }}"/>
-                        </input>
-                        <button class="btn primary" type="submit">Save</button>
-                    </form>
+        <h2 class="sub-title td:d mt:l">User settings</h1>
+        <p>The use of user settings requires javascript.</p>
+        <div class="ml:0 form-wrapper">
+            <label>Color-scheme</label>
+            <select id="usr-settings--color-scheme">
+                <option value="follow-system">Follow system theme</option>
+                <option value="dark">Dark mode</option>
+                <option value="light">Light mode</option>
+            </select>
+            <button id="usr-settings--save" class="btn primary">Save settings</button>
+        </div>
 
-                    <h2 class="sub-title td:d mt:l">User settings</h1>
-                    <p>The use of user settings requires javascript.</p>
-                    <div class="ml:0 form-wrapper">
-                        <label>Color-scheme</label>
-                        <select id="usr-settings--color-scheme">
-                            <option value="follow-system">Follow system theme</option>
-                            <option value="dark">Dark mode</option>
-                            <option value="light">Light mode</option>
-                        </select>
-                        <button id="usr-settings--save" class="btn primary">Save settings</button>
-                    </div>
+    </section>
 
-                </section>
-
-                <section class="styles mt:l">
-                    <h2 class="sub-title td:d">Userstyles</h2>
-                    {{ if ne (len .Styles) 0 }}
-                        <p class="description">{{ len .Styles }} styles in total.</p>
-                        {{/* template "utils/debug_styles" . */}}
-                        <div class="grid  flex rwrap mx:r mt:m">
-                            {{ range .Styles }}
-                                {{ template "partials/style_card" . }}
-                            {{ end }}
-                        </div>
-                    {{ else }}
-                        <p class="fg:3"><i>No styles found.</i></p>
-                    {{ end }}
-                </section>
+    <section class="styles mt:l">
+        <h2 class="sub-title td:d">Userstyles</h2>
+        {{ if ne (len .Styles) 0 }}
+            <p class="description">{{ len .Styles }} styles in total.</p>
+            {{/* template "utils/debug_styles" . */}}
+            <div class="grid  flex rwrap mx:r mt:m">
+                {{ range .Styles }}
+                    {{ template "partials/style_card" . }}
+                {{ end }}
             </div>
-        </main>
-
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+        {{ else }}
+            <p class="fg:3"><i>No styles found.</i></p>
+        {{ end }}
+    </section>
+</div>

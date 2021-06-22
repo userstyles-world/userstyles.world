@@ -1,41 +1,27 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
+<div class="wrapper py:l">
+    {{ template "partials/alert" . }}
 
-        <main>
-            <div class="wrapper py:l">
-                {{ template "partials/alert" . }}
-
-                <section class="styles mt:l">
-                    <h2 class="sub-title td:d">Userstyles</h2>
-                    <p class="description">Please pick an existing style or a new style, that you'd like to link.</p>
-                    <div class="grid  flex rwrap mx:r mt:m">
-                    {{ if ne (len .Styles) 0 }}
-                        {{ range .Styles }}
-                            {{- $method := printf "api/oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
-                            <div class="card col gap animate bd:o">
-                                <div class="thumbnail">
-                                    {{ template "partials/preview_image" . }}
-                                </div>
-                                <div class="flex cwrap px:m bd:t fg:1 py:m">
-                                    <span class="f:h3 f:b my:0">{{- .Name -}}</span>
-                                </div>
-                                <form method="post" action="/{{ $method }}">
-                                    <button class="flex btn primary" type="submit">Link style</button>
-                                </form>
-                            </div>
-                        {{ end }}
-                    {{ end }}
-                        {{ template "partials/new_style" . }}
+    <section class="styles mt:l">
+        <h2 class="sub-title td:d">Userstyles</h2>
+        <p class="description">Please pick an existing style or a new style, that you'd like to link.</p>
+        <div class="grid  flex rwrap mx:r mt:m">
+        {{ if ne (len .Styles) 0 }}
+            {{ range .Styles }}
+                {{- $method := printf "api/oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
+                <div class="card col gap animate bd:o">
+                    <div class="thumbnail">
+                        {{ template "partials/preview_image" . }}
                     </div>
-                </section>
-            </div>
-        </main>
-
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+                    <div class="flex cwrap px:m bd:t fg:1 py:m">
+                        <span class="f:h3 f:b my:0">{{- .Name -}}</span>
+                    </div>
+                    <form method="post" action="/{{ $method }}">
+                        <button class="flex btn primary" type="submit">Link style</button>
+                    </form>
+                </div>
+            {{ end }}
+        {{ end }}
+            {{ template "partials/new_style" . }}
+        </div>
+    </section>
+</div>

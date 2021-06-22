@@ -1,63 +1,49 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
+<div class="wrapper py:l">
+    <section class="ta:c">
+        <h1>Import userstyle</h1>
+        <p class="fg:3">For UserStyles.org users, find your userstyle in <a href="https://33kk.github.io/uso-archive/"><span tooltip-data="USo-archive is an fast mirror of the slower userstyles.org website." >USo-archive</span></a>.</p>
+        <i class="fg:3"><a href="https://github.com/vednoc/go-usercss-parser">UserCSS parser</a> will set most of metadata for you, but your input is required for missing fields.</i>
+    </section>
 
-        <main>
-            <div class="wrapper py:l">
-                <section class="ta:c">
-                    <h1>Import userstyle</h1>
-                    <p class="fg:3">For UserStyles.org users, find your userstyle in <a href="https://33kk.github.io/uso-archive/"><span tooltip-data="USo-archive is an fast mirror of the slower userstyles.org website." >USo-archive</span></a>.</p>
-                    <i class="fg:3"><a href="https://github.com/vednoc/go-usercss-parser">UserCSS parser</a> will set most of metadata for you, but your input is required for missing fields.</i>
-                </section>
+    <section>
+        <form class="import" method="post" action="/import">
+            <label for="import">Import URL</label>
+            <input
+                type="text" name="import"
+                required pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
+                placeholder="Path to external userstyle's install URL">
 
-                <section>
-                    <form class="import" method="post" action="/import">
-                        <label for="import">Import URL</label>
-                        <input
-                            type="text" name="import"
-                            required pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
-                            placeholder="Path to external userstyle's install URL">
+            <label for="preview">Preview image</label>
+            <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
+            <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
+            <input
+                type="text" name="preview"
+                pattern="^https:\/\/(www\.)?((user-images|raw)\.githubusercontent\.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
+                placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
 
-                        <label for="preview">Preview image</label>
-                        <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-                        <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
-                        <input
-                            type="text" name="preview"
-                            pattern="^https:\/\/(www\.)?((user-images|raw)\.githubusercontent\.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
-                            placeholder="Link to userstyle's preview image (jpg, jpeg, png, and webp formats only)">
+            <label for="category">Category</label>
+            <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
+            <i class="fg:3">Website name that your userstyle applies to. E.g.: userstyles, github, gitlab, etc.</i>
+            <input
+                type="text" name="category"
+                placeholder="e.g userstyles">
 
-                        <label for="category">Category</label>
-                        <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-                        <i class="fg:3">Website name that your userstyle applies to. E.g.: userstyles, github, gitlab, etc.</i>
-                        <input
-                            type="text" name="category"
-                            placeholder="e.g userstyles">
-
-                        <div class="ta:l">
-                            <p class="mb:s fg:3"><i>Only available to styles imported from USo-archive.</i></p>
-                            <div class="checkbox flex mb:m">
-                                <input type="checkbox" name="mirrorMeta" id="mirrorMeta">
-                                {{ template "partials/checkboxes" }}
-                                <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
-                            </div>
-                            <p class="mb:s fg:3"><i>Available to all imported styles. You can set a custom mirror URL later.</i></p>
-                            <div class="checkbox flex mb:m">
-                                <input type="checkbox" name="mirrorCode" id="mirrorCode">
-                                {{ template "partials/checkboxes" }}
-                                <label for="mirrorCode">Mirror source code</label>
-                            </div>
-                        </div>
-
-                        <button class="btn primary" type="submit">Import userstyle</button>
-                    </form>
-                </section>
+            <div class="ta:l">
+                <p class="mb:s fg:3"><i>Only available to styles imported from USo-archive.</i></p>
+                <div class="checkbox flex mb:m">
+                    <input type="checkbox" name="mirrorMeta" id="mirrorMeta">
+                    {{ template "partials/checkboxes" }}
+                    <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
+                </div>
+                <p class="mb:s fg:3"><i>Available to all imported styles. You can set a custom mirror URL later.</i></p>
+                <div class="checkbox flex mb:m">
+                    <input type="checkbox" name="mirrorCode" id="mirrorCode">
+                    {{ template "partials/checkboxes" }}
+                    <label for="mirrorCode">Mirror source code</label>
+                </div>
             </div>
-        </main>
 
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+            <button class="btn primary" type="submit">Import userstyle</button>
+        </form>
+    </section>
+</div>

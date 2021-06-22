@@ -1,41 +1,27 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
+<div class="wrapper py:l">
+    <section class="mt:m ta:c">
+        <h1>Explore</h1>
+        <p class="fg:3">Browse all available userstyles.</p>
+    </section>
 
-        <main>
-            <div class="wrapper py:l">
-                <section class="mt:m ta:c">
-                    <h1>Explore</h1>
-                    <p class="fg:3">Browse all available userstyles.</p>
-                </section>
-
-                <section class="mt:l">
-                    <form class="form-wrapper plain advanced flex" method="get" action="/explore">
-                        <div class="section flex ai:c ml:a mr:m">
-                            {{ template "partials/form_sort" . }}
-                        </div>
-
-                        <button class="btn primary ml:m" type="submit">Sort</button>
-                    </form>
-
-                    {{ if gt (len .Styles) 1 }}
-                        {{/* template "utils/debug_styles" . */}}
-                        <div class="grid flex rwrap mx:r mt:m">
-                            {{ range .Styles }}
-                                {{ template "partials/style_card" . }}
-                            {{ end }}
-                        </div>
-                    {{ else }}
-                        <p class="ta:c">No userstyles found.</p>
-                    {{ end }}
-                </section>
+    <section class="mt:l">
+        <form class="form-wrapper plain advanced flex" method="get" action="/explore">
+            <div class="section flex ai:c ml:a mr:m">
+                {{ template "partials/form_sort" . }}
             </div>
-        </main>
 
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+            <button class="btn primary ml:m" type="submit">Sort</button>
+        </form>
+
+        {{ if gt (len .Styles) 1 }}
+            {{/* template "utils/debug_styles" . */}}
+            <div class="grid flex rwrap mx:r mt:m">
+                {{ range .Styles }}
+                    {{ template "partials/style_card" . }}
+                {{ end }}
+            </div>
+        {{ else }}
+            <p class="ta:c">No userstyles found.</p>
+        {{ end }}
+    </section>
+</div>

@@ -1,130 +1,117 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
-
-        <main>
-            <div class="wrapper py:l">
-                <section class="preview">
-                    <h1 class="mb:m">{{ .Style.Name -}}
-                        <span class="fg:4"> by {{ .Style.Username }}</span>
-                    </h1>
-                    {{ if .Style.Original -}}
-                        <p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
-                    {{- end }}
-                    <div class="card">
-                        <div class="screenshot">
-                            {{ $webp := printf "/api/style/preview/%d.webp" .Style.ID }}
-                            <img class="blurred" src="{{ $webp }}">
-                            {{- template "partials/preview_image" .Style -}}
-                        </div>
-                    </div>
-                </section>
-
-                <section class="mt:l">
-                    <div class="header flex mb:m ai:c">
-                        {{ if .Slug }}
-                            <div class="share flex ai:c mr:m">
-                                <span class="mr:s">Share style</span>
-                                <input
-                                    id="share"
-                                    class="bg:2" readonly
-                                    value="{{ printf "https://userstyles.world%s" .Slug }}"
-                                ></input>
-                                <button
-                                    type="submit"
-                                    tooltip-data="Style URL has been copied to your clipboard."
-                                    id="btn-share" class="btn iflex ml:s ai:c">
-                                    {{- template "icons/copy" -}}
-                                </button>
-                            </div>
-                        {{ end }}
-
-                        <span class="actions flex ml:a">
-                            {{ if eq .User.ID .Style.UserID }}
-                                <a href="/delete/{{ .Style.ID }}" class="btn mr:s">Delete</a>
-                                <a href="/edit/{{ .Style.ID }}" class="btn mr:s">Edit</a>
-                            {{ end }}
-                            {{ if ge .User.Role 1 }}
-                                <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
-                                    <button class="btn mr:s" type="submit"
-                                    tooltip-data='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
-                                    >
-                                    🌟</button>
-                                </form>
-                            {{ end }}
-                            {{ if .Style.Homepage }}
-                                <a
-                                    target="_blank"
-                                    rel="noopener"
-                                    href="{{ .Style.Homepage }}"
-                                    class="btn mr:s"
-                                >Project homepage</a>
-                            {{ end }}
-                            <a
-                                target="_blank"
-                                rel="noopener"
-                                href="/api/style/{{ .Style.ID }}.user.css"
-                                id="install" class="btn primary mr:s"
-                            >Install userstyle</a>
-                            <a
-                                target="_blank"
-                                rel="noopener"
-                                href="https://github.com/openstyles/stylus/#readme"
-                                id="stylus" class="btn stylus"
-                            >Get Stylus</a>
-                        </span>
-                    </div>
-
-                    <div class="details">
-                        <h2 class="my:0 td:d">Details</h2>
-                        <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
-                        <p><span class="minw">License</span>{{ .Style.License }}</p>
-                        <p><span class="minw">Created at</span>{{ .Style.CreatedAt | Date }}</p>
-                        <p><span class="minw">Updated at</span>{{ .Style.UpdatedAt | Date }}</p>
-                        <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
-                        <div class="stats mt:m">
-                            <h2 class="td:d">Statistics</h2>
-                            <p class="total-views"><span class="minw">Total views</span>{{ .TotalViews }}</p>
-                            <p class="total-installs"><span class="minw">Total installs</span>{{ .TotalInstalls }}</p>
-                            <p class="weekly-installs"><span class="minw">Weekly installs</span>{{ .WeeklyInstalls }}</p>
-                            <p class="weekly-updates"><span class="minw">Weekly updates</span>{{ .WeeklyUpdates }}</p>
-                        </div>
-                        <div class="mt:m">
-                            <h2 class="td:d">Description</h2>
-                            {{ if .Style.Description }}
-                                <div class="md">{{ .Style.Description | MarkdownUnsafe }}</div>
-                            {{ else }}
-                                <i>Userstyle doesn't have description.</i>
-                            {{ end }}
-                        </div>
-                        <div class="mt:m">
-                            <h2 class="td:d">Notes</h2>
-                            {{ if .Style.Notes }}
-                                <div class="md">{{ .Style.Notes | MarkdownUnsafe }}</div>
-                            {{ else }}
-                                <i>Userstyle doesn't have notes.</i>
-                            {{ end }}
-                        </div>
-                    </div>
-
-                    <div class="code mt:l">
-                        <h2 class="mt:0 mb:m td:d">Source code</h2>
-                        {{ $code := "" }}
-                        {{ if .Style.TruncateCode }}
-                            <mark class="mb:s">Source code has over 150k characters, so we truncated it. You can inspect the full source code on install link.</mark>
-                            {{ $code = printf "%.150000s..." .Style.Code }}
-                        {{ else }}
-                            {{ $code = printf "%s" .Style.Code }}
-                        {{ end }}
-                        <textarea class="monospace" readonly>{{ $code }}</textarea>
-                    </div>
-                </section>
+<div class="wrapper py:l">
+    <section class="preview">
+        <h1 class="mb:m">{{ .Style.Name -}}
+            <span class="fg:4"> by {{ .Style.Username }}</span>
+        </h1>
+        {{ if .Style.Original -}}
+            <p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
+        {{- end }}
+        <div class="card">
+            <div class="screenshot">
+                {{ $webp := printf "/api/style/preview/%d.webp" .Style.ID }}
+                <img class="blurred" src="{{ $webp }}">
+                {{- template "partials/preview_image" .Style -}}
             </div>
-        </main>
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+        </div>
+    </section>
+
+    <section class="mt:l">
+        <div class="header flex mb:m ai:c">
+            {{ if .Slug }}
+                <div class="share flex ai:c mr:m">
+                    <span class="mr:s">Share style</span>
+                    <input
+                        id="share"
+                        class="bg:2" readonly
+                        value="{{ printf "https://userstyles.world%s" .Slug }}"
+                    ></input>
+                    <button
+                        type="submit"
+                        tooltip-data="Style URL has been copied to your clipboard."
+                        id="btn-share" class="btn iflex ml:s ai:c">
+                        {{- template "icons/copy" -}}
+                    </button>
+                </div>
+            {{ end }}
+
+            <span class="actions flex ml:a">
+                {{ if eq .User.ID .Style.UserID }}
+                    <a href="/delete/{{ .Style.ID }}" class="btn mr:s">Delete</a>
+                    <a href="/edit/{{ .Style.ID }}" class="btn mr:s">Edit</a>
+                {{ end }}
+                {{ if ge .User.Role 1 }}
+                    <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
+                        <button class="btn mr:s" type="submit"
+                        tooltip-data='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
+                        >
+                        🌟</button>
+                    </form>
+                {{ end }}
+                {{ if .Style.Homepage }}
+                    <a
+                        target="_blank"
+                        rel="noopener"
+                        href="{{ .Style.Homepage }}"
+                        class="btn mr:s"
+                    >Project homepage</a>
+                {{ end }}
+                <a
+                    target="_blank"
+                    rel="noopener"
+                    href="/api/style/{{ .Style.ID }}.user.css"
+                    id="install" class="btn primary mr:s"
+                >Install userstyle</a>
+                <a
+                    target="_blank"
+                    rel="noopener"
+                    href="https://github.com/openstyles/stylus/#readme"
+                    id="stylus" class="btn stylus"
+                >Get Stylus</a>
+            </span>
+        </div>
+
+        <div class="details">
+            <h2 class="my:0 td:d">Details</h2>
+            <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
+            <p><span class="minw">License</span>{{ .Style.License }}</p>
+            <p><span class="minw">Created at</span>{{ .Style.CreatedAt | Date }}</p>
+            <p><span class="minw">Updated at</span>{{ .Style.UpdatedAt | Date }}</p>
+            <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
+            <div class="stats mt:m">
+                <h2 class="td:d">Statistics</h2>
+                <p class="total-views"><span class="minw">Total views</span>{{ .TotalViews }}</p>
+                <p class="total-installs"><span class="minw">Total installs</span>{{ .TotalInstalls }}</p>
+                <p class="weekly-installs"><span class="minw">Weekly installs</span>{{ .WeeklyInstalls }}</p>
+                <p class="weekly-updates"><span class="minw">Weekly updates</span>{{ .WeeklyUpdates }}</p>
+            </div>
+            <div class="mt:m">
+                <h2 class="td:d">Description</h2>
+                {{ if .Style.Description }}
+                    <div class="md">{{ .Style.Description | MarkdownUnsafe }}</div>
+                {{ else }}
+                    <i>Userstyle doesn't have description.</i>
+                {{ end }}
+            </div>
+            <div class="mt:m">
+                <h2 class="td:d">Notes</h2>
+                {{ if .Style.Notes }}
+                    <div class="md">{{ .Style.Notes | MarkdownUnsafe }}</div>
+                {{ else }}
+                    <i>Userstyle doesn't have notes.</i>
+                {{ end }}
+            </div>
+        </div>
+
+        <div class="code mt:l">
+            <h2 class="mt:0 mb:m td:d">Source code</h2>
+            {{ $code := "" }}
+            {{ if .Style.TruncateCode }}
+                <mark class="mb:s">Source code has over 150k characters, so we truncated it. You can inspect the full source code on install link.</mark>
+                {{ $code = printf "%.150000s..." .Style.Code }}
+            {{ else }}
+                {{ $code = printf "%s" .Style.Code }}
+            {{ end }}
+            <textarea class="monospace" readonly>{{ $code }}</textarea>
+        </div>
+    </section>
+</div>

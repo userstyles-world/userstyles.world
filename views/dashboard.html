@@ -1,83 +1,69 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
+<div class="wrapper py:l">
+    <style type="text/css" media="screen">
+        table {
+            width: 100%;
+            padding: 1rem;
+            border-spacing: 0;
+            border-radius: var(--br-2);
+            background-color: var(--bg-2);
+        }
+        table thead {
+            top: 0;
+            position: sticky;
+            text-align: left;
+            background-color: var(--bg-2);
+        }
+        table tr > * { padding: 0.5rem }
+        tbody tr:nth-child(2n-1) { background-color: var(--bg-3) }
+    </style>
 
-        <main>
-            <div class="wrapper py:l">
-                <style type="text/css" media="screen">
-                    table {
-                        width: 100%;
-                        padding: 1rem;
-                        border-spacing: 0;
-                        border-radius: var(--br-2);
-                        background-color: var(--bg-2);
-                    }
-                    table thead {
-                        top: 0;
-                        position: sticky;
-                        text-align: left;
-                        background-color: var(--bg-2);
-                    }
-                    table tr > * { padding: 0.5rem }
-                    tbody tr:nth-child(2n-1) { background-color: var(--bg-3) }
-                </style>
+    <section class="mt:m ta:c">
+        <h1>Dashboard</h1>
+        <p class="fg:3">WIP functionality to help with moderation.</p>
+    </section>
 
-                <section class="mt:m ta:c">
-                    <h1>Dashboard</h1>
-                    <p class="fg:3">WIP functionality to help with moderation.</p>
-                </section>
+    <section class="users mt:l">
+        <h2>Users</h2>
 
-                <section class="users mt:l">
-                    <h2>Users</h2>
-
-                    {{ if gt (len .Users) 1 }}
-                        <table>
-                            <thead>
-                                <th>ID</th>
-                                <th>Created at</th>
-                                <th>Updated at</th>
-                                <th>Username</th>
-                                <th>Display name</th>
-                                <th>OAuth provider</th>
-                            </thead>
-                            <tbody>
-                                {{ range .Users }}
-                                    <tr>
-                                        <td>{{ .ID }}</td>
-                                        <td>{{ .CreatedAt | Date }}</td>
-                                        <td>{{ .UpdatedAt | Date }}</td>
-                                        <td>{{ .Username }}</td>
-                                        <td>{{ .DisplayName }}</td>
-                                        <td>{{ .OAuthProvider }}</td>
-                                    </tr>
-                                {{ end }}
-                            </tbody>
-                        </table>
-                    {{ else }}
-                        <p class="ta:c">No users found.</p>
+        {{ if gt (len .Users) 1 }}
+            <table>
+                <thead>
+                    <th>ID</th>
+                    <th>Created at</th>
+                    <th>Updated at</th>
+                    <th>Username</th>
+                    <th>Display name</th>
+                    <th>OAuth provider</th>
+                </thead>
+                <tbody>
+                    {{ range .Users }}
+                        <tr>
+                            <td>{{ .ID }}</td>
+                            <td>{{ .CreatedAt | Date }}</td>
+                            <td>{{ .UpdatedAt | Date }}</td>
+                            <td>{{ .Username }}</td>
+                            <td>{{ .DisplayName }}</td>
+                            <td>{{ .OAuthProvider }}</td>
+                        </tr>
                     {{ end }}
-                </section>
+                </tbody>
+            </table>
+        {{ else }}
+            <p class="ta:c">No users found.</p>
+        {{ end }}
+    </section>
 
-                <section class="styles mt:l">
-                    <h2>Styles</h2>
-                    {{ if gt (len .Styles) 1 }}
-                        {{/* template "utils/debug_styles" . */}}
-                        <div class="grid flex rwrap mx:r mt:m">
-                            {{ range .Styles }}
-                                {{ template "partials/style_card" . }}
-                            {{ end }}
-                        </div>
-                    {{ else }}
-                        <p class="ta:c">No userstyles found.</p>
-                    {{ end }}
-                </section>
+    <section class="styles mt:l">
+        <h2>Styles</h2>
+        {{ if gt (len .Styles) 1 }}
+            {{/* template "utils/debug_styles" . */}}
+            <div class="grid flex rwrap mx:r mt:m">
+                {{ range .Styles }}
+                    {{ template "partials/style_card" . }}
+                {{ end }}
             </div>
-        </main>
-
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+        {{ else }}
+            <p class="ta:c">No userstyles found.</p>
+        {{ end }}
+    </section>
+</div>

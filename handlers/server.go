@@ -35,6 +35,7 @@ func proxyHeader() (s string) {
 func Initialize() {
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(),
+		ViewsLayout: "layouts/main",
 		ProxyHeader: proxyHeader(),
 		JSONEncoder: utils.JSONEncoder,
 	})

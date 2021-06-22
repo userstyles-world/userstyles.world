@@ -1,53 +1,39 @@
-<!DOCTYPE html>
-<html data-color-scheme="dark" lang="en">
-    <head>
-        {{ template "partials/head" . }}
-    </head>
-    <body>
-        {{ template "partials/nav" . }}
+<div class="wrapper py:l">
+    {{ if not .User.ID }}
+        <section class="hero md flex f-col ta:c">
+            <div class="mascot">
+                {{- template "partials/mascot" . -}}
+            </div>
+            <h1>UserStyles.world</h1>
+            <p>A free and open-source, community-driven, modern alternative to <code>userstyles.org</code>. For the community, by the community.</p>
+            <p class="stats">
+                UserStyles.world is home to {{ printf "%d " .Params.TotalUsers -}}
+                users and {{ .Params.TotalStyles }} userstyles.
 
-        <main>
-            <div class="wrapper py:l">
-                {{ if not .User.ID }}
-                    <section class="hero md flex f-col ta:c">
-                        <div class="mascot">
-                            {{- template "partials/mascot" . -}}
-                        </div>
-                        <h1>UserStyles.world</h1>
-                        <p>A free and open-source, community-driven, modern alternative to <code>userstyles.org</code>. For the community, by the community.</p>
-                        <p class="stats">
-                            UserStyles.world is home to {{ printf "%d " .Params.TotalUsers -}}
-                            users and {{ .Params.TotalStyles }} userstyles.
+                Styles have been viewed {{ printf "%d " .Params.WeeklyViews -}}
+                times, installed {{ printf "%d " .Params.WeeklyInstalls -}}
+                times, and updated {{ printf "%d " .Params.WeeklyUpdates -}}
+                times in the last 24 hours, for a total of
+                {{- printf " %d " .Params.TotalViews -}} views and
+                {{- printf " %d " .Params.TotalInstalls }} installs.
+            </p>
+            <span class="flex mt:m">
+                <a class="btn primary mx:s" href="/explore">Explore userstyles</a>
+                <a class="btn mx:s" href="/register">Create an account</a>
+            </span>
+        </section>
+    {{ end }}
 
-                            Styles have been viewed {{ printf "%d " .Params.WeeklyViews -}}
-                            times, installed {{ printf "%d " .Params.WeeklyInstalls -}}
-                            times, and updated {{ printf "%d " .Params.WeeklyUpdates -}}
-                            times in the last 24 hours, for a total of
-                            {{- printf " %d " .Params.TotalViews -}} views and
-                            {{- printf " %d " .Params.TotalInstalls }} installs.
-                        </p>
-                        <span class="flex mt:m">
-                            <a class="btn primary mx:s" href="/explore">Explore userstyles</a>
-                            <a class="btn mx:s" href="/register">Create an account</a>
-                        </span>
-                    </section>
-                {{ end }}
-
-                {{ if ge (len .Styles) 1 }}
-                    <section class="mt:l">
-                        <h2 class="ta:c">Featured userstyles</h2>
-                        <p class="ta:c mb:l fg:3">See more styles on <a href="/explore">Explore</a> page.</p>
-                        {{/* template "utils/debug_styles" . */}}
-                        <div class="grid flex rwrap mx:r mt:m">
-                            {{ range .Styles }}
-                                {{ template "partials/style_card" . }}
-                            {{ end }}
-                        </div>
-                    </section>
+    {{ if ge (len .Styles) 1 }}
+        <section class="mt:l">
+            <h2 class="ta:c">Featured userstyles</h2>
+            <p class="ta:c mb:l fg:3">See more styles on <a href="/explore">Explore</a> page.</p>
+            {{/* template "utils/debug_styles" . */}}
+            <div class="grid flex rwrap mx:r mt:m">
+                {{ range .Styles }}
+                    {{ template "partials/style_card" . }}
                 {{ end }}
             </div>
-        </main>
-
-        {{ template "partials/footer" . }}
-    </body>
-</html>
+        </section>
+    {{ end }}
+</div>
