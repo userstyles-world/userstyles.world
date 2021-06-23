@@ -19,7 +19,7 @@ func RecoverGet(c *fiber.Ctx) error {
 		log.Printf("User %d has set session, redirecting.", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
-	return c.Render("reset", fiber.Map{
+	return c.Render("user/recover", fiber.Map{
 		"Title": "Reset",
 	})
 }
@@ -45,7 +45,7 @@ func ResetGet(c *fiber.Ctx) error {
 		return renderError
 	}
 
-	return c.Render("reset_password", fiber.Map{
+	return c.Render("user/reset-password", fiber.Map{
 		"Title": "Reset password",
 		"Key":   key,
 	})
@@ -106,7 +106,7 @@ func ResetPost(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("verification", fiber.Map{
+	return c.Render("user/verification", fiber.Map{
 		"Title":        "Successful reset",
 		"Verification": "Successful password reset",
 		"Reason":       "You've successfully changed your password",
@@ -128,7 +128,7 @@ func RecoverPost(c *fiber.Ctx) error {
 		log.Println("Validation errors:", errors)
 
 		return c.Status(fiber.StatusInternalServerError).
-			Render("reset", fiber.Map{
+			Render("user/recover", fiber.Map{
 				"Title": "Reset failed",
 				"Error": "Failed to send email. Make sure your input is correct.",
 			})
@@ -137,7 +137,7 @@ func RecoverPost(c *fiber.Ctx) error {
 	if _, err := models.FindUserByEmail(u.Email); err != nil {
 		// We need to just say we have send an reset email.
 		// So that we can't leak if we have such email in our database ;).
-		return c.Render("send_email", fiber.Map{
+		return c.Render("user/email-sent", fiber.Map{
 			"Title":  "Password reset",
 			"Reason": "We've sent an email to reset your password.",
 		})
@@ -184,7 +184,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			})
 	}
 
-	return c.Render("send_email", fiber.Map{
+	return c.Render("user/email-sent", fiber.Map{
 		"Title":  "Password reset",
 		"Reason": "We've sent an email to reset your password.",
 	})

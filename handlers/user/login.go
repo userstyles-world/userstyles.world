@@ -29,7 +29,7 @@ func LoginGet(c *fiber.Ctx) error {
 		arguments["Error"] = "You must log in to do this action."
 	}
 
-	return c.Render("login", arguments)
+	return c.Render("user/login", arguments)
 }
 
 func LoginPost(c *fiber.Ctx) error {
@@ -44,7 +44,7 @@ func LoginPost(c *fiber.Ctx) error {
 		errors := err.(validator.ValidationErrors)
 		log.Println("Validation errors:", errors)
 
-		return c.Render("login", fiber.Map{
+		return c.Render("user/login", fiber.Map{
 			"Title":  "Login failed",
 			"Errors": errors,
 		})
@@ -55,14 +55,14 @@ func LoginPost(c *fiber.Ctx) error {
 		log.Printf("Failed to find %s, error: %s", form.Email, err)
 
 		return c.Status(fiber.StatusUnauthorized).
-			Render("login", fiber.Map{
+			Render("user/login", fiber.Map{
 				"Title": "Login failed",
 				"Error": "Invalid credentials.",
 			})
 	}
 	if user.OAuthProvider != "none" {
 		return c.Status(fiber.StatusUnauthorized).
-			Render("login", fiber.Map{
+			Render("user/login", fiber.Map{
 				"Title": "Login failed",
 				"Error": "Login via OAuth provider",
 			})
@@ -73,7 +73,7 @@ func LoginPost(c *fiber.Ctx) error {
 		log.Printf("Failed to match hash for user: %#+v\n", user.Email)
 
 		return c.Status(fiber.StatusInternalServerError).
-			Render("login", fiber.Map{
+			Render("user/login", fiber.Map{
 				"Title": "Login failed",
 				"Error": "Invalid credentials.",
 			})

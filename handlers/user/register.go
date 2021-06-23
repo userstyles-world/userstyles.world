@@ -19,7 +19,7 @@ func RegisterGet(c *fiber.Ctx) error {
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
-	return c.Render("register", fiber.Map{
+	return c.Render("user/register", fiber.Map{
 		"Title": "Register",
 	})
 }
@@ -37,7 +37,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		log.Println("Validation errors:", errors)
 
 		return c.Status(fiber.StatusInternalServerError).
-			Render("register", fiber.Map{
+			Render("user/register", fiber.Map{
 				"Title": "Register failed",
 				"Error": "Failed to register. Make sure your input is correct.",
 			})
@@ -87,7 +87,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	return c.Render("send_email", fiber.Map{
+	return c.Render("user/email-sent", fiber.Map{
 		"Title":  "Email verifcation",
 		"Reason": "Verification link has been sent to your e-mail address.",
 	})

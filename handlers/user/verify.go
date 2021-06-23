@@ -64,7 +64,7 @@ func VerifyGet(c *fiber.Ctx) error {
 			})
 	}
 
-	return c.Render("verification", fiber.Map{
+	return c.Render("user/verification", fiber.Map{
 		"Title":        "Successful verifcation",
 		"Verification": "Successful email verification",
 		"Reason":       "You've successfully verified your email address",

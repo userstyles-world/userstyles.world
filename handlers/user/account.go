@@ -49,7 +49,7 @@ func Account(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("account", fiber.Map{
+	return c.Render("user/account", fiber.Map{
 		"Title":  "Account",
 		"User":   u,
 		"Params": user,
@@ -95,7 +95,7 @@ func EditAccount(c *fiber.Ctx) error {
 				e = "Make sure your input contains valid characters."
 			}
 
-			return c.Render("account", fiber.Map{
+			return c.Render("user/account", fiber.Map{
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
@@ -115,7 +115,7 @@ func EditAccount(c *fiber.Ctx) error {
 			log.Println("Validation errors:", errors)
 			user.Biography = prev
 
-			return c.Render("account", fiber.Map{
+			return c.Render("user/account", fiber.Map{
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
@@ -143,7 +143,7 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("account", fiber.Map{
+	return c.Render("user/account", fiber.Map{
 		"Title":  "Account",
 		"User":   u,
 		"Params": user,
