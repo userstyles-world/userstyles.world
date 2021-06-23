@@ -1,9 +1,0 @@
-{{- $method := printf "api/oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
-<a class="card col gap animate bd:o" href="{{ $method }}">
-    <div class="thumbnail">
-        {{ template "partials/preview_image" . }}
-    </div>
-    <div class="flex cwrap px:m bd:t fg:1 py:m">
-        <span class="f:h3 f:b my:0">{{- .Name -}}</span>
-    </div>
-</a>

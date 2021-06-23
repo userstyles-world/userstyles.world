@@ -47,10 +47,10 @@
         <h2 class="sub-title td:d">Userstyles</h2>
         {{ if ne (len .Styles) 0 }}
             <p class="description">{{ len .Styles }} styles in total.</p>
-            {{/* template "utils/debug_styles" . */}}
+            {{/* template "partials/debug-styles" . */}}
             <div class="grid  flex rwrap mx:r mt:m">
                 {{ range .Styles }}
-                    {{ template "partials/style_card" . }}
+                    {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
         {{ else }}

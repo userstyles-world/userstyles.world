@@ -28,10 +28,10 @@
         <section class="mt:l">
             <h2 class="ta:c">Featured userstyles</h2>
             <p class="ta:c mb:l fg:3">See more styles on <a href="/explore">Explore</a> page.</p>
-            {{/* template "utils/debug_styles" . */}}
+            {{/* template "partials/debug-styles" . */}}
             <div class="grid flex rwrap mx:r mt:m">
                 {{ range .Styles }}
-                    {{ template "partials/style_card" . }}
+                    {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
         </section>

@@ -76,7 +76,7 @@
             <p class="description">{{ len .OAuths }} styles in total.</p>
             <div class="grid  flex rwrap mx:r mt:m">
                 {{ range .OAuths }}
-                    {{ template "partials/oauth_card" . }}
+                    {{ template "partials/oauth-card" . }}
                 {{ end }}
             </div>
         {{ else }}

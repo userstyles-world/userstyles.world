@@ -10,7 +10,7 @@
                 {{- $method := printf "api/oauth/authorize_style?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
                 <div class="card col gap animate bd:o">
                     <div class="thumbnail">
-                        {{ template "partials/preview_image" . }}
+                        {{ template "partials/preview-image" . }}
                     </div>
                     <div class="flex cwrap px:m bd:t fg:1 py:m">
                         <span class="f:h3 f:b my:0">{{- .Name -}}</span>
@@ -21,7 +21,7 @@
                 </div>
             {{ end }}
         {{ end }}
-            {{ template "partials/new_style" . }}
+            {{ template "partials/new-style" . }}
         </div>
     </section>
 </div>
