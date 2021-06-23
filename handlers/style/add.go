@@ -25,7 +25,7 @@ import (
 func CreateGet(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 
-	return c.Render("add", fiber.Map{
+	return c.Render("style/create", fiber.Map{
 		"Title":  "Add userstyle",
 		"User":   u,
 		"Method": "add",
@@ -70,7 +70,7 @@ func CreatePost(c *fiber.Ctx) error {
 			arguments["OAuthID"] = OAuthID
 			arguments["SecureToken"] = secureToken
 		}
-		return c.Render("add", arguments)
+		return c.Render("style/create", arguments)
 	}
 
 	// Prevent adding multiples of the same style.

@@ -44,7 +44,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("style", fiber.Map{
+	return c.Render("style/view", fiber.Map{
 		"Title":          data.Name,
 		"User":           u,
 		"Style":          data,

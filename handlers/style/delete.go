@@ -31,7 +31,7 @@ func DeleteGet(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("styles/delete", fiber.Map{
+	return c.Render("style/delete", fiber.Map{
 		"Title": "Confirm deletion",
 		"User":  u,
 		"Style": s,

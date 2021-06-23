@@ -34,7 +34,7 @@ func EditGet(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("add", fiber.Map{
+	return c.Render("style/create", fiber.Map{
 		"Title":  "Edit userstyle",
 		"Method": "edit",
 		"User":   u,

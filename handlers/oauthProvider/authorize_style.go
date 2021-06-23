@@ -176,7 +176,7 @@ func AuthorizeStyleNewPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	return c.Render("add", fiber.Map{
+	return c.Render("style/create", fiber.Map{
 		"Title":       "Add userstyle",
 		"User":        u,
 		"Method":      "add_api",

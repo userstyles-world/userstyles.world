@@ -16,7 +16,7 @@ import (
 func ImportGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	return c.Render("import", fiber.Map{
+	return c.Render("style/import", fiber.Map{
 		"Title": "Add userstyle",
 		"User":  u,
 	})
