@@ -26,7 +26,7 @@ var Protected = func(c *fiber.Ctx) error {
 			redirectURI += "?" + c.Context().QueryArgs().String()
 		}
 
-		return c.Redirect("/login?destination_url=" + url.QueryEscape(redirectURI))
+		return c.Redirect("/login?r=" + url.QueryEscape(redirectURI))
 	}
 	return c.Next()
 }
