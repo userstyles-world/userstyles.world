@@ -45,6 +45,24 @@ func New() *html.Engine {
 		return template.HTML(time.Format("January 02, 2006 15:04"))
 	})
 
+	engine.AddFunc("BaseCodeTemplate", func() template.HTML {
+		return `/* ==UserStyle==
+@name           Example
+@namespace      example.com
+@version        1.0.0
+@description    A new userstyle
+@author         Me
+==/UserStyle== */
+
+@-moz-document domain("example.com") {
+    /**
+        Your code goes here!
+        More info in the official documentation at Stylus' wiki:
+        https://github.com/openstyles/stylus/wiki/Writing-UserCSS
+    */
+}`
+	})
+
 	if !config.Production {
 		engine.Reload(true)
 	}
