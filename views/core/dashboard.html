@@ -24,6 +24,7 @@
 
     <section class="users mt:l">
         <h2>Users</h2>
+        <p class="fg:3 mb:m">{{ len .Users }} users in total.</p>
 
         {{ if gt (len .Users) 1 }}
             <table>
@@ -55,11 +56,12 @@
 
     <section class="styles mt:l">
         <h2>Styles</h2>
+        <p class="fg:3 mb:m">{{ len .Styles }} styles in total.</p>
         {{ if gt (len .Styles) 1 }}
-            {{/* template "utils/debug_styles" . */}}
+            {{/* template "partials/debug-styles" . */}}
             <div class="grid flex rwrap mx:r mt:m">
                 {{ range .Styles }}
-                    {{ template "partials/style_card" . }}
+                    {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
         {{ else }}
