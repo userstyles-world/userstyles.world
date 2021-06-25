@@ -90,6 +90,7 @@
             <label for="code">Source code</label>
             <textarea
                 type="text" name="code"
+                spellcheck="false"
                 placeholder="{{ printf "* {\n    color: red !important \n}" }}"
             >{{ with .Style }}{{ .Code }}{{ else }}{{ BaseCodeTemplate }}{{ end }}</textarea>
 

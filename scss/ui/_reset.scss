@@ -87,6 +87,7 @@ textarea {
     border: 1px solid var(--bg-4);
     background-color: var(--bg-3);
     border-radius: var(--br-3);
+    scrollbar-color: var(--bg-5) var(--bg-3);
     resize: vertical;
 
     &[readonly] { background-color: var(--bg-2) }
@@ -109,6 +110,12 @@ textarea {
     &:-moz-focusring {
         outline: 1px solid transparent;
     }
+}
+
+select {
+    color: var(--fg-1);
+    border: 1px solid var(--bg-5);
+    background-color: var(--bg-3);
 }
 
 pre {
