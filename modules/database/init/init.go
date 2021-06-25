@@ -38,8 +38,7 @@ func connect() {
 		Logger: newLogger,
 	})
 	if err != nil {
-		log.Println("Failed to connect database.")
-		panic(err)
+		log.Fatalf("Failed to connect database, err: %s\n", err.Error())
 	}
 
 	database.Conn = conn
@@ -58,15 +57,14 @@ func Initialize() {
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		log.Println("Dropping database tables.")
-		if err := drop(&user, &style, &stats, &oauth, &history); err != nil {
-			log.Printf("Warning: Couldn't drop table due to error: %s", err.Error())
+		if err := drop(); err != nil {
+			log.Fatalf("Failed to drop tables, err: %s", err.Error())
 		}
 		defer seed()
 	}
 
 	if err := migrate(&user, &style, &stats, &oauth, &history); err != nil {
-		log.Println("Failed to migrate tables to new schema, err:")
-		panic(err)
+		log.Fatalf("Failed to migrate tables to new schema, err: %s", err.Error())
 	}
 }
 
