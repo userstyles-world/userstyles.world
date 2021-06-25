@@ -24,7 +24,7 @@ var (
 	oauth   models.OAuth
 )
 
-func connect() {
+func connect() (*gorm.DB, error) {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
@@ -38,11 +38,10 @@ func connect() {
 		Logger: newLogger,
 	})
 	if err != nil {
-		log.Fatalf("Failed to connect database, err: %s\n", err.Error())
+		return nil, err
 	}
 
-	database.Conn = conn
-	log.Println("Database successfully connected.")
+	return conn, nil
 }
 
 func migrate(tables ...interface{}) error {
@@ -52,7 +51,13 @@ func migrate(tables ...interface{}) error {
 
 // Initialize the database connection.
 func Initialize() {
-	connect()
+	conn, err := connect()
+	if err != nil {
+		log.Fatalf("Failed to connect database, err: %s\n", err.Error())
+	}
+
+	database.Conn = conn
+	log.Println("Database successfully connected.")
 
 	// Generate data for development.
 	if dropTables() && !config.Production {
