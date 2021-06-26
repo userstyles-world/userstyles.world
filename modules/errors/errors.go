@@ -58,10 +58,10 @@ var (
 	ErrOAuthNotFound = errors.New("oauth not found")
 
 	// ErrIncompatibleType errors that the given scope wasn't compatible.
-	ErrIncompatibleType = errors.New("incompatible type for Scopes")
+	ErrIncompatibleType = errors.New("incompatible type for scopes")
 
 	// ErrPrimaryEmailNotVerified errors that the found primary email was not identified as being verified by third party.
-	ErrPrimaryEmailNotVerified = errors.New("primary email is not verified by third part")
+	ErrPrimaryEmailNotVerified = errors.New("primary email is not verified by third party")
 
 	errUnexpectedSigningMethod = errors.New("unexpected jwt signing method")
 
