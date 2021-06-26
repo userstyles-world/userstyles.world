@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	chart "github.com/wcharczuk/go-chart/v2"
+	chart "github.com/userstyles-world/go-chart/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
