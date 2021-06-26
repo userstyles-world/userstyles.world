@@ -59,17 +59,25 @@ func Initialize() {
 	database.Conn = conn
 	log.Println("Database successfully connected.")
 
+	// Helper for iterating over tables.
+	tables := []interface{}{&user, &style, &stats, &oauth, &history}
+
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		log.Println("Dropping database tables.")
-		if err := drop(); err != nil {
-			log.Fatalf("Failed to drop tables, err: %s", err.Error())
+		for _, table := range tables {
+			if err := drop(table); err != nil {
+				log.Fatalf("Failed to drop %s, err: %s", table, err.Error())
+			}
 		}
 		defer seed()
 	}
 
-	if err := migrate(&user, &style, &stats, &oauth, &history); err != nil {
-		log.Fatalf("Failed to migrate tables to new schema, err: %s", err.Error())
+	// Migrate tables.
+	for _, table := range tables {
+		if err := migrate(table); err != nil {
+			log.Fatalf("Failed to migrate %s, err: %s", table, err.Error())
+		}
 	}
 }
 
