@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	chart "github.com/wcharczuk/go-chart/v2"
@@ -51,33 +52,39 @@ func GetStylePage(c *fiber.Ctx) error {
 	if err != nil {
 		log.Printf("No style stats for style %s, err: %s", id, err.Error())
 	}
+
+	var dates []time.Time
+	var views []float64
+	var updates []float64
+	var installs []float64
 	for _, v := range *history {
-		fmt.Printf("%v | %3v | %3v | %3v\n", v.CreatedAt.Format("2006-01-02"),
-			v.DailyInstalls, v.DailyUpdates, v.DailyViews)
+		// fmt.Printf("%v | %3v | %3v | %3v\n", v.CreatedAt.Format("2006-01-02"),
+		// 	v.DailyInstalls, v.DailyUpdates, v.DailyViews)
+		dates = append(dates, v.CreatedAt)
+		views = append(views, float64(v.DailyViews))
+		updates = append(updates, float64(v.DailyUpdates))
+		installs = append(installs, float64(v.DailyInstalls))
 	}
 
 	// Visualize data.
-	var b = 1000.
 	graph := chart.Chart{
 		Width: 1248,
-		XAxis: chart.XAxis{
-			ValueFormatter: chart.TimeDateValueFormatter,
-		},
-		YAxis: chart.YAxis{
-			Name: "Installs/views",
-		},
+		XAxis: chart.XAxis{Name: "Date"},
+		YAxis: chart.YAxis{Name: "Count"},
 		Series: []chart.Series{
-			chart.ContinuousSeries{
-				Name:    "Time Series",
-				XValues: []float64{10 * b, 20 * b, 30 * b, 40 * b, 50 * b, 60 * b, 70 * b, 80 * b},
-				YValues: []float64{1.0, 2.0, 30.0, 4.0, 50.0, 6.0, 7.0, 88.0},
+			chart.TimeSeries{
+				XValues: dates,
+				YValues: views,
 			},
-			chart.ContinuousSeries{
-				Style: chart.Style{
-					StrokeColor: chart.GetDefaultColor(1),
-				},
-				XValues: []float64{10 * b, 20 * b, 30 * b, 40 * b, 50 * b, 60 * b, 70 * b, 80 * b},
-				YValues: []float64{15.0, 52.0, 30.0, 42.0, 50.0, 26.0, 77.0, 38.0},
+			chart.TimeSeries{
+				Style:   chart.Style{StrokeColor: chart.ColorRed},
+				XValues: dates,
+				YValues: updates,
+			},
+			chart.TimeSeries{
+				Style:   chart.Style{StrokeColor: chart.ColorGreen},
+				XValues: dates,
+				YValues: installs,
 			},
 		},
 	}
