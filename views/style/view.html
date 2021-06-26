@@ -1,4 +1,8 @@
 <div class="wrapper py:l">
+    <style type="text/css" media="screen">
+        .history svg { filter: invert(1) hue-rotate(180deg) }
+    </style>
+
     <section class="preview">
         <h1 class="mb:m">{{ .Style.Name -}}
             <span class="fg:4"> by {{ .Style.Username }}</span>
@@ -101,6 +105,11 @@
                 {{ end }}
             </div>
         </div>
+
+        <section class="history">
+            <h2 class="td:d">History</h2>
+            <div>{{ .History | renderSVG }}</div>
+        </section>
 
         <div class="code mt:l">
             <h2 class="mt:0 mb:m td:d">Source code</h2>

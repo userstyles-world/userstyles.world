@@ -18,6 +18,7 @@ require (
 	github.com/ohler55/ojg v1.10.0
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/vednoc/go-usercss-parser v0.9.2
+	github.com/wcharczuk/go-chart/v2 v2.1.0
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.21.9
