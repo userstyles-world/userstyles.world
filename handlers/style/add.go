@@ -15,9 +15,9 @@ import (
 	"github.com/vednoc/go-usercss-parser"
 
 	jwtware "userstyles.world/handlers/jwt"
-	"userstyles.world/images"
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/images"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )

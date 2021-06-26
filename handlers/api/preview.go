@@ -5,10 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/images"
+	"userstyles.world/modules/images"
 )
 
 func getFileExtension(path string) string {
@@ -36,6 +35,7 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 
 	var stat fs.FileInfo
 	var fileName string
+	var mimeType string
 	orignalFile := images.CacheFolder + styleID + ".original"
 
 	switch format[1:] {
@@ -43,12 +43,13 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 		if info.Jpeg == nil {
 			return notFound(c)
 		}
-		stat = info.Original
+		stat = info.Jpeg
 		fileName = images.CacheFolder + styleID + ".jpeg"
+		mimeType = "image/jpeg"
 	case "webp":
 		fileName = images.CacheFolder + styleID + ".webp"
 		if info.WebP == nil {
-			err = images.DecodeImage(orignalFile, fileName, vips.ImageTypeWEBP)
+			err = images.DecodeImage(orignalFile, fileName, images.ImageTypeWEBP)
 			if err != nil {
 				return notFound(c)
 			}
@@ -60,6 +61,23 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 			break
 		}
 		stat = info.WebP
+		mimeType = "image/webp"
+	case "avif":
+		fileName = images.CacheFolder + styleID + ".avif"
+		if info.Avif == nil {
+			err = images.DecodeImage(orignalFile, fileName, images.ImageTypeAVIF)
+			if err != nil {
+				return notFound(c)
+			}
+			avifStat, err := os.Stat(fileName)
+			if err != nil {
+				return notFound(c)
+			}
+			stat = avifStat
+			break
+		}
+		stat = info.Avif
+		mimeType = "image/avif"
 	}
 
 	if stat == nil || fileName == "" {
@@ -74,7 +92,7 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 	// Set caching to two weeks.
 	c.Response().Header.Set(fiber.HeaderCacheControl, "public, max-age=1209600")
 
-	c.Type(getFileExtension(stat.Name()))
+	c.Response().Header.SetContentType(mimeType)
 	c.Response().SetBodyStream(file, int(stat.Size()))
 
 	return nil

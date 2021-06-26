@@ -9,9 +9,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
-	"userstyles.world/images"
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/images"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -105,12 +105,14 @@ func EditPost(c *fiber.Ctx) error {
 		// So we don't care about the error.
 		_ = os.Remove(images.CacheFolder + styleID + ".jpeg")
 		_ = os.Remove(images.CacheFolder + styleID + ".webp")
+		_ = os.Remove(images.CacheFolder + styleID + ".avif")
 
 		q.Preview = "https://userstyles.world/api/preview/" + styleID + ".jpeg"
 	}
 
 	if q.Preview != s.Preview {
 		_ = os.Remove(images.CacheFolder + styleID + ".original")
+		_ = os.Remove(images.CacheFolder + styleID + ".avif")
 		_ = os.Remove(images.CacheFolder + styleID + ".jpeg")
 		_ = os.Remove(images.CacheFolder + styleID + ".webp")
 	}

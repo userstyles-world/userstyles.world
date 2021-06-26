@@ -252,9 +252,9 @@ this is normally used as updateURL and installation URL.
 
 ### Get style's preview
 ```
-GET /style/preview/<id>.<webp | jpeg>
+GET /style/preview/<id>.<jpeg | webp | avif>
 ```
-Gets an optimized webp/jpeg version of the style's preview.
+Gets an optimized jpeg/webp/avif version of the style's preview.
 
 ### List all styles
 ```

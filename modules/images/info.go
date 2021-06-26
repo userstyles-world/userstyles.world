@@ -7,13 +7,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/davidbyttow/govips/v2/vips"
-
 	"userstyles.world/models"
 )
 
 type ImageInfo struct {
 	Original fs.FileInfo
+	Avif     fs.FileInfo
 	Jpeg     fs.FileInfo
 	WebP     fs.FileInfo
 }
@@ -26,13 +25,6 @@ func Initialize() {
 			log.Fatalln(err)
 		}
 	}
-
-	vips.Startup(&vips.Config{
-		ConcurrencyLevel: 0,
-		MaxCacheFiles:    0,
-		MaxCacheMem:      0,
-		MaxCacheSize:     0,
-	})
 }
 
 func fileExist(path string) fs.FileInfo {
@@ -47,6 +39,7 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 	template := CacheFolder + id
 	original := template + ".original"
 	jpeg := template + ".jpeg"
+	avif := template + ".avif"
 	webp := template + ".webp"
 	if fileExist(original) == nil {
 		style, err := models.GetStyleByID(id)
@@ -69,7 +62,7 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 			return ImageInfo{}, err
 		}
 
-		err = DecodeImage(original, jpeg, vips.ImageTypeJPEG)
+		err = DecodeImage(original, jpeg, ImageTypeJPEG)
 		if err != nil {
 			log.Println("Error processing:", err)
 			return ImageInfo{}, err
@@ -77,12 +70,14 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 
 		return ImageInfo{
 			Original: fileExist(original),
+			Jpeg:     fileExist(jpeg),
 		}, nil
 	}
 
 	return ImageInfo{
 		Original: fileExist(original),
-		Jpeg:     fileExist(jpeg),
+		Avif:     fileExist(avif),
 		WebP:     fileExist(webp),
+		Jpeg:     fileExist(jpeg),
 	}, nil
 }

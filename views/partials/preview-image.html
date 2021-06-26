@@ -1,6 +1,8 @@
+{{ $avif := printf "/api/style/preview/%d.avif" .ID }}
 {{ $webp := printf "/api/style/preview/%d.webp" .ID }}
 {{ if .Preview }}
     <picture>
+        <source srcset="{{ $avif }}" type="image/avif">
         <source srcset="{{ $webp }}" type="image/webp">
         <img src="/api/style/preview/{{ .ID }}.jpeg"
             alt="{{ .Name }} screenshot"
