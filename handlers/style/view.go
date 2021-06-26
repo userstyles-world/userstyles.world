@@ -46,7 +46,15 @@ func GetStylePage(c *fiber.Ctx) error {
 		})
 	}
 
-	// TODO: Get data from database.
+	// Get history data.
+	history, err := new(models.History).GetStatsForStyle(id)
+	if err != nil {
+		log.Printf("No style stats for style %s, err: %s", id, err.Error())
+	}
+	for _, v := range *history {
+		fmt.Printf("%v | %3v | %3v | %3v\n", v.CreatedAt.Format("2006-01-02"),
+			v.DailyInstalls, v.DailyUpdates, v.DailyViews)
+	}
 
 	// Visualize data.
 	var b = 1000.
