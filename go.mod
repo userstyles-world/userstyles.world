@@ -16,7 +16,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.9
 	github.com/ohler55/ojg v1.10.0
 	github.com/russross/blackfriday/v2 v2.0.1
-	github.com/userstyles-world/go-chart/v2 v2.3.0
+	github.com/userstyles-world/go-chart/v2 v2.4.0
 	github.com/vednoc/go-usercss-parser v0.9.2
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	gorm.io/driver/sqlite v1.1.4
