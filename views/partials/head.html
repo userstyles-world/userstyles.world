@@ -1,4 +1,5 @@
 {{ $title := "UserStyles.world" }}
+{{ $commit := printf "%.8s" GitCommit }}
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="title" content="{{ $title }}">
@@ -6,7 +7,7 @@
 <meta name="description" content="A new site to explore userstyles.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://userstyles.world">
-<link rel="stylesheet" href="/css/main.css?v={{ printf "%.8s" GitCommit }}s" type="text/css" media="screen">
+<link rel="stylesheet" href="/css/main.css?v={{ $commit }}" type="text/css" media="screen">
 <link rel="mask-icon" href="/mascot.svg" color="blue">
 <link rel="icon" href="/favicon.ico">
 <title>{{ .Title }} — {{ $title }}</title>
@@ -17,4 +18,4 @@
 <meta property="og:description" content="{{ .Style.Description }}" />
 <meta property="og:image" content="{{ .Style.Preview }}" />
 {{ end }}
-<script src="/js/main.js"></script>
+<script src="/js/main.js?v={{ $commit }}"></script>
