@@ -202,3 +202,30 @@ label[for="remember"] {
         }
     }
 }
+
+.chart {
+    display: flex;
+    padding: 0.5rem;
+    border-radius: var(--br-3);
+    border: 1px solid var(--bg-3);
+    background-color: var(--bg-2);
+
+    svg[viewBox] {
+        width: 100%;
+        height: 100%;
+        > path {
+            &[style*='fill:rgba(255'] { fill: transparent !important }
+            &[style*='stroke:rgba(51'] { stroke: var(--bg-5) !important }
+            &:nth-last-child(-n+3) {
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 2 !important;
+                // &:hover { stroke-width: 4 !important }
+            }
+        }
+        > text {
+            fill: var(--fg-3) !important;
+            font-family: var(--font-sans) !important;
+        }
+    }
+}
