@@ -73,21 +73,23 @@ func GetStylePage(c *fiber.Ctx) error {
 		YAxis: chart.YAxis{Name: "Count"},
 		Series: []chart.Series{
 			chart.TimeSeries{
+				Name:    "Installs",
 				XValues: dates,
-				YValues: views,
+				YValues: installs,
 			},
 			chart.TimeSeries{
-				Style:   chart.Style{StrokeColor: chart.ColorRed},
+				Name:    "Updates",
 				XValues: dates,
 				YValues: updates,
 			},
 			chart.TimeSeries{
-				Style:   chart.Style{StrokeColor: chart.ColorGreen},
+				Name:    "Views",
 				XValues: dates,
-				YValues: installs,
+				YValues: views,
 			},
 		},
 	}
+	graph.Elements = []chart.Renderable{chart.Legend(&graph)}
 
 	buffer := bytes.NewBuffer([]byte{})
 	err = graph.Render(chart.SVG, buffer)
