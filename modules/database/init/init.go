@@ -16,13 +16,16 @@ import (
 	"userstyles.world/utils"
 )
 
-var (
-	user    models.User
-	style   models.Style
-	stats   models.Stats
-	history models.History
-	oauth   models.OAuth
-)
+var tables = []struct {
+	name  string
+	model interface{}
+}{
+	{"users", &models.User{}},
+	{"styles", &models.Style{}},
+	{"stats", &models.Stats{}},
+	{"oauths", &models.OAuth{}},
+	{"histories", &models.History{}},
+}
 
 func connect() (*gorm.DB, error) {
 	newLogger := logger.New(
@@ -44,11 +47,6 @@ func connect() (*gorm.DB, error) {
 	return conn, nil
 }
 
-func migrate(tables ...interface{}) error {
-	log.Println("Migrating database tables.")
-	return database.Conn.AutoMigrate(tables...)
-}
-
 // Initialize the database connection.
 func Initialize() {
 	conn, err := connect()
@@ -59,30 +57,24 @@ func Initialize() {
 	database.Conn = conn
 	log.Println("Database successfully connected.")
 
-	// Helper for iterating over tables.
-	tables := []interface{}{&user, &style, &stats, &oauth, &history}
-
 	// Generate data for development.
 	if dropTables() && !config.Production {
-		log.Println("Dropping database tables.")
 		for _, table := range tables {
-			if err := drop(table); err != nil {
-				log.Fatalf("Failed to drop %s, err: %s", table, err.Error())
+			if err := drop(table.model); err != nil {
+				log.Fatalf("Failed to drop %s, err: %s", table.name, err.Error())
 			}
+			log.Printf("Dropped database table %s.\n", table.name)
 		}
 		defer seed()
 	}
 
 	// Migrate tables.
 	for _, table := range tables {
-		if err := migrate(table); err != nil {
-			log.Fatalf("Failed to migrate %s, err: %s", table, err.Error())
+		if err := migrate(table.model); err != nil {
+			log.Fatalf("Failed to migrate %s, err: %s", table.name, err.Error())
 		}
+		log.Printf("Migrated database table %s.\n", table.name)
 	}
-}
-
-func drop(dst ...interface{}) error {
-	return database.Conn.Migrator().DropTable(dst...)
 }
 
 func generateData(amount int) ([]models.Style, []models.User) {
@@ -119,6 +111,9 @@ func generateData(amount int) ([]models.Style, []models.User) {
 }
 
 func seed() {
+	log.Println("Seeding database mock data.")
+	defer log.Println("Finished seeding mock data.")
+
 	users := []models.User{
 		{
 			Username:  "admin",

@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/config"
+	"userstyles.world/modules/database"
 )
 
 func logLevel() logger.LogLevel {
@@ -35,4 +36,12 @@ func dropTables() bool {
 	default:
 		return false
 	}
+}
+
+func migrate(t ...interface{}) error {
+	return database.Conn.AutoMigrate(t...)
+}
+
+func drop(t ...interface{}) error {
+	return database.Conn.Migrator().DropTable(t...)
 }
