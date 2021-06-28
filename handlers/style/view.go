@@ -68,9 +68,11 @@ func GetStylePage(c *fiber.Ctx) error {
 
 	// Visualize data.
 	graph := chart.Chart{
-		Width: 1248,
-		XAxis: chart.XAxis{Name: "Date"},
-		YAxis: chart.YAxis{Name: "Count"},
+		Width:      1248,
+		Canvas:     chart.Style{ClassName: "bg inner"},
+		Background: chart.Style{ClassName: "bg outer"},
+		XAxis:      chart.XAxis{Name: "Date"},
+		YAxis:      chart.YAxis{Name: "Count"},
 		Series: []chart.Series{
 			chart.TimeSeries{
 				Name:    "Installs",

@@ -213,14 +213,19 @@ label[for="remember"] {
     svg[viewBox] {
         width: 100%;
         height: 100%;
+        .bg { fill: var(--bg-2) }
         > path {
-            &[style*='fill:rgba(255'] { fill: transparent !important }
+            &[style*='fill:rgba(255'] { fill: var(--bg-2) !important }
             &[style*='stroke:rgba(51'] { stroke: var(--bg-5) !important }
-            &:nth-last-child(-n+3) {
+            &:nth-last-child(-n+10) {
                 stroke-linecap: round;
                 stroke-linejoin: round;
                 stroke-width: 2 !important;
                 // &:hover { stroke-width: 4 !important }
+            }
+            &:nth-last-child(7) {
+                stroke-width: 1 !important;
+                transform: translate(-1px);
             }
         }
         > text {
