@@ -29,3 +29,16 @@ func (h History) GetStatsForStyle(id string) (q *[]History, err error) {
 
 	return q, nil
 }
+
+func (h History) GetStatsForAllStyles() (q *[]History, err error) {
+	err = database.Conn.
+		Debug().
+		Model(History{}).
+		Find(&q).
+		Error
+	if err != nil {
+		return nil, errors.New("failed to find all style histories")
+	}
+
+	return q, nil
+}
