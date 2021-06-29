@@ -45,10 +45,9 @@ const onMessage = (ev: MessageEvent<any>) => {
             if (metaData) {
                 fillInformationOnForm('description', metaData['description']);
                 fillInformationOnForm('license', metaData['license']);
-                fillInformationOnForm('homepage', metaData['license']);
+                fillInformationOnForm('homepage', metaData['homepage']);
             }
             handleSourceCode(data['sourceCode']);
-
         }
     }
 };
