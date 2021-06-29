@@ -106,7 +106,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	return c.Render("authorize", arguments)
 }
 
-func AuthorizePost(c *fiber.Ctx) error {
+func AuthPost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	oauthID, secureToken := c.Params("id"), c.Params("token")
 

@@ -74,7 +74,7 @@ _Please note that that within the OAuth settings, the 'styles' scope still has t
 
 ### 1 >> Let the user authorize with the given parameters
 ```
-GET https://usestyles.world/api/oauth/authorize_style
+GET https://usestyles.world/api/oauth/auth
 ```
 
 #### Parameters
@@ -90,7 +90,7 @@ GET https://usestyles.world/api/oauth/authorize_style
 _When the user specified which style they want to link, USw redirects back to your site with a temporary code in a `code` parameter. This temporary code will expire after 10 minutes. When in the previous step the `state` parameter was provided, it will be sent back in the `state` parameter, When the states don't match, then a third party created the request, and you should abort the process. In this workflow it will also return a `style_id` parameter to specify which style has been chosen_
 
 ```
-POST https://userstyles.world/api/oauth/access_token
+POST https://userstyles.world/api/oauth/token
 ```
 
 #### Parameters

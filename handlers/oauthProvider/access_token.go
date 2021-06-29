@@ -12,7 +12,7 @@ import (
 	"userstyles.world/utils"
 )
 
-func AccessTokenPost(c *fiber.Ctx) error {
+func TokenPost(c *fiber.Ctx) error {
 	clientID, clientSecret, stateQuery, tCode :=
 		c.FormValue("client_id"), c.FormValue("client_secret"), c.FormValue("state"), c.FormValue("code")
 

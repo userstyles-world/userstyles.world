@@ -1,4 +1,4 @@
-{{- $method :=  printf "api/oauth/authorize/%d/%s" .OAuth.ID .SecureToken -}}
+{{- $method :=  printf "api/oauth/auth/%d/%s" .OAuth.ID .SecureToken -}}
 <div class="wrapper py:l">
     <section class="settings mt:l">
         <h2 class="sub-title td:d">Authorization information</h2>

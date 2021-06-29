@@ -103,13 +103,13 @@ func Initialize() {
 	v1.Get("/style", api.ProtectedAPI, api.StyleGet)
 
 	oauthV1 := app.Group("/api/oauth")
-	oauthV1.Get("/authorize", jwtware.Protected, oauthprovider.AuthorizeGet)
-	oauthV1.Get("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStyleGet)
-	oauthV1.Post("/authorize_style", jwtware.Protected, oauthprovider.AuthorizeStylePost)
-	oauthV1.Get("/authorize_style/new", jwtware.Protected, oauthprovider.AuthorizeStyleNewPost)
-	oauthV1.Post("/authorize_style/new", jwtware.Protected, oauthprovider.AuthorizeStyleNewPost)
-	oauthV1.Post("/authorize/:id/:token", jwtware.Protected, oauthprovider.AuthorizePost)
-	oauthV1.Post("/access_token", oauthprovider.AccessTokenPost)
+	oauthV1.Get("/auth", jwtware.Protected, oauthprovider.AuthorizeGet)
+	oauthV1.Get("/style/link", jwtware.Protected, oauthprovider.OAuthStyleGet)
+	oauthV1.Post("/style/link", jwtware.Protected, oauthprovider.OAuthStylePost)
+	oauthV1.Get("/style/new", jwtware.Protected, oauthprovider.OAuthStyleNewPost)
+	oauthV1.Post("/style/new", jwtware.Protected, oauthprovider.OAuthStyleNewPost)
+	oauthV1.Post("/auth/:id/:token", jwtware.Protected, oauthprovider.AuthPost)
+	oauthV1.Post("/token", oauthprovider.TokenPost)
 
 	// Allows assets to be reloaded in dev mode.
 	// That means, they're not embedded into executable file.

@@ -37,7 +37,7 @@ const onMessage = (ev: MessageEvent<any>) => {
             removeElement(document.querySelector('a#stylus'));
         }
         case 'usw-fill-new-style': {
-            if ('/api/oauth/authorize_style/new' !== window.location.pathname || !data) {
+            if ('/api/oauth/style/new' !== window.location.pathname || !data) {
                 return;
             }
             fillInformationOnForm('name', data['name']);

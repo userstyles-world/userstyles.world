@@ -8,14 +8,13 @@ import (
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ohler55/ojg/oj"
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/utils"
 )
 
-func AuthorizeStyleGet(c *fiber.Ctx) error {
+func OAuthStyleGet(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 
 	// Under no circumstance this page should be loaded in some third-party frame.
@@ -56,7 +55,7 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 
 	//"add?token=%s&oauthID=%s" .SecureToken .OAuth.ID}
 	if len(styles) == 0 {
-		return c.Redirect(fmt.Sprintf("/api/oauth/authorize_style/new?token=%s&oauthID=%d", secureToken, OAuth.ID), fiber.StatusSeeOther)
+		return c.Redirect(fmt.Sprintf("/api/oauth/style/new?token=%s&oauthID=%d", secureToken, OAuth.ID), fiber.StatusSeeOther)
 	}
 
 	log.Println(styleInfo)
@@ -74,7 +73,7 @@ func AuthorizeStyleGet(c *fiber.Ctx) error {
 	return c.Render("authorize_style", arguments)
 }
 
-func AuthorizeStylePost(c *fiber.Ctx) error {
+func OAuthStylePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	styleID, oauthID, secureToken := c.Query("styleID"), c.Query("oauthID"), c.Query("token")
 
@@ -139,10 +138,7 @@ func AuthorizeStylePost(c *fiber.Ctx) error {
 	return c.Redirect(OAuth.RedirectURI + "/" + returnCode)
 }
 
-// jsonParser defined options.
-var jsonParser = &oj.Parser{Reuse: true}
-
-func AuthorizeStyleNewPost(c *fiber.Ctx) error {
+func OAuthStyleNewPost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	oauthID, secureToken := c.Query("oauthID"), c.Query("token")
 
