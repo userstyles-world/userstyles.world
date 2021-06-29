@@ -45,7 +45,7 @@
                             <td>{{ .UpdatedAt | Date }}</td>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .DisplayName }}</td>
-                            {{ if gt $.User.Role 1 }}<td>{{ .Email }}</td>{{ end }}
+                            {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}
                             <td>{{ .OAuthProvider }}</td>
                         </tr>
                     {{ end }}
