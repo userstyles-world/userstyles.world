@@ -36,6 +36,7 @@
                     <th>Display name</th>
                     {{ if gt $.User.Role 1 }}<th>Email</th>{{ end }}
                     <th>OAuth provider</th>
+                    <th>Actions</th>
                 </thead>
                 <tbody>
                     {{ range .Users }}
@@ -47,6 +48,7 @@
                             <td>{{ .DisplayName }}</td>
                             {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}
                             <td>{{ .OAuthProvider }}</td>
+                            <td><a href="/user/ban/{{ .ID }}">Ban</a></td>
                         </tr>
                     {{ end }}
                 </tbody>
