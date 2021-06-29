@@ -1,7 +1,6 @@
 package templates
 
 import (
-	"bytes"
 	"html/template"
 	"time"
 
@@ -46,8 +45,8 @@ func New() *html.Engine {
 		return template.HTML(time.Format("January 02, 2006 15:04"))
 	})
 
-	engine.AddFunc("renderSVG", func(b *bytes.Buffer) template.HTML {
-		return template.HTML(b.String())
+	engine.AddFunc("unescape", func(s string) template.HTML {
+		return template.HTML(s)
 	})
 
 	engine.AddFunc("BaseCodeTemplate", func() template.HTML {

@@ -113,6 +113,6 @@ func GetStylePage(c *fiber.Ctx) error {
 		"WeeklyUpdates":  models.GetWeeklyUpdatesForStyle(id),
 		"Url":            fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
 		"Slug":           c.Path(),
-		"History":        buffer,
+		"History":        buffer.String(),
 	})
 }
