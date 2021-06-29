@@ -104,7 +104,11 @@
 
         <section class="history">
             <h2 class="td:d">History</h2>
-            <div class="chart">{{ .History | unescape }}</div>
+            {{ if gt (len .History) 220 }}
+                <div class="chart">{{ .History | unescape }}</div>
+            {{ else }}
+                <p>No style history. Come back tomorrow.</p>
+            {{ end }}
         </section>
 
         <div class="code mt:l">

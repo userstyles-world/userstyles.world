@@ -95,7 +95,7 @@ func GetStylePage(c *fiber.Ctx) error {
 
 	buffer := bytes.NewBuffer([]byte{})
 	err = graph.Render(chart.SVG, buffer)
-	if err != nil {
+	if err != nil && buffer.Len() != 220 {
 		log.Printf("Failed to render SVG, err: %s\n", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
