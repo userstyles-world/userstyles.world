@@ -82,6 +82,11 @@ func (u APIUser) IsAdmin() bool {
 	return u.Role == Admin
 }
 
+// TODO: Remove `APIUser` when JWT is swapped to `User` model.
+func (u APIUser) IsModOrAdmin() bool {
+	return u.Role == Moderator || u.Role == Admin
+}
+
 func FindAllUsers() (u []User, err error) {
 	if err = database.Conn.Debug().Find(&u).Error; err != nil {
 		return nil, err

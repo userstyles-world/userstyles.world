@@ -14,9 +14,9 @@ func Ban(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
 
-	if !u.IsAdmin() {
+	if !u.IsModOrAdmin() {
 		return c.Render("err", fiber.Map{
-			"Title": "Invalid",
+			"Title": "Unauthorized",
 			"User":  u,
 		})
 	}
@@ -40,9 +40,9 @@ func ConfirmBan(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
 
-	if !u.IsAdmin() {
+	if !u.IsModOrAdmin() {
 		return c.Render("err", fiber.Map{
-			"Title": "Invalid",
+			"Title": "Unauthorized",
 			"User":  u,
 		})
 	}

@@ -34,9 +34,9 @@
                     <th>Updated at</th>
                     <th>Username</th>
                     <th>Display name</th>
-                    {{ if gt $.User.Role 1 }}<th>Email</th>{{ end }}
+                    {{ if $.User.IsAdmin }}<th>Email</th>{{ end }}
                     <th>OAuth provider</th>
-                    <th>Actions</th>
+                    {{ if $.User.IsModOrAdmin }}<th>Actions</th>{{ end }}
                 </thead>
                 <tbody>
                     {{ range .Users }}
@@ -48,7 +48,7 @@
                             <td>{{ .DisplayName }}</td>
                             {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}
                             <td>{{ .OAuthProvider }}</td>
-                            <td><a href="/user/ban/{{ .ID }}">Ban</a></td>
+                            {{ if $.User.IsModOrAdmin }}<td><a href="/user/ban/{{ .ID }}">Ban</a></td>{{ end }}
                         </tr>
                     {{ end }}
                 </tbody>
