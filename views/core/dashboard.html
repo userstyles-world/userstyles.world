@@ -34,6 +34,7 @@
                     <th>Updated at</th>
                     <th>Username</th>
                     <th>Display name</th>
+                    {{ if gt $.User.Role 1 }}<th>Email</th>{{ end }}
                     <th>OAuth provider</th>
                 </thead>
                 <tbody>
@@ -42,8 +43,9 @@
                             <td>{{ .ID }}</td>
                             <td>{{ .CreatedAt | Date }}</td>
                             <td>{{ .UpdatedAt | Date }}</td>
-                            <td>{{ .Username }}</td>
+                            <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .DisplayName }}</td>
+                            {{ if gt $.User.Role 1 }}<td>{{ .Email }}</td>{{ end }}
                             <td>{{ .OAuthProvider }}</td>
                         </tr>
                     {{ end }}
