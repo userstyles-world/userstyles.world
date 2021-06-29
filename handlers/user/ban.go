@@ -12,7 +12,7 @@ import (
 
 func Ban(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id := c.Params("id")
+	id := c.Params("id") // TODO: Switch to int type.
 
 	if !u.IsModOrAdmin() {
 		return c.Render("err", fiber.Map{
@@ -29,6 +29,13 @@ func Ban(c *fiber.Ctx) error {
 		})
 	}
 
+	if u.ID == user.ID {
+		return c.Render("err", fiber.Map{
+			"Title": "You can't ban yourself",
+			"User":  u,
+		})
+	}
+
 	return c.Render("user/ban", fiber.Map{
 		"Title":  "Ban user",
 		"User":   u,
@@ -38,11 +45,18 @@ func Ban(c *fiber.Ctx) error {
 
 func ConfirmBan(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id := c.Params("id")
+	id, _ := c.ParamsInt("id")
 
 	if !u.IsModOrAdmin() {
 		return c.Render("err", fiber.Map{
 			"Title": "Unauthorized",
+			"User":  u,
+		})
+	}
+
+	if int(u.ID) == id {
+		return c.Render("err", fiber.Map{
+			"Title": "You can't ban yourself",
 			"User":  u,
 		})
 	}
@@ -53,7 +67,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		log.Printf("Failed to ban user %s, err: %s", id, err)
+		log.Printf("Failed to ban user %d, err: %s", id, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -66,7 +80,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		log.Printf("Failed to ban styles from user %s, err: %s", id, err)
+		log.Printf("Failed to ban styles from user %d, err: %s", id, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
