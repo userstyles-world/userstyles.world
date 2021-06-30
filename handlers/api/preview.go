@@ -20,7 +20,7 @@ func getFileExtension(path string) string {
 
 var notFound = func(c *fiber.Ctx) error {
 	c.Status(fiber.StatusNotFound)
-	return c.SendString("Screenshot not found")
+	return c.JSON(fiber.Map{"error": "screenshot not found"})
 }
 
 func GetPreviewScreenshot(c *fiber.Ctx) error {
@@ -36,20 +36,29 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 	var stat fs.FileInfo
 	var fileName string
 	var mimeType string
-	orignalFile := images.CacheFolder + styleID + ".original"
+	originalFile := images.CacheFolder + styleID + ".original"
 
 	switch format[1:] {
 	case "jpeg":
+		fileName = images.CacheFolder + styleID + ".jpeg"
 		if info.Jpeg == nil {
-			return notFound(c)
+			err = images.DecodeImage(originalFile, fileName, images.ImageTypeJPEG)
+			if err != nil {
+				return notFound(c)
+			}
+			jpegStat, err := os.Stat(fileName)
+			if err != nil {
+				return notFound(c)
+			}
+			stat = jpegStat
+			break
 		}
 		stat = info.Jpeg
-		fileName = images.CacheFolder + styleID + ".jpeg"
 		mimeType = "image/jpeg"
 	case "webp":
 		fileName = images.CacheFolder + styleID + ".webp"
 		if info.WebP == nil {
-			err = images.DecodeImage(orignalFile, fileName, images.ImageTypeWEBP)
+			err = images.DecodeImage(originalFile, fileName, images.ImageTypeWEBP)
 			if err != nil {
 				return notFound(c)
 			}
