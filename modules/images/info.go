@@ -12,7 +12,6 @@ import (
 
 type ImageInfo struct {
 	Original fs.FileInfo
-	Avif     fs.FileInfo
 	Jpeg     fs.FileInfo
 	WebP     fs.FileInfo
 }
@@ -39,7 +38,6 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 	template := CacheFolder + id
 	original := template + ".original"
 	jpeg := template + ".jpeg"
-	avif := template + ".avif"
 	webp := template + ".webp"
 	if fileExist(original) == nil {
 		style, err := models.GetStyleByID(id)
@@ -76,7 +74,6 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 
 	return ImageInfo{
 		Original: fileExist(original),
-		Avif:     fileExist(avif),
 		WebP:     fileExist(webp),
 		Jpeg:     fileExist(jpeg),
 	}, nil

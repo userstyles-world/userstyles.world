@@ -62,22 +62,6 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 		}
 		stat = info.WebP
 		mimeType = "image/webp"
-	case "avif":
-		fileName = images.CacheFolder + styleID + ".avif"
-		if info.Avif == nil {
-			err = images.DecodeImage(orignalFile, fileName, images.ImageTypeAVIF)
-			if err != nil {
-				return notFound(c)
-			}
-			avifStat, err := os.Stat(fileName)
-			if err != nil {
-				return notFound(c)
-			}
-			stat = avifStat
-			break
-		}
-		stat = info.Avif
-		mimeType = "image/avif"
 	}
 
 	if stat == nil || fileName == "" {

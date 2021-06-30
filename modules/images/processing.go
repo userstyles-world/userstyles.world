@@ -9,8 +9,7 @@ import (
 type ImageType int
 
 const (
-	ImageTypeAVIF ImageType = iota
-	ImageTypeWEBP
+	ImageTypeWEBP ImageType = iota
 	ImageTypeJPEG
 )
 
@@ -50,8 +49,6 @@ func DecodeImage(original, newPath string, imageType ImageType) error {
 	switch imageType {
 	case ImageTypeWEBP:
 		vipsCommand = exec.Command("vips", "webpsave", "--strip", "--reduction-effort", "4", "--Q", "50", original, newPath)
-	case ImageTypeAVIF:
-		vipsCommand = exec.Command("vips", "heifsave", "--strip", "--compression", "av1", "--Q", "50", original, newPath)
 	case ImageTypeJPEG:
 		vipsCommand = exec.Command("vips", "jpegsave", "--strip", "--Q", "50", "--optimize-coding", "--optimize-scans", "--trellis-quant", "--quant-table", "3", original, newPath)
 	}
