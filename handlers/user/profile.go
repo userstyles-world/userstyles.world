@@ -13,7 +13,7 @@ func Profile(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	p := c.Params("name")
 
-	user, err := models.FindUserByName(p)
+	profile, err := models.FindUserByName(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "User not found",
@@ -22,7 +22,7 @@ func Profile(c *fiber.Ctx) error {
 	}
 
 	// Always redirect to correct URL.
-	if p != user.Username {
+	if p != profile.Username {
 		return c.Redirect("/user/"+strings.ToLower(p), fiber.StatusSeeOther)
 	}
 
@@ -44,9 +44,9 @@ func Profile(c *fiber.Ctx) error {
 	}*/
 
 	return c.Render("user/profile", fiber.Map{
-		"Title":  user.Name() + "'s profile",
-		"User":   u,
-		"Params": user,
-		"Styles": styles,
+		"Title":   profile.Name() + "'s profile",
+		"User":    u,
+		"Profile": profile,
+		"Styles":  styles,
 	})
 }
