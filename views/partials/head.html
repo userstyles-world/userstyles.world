@@ -11,6 +11,12 @@
 <link rel="mask-icon" href="/mascot.svg" color="blue">
 <link rel="icon" href="/favicon.ico">
 <title>{{ .Title }} — {{ $title }}</title>
+{{ with .Profile }}
+<meta property="og:type" content="profile">
+<meta property="og:url" content="{{ printf `https://userstyles.world/user/%s` .Username }}">
+<meta property="og:title" content="{{ .Name }}'s profile">
+<meta property="og:description" content="{{ .Biography | MarkdownUnsafe }}">
+{{ end }}
 {{ if .Url }}
 <meta property="og:url" content="{{ .Url }}" />
 <meta property="og:type" content="article" />
