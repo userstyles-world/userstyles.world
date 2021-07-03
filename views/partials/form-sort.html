@@ -1,10 +1,14 @@
-<label for="sort">Order</label>
+<label for="sort">Sort by</label>
 <div class="sort flex ai:c">
     <select id="sort" name="sort">
-        <option {{ with eq .Sort "created" }}selected{{ end }} value="created">By created date</option>
-        <option {{ with eq .Sort "updated" }}selected{{ end }} value="updated">By updated date</option>
-        <option {{ with eq .Sort "installs" }}selected{{ end }} value="installs">By install count</option>
-        <option {{ with eq .Sort "views" }}selected{{ end }} value="views">By view count</option>
+        <option {{ if eq .Sort "newest" }}selected{{ end }} value="newest">Recently added</option>
+        <option {{ if eq .Sort "oldest" }}selected{{ end }} value="oldest">Least recenetly added</option>
+        <option {{ if eq .Sort "recentlyupdated" }}selected{{ end }} value="recentlyupdated">Recently updated</option>
+        <option {{ if eq .Sort "leastupdated" }}selected{{ end }} value="leastupdated">Least recently updated</option>
+        <option {{ if eq .Sort "mostinstalls" }}selected{{ end }} value="mostinstalls">Most installs</option>
+        <option {{ if eq .Sort "leastinstalls" }}selected{{ end }} value="leastinstalls">Least installs</option>
+        <option {{ if eq .Sort "mostviews" }}selected{{ end }} value="mostviews">Most views</option>
+        <option {{ if eq .Sort "leastviews" }}selected{{ end }} value="leastviews">Least views</option>
     </select>
     {{ template "icons/chevrons-up-down" 18 }}
 </div>

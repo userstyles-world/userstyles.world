@@ -18,14 +18,22 @@ func Search(c *fiber.Ctx) error {
 	fv := c.Query("sort")
 	sort.Slice(s, func(i, j int) bool {
 		switch fv {
-		case "created":
+		case "newest":
 			return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix()
-		case "updated":
+		case "oldest":
+			return s[i].CreatedAt.Unix() < s[j].CreatedAt.Unix()
+		case "recentlyupdated":
 			return s[i].UpdatedAt.Unix() > s[j].UpdatedAt.Unix()
-		case "installs":
+		case "leastupdated":
+			return s[i].UpdatedAt.Unix() < s[j].UpdatedAt.Unix()
+		case "mostinstalls":
 			return s[i].Installs > s[j].Installs
-		case "views":
+		case "leastinstalls":
+			return s[i].Installs < s[j].Installs
+		case "mostviews":
 			return s[i].Views > s[j].Views
+		case "leastviews":
+			return s[i].Views < s[j].Views
 		default:
 			return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix()
 		}
