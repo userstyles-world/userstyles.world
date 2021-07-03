@@ -210,7 +210,7 @@ func GetAllAvailableStyles() ([]StyleCard, error) {
 	q := new([]StyleCard)
 	stmt := `
 select
-	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
+	styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name,
 	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
 	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
