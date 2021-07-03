@@ -8,7 +8,7 @@ check_cmd() {
     if ! command -v "$1" >/dev/null; then
         log "Missing $1!"
         case "$1" in
-            air) log "Install it with 'go get -u github.com/cosmtrek/air'" ;;
+            air) log "Install it with 'go install github.com/cosmtrek/air'" ;;
             sassc) log "Install 'sassc' with your package manager" ;;
             inotify*) log "Install 'notify-tools' with your package manager" ;;
         esac
