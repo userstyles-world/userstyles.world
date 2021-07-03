@@ -17,11 +17,11 @@
 <meta property="og:title" content="{{ .Name }}'s profile">
 <meta property="og:description" content="{{ .Biography | MarkdownUnsafe }}">
 {{ end }}
-{{ if .Url }}
-<meta property="og:url" content="{{ .Url }}" />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="{{ .Style.Name }} by {{ .Style.Username }}" />
-<meta property="og:description" content="{{ .Style.Description }}" />
-<meta property="og:image" content="{{ .Style.Preview }}" />
+{{ with .Style }}
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ .Name }} by {{ .Username }}">
+<meta property="og:description" content="{{ .Description | MarkdownUnsafe }}">
+<meta property="og:image" content="{{ printf `https://userstyles.world/api/style/preview/%d.webp` .ID }}">
+{{ with $.Url -}}<meta property="og:url" content="{{ printf `https://userstyles.world%s` $.Slug }}">{{ end -}}
 {{ end }}
 <script src="/js/main.js?v={{ $commit }}"></script>
