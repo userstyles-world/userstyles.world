@@ -35,7 +35,7 @@ func Search(c *fiber.Ctx) error {
 		case "leastviews":
 			return s[i].Views < s[j].Views
 		default:
-			return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix()
+			return s[i].CreatedAt.Unix() < s[j].CreatedAt.Unix()
 		}
 	})
 
