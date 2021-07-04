@@ -16,11 +16,12 @@ import (
 func OAuthSettingsGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
+	isEdit := id != ""
 
 	var method string
 	var oauth *models.APIOAuth
 	var err error
-	if id != "" {
+	if isEdit {
 		method = "edit"
 		oauth, err = models.GetOAuthByID(id)
 	} else {
