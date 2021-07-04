@@ -53,7 +53,6 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Couldn't retrieve styles of user")
 	}
 
-	//"add?token=%s&oauthID=%s" .SecureToken .OAuth.ID}
 	if len(styles) == 0 {
 		return c.Redirect(fmt.Sprintf("/api/oauth/style/new?token=%s&oauthID=%d", secureToken, OAuth.ID), fiber.StatusSeeOther)
 	}
