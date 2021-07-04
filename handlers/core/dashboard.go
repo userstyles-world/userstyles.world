@@ -59,10 +59,11 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
-	var dates []time.Time
-	var views []float64
-	var updates []float64
-	var installs []float64
+	historyLen := len(*history)
+	dates := make([]time.Time, 0, historyLen)
+	views := make([]float64, 0, historyLen)
+	updates := make([]float64, 0, historyLen)
+	installs := make([]float64, 0, historyLen)
 	for _, v := range *history {
 		// fmt.Printf("%v | %3v | %3v | %3v\n", v.CreatedAt.Format("2006-01-02"),
 		// 	v.DailyInstalls, v.DailyUpdates, v.DailyViews)
