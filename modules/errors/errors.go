@@ -71,6 +71,12 @@ var (
 	// ErrNoImageProcessing errors that the vips CLI returned a error or a non-zero return code.
 	// meaning that it failed to do the task.
 	ErrNoImageProcessing = errors.New("the image processor couldn't process the image")
+
+	// ErrFailedHistoriesSearch errors that it couldn't find all histories.
+	ErrFailedHistoriesSearch = errors.New("failed to find all style histories")
+
+	// ErrNoStyleStats errors that the given style doesn't have any styles yet.
+	ErrNoStyleStats = errors.New("style doesn't have stats yet")
 )
 
 // UnexpectedSigningMethod errors that a unexpected jwt signing method was used.
