@@ -1,4 +1,5 @@
 .card {
+    overflow-x: hidden;
     min-width: var(--card-min-width);
     border-radius: var(--br-3);
     background-color: var(--bg-2);
