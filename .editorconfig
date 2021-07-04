@@ -13,4 +13,4 @@ trim_trailing_whitespace = true
 trim_trailing_whitespace = false
 
 [*.{go,mod}]
-    indent_style = tab
+indent_style = tab
