@@ -11,7 +11,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/markbates/pkger"
 
-	"userstyles.world/config"
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
 	"userstyles.world/handlers/jwt"
@@ -19,6 +18,7 @@ import (
 	oauthprovider "userstyles.world/handlers/oauthProvider"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/templates"
 	"userstyles.world/utils"
 )

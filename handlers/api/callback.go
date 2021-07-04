@@ -7,8 +7,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/config"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/utils"
 )

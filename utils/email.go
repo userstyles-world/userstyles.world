@@ -7,7 +7,7 @@ import (
 	"github.com/emersion/go-sasl"
 	"github.com/emersion/go-smtp"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
 )
 

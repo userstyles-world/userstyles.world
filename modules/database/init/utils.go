@@ -3,7 +3,7 @@ package init
 import (
 	"gorm.io/gorm/logger"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 )
 

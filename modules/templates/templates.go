@@ -9,7 +9,7 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	md "github.com/russross/blackfriday/v2"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 )
 
 var ext = md.CommonExtensions | md.AutoHeadingIDs

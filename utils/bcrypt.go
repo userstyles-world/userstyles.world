@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 )
 
 var salt = getSalt()

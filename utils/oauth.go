@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
 )
 

@@ -5,7 +5,7 @@ import (
 
 	"github.com/form3tech-oss/jwt-go"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 )
 
 type JWTTokenBuilder struct {

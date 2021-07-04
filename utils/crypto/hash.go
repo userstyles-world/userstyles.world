@@ -5,7 +5,7 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 )
 
 func CreateHashedRecord(id, ip string) (string, error) {

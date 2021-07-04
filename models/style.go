@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"userstyles.world/config"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 	"userstyles.world/utils/strings"
