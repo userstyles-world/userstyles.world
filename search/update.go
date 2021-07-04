@@ -29,6 +29,7 @@ func IndexStyle(id uint) error {
 	}); err != nil {
 		return err
 	}
+
 	return nil
 }
 
