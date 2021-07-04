@@ -16,12 +16,11 @@ import (
 func OAuthSettingsGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
-	isEdit := id != ""
 
 	var method string
 	var oauth *models.APIOAuth
 	var err error
-	if isEdit {
+	if id != "" {
 		method = "edit"
 		oauth, err = models.GetOAuthByID(id)
 	} else {
@@ -90,7 +89,6 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 
 func OAuthSettingsPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id := c.Params("id")
 
 	q := models.OAuth{
 		Name:        c.FormValue("name"),
@@ -122,7 +120,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 
 	var err error
 	var dbOAuth *models.OAuth
-	if id != "" {
+	if id := c.Params("id"); id != "" {
 		err = models.UpdateOAuth(&q, id)
 	} else {
 		q.ClientID = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(32)))

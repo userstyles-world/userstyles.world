@@ -28,8 +28,7 @@ func isVipsInstalled() VipsStatus {
 		return vipsStatus
 	}
 	vipsLocation := exec.Command("which", "vips")
-	err := vipsLocation.Run()
-	if err != nil {
+	if vipsLocation.Run() != nil {
 		vipsStatus = notInstalled
 	} else {
 		vipsStatus = installed

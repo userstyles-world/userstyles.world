@@ -23,8 +23,7 @@ func LoginGet(c *fiber.Ctx) error {
 		"Title": "Login",
 	}
 
-	r := c.Query("r")
-	if r != "" {
+	if r := c.Query("r"); r != "" {
 		arguments["Redirect"] = "?r=" + url.QueryEscape(r)
 		arguments["Error"] = "You must log in to do this action."
 	}
@@ -108,8 +107,7 @@ func LoginPost(c *fiber.Ctx) error {
 		SameSite: "strict",
 	})
 
-	r := c.Query("r")
-	if r != "" {
+	if r := c.Query("r"); r != "" {
 		path, err := url.QueryUnescape(r)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).
