@@ -13,6 +13,9 @@ type History struct {
 	DailyViews    int64
 	DailyInstalls int64
 	DailyUpdates  int64
+	TotalViews    int64
+	TotalInstalls int64
+	TotalUpdates  int64
 }
 
 func (h History) GetStatsForStyle(id string) (q *[]History, err error) {

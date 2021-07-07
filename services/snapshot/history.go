@@ -40,6 +40,17 @@ func getInstalls(id int64) (i int64) {
 	return i
 }
 
+
+func getPreviousHistory(id uint) (q *models.History) {
+	database.Conn.
+		Model(models.History{}).
+		Where("style_id = ?", id).
+		Order("id DESC").
+		Find(&q)
+
+	return q
+}
+
 func StyleStatistics() {
 	styles, err := models.GetAllStyleIDs()
 	if err != nil {
@@ -51,11 +62,22 @@ func StyleStatistics() {
 
 	// Iterate over styles and collect their stats.
 	for _, v := range styles {
+		prev := getPreviousHistory(v.ID)
+		views := getViews(int64(v.ID))
+		totalViews := prev.TotalViews + views
+		installs := getInstalls(int64(v.ID))
+		totalInstalls := prev.TotalInstalls + installs
+		updates := getUpdates(int64(v.ID))
+		totalUpdates := prev.TotalUpdates + updates
+
 		item := models.History{
 			StyleID:       v.ID,
-			DailyViews:    getViews(int64(v.ID)),
-			DailyInstalls: getInstalls(int64(v.ID)),
-			DailyUpdates:  getUpdates(int64(v.ID)),
+			DailyViews:    views,
+			DailyInstalls: installs,
+			DailyUpdates:  updates,
+			TotalViews:    totalViews,
+			TotalInstalls: totalInstalls,
+			TotalUpdates:  totalUpdates,
 		}
 
 		*stats = append(*stats, item)
