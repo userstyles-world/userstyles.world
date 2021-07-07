@@ -82,8 +82,10 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 		return notFound(c)
 	}
 
-	// Set caching to two weeks.
-	c.Response().Header.Set(fiber.HeaderCacheControl, "public, max-age=1209600")
+	// Set caching to a month.
+	// Images are very likely not chaning that often.
+	// 60 * 60 * 24 * 31
+	c.Response().Header.Set(fiber.HeaderCacheControl, "public, max-age=2678400")
 
 	c.Response().Header.SetContentType(mimeType)
 	c.Response().SetBodyStream(file, int(stat.Size()))
