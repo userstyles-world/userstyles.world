@@ -80,8 +80,8 @@ func LoginPost(c *fiber.Ctx) error {
 
 	var expiration time.Time
 	if remember {
-		// 2 weeks
-		expiration = time.Now().Add(time.Hour * 24 * 14)
+		// 1 months
+		expiration = time.Now().Add(time.Hour * 24 * 31)
 	}
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
