@@ -2,6 +2,7 @@ package user
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -45,7 +46,9 @@ func Ban(c *fiber.Ctx) error {
 
 func ConfirmBan(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id, _ := c.ParamsInt("id")
+	stringID := c.Params("id")
+	id, _ := strconv.Atoi(stringID)
+	reason := c.FormValue("reason")
 
 	if !u.IsModOrAdmin() {
 		return c.Render("err", fiber.Map{
@@ -61,13 +64,41 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	err := database.Conn.
+	targetUser, err := models.FindUserByID(stringID)
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "User ID doesn't exist",
+			"User":  u,
+		})
+	}
+
+	err = database.Conn.
 		Debug().
 		Delete(&models.User{}, "id = ?", id).
 		Error
 
 	if err != nil {
 		log.Printf("Failed to ban user %d, err: %s", id, err)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error.",
+			"User":  u,
+		})
+	}
+
+	// Add banned user log entry.
+	err = database.Conn.
+		Debug().
+		Create(&models.Log{
+			UserID:         u.ID,
+			TargetData:     "",
+			Reason:         reason,
+			Kind:           models.LogBanUser,
+			TargetUserName: targetUser.Username,
+		}).
+		Error
+
+	if err != nil {
+		log.Printf("Failed to add log entry!!! user %d, err: %s", id, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,

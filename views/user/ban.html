@@ -6,6 +6,12 @@
     <section class="limit mt:l mx:a">
         <form class="form-wrapper" method="post" action="/user/ban/{{ .Params.ID }}">
             <label class="mb:m">Are you sure you want to ban user {{ .Params.Name }}?</label>
+            <label for="reason">Reason for ban</label>
+            <i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
+            <input
+                required
+                type="text" name="reason"
+                placeholder="Your reason to ban this person">
             <div>
                 <button class="btn primary mr:s" type="submit">Confirm</button>
                 <a class="fg:1" href="/user/ban/{{ .Params.ID }}">Cancel</a>

@@ -16,8 +16,8 @@ const (
 // Log struct has all the relavant information for a log entry
 type Log struct {
 	gorm.Model
-	Username       string
 	UserID         uint
+	Username       string
 	Reason         string
 	Kind           LogKind
 	TargetData     string
