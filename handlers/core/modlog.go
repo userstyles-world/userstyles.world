@@ -30,5 +30,7 @@ func GetModLog(c *fiber.Ctx) error {
 	return c.Render("core/modlog", fiber.Map{
 		"BannedUsers":   bannedUsers,
 		"RemovedStyles": removedStyles,
+		"User":          u,
+		"Title":         "Mod Log",
 	})
 }
