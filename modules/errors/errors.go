@@ -77,6 +77,15 @@ var (
 
 	// ErrNoStyleStats errors that the given style doesn't have any styles yet.
 	ErrNoStyleStats = errors.New("style doesn't have stats yet")
+
+	// ErrFailedLogRetrieval errors that it couldn't retrieve all the logs.
+	ErrFailedLogRetrieval = errors.New("failed to find all logs")
+
+	// ErrFailedLogAddition errors that it couldn't add the log.
+	ErrFailedLogAddition = errors.New("failed to add the log")
+
+	// ErrOnlyRemovedStyle errors that this function only allows to remove style kind.
+	ErrOnlyRemovedStyle = errors.New("only remove style kind is allowed")
 )
 
 // UnexpectedSigningMethod errors that a unexpected jwt signing method was used.

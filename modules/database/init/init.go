@@ -25,6 +25,7 @@ var tables = []struct {
 	{"stats", &models.Stats{}},
 	{"oauths", &models.OAuth{}},
 	{"histories", &models.History{}},
+	{"logs", &models.Log{}},
 }
 
 func connect() (*gorm.DB, error) {
@@ -200,6 +201,22 @@ func seed() {
 		},
 	}
 
+	Logs := []models.Log{
+		{
+			UserID:         1,
+			Reason:         "I like to abuse powers.",
+			Kind:           models.LogBanUser,
+			TargetUserName: "gusted",
+		},
+		{
+			UserID:         1,
+			Reason:         "My style is superior",
+			Kind:           models.LogRemoveStyle,
+			TargetUserName: "gusted",
+			TargetData:     "Black-Discord",
+		},
+	}
+
 	if config.DB_RANDOM_DATA != "false" {
 		amount, _ := strconv.Atoi(config.DB_RANDOM_DATA)
 		s, u := generateData(amount)
@@ -215,5 +232,8 @@ func seed() {
 	}
 	for i := range OAuths {
 		database.Conn.Create(&OAuths[i])
+	}
+	for i := range Logs {
+		database.Conn.Create(&Logs[i])
 	}
 }

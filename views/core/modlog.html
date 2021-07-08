@@ -1,0 +1,83 @@
+<div class="wrapper py:l">
+    <style type="text/css" media="screen">
+        table {
+            width: 100%;
+            padding: 1rem;
+            border-spacing: 0;
+            border-radius: var(--br-2);
+            background-color: var(--bg-2);
+        }
+        table thead {
+            top: 0;
+            position: sticky;
+            text-align: left;
+            background-color: var(--bg-2);
+        }
+        table tr > * { padding: 0.5rem }
+        tbody tr:nth-child(2n-1) { background-color: var(--bg-3) }
+    </style>
+
+    <section class="mt:m ta:c">
+        <h1>Read-Only Mod log</h1>
+        <p class="fg:3">This is a transpancy modlog that is read-only and list all of the mod actions.</p>
+        <p class="fg:3">All names are displayed as their Username and not their Displayname.</p>
+    </section>
+
+    <section class="users mt:l">
+        <h2 class="td:d">Banned users</h2>
+        <p class="fg:3 mb:m">{{ len .BannedUsers }} banned users in total.</p>
+
+        {{ if ge (len .BannedUsers) 1 }}
+            <table>
+                <thead>
+                    <th>Moderator</th>
+                    <th>Time of Entry</th>
+                    <th>Banned user</th>
+                    <th>Reason</th>
+                </thead>
+                <tbody>
+                    {{ range .BannedUsers }}
+                        <tr>
+                            <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
+                            <td>{{ .CreatedAt | Date }}</td>
+                            <td>{{ .TargetUserName }}</td>
+                            <td>{{ .Reason }}</td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        {{ else }}
+            <p class="ta:c">No banned users found.</p>
+        {{ end }}
+    </section>
+
+    <section class="users mt:l">
+        <h2 class="td:d">Removed styles</h2>
+        <p class="fg:3 mb:m">{{ len .RemovedStyles }} removed styles in total.</p>
+
+        {{ if ge (len .RemovedStyles) 1 }}
+            <table>
+                <thead>
+                    <th>Moderator</th>
+                    <th>Time of Entry</th>
+                    <th>Removed Style</th>
+                    <th>Owner of removed style</th>
+                    <th>Reason</th>
+                </thead>
+                <tbody>
+                    {{ range .RemovedStyles }}
+                        <tr>
+                            <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
+                            <td>{{ .CreatedAt | Date }}</td>
+                            <td>{{ .TargetData }}</td>
+                            <td><a href="/user/{{ .TargetUserName }}">{{ .TargetUserName }}</a></td>
+                            <td>{{ .Reason }}</td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        {{ else }}
+            <p class="ta:c">No removed styles found.</p>
+        {{ end }}
+    </section>
+</div>
