@@ -35,7 +35,7 @@
                 type="text" name="name"
                 pattern="^[a-zA-Z0-9-_ ]{5,20}$"
                 value="{{ .Params.DisplayName }}">
-            <button class="btn primary" type="submit">Save</button>
+            <button class="btn icon primary" type="submit">{{ template "icons/save" 16 }} Save</button>
         </form>
 
         <h2 class="sub-title td:d mt:l">Biography</h2>
@@ -49,7 +49,7 @@
                 placeholder="e.g. I'd often make styles.">
                 {{- .Params.Biography -}}
             </textarea>
-            <button class="btn primary" type="submit">Save</button>
+            <button class="btn icon primary" type="submit">{{ template "icons/save" 16 }} Save</button>
         </form>
 
         <h2 class="sub-title td:d mt:l">Socials</h2>
@@ -84,7 +84,7 @@
                 placeholder="e.g. username"
                 value="{{ .Params.Socials.Codeberg }}"/>
             </input>
-            <button class="btn primary" type="submit">Save</button>
+            <button class="btn icon primary" type="submit">{{ template "icons/save" 16 }} Save</button>
         </form>
 
         <h2 class="sub-title td:d mt:l">User settings</h1>
@@ -96,7 +96,10 @@
                 <option value="dark">Dark mode</option>
                 <option value="light">Light mode</option>
             </select>
-            <button id="usr-settings--save" class="btn primary">Save settings</button>
+            <button
+                id="usr-settings--save"
+                class="btn icon primary"
+            >{{ template "icons/save" 16 }} Save settings</button>
         </div>
 
     </section>
