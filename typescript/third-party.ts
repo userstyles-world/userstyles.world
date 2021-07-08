@@ -37,7 +37,7 @@ const onMessage = (ev: MessageEvent<any>) => {
             removeElement(document.querySelector('a#stylus'));
         }
         case 'usw-fill-new-style': {
-            if ('/api/oauth/style/new' !== window.location.pathname || !data) {
+            if ('/api/oauth/style/new' !== location.pathname || !data) {
                 return;
             }
             fillInformationOnForm('name', data['name']);
@@ -52,10 +52,10 @@ const onMessage = (ev: MessageEvent<any>) => {
     }
 };
 
-window.addEventListener('message', onMessage);
+addEventListener('message', onMessage);
 
 export function BroadcastReady() {
-    window.dispatchEvent(new MessageEvent('message', {
+    dispatchEvent(new MessageEvent('message', {
         data: {type: 'usw-ready'},
         origin: 'https://userstyles.world'
     }));
