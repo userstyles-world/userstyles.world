@@ -10,7 +10,10 @@
                 {{ template "partials/form-sort" . }}
             </div>
 
-            <button class="btn primary ml:m" type="submit">Sort</button>
+            <button
+                type="submit"
+                class="btn icon primary ml:m"
+            >{{ template "icons/search" 16 }} Sort</button>
         </form>
 
         {{ if gt (len .Styles) 1 }}
