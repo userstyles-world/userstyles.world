@@ -39,14 +39,14 @@ type OAuthResponse struct {
 }
 
 type emailResponseStruct struct {
-	Email string `json:email`
+	Email string `json:"email"`
 
 	// Github & Gitea
-	Verified bool `json:verified`
-	Primary  bool `json:primary`
+	Verified bool `json:"verified"`
+	Primary  bool `json:"primary"`
 
 	// Gitlab
-	ConfirmedAt string `json:confirmed_at`
+	ConfirmedAt string `json:"confirmed_at"`
 }
 
 type GiteaLikeAccessJSON struct {
