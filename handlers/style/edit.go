@@ -38,7 +38,7 @@ func EditGet(c *fiber.Ctx) error {
 		"Title":  "Edit userstyle",
 		"Method": "edit",
 		"User":   u,
-		"Style":  s,
+		"Styles": s,
 	})
 }
 

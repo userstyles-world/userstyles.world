@@ -4,7 +4,7 @@
     {{ $method = "add" }}
     {{ $btn = "Add userstyle" }}
 {{ else if eq .Method "edit" }}
-    {{ $method = printf "edit/%d" .Style.ID }}
+    {{ $method = printf "edit/%d" .Styles.ID }}
     {{ $btn = "Save changes" }}
 {{ else }}
     {{ $method = printf "add?token=%s&oauthID=%s" .SecureToken .OAuthID}}
@@ -19,6 +19,10 @@
 
     <section class="alert">
         <style type="text/css">
+            .alert {
+                max-width: var(--form-max-width);
+                margin: 0 auto;
+            }
             .alert > .limit { max-width: 100% }
         </style>
         {{ template "partials/alert" . }}
@@ -29,7 +33,7 @@
             <label for="name">Name</label>
             <input
                 required pattern=".+"
-                type="text" name="name" value="{{ .Style.Name }}"
+                type="text" name="name" value="{{ .Styles.Name }}"
                 placeholder="e.g. UserStyles.world tweaks">
 
             <label for="description">Description</label>
@@ -38,26 +42,26 @@
                 required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
                 type="text" name="description"
                 placeholder="e.g. Tweaks for UserStyles.world"
-            >{{ .Style.Description }}</textarea>
+            >{{ .Styles.Description }}</textarea>
 
             <label for="notes">Notes</label>
             <i class="fg:3">Supports Markdown syntax.</i>
             <textarea
                 type="text" name="notes"
                 placeholder="Userstyle's instructions, release notes, etc."
-            >{{ .Style.Notes }}</textarea>
+            >{{ .Styles.Notes }}</textarea>
 
             <label for="homepage">Homepage</label>
             <input
                 pattern="^https?:\/\/.*$"
-                type="text" name="homepage" value="{{ .Style.Homepage }}"
+                type="text" name="homepage" value="{{ .Styles.Homepage }}"
                 placeholder="Link to userstyle's project home, bug tracker, etc.">
 
             {{- if eq .Method "edit" }}
                 <p>Current image</p>
                 <i class="fg:3">To change it, set a new preview URL or upload a new image.</i>
                 <div class="flex mt:s">
-                    {{ template "partials/preview-image" .Style }}
+                    {{ template "partials/preview-image" .Styles }}
                 </div>
             {{ end }}
 
@@ -65,7 +69,7 @@
             <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
             <input
                 pattern="^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw)\.githubusercontent\.com|github.com|gitlab\.com|codeberg\.org)\/.*\.(jpe?g|png|webp)$"
-                type="text" name="previewUrl" value="{{ .Style.Preview }}"
+                type="text" name="previewUrl" value="{{ .Styles.Preview }}"
                 placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
             <label for="preview">Preview image</label>
@@ -77,14 +81,14 @@
             <label for="license">License</label>
             <i class="fg:3">If left empty, the style will use <a href="https://choosealicense.com/no-permission/">No License</a> by default.</i>
             <input
-                type="text" name="license" value="{{ .Style.License }}"
+                type="text" name="license" value="{{ .Styles.License }}"
                 placeholder="e.g CC Zero">
 
             <label for="category">Category</label>
             <i class="fg:3">Website name that your userstyle applies to. E.g.: userstyles, github, gitlab, etc.</i>
             <input
                 required
-                type="text" name="category" value="{{ .Style.Category }}"
+                type="text" name="category" value="{{ .Styles.Category }}"
                 placeholder="e.g userstyles">
 
             <label for="code">Source code</label>
@@ -92,19 +96,19 @@
                 type="text" name="code"
                 spellcheck="false"
                 placeholder="{{ printf "* {\n    color: red !important \n}" }}"
-            >{{ with .Style }}{{ .Code }}{{ else }}{{ BaseCodeTemplate }}{{ end }}</textarea>
+            >{{ with .Styles }}{{ .Code }}{{ else }}{{ BaseCodeTemplate }}{{ end }}</textarea>
 
             {{ if eq .Method "edit" }}
                 <label for="mirrorURL">Mirror source code URL</label>
                 <i class="fg:3">If your style was imported, this takes priority over original URL.</i>
                 <input
-                    type="text" name="mirrorURL" value="{{ .Style.MirrorURL }}"
+                    type="text" name="mirrorURL" value="{{ .Styles.MirrorURL }}"
                     pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
                     placeholder="Path to external userstyle's install URL">
 
                 <div class="ta:l">
                     {{- $mirrorMeta := "" -}}
-                    {{- if .Style.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
+                    {{- if .Styles.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
                     <div class="checkbox iflex mb:m">
                         <input type="checkbox" name="mirrorMeta" id="mirrorMeta" {{ $mirrorMeta }}>
                         {{ template "partials/checkboxes" }}
@@ -114,7 +118,7 @@
 
                 <div class="ta:l">
                     {{- $mirrorCode := "" -}}
-                    {{- if .Style.MirrorCode -}}{{- $mirrorCode = "checked" -}}{{- end -}}
+                    {{- if .Styles.MirrorCode -}}{{- $mirrorCode = "checked" -}}{{- end -}}
                     <div class="checkbox iflex mb:m">
                         <input type="checkbox" name="mirrorCode" id="mirrorCode" {{ $mirrorCode }}>
                         {{ template "partials/checkboxes" }}

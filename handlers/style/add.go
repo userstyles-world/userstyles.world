@@ -61,7 +61,7 @@ func CreatePost(c *fiber.Ctx) error {
 		arguments := fiber.Map{
 			"Title":  "Add userstyle",
 			"User":   u,
-			"Style":  s,
+			"Styles": s,
 			"Method": "add",
 			"Errors": errs,
 		}
