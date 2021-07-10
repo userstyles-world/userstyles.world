@@ -18,9 +18,8 @@
     </style>
 
     <section class="mt:m ta:c">
-        <h1>Read-Only Mod log</h1>
-        <p class="fg:3">This is a transpancy modlog that is read-only and list all of the mod actions.</p>
-        <p class="fg:3">All names are displayed as their Username and not their Displayname.</p>
+        <h1>Read-only mod log</h1>
+        <p class="fg:3">As a way to be more transparent, this page lists all of the mod actions.</p>
     </section>
 
     <section class="users mt:l">
@@ -31,7 +30,7 @@
             <table>
                 <thead>
                     <th>Moderator</th>
-                    <th>Time of Entry</th>
+                    <th>Date and time</th>
                     <th>Banned user</th>
                     <th>Reason</th>
                 </thead>
@@ -46,12 +45,10 @@
                     {{ end }}
                 </tbody>
             </table>
-        {{ else }}
-            <p class="ta:c">No banned users found.</p>
         {{ end }}
     </section>
 
-    <section class="users mt:l">
+    <section class="styles mt:l">
         <h2 class="td:d">Removed styles</h2>
         <p class="fg:3 mb:m">{{ len .RemovedStyles }} removed styles in total.</p>
 
@@ -59,8 +56,8 @@
             <table>
                 <thead>
                     <th>Moderator</th>
-                    <th>Time of Entry</th>
-                    <th>Removed Style</th>
+                    <th>Date and time</th>
+                    <th>Removed style</th>
                     <th>Owner of removed style</th>
                     <th>Reason</th>
                 </thead>
@@ -76,8 +73,6 @@
                     {{ end }}
                 </tbody>
             </table>
-        {{ else }}
-            <p class="ta:c">No removed styles found.</p>
         {{ end }}
     </section>
 </div>
