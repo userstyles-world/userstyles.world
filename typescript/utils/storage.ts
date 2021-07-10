@@ -53,7 +53,7 @@ function getValidatedObject<T>(source: any, compare: T): Partial<T> {
             }
         } else if ('object' === typeof value && 'object' === typeof compare[key]) {
             result[key] = getValidatedObject(value, compare[key]);
-        } else if (typeof value === typeof compare[key]) {
+        } else if (typeof value === typeof compare[key] && compare.hasOwnProperty(key)) {
             result[key] = value;
         }
     });
