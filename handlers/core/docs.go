@@ -8,22 +8,29 @@ import (
 	"userstyles.world/handlers/jwt"
 )
 
+func readFile(f string) (s string) {
+	b, err := os.ReadFile(f)
+	if err != nil {
+		return ""
+	}
+
+	return string(b)
+}
+
 func GetDocs(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	var title string
-	var content []byte
-
+	var title, content string
 	switch c.Params("document") {
 	case "changelog":
-		content, _ = os.ReadFile("docs/changelog.md")
+		content = readFile("docs/changelog.md")
 		title = "Changelog"
 	case "privacy":
-		content, _ = os.ReadFile("docs/privacy.md")
+		content = readFile("docs/privacy.md")
 		title = "Privacy Policy"
 	}
 
-	if len(content) == 0 {
+	if content == "" {
 		return c.Render("err", fiber.Map{
 			"Title": "Couldn't load the document.",
 			"User":  u,
