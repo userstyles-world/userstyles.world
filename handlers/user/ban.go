@@ -3,6 +3,7 @@ package user
 import (
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -47,7 +48,6 @@ func ConfirmBan(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	stringID := c.Params("id")
 	id, _ := strconv.Atoi(stringID)
-	reason := c.FormValue("reason")
 
 	if !u.IsModOrAdmin() {
 		return c.Render("err", fiber.Map{
@@ -77,9 +77,9 @@ func ConfirmBan(c *fiber.Ctx) error {
 	logEntry := models.Log{
 		UserID:         u.ID,
 		Username:       u.Username,
-		Reason:         reason,
 		Kind:           models.LogBanUser,
 		TargetUserName: targetUser.Username,
+		Reason:         strings.TrimSpace(c.FormValue("reason")),
 	}
 
 	// Add banned user log entry.
