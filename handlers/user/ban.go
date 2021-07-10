@@ -85,20 +85,19 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	// Add banned user log entry.
-	err = database.Conn.
-		Debug().
-		Create(&models.Log{
-			UserID:         u.ID,
-			TargetData:     "",
-			Reason:         reason,
-			Kind:           models.LogBanUser,
-			TargetUserName: targetUser.Username,
-		}).
-		Error
+	// Initialize modlog data.
+	modlog := new(models.Log)
+	logEntry := models.Log{
+		UserID:         u.ID,
+		Username:       u.Username,
+		Reason:         reason,
+		Kind:           models.LogBanUser,
+		TargetUserName: targetUser.Username,
+	}
 
-	if err != nil {
-		log.Printf("Failed to add log entry!!! user %d, err: %s", id, err)
+	// Add banned user log entry.
+	if err := modlog.AddLog(logEntry); err != nil {
+		log.Printf("Failed to add user %d to ModLog, err: %s", targetUser.ID, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,

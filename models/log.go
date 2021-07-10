@@ -2,6 +2,7 @@ package models
 
 import (
 	"gorm.io/gorm"
+
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
@@ -25,15 +26,16 @@ type Log struct {
 }
 
 // AddLog adds a new log to the database.
-func AddLog(log Log) (err error) {
+func (l *Log) AddLog(log Log) (err error) {
 	err = database.Conn.
 		Debug().
 		Model(Log{}).
-		Create(log).
+		Create(&log).
 		Error
 	if err != nil {
 		return errors.ErrFailedLogAddition
 	}
+
 	return nil
 }
 
