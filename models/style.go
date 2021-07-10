@@ -354,3 +354,11 @@ func CheckDuplicateStyle(s *Style) error {
 
 	return nil
 }
+
+func (s *Style) BanWhereUserID(id interface{}) (err error) {
+	if err = database.Conn.Delete(&Style{}, "user_id = ?", id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

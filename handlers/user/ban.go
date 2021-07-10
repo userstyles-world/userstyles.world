@@ -104,12 +104,9 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	err = database.Conn.
-		Debug().
-		Delete(&models.Style{}, "user_id = ?", id).
-		Error
-
-	if err != nil {
+	// Remove user's styles.
+	styles := new(models.Style)
+	if err := styles.BanWhereUserID(targetUser.ID); err != nil {
 		log.Printf("Failed to ban styles from user %d, err: %s", id, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
