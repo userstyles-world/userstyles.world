@@ -8,7 +8,6 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
-	"userstyles.world/modules/database"
 )
 
 func Ban(c *fiber.Ctx) error {
@@ -57,30 +56,18 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	if int(u.ID) == id {
+	if u.ID == uint(id) {
 		return c.Render("err", fiber.Map{
 			"Title": "You can't ban yourself",
 			"User":  u,
 		})
 	}
 
+	// Check if user exists.
 	targetUser, err := models.FindUserByID(stringID)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "User ID doesn't exist",
-			"User":  u,
-		})
-	}
-
-	err = database.Conn.
-		Debug().
-		Delete(&models.User{}, "id = ?", id).
-		Error
-
-	if err != nil {
-		log.Printf("Failed to ban user %d, err: %s", id, err)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
 			"User":  u,
 		})
 	}
@@ -104,7 +91,17 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	// Remove user's styles.
+	// Delete user.
+	user := new(models.User)
+	if err := user.DeleteWhereID(targetUser.ID); err != nil {
+		log.Printf("Failed to ban user %d, err: %s", id, err)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error.",
+			"User":  u,
+		})
+	}
+
+	// Delete user's styles.
 	styles := new(models.Style)
 	if err := styles.BanWhereUserID(targetUser.ID); err != nil {
 		log.Printf("Failed to ban styles from user %d, err: %s", id, err)
