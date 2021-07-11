@@ -6,7 +6,7 @@ require (
 	github.com/blevesearch/bleve/v2 v2.0.3
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
-	github.com/evanw/esbuild v0.12.1
+	github.com/evanw/esbuild v0.12.15
 	github.com/form3tech-oss/jwt-go v3.2.3+incompatible
 	github.com/go-co-op/gocron v1.6.2
 	github.com/go-playground/validator/v10 v10.7.0
