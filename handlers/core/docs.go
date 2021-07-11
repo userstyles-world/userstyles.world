@@ -22,9 +22,15 @@ func GetDocs(c *fiber.Ctx) error {
 
 	var title, content string
 	switch c.Params("document") {
+	case "":
+		content = readFile("docs/readme.md")
+		title = "Documentation"
 	case "changelog":
 		content = readFile("docs/changelog.md")
 		title = "Changelog"
+	case "faq":
+		content = readFile("docs/faq.md")
+		title = "Frequently Asked Questions"
 	case "privacy":
 		content = readFile("docs/privacy.md")
 		title = "Privacy Policy"
