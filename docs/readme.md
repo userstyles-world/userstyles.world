@@ -1,6 +1,6 @@
 # Documentation
 
-Here you can find the index for all of the documentation files.
+Here you can find the index for all of the internal documentation.
 
 Table of Content
 
