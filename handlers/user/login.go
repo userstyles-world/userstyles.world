@@ -97,6 +97,13 @@ func LoginPost(c *fiber.Ctx) error {
 			})
 	}
 
+	// Fix issues with Vim Vixen in dev environment.
+	var site string
+	if config.Production {
+		site = "strict"
+	}
+
+	// Create cookie.
 	c.Cookie(&fiber.Cookie{
 		Name:     fiber.HeaderAuthorization,
 		Value:    t,
@@ -104,7 +111,7 @@ func LoginPost(c *fiber.Ctx) error {
 		Expires:  expiration,
 		Secure:   config.Production,
 		HTTPOnly: true,
-		SameSite: "strict",
+		SameSite: site,
 	})
 
 	if r := c.Query("r"); r != "" {
