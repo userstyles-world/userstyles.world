@@ -2,6 +2,70 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/userstyles-world/userstyles.world/compare/v1.3.0...v1.4.0) (2021-07-12)
+
+
+### Features
+
+* **core:** add more sorting options for styles ([d14f171](https://github.com/userstyles-world/userstyles.world/commit/d14f171abd7e40da4aa61c83eb661b1baeddb1db))
+* **crypto:** add nonce scrambling ([972e88a](https://github.com/userstyles-world/userstyles.world/commit/972e88afd4b3c8db76919748d29fc55a0c9fa275))
+* **crypto:** add nonce scrambling into crypto functions ([63e2b29](https://github.com/userstyles-world/userstyles.world/commit/63e2b298ea4c1562e5b10bc874a38d29119fb98f))
+* **css:** improve styles for charts ([bc9820d](https://github.com/userstyles-world/userstyles.world/commit/bc9820d183084d89380190aa37ea96744cea7029))
+* **css:** improve styles for content in docs ([5c2145f](https://github.com/userstyles-world/userstyles.world/commit/5c2145f8ea016fe30acdb9fa1823391c82d298d5))
+* **css:** tweak and improve styles for graphs ([8084d3a](https://github.com/userstyles-world/userstyles.world/commit/8084d3a187569e75388daf8eed762ee8b398bf78))
+* **dashboard:** add functionality to ban users ([8a400b7](https://github.com/userstyles-world/userstyles.world/commit/8a400b70ffc499adb7fdc6baf40d0b7614367155))
+* **dashboard:** allow moderators to ban users ([5f8bad4](https://github.com/userstyles-world/userstyles.world/commit/5f8bad44d93fc61cbca6f39e4d59443014276169))
+* **dashboard:** show History chart for all styles ([8388dfa](https://github.com/userstyles-world/userstyles.world/commit/8388dfaa762cf16520a214e7bb2ec6295bbd255d))
+* **dashboard:** show user's email field to admins ([dd58541](https://github.com/userstyles-world/userstyles.world/commit/dd58541eddc1c075d5da2edb9c0dda01925a0cc3))
+* **db:** improve error checking for table actions ([7e61f23](https://github.com/userstyles-world/userstyles.world/commit/7e61f23bb4706e8c3da4a9614f030a05d6c9a646))
+* **db:** improve migrate/drop/seed functionality ([7c054b8](https://github.com/userstyles-world/userstyles.world/commit/7c054b8731bc1f549fe13bbb56d672783c3adb0d))
+* **docs:** add more content to FAQ page ([8f29262](https://github.com/userstyles-world/userstyles.world/commit/8f2926202fd48633771aad54847b67fba9b4cc2b))
+* **docs:** expand our internal documentation ([458efc6](https://github.com/userstyles-world/userstyles.world/commit/458efc6851398aab4f8d20b64bf213820b6c0e7b))
+* **html:** add 'default' option to sort menus ([4559fe3](https://github.com/userstyles-world/userstyles.world/commit/4559fe3419c8f67aae7cff30cf42b307d0cfcfa1))
+* **html:** add icons for Style action buttons ([9fb1f62](https://github.com/userstyles-world/userstyles.world/commit/9fb1f62c0889c4e5a74ce7891908f882d8e13671))
+* **html:** add icons to homepage/save buttons ([adfb0cf](https://github.com/userstyles-world/userstyles.world/commit/adfb0cfe25442a36f76112152e8828a90eca906c))
+* **html:** add icons to search/sort buttons ([fa7d515](https://github.com/userstyles-world/userstyles.world/commit/fa7d51568b4ea52805a18c1008dba36215f43721))
+* **html:** add legends to History chart ([fca0ff8](https://github.com/userstyles-world/userstyles.world/commit/fca0ff8fb6dc9195b139b0cb93d950c6a3e3cb6c))
+* **html:** append git commit hash to JS file ([920ad65](https://github.com/userstyles-world/userstyles.world/commit/920ad659d230769d6aa7d8880b23c582d61184ef))
+* **html:** implement meta tags for User profiles ([f1e7070](https://github.com/userstyles-world/userstyles.world/commit/f1e70704645232bf9766e5bba2bc2b79d56e224a))
+* **html:** improve meta tags for Style pages ([5e45f38](https://github.com/userstyles-world/userstyles.world/commit/5e45f38cb27199544060e6f7c0779b14d4f66ee8))
+* **html:** show counters on dashboard page ([89cfa53](https://github.com/userstyles-world/userstyles.world/commit/89cfa530cafaea12cefa323b2d8b96752e17f8c7))
+* **images:** bump image caching to a month ([eab65f9](https://github.com/userstyles-world/userstyles.world/commit/eab65f965ec796d71d2eeae4a9d9b6a655fc49cf))
+* **images:** increase quality for screenshots ([55b7182](https://github.com/userstyles-world/userstyles.world/commit/55b71822b8908f6f03efd74c7e53cdaddd75dbcd))
+* **login:** bump remember me to a month ([8457887](https://github.com/userstyles-world/userstyles.world/commit/8457887e8b781610673929509cf31b0fe0c99303))
+* **modlog:** add reason & log when banned user ([ea0c575](https://github.com/userstyles-world/userstyles.world/commit/ea0c57516f8701b51c6b4baaf7732bf8f64cc20e))
+* **modlog:** create modlog prototype ([664f3eb](https://github.com/userstyles-world/userstyles.world/commit/664f3eb9e0ad637a008973397310a111bebdc2dc))
+* **styles:** add data for combined statistics ([68bda02](https://github.com/userstyles-world/userstyles.world/commit/68bda021aba7a6da074945fed45f6cbd898fea2b))
+* **styles:** add logic for visualizing statistics ([8be681d](https://github.com/userstyles-world/userstyles.world/commit/8be681db6f9f052ad5722e077ec8f6b4f70992e3))
+* **styles:** get history data for Style stats ([fd7b739](https://github.com/userstyles-world/userstyles.world/commit/fd7b739a9368c4ec11f51c57ad9420ebf537f516))
+* **styles:** show userstyle stats in History area ([5e82d06](https://github.com/userstyles-world/userstyles.world/commit/5e82d06e4c00eed3f8901b8fda870e21a16dd71f))
+
+
+### Bug Fixes
+
+* **api:** add missing logic for JPEG screenshots ([e5bd33b](https://github.com/userstyles-world/userstyles.world/commit/e5bd33bca656aab5af629a0acc474c7dcbc57469))
+* **auth:** resolve cookie issues with Vim Vixen ([b37d8c1](https://github.com/userstyles-world/userstyles.world/commit/b37d8c1a1229e66c99fde585ee9cbdeadd359fe3))
+* **core:** trim spaces in reason field for Mod Log ([2ba5457](https://github.com/userstyles-world/userstyles.world/commit/2ba5457fdf99437bc69e2193f62e461b6b9680d0))
+* **crypto:** don't panic on incorrect input ([6e665fe](https://github.com/userstyles-world/userstyles.world/commit/6e665fe0ea342ec790bb55ab76301c7a380462b4))
+* **css:** hide horizontal overflow on body element ([fb45db9](https://github.com/userstyles-world/userstyles.world/commit/fb45db907c4590d579b72b2927343229c924400b))
+* **css:** hide overflow in style cards ([0bc94b5](https://github.com/userstyles-world/userstyles.world/commit/0bc94b5efa0a79c697d268a4fb2796d47970bd9e))
+* **css:** improve styles for textareas and select ([65cd64e](https://github.com/userstyles-world/userstyles.world/commit/65cd64e052af4bdd6aeca7bd561cc84e9b8bc3e6))
+* **css:** improve styles on Style's link page ([f56268a](https://github.com/userstyles-world/userstyles.world/commit/f56268a40205d28ab3c41703368ca5ab05254826))
+* **dashboard:** prevent being able to ban yourself ([bacff96](https://github.com/userstyles-world/userstyles.world/commit/bacff9646f464a12039a821f3ff61a81386766f8))
+* **db:** add created date to search cards query ([5bd8ff6](https://github.com/userstyles-world/userstyles.world/commit/5bd8ff69cae805b17d6ac31fa6f5f3a436e18452))
+* **err:** add missed letter ([24b7611](https://github.com/userstyles-world/userstyles.world/commit/24b7611254db71c8b2b621afbdb341971885c454))
+* **html:** add missing History chart on dashboard ([925687d](https://github.com/userstyles-world/userstyles.world/commit/925687dbcf6cb6cbef4a14097c622de46c5be63d))
+* **html:** resolve a bug with alerts ([61ac607](https://github.com/userstyles-world/userstyles.world/commit/61ac6075ac73d6e668b8700f344c6b2bf0b8f528))
+* **images:** remove avif ([9e13023](https://github.com/userstyles-world/userstyles.world/commit/9e13023b9855b6c8a8557ad53c681b60da345d6a))
+* **json:** fix json tags ([d23c405](https://github.com/userstyles-world/userstyles.world/commit/d23c40587ec5befb09fcc11b8f6ab64cf4d0463e))
+* **modlog:** add Modlog to nav menu ([0df8fa6](https://github.com/userstyles-world/userstyles.world/commit/0df8fa65cb3a6f74044d5ebcbcb8d991b50d98e7))
+* **modlog:** add User and Title to render ([f55fc2b](https://github.com/userstyles-world/userstyles.world/commit/f55fc2b91ff5769a1dcc95a9c373733058e127be))
+* revert this line ([609729d](https://github.com/userstyles-world/userstyles.world/commit/609729d12c9199fe5337575ea59d696b25b1a2e2))
+* **styles:** remove History if data doesn't exist ([f63ed61](https://github.com/userstyles-world/userstyles.world/commit/f63ed610ae76481250bd92a0bc3acda8c06ad126))
+* **styles:** resolve an issue with SEO logic ([d6cea95](https://github.com/userstyles-world/userstyles.world/commit/d6cea9547beff25944cc7654defa425d19e78c7d)), closes [#62](https://github.com/userstyles-world/userstyles.world/issues/62)
+* **ts:** auto-fill proper metadata for homepage ([afc459b](https://github.com/userstyles-world/userstyles.world/commit/afc459b8752b6d8c1ed714afcd0f354fd39cbcf3))
+* **ts:** prevent prototype pollution ([a086a49](https://github.com/userstyles-world/userstyles.world/commit/a086a49b36ffa63f096d6598cfb1aab3425d40b4))
+
 ## [1.3.0](https://github.com/userstyles-world/userstyles.world/compare/v1.2.1...v1.3.0) (2021-06-19)
 
 
