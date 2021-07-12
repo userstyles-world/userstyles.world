@@ -50,6 +50,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.VerifySigningKey)
 	if err != nil {
+		log.Println("Couldn't create a JWT Token, due to", err)
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
 				"Title": "Internal server error",
@@ -80,6 +81,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		SendEmail()
 
 	if err != nil {
+		log.Println("Couldn't send a email, due to", err)
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
 				"Title": "Internal server error",
