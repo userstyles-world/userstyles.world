@@ -201,6 +201,35 @@ func TestNonceDescramblingInsaneConfig(t *testing.T) {
 	}
 }
 
+func TestNonceDescramblingPerfectStop(t *testing.T) {
+	t.Parallel()
+
+	nonce := "1234567890"
+	text := "abcdefghijklmnopqr"
+
+	dest := ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 3, 1)
+
+	if len(dest) == len(nonce)+len(text) && string(dest) != "1abc2def3ghi4jkl5mno6pqr7890" {
+		t.Error("Nonce descrambling failed.")
+	}
+
+	// In production we know the Nonce of a specific hash, due to,
+	// that AEAD is used. Which used a hard-coded length.
+	descrambledNonce, descrambledText, err := DescrambleNonce(dest, len(nonce), 3, 1)
+
+	if err != nil {
+		t.Error("Couldn't descramble, errored:", err)
+	}
+
+	if string(descrambledNonce) != nonce {
+		t.Error("Couldn't descramble nonce")
+	}
+
+	if string(descrambledText) != text {
+		t.Error("Couldn't descramble text")
+	}
+}
+
 func TestNonceDescramblingWithOverflow(t *testing.T) {
 	t.Parallel()
 
