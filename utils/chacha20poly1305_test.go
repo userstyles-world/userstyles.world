@@ -112,3 +112,68 @@ func BenchmarkPrepareText(b *testing.B) {
 		})
 	}
 }
+
+func TestNonceEncoding(t *testing.T) {
+	t.Parallel()
+	InitalizeCrypto()
+
+	nonce := "1124551523355"
+	text := "ohnoweowfsdfsfdsfsd"
+
+	dest := UnsafeString(ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 3, 3))
+	if len(dest) == len(nonce)+len(text) && dest != "112ohn455owe152owf335sdf5sfdsfsd" {
+		t.Error("Nonce scrambling failed.")
+	}
+}
+
+func TestNonceDescrambling(t *testing.T) {
+	t.Parallel()
+	InitalizeCrypto()
+
+	nonce := "1241312231412"
+	text := "HellloBeautfikfuldasa"
+
+	dest := ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 2, 3)
+
+	if len(dest) == len(nonce)+len(text) && string(dest) != "124He131ll223lo141Be2autfikfuldasa" {
+		t.Error("Nonce descrambling failed.")
+	}
+
+	// In production we know the Nonce of a specific hash, due to,
+	// that AEAD is used. Which used a hard-coded length.
+	descrambledNonce, descrambledText := DescrambleNonce(dest, len(nonce), 2, 3)
+
+	if string(descrambledNonce) != nonce {
+		t.Error("Couldn't descramble nonce")
+	}
+
+	if string(descrambledText) != text {
+		t.Error("Couldn't descramble text")
+	}
+}
+
+func TestNonceDescramblingWithOverflow(t *testing.T) {
+	t.Parallel()
+	InitalizeCrypto()
+
+	nonce := "124131223141274483127131231"
+	text := "HellloBeautfikfuldasa"
+
+	dest := ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 2, 1)
+
+	if string(dest) != "1He2ll4lo1Be3au1tf2ik2fu3ld1as4a1274483127131231" {
+		t.Error("Nonce descrambling failed.")
+	}
+
+	// In production we know the Nonce of a specific hash, due to,
+	// that AEAD is used. Which used a hard-coded length.
+	descrambledNonce, descrambledText := DescrambleNonce(dest, len(nonce), 2, 1)
+
+	if string(descrambledNonce) != nonce {
+		t.Error("Couldn't descramble nonce")
+	}
+
+	if string(descrambledText) != text {
+		t.Error("Couldn't descramble text")
+	}
+}

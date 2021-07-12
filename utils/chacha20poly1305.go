@@ -48,6 +48,129 @@ func SealText(text string, aead cipher.AEAD) []byte {
 	return aead.Seal(nonce, nonce, UnsafeBytes(text), nil)
 }
 
+// ScrambleNonce into string takes a nonce and a text
+// And it will insert `bytesPerInsert`` bits of the nonce every `step` bytes.
+// And it will paste the "rest" nonce if the text isn't big enough
+func ScrambleNonce(nonce, text []byte, step, bytesPerInsert int) []byte {
+	// Copy the text into encodedText.
+	encodedText := make([]byte, len(text))
+	copy(encodedText, text)
+
+	// Copy the nonce into restNonce.
+	restNonce := make([]byte, len(nonce))
+	copy(restNonce, nonce)
+
+	var currentNonce byte
+
+	// Loop trough the text every x `steps`.
+mainLoop:
+	for i := 0; i < len(encodedText); i += (step + bytesPerInsert) {
+
+		// Insert `bytesPerInsert` bytes of nonce at the index.
+		for j := 0; j < bytesPerInsert; j++ {
+			if len(restNonce) == 0 {
+				break mainLoop
+			}
+
+			// Create some space at the index we want to append the nonce to.
+			encodedText = append(encodedText, 0)
+			copy(encodedText[i+j+1:], encodedText[i+j:])
+
+			// One-liner for front-shift
+			currentNonce, restNonce = restNonce[0], restNonce[1:]
+
+			// Add the current nonce to the text at the correct index.
+			encodedText[i+j] = currentNonce
+		}
+
+		if len(restNonce) == 0 {
+			break
+		}
+	}
+
+	// Append the left overs from the nonce at the end of the text.
+	encodedText = append(encodedText, restNonce...)
+	return encodedText
+}
+
+// DescrambleNonce will take a text, bytesPerInsert, step and the length of the nonce.
+// And it will return the nonce and descrambled text.
+func DescrambleNonce(scrambledText []byte, nonceSize, step, bytesPerInsert int) ([]byte, []byte) {
+	// Store the lenght of the scrambledText.
+	textLen := len(scrambledText)
+
+	// Because we don't want to modify the originial text, we copy it.
+	text := make([]byte, textLen)
+	copy(text, scrambledText)
+
+	// nonce will be the nonce that was scrambled in `text`.
+	// We already know the size of it. So we can allocate it right away.
+	nonce := make([]byte, 0, nonceSize)
+
+	// We need to store the amount of found bytes.
+	// So we know when to stop looking for more bytes.
+	foundBytes := 0
+
+	var currentNonce byte
+
+	// Because we can calculate which bytes where being appened to the text.
+	// We can use this to to get the "appended nonce" if there is any.
+	// So it won't interfere with the next step.
+	var appendedNonce []byte
+
+	// First we get the originial text length.
+	originialTextLen := textLen - nonceSize
+
+	// Then we calculate how many places that text had "places" to add bytes to.
+	// We also add bytesPerInsert, because this caluclation to don't take in account.
+	// The very first few bytes in text are part of the scrambled nonce.
+	placesToInsertByte := originialTextLen/step + bytesPerInsert
+
+	// Now we know how many places the text had to append bytes to.
+	// We check if the amount of places * amount of bytes per insert is larger.
+	// That means it wouldn't have enough places to append all bytes at every x step.
+	// And appended some bytes after the text.
+	if (placesToInsertByte * bytesPerInsert) < nonceSize {
+		// Now we calculate from where the specific nonce should be found.
+		amountOfAppendedBytes := textLen - originialTextLen - (placesToInsertByte * bytesPerInsert)
+
+		// Now we cut the appended nonce bytes from the text.
+		// So it won't interfere with the next step.
+		appendedNonce, text = text[textLen-amountOfAppendedBytes:], text[:textLen-amountOfAppendedBytes]
+
+		// Also make sure to add the amount of appended bytes to the found bytes!
+		foundBytes += amountOfAppendedBytes
+	}
+
+mainLoop:
+	// Mikey don't you dare to optimize this loop!
+	// The size of scrambledText changes after evert itteration.
+	for i := 0; i < len(text); i += step {
+		for j := 0; j < bytesPerInsert; j++ {
+			// if we found the amount of bytes we need, we can break the loop.
+			if foundBytes == nonceSize {
+				break mainLoop
+			}
+
+			// Also you would think we should use `i+j`, but like I SAID MIKEY.
+			// The text will be changed all the time and the previous nonce will be already
+			// gone and thus the `i` index will have the new nonce byte.
+
+			currentNonce = text[i]
+
+			// Cut the nonce from the text.
+			text = append(text[:i], text[i+1:]...)
+
+			// Append the correct nonce to the current nonce.
+			nonce = append(nonce, currentNonce)
+			foundBytes++
+		}
+	}
+	nonce = append(nonce, appendedNonce...)
+
+	return nonce, text
+}
+
 func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
 	if len(encryptedMsg) < aead.NonceSize() {
 		return nil, errors.ErrMessageSmall
