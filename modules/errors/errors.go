@@ -86,9 +86,16 @@ var (
 
 	// ErrOnlyRemovedStyle errors that this function only allows to remove style kind.
 	ErrOnlyRemovedStyle = errors.New("only remove style kind is allowed")
+
+	errTextTooShort = errors.New("text is too short")
 )
 
 // UnexpectedSigningMethod errors that a unexpected jwt signing method was used.
 func UnexpectedSigningMethod(message string) error {
 	return fmt.Errorf("%w=%s", errUnexpectedSigningMethod, message)
+}
+
+// TexTooShort errors that the nonce was larger than the actual text.
+func TexTooShort(nonceSize, textSize int) error {
+	return fmt.Errorf("%w nonce(%d) > text(%d)", errTextTooShort, nonceSize, textSize)
 }

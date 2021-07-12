@@ -133,7 +133,6 @@ func BenchmarkPrepareText(b *testing.B) {
 
 func TestNonceEncoding(t *testing.T) {
 	t.Parallel()
-	InitalizeCrypto()
 
 	nonce := "1124551523355"
 	text := "ohnoweowfsdfsfdsfsd"
@@ -146,7 +145,6 @@ func TestNonceEncoding(t *testing.T) {
 
 func TestNonceDescrambling(t *testing.T) {
 	t.Parallel()
-	InitalizeCrypto()
 
 	nonce := "1241312231412"
 	text := "HellloBeautfikfuldasa"
@@ -159,7 +157,11 @@ func TestNonceDescrambling(t *testing.T) {
 
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
-	descrambledNonce, descrambledText := DescrambleNonce(dest, len(nonce), 2, 3)
+	descrambledNonce, descrambledText, err := DescrambleNonce(dest, len(nonce), 2, 3)
+
+	if err != nil {
+		t.Error("Couldn't descramble, errored:", err)
+	}
 
 	if string(descrambledNonce) != nonce {
 		t.Error("Couldn't descramble nonce")
@@ -172,7 +174,6 @@ func TestNonceDescrambling(t *testing.T) {
 
 func TestNonceDescramblingWithOverflow(t *testing.T) {
 	t.Parallel()
-	InitalizeCrypto()
 
 	nonce := "124131223141274483127131231"
 	text := "HellloBeautfikfuldasa"
@@ -185,7 +186,11 @@ func TestNonceDescramblingWithOverflow(t *testing.T) {
 
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
-	descrambledNonce, descrambledText := DescrambleNonce(dest, len(nonce), 2, 1)
+	descrambledNonce, descrambledText, err := DescrambleNonce(dest, len(nonce), 2, 1)
+
+	if err != nil {
+		t.Error("Couldn't descramble, errored:", err)
+	}
 
 	if string(descrambledNonce) != nonce {
 		t.Error("Couldn't descramble nonce")
@@ -194,4 +199,38 @@ func TestNonceDescramblingWithOverflow(t *testing.T) {
 	if string(descrambledText) != text {
 		t.Error("Couldn't descramble text")
 	}
+}
+
+func TestNonceDescramblingOnIncorrectInput(t *testing.T) {
+	t.Parallel()
+
+	dest := []byte("helloI'mMaliciousInput")
+	_, _, err := DescrambleNonce(dest, 24, 4, 1)
+
+	if err == nil {
+		t.Error("Descrambling should fail on incorrect input")
+	}
+
+	dest = []byte("hello")
+	_, _, err = DescrambleNonce(dest, 24, 4, 1)
+
+	if err == nil {
+		t.Error("Descrambling should fail on incorrect input")
+	}
+
+	dest = []byte("22")
+	_, _, err = DescrambleNonce(dest, 2, 4, 1)
+
+	if err == nil {
+		t.Error("Descrambling should fail on incorrect input")
+	}
+
+	dest = []byte("333")
+	_, _, _ = DescrambleNonce(dest, 2, 4, 1)
+
+	dest = []byte("4444")
+	_, _, _ = DescrambleNonce(dest, 3, 1, 1)
+
+	dest = []byte("5555")
+	_, _, _ = DescrambleNonce(dest, 4, 3, 4)
 }

@@ -96,9 +96,13 @@ mainLoop:
 
 // DescrambleNonce will take a text, bytesPerInsert, step and the length of the nonce.
 // And it will return the nonce and descrambled text.
-func DescrambleNonce(scrambledText []byte, nonceSize, step, bytesPerInsert int) ([]byte, []byte) {
+func DescrambleNonce(scrambledText []byte, nonceSize, step, bytesPerInsert int) ([]byte, []byte, error) {
 	// Store the lenght of the scrambledText.
 	textLen := len(scrambledText)
+
+	if nonceSize >= textLen {
+		return nil, nil, errors.TexTooShort(nonceSize, textLen)
+	}
 
 	// Because we don't want to modify the originial text, we copy it.
 	text := make([]byte, textLen)
@@ -149,7 +153,8 @@ mainLoop:
 	for i := 0; i < len(text); i += step {
 		for j := 0; j < bytesPerInsert; j++ {
 			// if we found the amount of bytes we need, we can break the loop.
-			if foundBytes == nonceSize {
+			// i >= len(text) prevents that we will access a index that doesn't exist.
+			if foundBytes == nonceSize || i >= len(text) {
 				break mainLoop
 			}
 
@@ -169,7 +174,7 @@ mainLoop:
 	}
 	nonce = append(nonce, appendedNonce...)
 
-	return nonce, text
+	return nonce, text, nil
 }
 
 func OpenText(encryptedMsg string, aead cipher.AEAD, nonceScrambling *config.NonceScramblingConfig) ([]byte, error) {
@@ -178,8 +183,10 @@ func OpenText(encryptedMsg string, aead cipher.AEAD, nonceScrambling *config.Non
 	}
 
 	// Split nonce and ciphertext.
-	nonce, ciphertext := DescrambleNonce([]byte(encryptedMsg), aead.NonceSize(), nonceScrambling.StepSize, nonceScrambling.BytesPerInsert)
-
+	nonce, ciphertext, err := DescrambleNonce([]byte(encryptedMsg), aead.NonceSize(), nonceScrambling.StepSize, nonceScrambling.BytesPerInsert)
+	if err != nil {
+		return nil, err
+	}
 	// Decrypt the message and check it wasn't tampered with.
 	return aead.Open(nil, nonce, ciphertext, nil)
 }
