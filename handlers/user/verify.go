@@ -8,6 +8,7 @@ import (
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/utils"
 )
@@ -28,7 +29,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := utils.DecodePreparedText(base64Key, utils.AEAD_CRYPTO)
+	unSealedText, err := utils.DecodePreparedText(base64Key, utils.AEAD_CRYPTO, config.ScrambleConfig)
 	if err != nil {
 		log.Printf("Couldn't decode key due to: %s\n", err.Error())
 		return c.Render("err", fiber.Map{

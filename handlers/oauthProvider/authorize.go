@@ -11,6 +11,7 @@ import (
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/utils"
 )
 
@@ -34,7 +35,7 @@ func redirectFunction(c *fiber.Ctx, state, redirectURI string) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
+	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	if state != "" {
 		returnCode += "&state=" + state
 	}
@@ -97,7 +98,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	arguments := fiber.Map{
 		"User":        u,
 		"OAuth":       OAuth,
-		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP),
+		"SecureToken": utils.PrepareText(jwt, utils.AEAD_OAUTHP, config.ScrambleConfig),
 	}
 	for _, v := range OAuth.Scopes {
 		arguments["Scope_"+v] = true
@@ -115,7 +116,7 @@ func AuthPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP)
+	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	if err != nil {
 		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")

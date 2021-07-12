@@ -3,7 +3,13 @@ package config
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
+
+type NonceScramblingConfig struct {
+	StepSize       int
+	BytesPerInsert int
+}
 
 var (
 	PORT                   = getEnv("PORT", ":3000")
@@ -32,7 +38,24 @@ var (
 
 	// Production is used for various "feature flags".
 	Production = DB != "dev.db"
+
+	ScrambleConfig = &NonceScramblingConfig{
+		StepSize:       getEnvInt("NONCE_SCRAMBLE_STEP", 2),
+		BytesPerInsert: getEnvInt("NONCE_SCRAMBLE_BYTES_PER_INSERT", 3),
+	}
 )
+
+func getEnvInt(name string, defaultValue int) int {
+	envValue := getEnv(name, "__NOT_FOUND!")
+	if envValue == "__NOT_FOUND!" {
+		return defaultValue
+	}
+	if envInt, err := strconv.Atoi(envValue); err != nil {
+		return defaultValue
+	} else {
+		return envInt
+	}
+}
 
 func getEnv(name, fallback string) string {
 	if val, set := os.LookupEnv(name); set {

@@ -39,7 +39,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	if redirectCode != "codeberg" && redirectCode != "gitlab" {
 		service = "github"
 		// Decode the string so we get our actual information back.
-		code, err := utils.DecodePreparedText(redirectCode, utils.AEAD_OAUTH)
+		code, err := utils.DecodePreparedText(redirectCode, utils.AEAD_OAUTH, config.ScrambleConfig)
 		if err != nil {
 			log.Println("Error: Couldn't decode our prepared text.")
 			return c.Next()

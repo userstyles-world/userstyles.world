@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/form3tech-oss/jwt-go"
+	"userstyles.world/modules/config"
 )
 
 func TestSimpleKey(t *testing.T) {
@@ -20,8 +21,13 @@ func TestSimpleKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	sealedText := SealText(jwtToken, AEAD_CRYPTO)
-	unSealedText, err := OpenText(UnsafeString(sealedText), AEAD_CRYPTO)
+	scrambleConfig := &config.NonceScramblingConfig{
+		StepSize:       3,
+		BytesPerInsert: 2,
+	}
+
+	sealedText := SealText(jwtToken, AEAD_CRYPTO, scrambleConfig)
+	unSealedText, err := OpenText(UnsafeString(sealedText), AEAD_CRYPTO, scrambleConfig)
 	if err != nil {
 		t.Error(err)
 	}
@@ -35,7 +41,7 @@ func TestSimpleKey(t *testing.T) {
 	}
 }
 
-func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte) {
+func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -43,25 +49,25 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = SealText(UnsafeString(buf), AEAD_CRYPTO)
+		_ = SealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
-func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte) {
+func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := SealText(UnsafeString(buf), AEAD_CRYPTO)
+	ct := SealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = OpenText(UnsafeString(ct), AEAD_CRYPTO)
+		_, _ = OpenText(UnsafeString(ct), AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
-func benchamarkPrepareText(b *testing.B, buf []byte) {
+func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -69,33 +75,39 @@ func benchamarkPrepareText(b *testing.B, buf []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = PrepareText(UnsafeString(buf), AEAD_CRYPTO)
+		_ = PrepareText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
-func benchamarkDecodePreparedText(b *testing.B, buf []byte) {
+func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := PrepareText(UnsafeString(buf), AEAD_CRYPTO)
+	ct := PrepareText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = DecodePreparedText(ct, AEAD_CRYPTO)
+		_, _ = DecodePreparedText(ct, AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
 func BenchmarkPureChaCha20Poly1305(b *testing.B) {
 	InitalizeCrypto()
 	b.ResetTimer()
+
+	scrambleConfig := &config.NonceScramblingConfig{
+		StepSize:       2,
+		BytesPerInsert: 4,
+	}
+
 	for _, length := range []int{215, 1350, 8 * 1024} {
 		b.Run("Open-"+strconv.Itoa(length)+"-X", func(b *testing.B) {
-			benchamarkChaCha20Poly1305Open(b, make([]byte, length))
+			benchamarkChaCha20Poly1305Open(b, make([]byte, length), scrambleConfig)
 		})
 		b.Run("Seal-"+strconv.Itoa(length)+"-X", func(b *testing.B) {
-			benchamarkChaCha20Poly1305Seal(b, make([]byte, length))
+			benchamarkChaCha20Poly1305Seal(b, make([]byte, length), scrambleConfig)
 		})
 	}
 }
@@ -103,12 +115,18 @@ func BenchmarkPureChaCha20Poly1305(b *testing.B) {
 func BenchmarkPrepareText(b *testing.B) {
 	InitalizeCrypto()
 	b.ResetTimer()
+
+	scrambleConfig := &config.NonceScramblingConfig{
+		StepSize:       2,
+		BytesPerInsert: 4,
+	}
+
 	for _, length := range []int{215, 1350, 8 * 1024} {
 		b.Run("Prepare-"+strconv.Itoa(length), func(b *testing.B) {
-			benchamarkPrepareText(b, make([]byte, length))
+			benchamarkPrepareText(b, make([]byte, length), scrambleConfig)
 		})
 		b.Run("Decode-"+strconv.Itoa(length), func(b *testing.B) {
-			benchamarkDecodePreparedText(b, make([]byte, length))
+			benchamarkDecodePreparedText(b, make([]byte, length), scrambleConfig)
 		})
 	}
 }

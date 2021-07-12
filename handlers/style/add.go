@@ -16,6 +16,7 @@ import (
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/search"
@@ -146,7 +147,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP)
+	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	if err != nil {
 		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return c.Status(500).
@@ -205,7 +206,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP)
+	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state

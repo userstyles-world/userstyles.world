@@ -42,10 +42,11 @@ func InitalizeCrypto() {
 	AEAD_OAUTHP = aead
 }
 
-func SealText(text string, aead cipher.AEAD) []byte {
+func SealText(text string, aead cipher.AEAD, nonceScrambling *config.NonceScramblingConfig) []byte {
 	nonce := RandStringBytesMaskImprSrcUnsafe(aead.NonceSize())
 
-	return aead.Seal(nonce, nonce, UnsafeBytes(text), nil)
+	dest := aead.Seal(nil, nonce, UnsafeBytes(text), nil)
+	return ScrambleNonce(nonce, dest, nonceScrambling.StepSize, nonceScrambling.BytesPerInsert)
 }
 
 // ScrambleNonce into string takes a nonce and a text
@@ -171,15 +172,16 @@ mainLoop:
 	return nonce, text
 }
 
-func OpenText(encryptedMsg string, aead cipher.AEAD) ([]byte, error) {
+func OpenText(encryptedMsg string, aead cipher.AEAD, nonceScrambling *config.NonceScramblingConfig) ([]byte, error) {
 	if len(encryptedMsg) < aead.NonceSize() {
 		return nil, errors.ErrMessageSmall
 	}
+
 	// Split nonce and ciphertext.
-	nonce, ciphertext := encryptedMsg[:aead.NonceSize()], encryptedMsg[aead.NonceSize():]
+	nonce, ciphertext := DescrambleNonce([]byte(encryptedMsg), aead.NonceSize(), nonceScrambling.StepSize, nonceScrambling.BytesPerInsert)
 
 	// Decrypt the message and check it wasn't tampered with.
-	return aead.Open(nil, UnsafeBytes(nonce), UnsafeBytes(ciphertext), nil)
+	return aead.Open(nil, nonce, ciphertext, nil)
 }
 
 func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
@@ -196,15 +198,15 @@ func OAuthPJwtKeyFunction(t *jwt.Token) (interface{}, error) {
 	return OAuthPSigningKey, nil
 }
 
-func PrepareText(text string, aead cipher.AEAD) string {
+func PrepareText(text string, aead cipher.AEAD, nonceScrambling *config.NonceScramblingConfig) string {
 	// We have to prepare the encrypted text for transport
 	// Seal Text -> Base64(URL Version)
-	sealedText := SealText(text, aead)
+	sealedText := SealText(text, aead, nonceScrambling)
 
 	return EncodeToString(sealedText)
 }
 
-func DecodePreparedText(preparedText string, aead cipher.AEAD) (string, error) {
+func DecodePreparedText(preparedText string, aead cipher.AEAD, nonceScrambling *config.NonceScramblingConfig) (string, error) {
 	// Now we have to reverse the process.
 	// Decode Base64(URL version) -> Unseal Text
 	enryptedText, err := DecodeString(preparedText)
@@ -212,7 +214,7 @@ func DecodePreparedText(preparedText string, aead cipher.AEAD) (string, error) {
 		return "", err
 	}
 
-	decryptedText, err := OpenText(UnsafeString(enryptedText), aead)
+	decryptedText, err := OpenText(UnsafeString(enryptedText), aead, nonceScrambling)
 	if err != nil {
 		return "", err
 	}

@@ -10,6 +10,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/utils"
 )
 
@@ -57,7 +58,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/verify/" + utils.PrepareText(token, utils.AEAD_CRYPTO)
+	link := c.BaseURL() + "/verify/" + utils.PrepareText(token, utils.AEAD_CRYPTO, config.ScrambleConfig)
 
 	partPlain := utils.NewPart().
 		SetBody("Verify your UserStyles.world account by clicking the link below.\n" +

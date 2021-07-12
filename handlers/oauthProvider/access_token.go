@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/utils"
 )
 
@@ -34,7 +35,7 @@ func TokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect client_secret specified")
 	}
 
-	unsealedText, err := utils.DecodePreparedText(tCode, utils.AEAD_OAUTHP)
+	unsealedText, err := utils.DecodePreparedText(tCode, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	if err != nil {
 		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
