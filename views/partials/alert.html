@@ -1,14 +1,14 @@
 {{ if or .Error .Errors }}
     <section class="err limit">
-        {{ if .Error }}
-            <p>{{ .Error }}</p>
+        {{ with .Error }}
+            <p>{{ . }}</p>
         {{ end }}
 
-        {{ if .Errors }}
+        {{ with .Errors }}
             <p>Validation failed!</p>
             <ul>
-                {{ range .Errors }}
-                    {{ if .Code }}
+                {{ range . }}
+                    {{ if eq (printf "%T" .) "usercss.Error" }}
                         <li>{{ .Code }}</li>
                     {{ else }}
                         <li>{{ . }}</li>
