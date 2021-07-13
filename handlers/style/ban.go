@@ -65,7 +65,6 @@ func BanPost(c *fiber.Ctx) error {
 	}
 
 	// Initialize modlog data.
-	modlog := new(models.Log)
 	logEntry := models.Log{
 		UserID:         u.ID,
 		Username:       u.Username,
@@ -76,6 +75,7 @@ func BanPost(c *fiber.Ctx) error {
 	}
 
 	// Add banned style log entry.
+	modlog := new(models.Log)
 	if err := modlog.AddLog(logEntry); err != nil {
 		log.Printf("Failed to add style %d to ModLog, err: %s", s.ID, err)
 		return c.Render("err", fiber.Map{
@@ -100,5 +100,5 @@ func BanPost(c *fiber.Ctx) error {
 		log.Printf("Couldn't delete style %d failed, err: %s", s.ID, err.Error())
 	}
 
-	return c.Redirect("/account", fiber.StatusSeeOther)
+	return c.Redirect("/modlog", fiber.StatusSeeOther)
 }

@@ -119,7 +119,7 @@
             {{ if gt (len .History) 220 }}
                 <div class="chart">{{ .History | unescape }}</div>
             {{ else }}
-                <p>No style history. Come back tomorrow.</p>
+                <i>No style history. Come back tomorrow.</i>
             {{ end }}
         </section>
 

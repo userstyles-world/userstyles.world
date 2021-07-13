@@ -72,26 +72,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	// Initialize modlog data.
-	modlog := new(models.Log)
-	logEntry := models.Log{
-		UserID:         u.ID,
-		Username:       u.Username,
-		Kind:           models.LogBanUser,
-		TargetUserName: targetUser.Username,
-		Reason:         strings.TrimSpace(c.FormValue("reason")),
-	}
-
-	// Add banned user log entry.
-	if err := modlog.AddLog(logEntry); err != nil {
-		log.Printf("Failed to add user %d to ModLog, err: %s", targetUser.ID, err)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
-			"User":  u,
-		})
-	}
-
-	// Delete user.
+	// Delete from database.
 	user := new(models.User)
 	if err := user.DeleteWhereID(targetUser.ID); err != nil {
 		log.Printf("Failed to ban user %d, err: %s", id, err)
@@ -105,6 +86,25 @@ func ConfirmBan(c *fiber.Ctx) error {
 	styles := new(models.Style)
 	if err := styles.BanWhereUserID(targetUser.ID); err != nil {
 		log.Printf("Failed to ban styles from user %d, err: %s", id, err)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error.",
+			"User":  u,
+		})
+	}
+
+	// Initialize modlog data.
+	logEntry := models.Log{
+		UserID:         u.ID,
+		Username:       u.Username,
+		Kind:           models.LogBanUser,
+		TargetUserName: targetUser.Username,
+		Reason:         strings.TrimSpace(c.FormValue("reason")),
+	}
+
+	// Add banned user log entry.
+	modlog := new(models.Log)
+	if err := modlog.AddLog(logEntry); err != nil {
+		log.Printf("Failed to add user %d to ModLog, err: %s", targetUser.ID, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
