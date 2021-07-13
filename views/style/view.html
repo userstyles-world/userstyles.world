@@ -35,6 +35,12 @@
             {{ end }}
 
             <span class="actions flex ml:a">
+                {{ if .User.IsModOrAdmin }}
+                    <a
+                        href="/styles/ban/{{ .Style.ID }}"
+                        class="btn icon mr:s"
+                    >{{ template "icons/ban" 16 }} Ban</a>
+                {{ end }}
                 {{ if eq .User.ID .Style.UserID }}
                     <a
                         href="/delete/{{ .Style.ID }}"

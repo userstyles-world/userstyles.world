@@ -82,6 +82,8 @@ func Initialize() {
 	app.Get("/edit/:id", jwtware.Protected, style.EditGet)
 	app.Post("/edit/:id", jwtware.Protected, style.EditPost)
 	app.Post("/style/:id/promote", jwtware.Protected, style.Promote)
+	app.Get("/styles/ban/:id", jwtware.Protected, style.BanGet)
+	app.Post("/styles/ban/:id", jwtware.Protected, style.BanPost)
 	app.Get("/oauth_settings/:id?", jwtware.Protected, oauthprovider.OAuthSettingsGet)
 	app.Post("/oauth_settings/:id?", jwtware.Protected, oauthprovider.OAuthSettingsPost)
 	app.Get("/user/ban/:id", jwtware.Protected, user.Ban)

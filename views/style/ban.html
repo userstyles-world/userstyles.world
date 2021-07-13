@@ -1,0 +1,15 @@
+<div class="wrapper py:l">
+    <section class="ta:c">
+        <h1>{{ .Title }}</h1>
+        <p>This action is irreversible.</p>
+    </section>
+    <section class="limit mt:l mx:a">
+        <form class="form-wrapper" method="post" action="/styles/ban/{{ .Style.ID }}">
+            <label class="mb:m">Are you sure you want to ban "{{ .Style.Name }}"?</label>
+            <div>
+                <button class="btn primary mr:s" type="submit">Confirm</button>
+                <a class="fg:1" href="/style/{{ .Style.ID }}">Cancel</a>
+            </div>
+        </form>
+    </section>
+</div>
