@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	ArchiveURL = "https://raw.githubusercontent.com/33kk/uso-archive/flomaster/data/"
+	ArchiveURL = "https://cdn.jsdelivr.net/gh/33kk/uso-archive@flomaster/data/"
 	DataURL    = ArchiveURL + "styles/"
 	StyleURL   = ArchiveURL + "usercss/"
 	PreviewURL = ArchiveURL + "screenshots/"
