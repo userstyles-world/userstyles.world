@@ -2,6 +2,7 @@ package style
 
 import (
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -59,6 +60,26 @@ func BanPost(c *fiber.Ctx) error {
 		c.Status(fiber.StatusNotFound)
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
+			"User":  u,
+		})
+	}
+
+	// Initialize modlog data.
+	modlog := new(models.Log)
+	logEntry := models.Log{
+		UserID:         u.ID,
+		Username:       u.Username,
+		Kind:           models.LogRemoveStyle,
+		TargetUserName: s.Username,
+		TargetData:     s.Name,
+		Reason:         strings.TrimSpace(c.FormValue("reason")),
+	}
+
+	// Add banned style log entry.
+	if err := modlog.AddLog(logEntry); err != nil {
+		log.Printf("Failed to add style %d to ModLog, err: %s", s.ID, err)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error.",
 			"User":  u,
 		})
 	}
