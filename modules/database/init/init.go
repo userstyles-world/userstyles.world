@@ -58,6 +58,7 @@ func Initialize() {
 	database.Conn = conn
 	log.Println("Database successfully connected.")
 
+	shouldSeed := false
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		for _, table := range tables {
@@ -66,7 +67,7 @@ func Initialize() {
 			}
 			log.Printf("Dropped database table %s.\n", table.name)
 		}
-		defer seed()
+		shouldSeed = true
 	}
 
 	// Migrate tables.
@@ -75,6 +76,9 @@ func Initialize() {
 			log.Fatalf("Failed to migrate %s, err: %s", table.name, err.Error())
 		}
 		log.Printf("Migrated database table %s.\n", table.name)
+	}
+	if shouldSeed {
+		seed()
 	}
 }
 
