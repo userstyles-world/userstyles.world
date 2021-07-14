@@ -15,64 +15,64 @@ var (
 	clrf = "\r\n"
 )
 
-type emailBuilder struct {
+type EmailBuilder struct {
 	to       string
 	from     string
 	subject  string
 	boundary string
-	parts    []mimePart
+	parts    []MimePart
 }
 
-type mimePart struct {
+type MimePart struct {
 	contentType             string
 	contentTransferEncoding string
 	body                    string
 }
 
-func NewEmail() *emailBuilder {
-	return &emailBuilder{}
+func NewEmail() *EmailBuilder {
+	return &EmailBuilder{}
 }
 
-func (eb *emailBuilder) SetTo(to string) *emailBuilder {
+func (eb *EmailBuilder) SetTo(to string) *EmailBuilder {
 	eb.to = to
 	return eb
 }
 
-func (eb *emailBuilder) SetFrom(from string) *emailBuilder {
+func (eb *EmailBuilder) SetFrom(from string) *EmailBuilder {
 	eb.from = from
 	return eb
 }
 
-func (eb *emailBuilder) SetSubject(subject string) *emailBuilder {
+func (eb *EmailBuilder) SetSubject(subject string) *EmailBuilder {
 	eb.subject = subject
 	return eb
 }
 
-func NewPart() *mimePart {
-	return &mimePart{}
+func NewPart() *MimePart {
+	return &MimePart{}
 }
 
-func (mp *mimePart) SetContentType(contentType string) *mimePart {
+func (mp *MimePart) SetContentType(contentType string) *MimePart {
 	mp.contentType = contentType
 	return mp
 }
 
-func (mp *mimePart) SetContentTransferEncoding(contentTransferEncoding string) *mimePart {
+func (mp *MimePart) SetContentTransferEncoding(contentTransferEncoding string) *MimePart {
 	mp.contentTransferEncoding = contentTransferEncoding
 	return mp
 }
 
-func (mp *mimePart) SetBody(body string) *mimePart {
+func (mp *MimePart) SetBody(body string) *MimePart {
 	mp.body = body
 	return mp
 }
 
-func (eb *emailBuilder) AddPart(part mimePart) *emailBuilder {
+func (eb *EmailBuilder) AddPart(part MimePart) *EmailBuilder {
 	eb.parts = append(eb.parts, part)
 	return eb
 }
 
-func (eb *emailBuilder) parseMultiPart() (string, error) {
+func (eb *EmailBuilder) parseMultiPart() (string, error) {
 	output := ""
 	boundary := "--" + eb.boundary
 	partsLen := len(eb.parts)
@@ -123,7 +123,7 @@ func correctLineBreak(message string) string {
 	return strings.ReplaceAll(message, "\\n", clrf)
 }
 
-func (eb *emailBuilder) SendEmail() error {
+func (eb *EmailBuilder) SendEmail() error {
 	eb.boundary = UnsafeString(RandStringBytesMaskImprSrcUnsafe(30))
 
 	if eb.from == "" {
