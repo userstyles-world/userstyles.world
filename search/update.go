@@ -14,7 +14,7 @@ func IndexStyle(id uint) error {
 		return err
 	}
 
-	if err := StyleIndex.Index(styleID, MinimalStyle{
+	return StyleIndex.Index(styleID, MinimalStyle{
 		ID:          style.ID,
 		CreatedAt:   style.CreatedAt,
 		UpdatedAt:   style.UpdatedAt,
@@ -26,11 +26,7 @@ func IndexStyle(id uint) error {
 		Notes:       style.Notes,
 		Installs:    style.Installs,
 		Views:       style.Views,
-	}); err != nil {
-		return err
-	}
-
-	return nil
+	})
 }
 
 func DeleteStyle(id uint) error {
