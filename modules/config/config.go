@@ -50,11 +50,12 @@ func getEnvInt(name string, defaultValue int) int {
 	if envValue == "__NOT_FOUND!" {
 		return defaultValue
 	}
-	if envInt, err := strconv.Atoi(envValue); err != nil {
+
+	envInt, err := strconv.Atoi(envValue)
+	if err != nil {
 		return defaultValue
-	} else {
-		return envInt
 	}
+	return envInt
 }
 
 func getEnv(name, fallback string) string {
