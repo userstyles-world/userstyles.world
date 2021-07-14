@@ -13,7 +13,6 @@ import (
 
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
-	"userstyles.world/handlers/jwt"
 	jwtware "userstyles.world/handlers/jwt"
 	oauthprovider "userstyles.world/handlers/oauthProvider"
 	"userstyles.world/handlers/style"
@@ -75,8 +74,8 @@ func Initialize() {
 	app.Post("/account", jwtware.Protected, user.EditAccount)
 	app.Get("/add", jwtware.Protected, style.CreateGet)
 	app.Post("/add", jwtware.Protected, style.CreatePost)
-	app.Get("/delete/:id", jwt.Protected, style.DeleteGet)
-	app.Post("/delete/:id", jwt.Protected, style.DeletePost)
+	app.Get("/delete/:id", jwtware.Protected, style.DeleteGet)
+	app.Post("/delete/:id", jwtware.Protected, style.DeletePost)
 	app.Get("/import", jwtware.Protected, style.ImportGet)
 	app.Post("/import", jwtware.Protected, style.ImportPost)
 	app.Get("/edit/:id", jwtware.Protected, style.EditGet)
