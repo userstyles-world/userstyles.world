@@ -242,7 +242,7 @@ form,
     .sort { margin: 0.5rem 0 1.5rem }
 
     .section {
-        @screen and (min-width: 1000px) {
+        @media screen and (min-width: 1000px) {
             flex-direction: column !important;
         }
     }
