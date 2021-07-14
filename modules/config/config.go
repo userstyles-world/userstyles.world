@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type NonceScramblingConfig struct {
+type ScrambleSettings struct {
 	StepSize       int
 	BytesPerInsert int
 }
@@ -39,7 +39,7 @@ var (
 	// Production is used for various "feature flags".
 	Production = DB != "dev.db"
 
-	ScrambleConfig = &NonceScramblingConfig{
+	ScrambleConfig = &ScrambleSettings{
 		StepSize:       getEnvInt("NONCE_SCRAMBLE_STEP", 2),
 		BytesPerInsert: getEnvInt("NONCE_SCRAMBLE_BYTES_PER_INSERT", 3),
 	}

@@ -21,7 +21,7 @@ func TestSimpleKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	scrambleConfig := &config.NonceScramblingConfig{
+	scrambleConfig := &config.ScrambleSettings{
 		StepSize:       3,
 		BytesPerInsert: 2,
 	}
@@ -41,7 +41,7 @@ func TestSimpleKey(t *testing.T) {
 	}
 }
 
-func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
+func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -53,7 +53,7 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *co
 	}
 }
 
-func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
+func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -67,7 +67,7 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *co
 	}
 }
 
-func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
+func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -75,21 +75,21 @@ func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.Nonc
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = PrepareText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+		_ = EncryptText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
-func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *config.NonceScramblingConfig) {
+func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
 	b.Helper()
 
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := PrepareText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+	ct := EncryptText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = DecodePreparedText(ct, AEAD_CRYPTO, scrambleConfig)
+		_, _ = DecryptText(ct, AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
@@ -97,7 +97,7 @@ func BenchmarkPureChaCha20Poly1305(b *testing.B) {
 	InitalizeCrypto()
 	b.ResetTimer()
 
-	scrambleConfig := &config.NonceScramblingConfig{
+	scrambleConfig := &config.ScrambleSettings{
 		StepSize:       2,
 		BytesPerInsert: 4,
 	}
@@ -116,7 +116,7 @@ func BenchmarkPrepareText(b *testing.B) {
 	InitalizeCrypto()
 	b.ResetTimer()
 
-	scrambleConfig := &config.NonceScramblingConfig{
+	scrambleConfig := &config.ScrambleSettings{
 		StepSize:       2,
 		BytesPerInsert: 4,
 	}

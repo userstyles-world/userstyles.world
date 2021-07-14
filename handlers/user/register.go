@@ -60,7 +60,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/verify/" + utils.PrepareText(token, utils.AEAD_CRYPTO, config.ScrambleConfig)
+	link := c.BaseURL() + "/verify/" + utils.EncryptText(token, utils.AEAD_CRYPTO, config.ScrambleConfig)
 
 	partPlain := utils.NewPart().
 		SetBody("Verify your UserStyles.world account by clicking the link below.\n" +

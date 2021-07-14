@@ -101,7 +101,7 @@ func OauthMakeURL(service string) string {
 	// From which site the callback was from.
 	redirectURL := config.OAuthURL()
 	if service == github {
-		redirectURL += PrepareText(nonsenseState, AEAD_OAUTH, config.ScrambleConfig) + "/"
+		redirectURL += EncryptText(nonsenseState, AEAD_OAUTH, config.ScrambleConfig) + "/"
 	} else {
 		redirectURL += service + "/"
 	}

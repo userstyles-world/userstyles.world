@@ -29,7 +29,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := utils.DecodePreparedText(base64Key, utils.AEAD_CRYPTO, config.ScrambleConfig)
+	unSealedText, err := utils.DecryptText(base64Key, utils.AEAD_CRYPTO, config.ScrambleConfig)
 	if err != nil {
 		log.Printf("Couldn't decode key due to: %s\n", err.Error())
 		return c.Render("err", fiber.Map{

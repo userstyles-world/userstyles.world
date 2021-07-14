@@ -46,7 +46,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 		log.Println("Error: Couldn't make a JWT Token due to:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, please notify the admins.")
 	}
-	secureToken := utils.PrepareText(jwt, utils.AEAD_OAUTHP, config.ScrambleConfig)
+	secureToken := utils.EncryptText(jwt, utils.AEAD_OAUTHP, config.ScrambleConfig)
 
 	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
@@ -84,7 +84,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP, config.ScrambleConfig)
+	unsealedText, err := utils.DecryptText(secureToken, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	if err != nil {
 		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
@@ -131,7 +131,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	returnCode := "?code=" + utils.PrepareText(jwt, utils.AEAD_OAUTHP, config.ScrambleConfig)
+	returnCode := "?code=" + utils.EncryptText(jwt, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state
@@ -149,7 +149,7 @@ func OAuthStyleNewPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := utils.DecodePreparedText(secureToken, utils.AEAD_OAUTHP, config.ScrambleConfig)
+	unsealedText, err := utils.DecryptText(secureToken, utils.AEAD_OAUTHP, config.ScrambleConfig)
 	if err != nil {
 		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
