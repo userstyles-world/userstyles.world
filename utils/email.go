@@ -93,7 +93,7 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 		if part0.ContentType == "" {
 			part0.ContentType = "text/plain"
 		}
-		output += "Content-Type: " + part0.ContentType + "charset=\"utf-8\"\n" +
+		output += "Content-Type: " + part0.ContentType + ";charset=\"utf-8\"\n" +
 			"Content-Transfer-Encoding: " + part0.ContentTransferEncoding + "\n\n"
 	}
 
