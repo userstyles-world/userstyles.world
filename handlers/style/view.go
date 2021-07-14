@@ -1,16 +1,14 @@
 package style
 
 import (
-	"bytes"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
-	chart "github.com/userstyles-world/go-chart/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/charts"
 	"userstyles.world/utils/strings"
 )
 
@@ -53,55 +51,9 @@ func GetStylePage(c *fiber.Ctx) error {
 		log.Printf("No style stats for style %s, err: %s", id, err.Error())
 	}
 
-	historyLen := len(*history)
-	dates := make([]time.Time, 0, historyLen)
-	views := make([]float64, 0, historyLen)
-	updates := make([]float64, 0, historyLen)
-	installs := make([]float64, 0, historyLen)
-	for _, v := range *history {
-		// fmt.Printf("%v | %3v | %3v | %3v\n", v.CreatedAt.Format("2006-01-02"),
-		// 	v.DailyInstalls, v.DailyUpdates, v.DailyViews)
-		dates = append(dates, v.CreatedAt)
-		views = append(views, float64(v.DailyViews))
-		updates = append(updates, float64(v.DailyUpdates))
-		installs = append(installs, float64(v.DailyInstalls))
-	}
-
-	// Visualize data.
-	graph := chart.Chart{
-		Width:      1248,
-		Canvas:     chart.Style{ClassName: "bg inner"},
-		Background: chart.Style{ClassName: "bg outer"},
-		XAxis:      chart.XAxis{Name: "Date"},
-		YAxis:      chart.YAxis{Name: "Count"},
-		Series: []chart.Series{
-			chart.TimeSeries{
-				Name:    "Installs",
-				XValues: dates,
-				YValues: installs,
-			},
-			chart.TimeSeries{
-				Name:    "Updates",
-				XValues: dates,
-				YValues: updates,
-			},
-			chart.TimeSeries{
-				Name:    "Views",
-				XValues: dates,
-				YValues: views,
-			},
-		},
-	}
-	graph.Elements = []chart.Renderable{chart.Legend(&graph)}
-
-	buffer := bytes.NewBuffer([]byte{})
-	err = graph.Render(chart.SVG, buffer)
-	if err != nil && buffer.Len() != 220 {
-		log.Printf("Failed to render SVG, err: %s\n", err.Error())
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"User":  u,
-		})
+	dailyHistory, totalHistory, err := charts.GetDailyHistoryForStyle(*history)
+	if err != nil {
+		log.Printf("Failed to render history for style %d, err: %s\n", id, err.Error())
 	}
 
 	return c.Render("style/view", fiber.Map{
@@ -114,6 +66,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		"WeeklyUpdates":  models.GetWeeklyUpdatesForStyle(id),
 		"Url":            fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
 		"Slug":           c.Path(),
-		"History":        buffer.String(),
+		"DailyHistory":   dailyHistory,
+		"TotalHistory":   totalHistory,
 	})
 }

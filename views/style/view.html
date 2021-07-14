@@ -116,10 +116,15 @@
 
         <section class="history">
             <h2 class="td:d">History</h2>
-            {{ if gt (len .History) 220 }}
-                <div class="chart">{{ .History | unescape }}</div>
-            {{ else }}
-                <i>No style history. Come back tomorrow.</i>
+            <p>Learn more about style statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
+            {{ if not (or .DailyHistory .TotalHistory) }}
+                <i>No style history. Come back in a couple of days.</i>
+            {{ end }}
+            {{ with .DailyHistory }}
+                <div class="chart daily mt:m">{{ . | unescape }}</div>
+            {{ end }}
+            {{ with .TotalHistory }}
+                <div class="chart total mt:m">{{ . | unescape }}</div>
             {{ end }}
         </section>
 
