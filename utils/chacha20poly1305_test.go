@@ -180,7 +180,8 @@ func TestNonceDescramblingInsaneConfig(t *testing.T) {
 
 	dest := scrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 9, 20)
 
-	if len(dest) == len(nonce)+len(text) && string(dest) != "12313213131231231231HellloBea23123123123131231231utfikfuld23123123asa" {
+	if len(dest) == len(nonce)+len(text) &&
+		string(dest) != "12313213131231231231HellloBea23123123123131231231utfikfuld23123123asa" {
 		t.Error("Nonce descrambling failed.")
 	}
 

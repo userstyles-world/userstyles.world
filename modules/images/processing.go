@@ -47,9 +47,12 @@ func DecodeImage(original, newPath string, imageType ImageType) error {
 
 	switch imageType {
 	case ImageTypeWEBP:
-		vipsCommand = exec.Command("vips", "webpsave", "--strip", "--reduction-effort", "4", "--Q", "80", original, newPath)
+		vipsCommand = exec.Command("vips", "webpsave", "--strip",
+			"--reduction-effort", "4", "--Q", "80", original, newPath)
 	case ImageTypeJPEG:
-		vipsCommand = exec.Command("vips", "jpegsave", "--strip", "--Q", "80", "--optimize-coding", "--optimize-scans", "--trellis-quant", "--quant-table", "3", original, newPath)
+		vipsCommand = exec.Command("vips", "jpegsave", "--strip",
+			"--Q", "80", "--optimize-coding", "--optimize-scans",
+			"--trellis-quant", "--quant-table", "3", original, newPath)
 	}
 
 	err := vipsCommand.Run()

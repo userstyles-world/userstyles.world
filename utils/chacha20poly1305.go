@@ -182,7 +182,8 @@ func openText(encryptedMsg string, aead cipher.AEAD, nonceScrambling *config.Scr
 	}
 
 	// Split nonce and ciphertext.
-	nonce, ciphertext, err := descrambleNonce(UnsafeBytes(encryptedMsg), aead.NonceSize(), nonceScrambling.StepSize, nonceScrambling.BytesPerInsert)
+	nonce, ciphertext, err := descrambleNonce(UnsafeBytes(encryptedMsg), aead.NonceSize(),
+		nonceScrambling.StepSize, nonceScrambling.BytesPerInsert)
 	if err != nil {
 		return nil, err
 	}
