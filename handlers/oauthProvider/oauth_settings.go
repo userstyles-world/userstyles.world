@@ -1,6 +1,7 @@
 package oauthprovider
 
 import (
+	"errors"
 	"log"
 	"strconv"
 	"strings"
@@ -16,12 +17,11 @@ import (
 func OAuthSettingsGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
-	isEdit := id != ""
 
 	var method string
 	var oauth *models.APIOAuth
 	var err error
-	if isEdit {
+	if isEdit := id != ""; isEdit {
 		method = "edit"
 		oauth, err = models.GetOAuthByID(id)
 	} else {
@@ -102,8 +102,10 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	}
 
 	if err := utils.Validate().StructPartial(q, "Name", "Description"); err != nil {
-		errors := err.(validator.ValidationErrors)
-		log.Println("Validation errors:", errors)
+		var validationError validator.ValidationErrors
+		if ok := errors.As(err, &validationError); ok {
+			log.Println("Validation errors:", validationError)
+		}
 
 		arguments := fiber.Map{
 			"Title":  "OAuth Settings",

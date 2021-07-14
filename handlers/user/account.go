@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"log"
 	"strings"
 
@@ -82,8 +83,10 @@ func EditAccount(c *fiber.Ctx) error {
 		user.DisplayName = name
 
 		if err := utils.Validate().StructPartial(user, "DisplayName"); err != nil {
-			errors := err.(validator.ValidationErrors)
-			log.Println("Validation errors:", errors)
+			var validationError validator.ValidationErrors
+			if ok := errors.As(err, &validationError); ok {
+				log.Println("Validation errors:", validationError)
+			}
 			user.DisplayName = prev
 
 			l := len(name)
@@ -111,8 +114,10 @@ func EditAccount(c *fiber.Ctx) error {
 		user.Biography = bio
 
 		if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
-			errors := err.(validator.ValidationErrors)
-			log.Println("Validation errors:", errors)
+			var validationError validator.ValidationErrors
+			if ok := errors.As(err, &validationError); ok {
+				log.Println("Validation errors:", validationError)
+			}
 			user.Biography = prev
 
 			return c.Render("user/account", fiber.Map{
