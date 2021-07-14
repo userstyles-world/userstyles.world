@@ -14,7 +14,7 @@ import (
 var (
 	auth      = sasl.NewPlainClient("", config.EMAIL_ADDRESS, config.EMAIL_PWD)
 	emailLine = regexp.MustCompile(`(\\r)?\\n`)
-	CLRF      = "\r\n"
+	CLRF      = []byte("\r\n")
 )
 
 type EmailBuilder struct {
@@ -122,7 +122,7 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 }
 
 func correctLineBreak(message string) string {
-	return string(emailLine.ReplaceAll([]byte(message), []byte(CLRF)))
+	return string(emailLine.ReplaceAll(UnsafeBytes(message), CLRF))
 }
 
 func (eb *EmailBuilder) SendEmail() error {
