@@ -14,19 +14,24 @@ import (
 	"userstyles.world/utils"
 )
 
+type OAuthSettingMethod uint8
+
+const (
+	methodAdd OAuthSettingMethod = iota
+	methodEdit
+)
+
 func OAuthSettingsGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id := c.Params("id")
-	isEdit := id != ""
 
-	var method string
+	var method OAuthSettingMethod
 	var oauth *models.APIOAuth
 	var err error
-	if isEdit {
-		method = "edit"
+	if id := c.Params("id"); id != "" {
+		method = methodEdit
 		oauth, err = models.GetOAuthByID(id)
 	} else {
-		method = "add"
+		method = methodAdd
 	}
 
 	if err != nil {
@@ -37,7 +42,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 		})
 	}
 
-	if isEdit {
+	if method == methodEdit {
 		if u.ID != oauth.UserID {
 			return c.Render("err", fiber.Map{
 				"Title": "Users don't match",
@@ -47,7 +52,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	}
 	oauths, err := models.ListOAuthsOfUser(u.Username)
 	if err != nil {
-		if isEdit {
+		if method == methodEdit {
 			arguments := fiber.Map{
 				"Title":  "OAuth Settings",
 				"User":   u,
@@ -68,7 +73,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 		})
 	}
 
-	if isEdit {
+	if method == methodEdit {
 		arguments := fiber.Map{
 			"Title":  "OAuth Settings",
 			"User":   u,
