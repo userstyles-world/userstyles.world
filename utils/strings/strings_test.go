@@ -5,6 +5,8 @@ import (
 )
 
 func TestSluggifyURLs(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		desc     string
 		a        string
