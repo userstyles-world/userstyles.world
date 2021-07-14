@@ -178,6 +178,6 @@ func UpdateUser(u *User) error {
 	return nil
 }
 
-func (s *User) DeleteWhereID(id interface{}) error {
+func (u *User) DeleteWhereID(id interface{}) error {
 	return database.Conn.Delete(&User{}, "id = ?", id).Error
 }
