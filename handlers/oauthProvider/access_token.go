@@ -47,7 +47,11 @@ func TokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	claims := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		log.Println("Error: Couldn't type assert JWT Token:", err.Error())
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
 
 	state, ok := claims["state"].(string)
 	if !ok {
