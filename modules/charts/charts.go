@@ -9,7 +9,7 @@ import (
 	"userstyles.world/models"
 )
 
-func GetDailyHistoryForStyle(history []models.History) (string, string, error) {
+func GetStyleHistory(history []models.History) (string, string, error) {
 	historyLen := len(history)
 	dates := make([]time.Time, 0, historyLen)
 	dailyViews := make([]float64, 0, historyLen)
