@@ -36,22 +36,21 @@ type Data struct {
 
 func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	id, err := extractID(url)
-	s := &models.Style{}
 	if err != nil {
 		log.Printf("failed to extract id, err: %v\n", err)
-		return s, errors.ErrFailedProcessData
+		return nil, errors.ErrFailedProcessData
 	}
 
 	data, err := fetchJSON(id)
 	if err != nil {
 		log.Printf("failed to fetch json, err: %v\n", err)
-		return s, errors.ErrFailedFetch
+		return nil, errors.ErrFailedFetch
 	}
 
 	res, err := unmarshalJSON(data)
 	if err != nil {
 		log.Printf("failed to unmarshal json, err: %v\n", err)
-		return s, errors.ErrFailedProcessData
+		return nil, errors.ErrFailedProcessData
 	}
 
 	// Fetch generated UserCSS format.
@@ -59,10 +58,10 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	uc, err := usercss.ParseFromURL(source)
 	if err != nil {
 		log.Printf("failed to parse style from URL, err: %v\n", err)
-		return s, errors.ErrFailedFetch
+		return nil, errors.ErrFailedFetch
 	}
 
-	s = &models.Style{
+	s := &models.Style{
 		UserID:      u.ID,
 		Name:        uc.Name,
 		Description: res.Info.Description,
