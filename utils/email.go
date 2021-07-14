@@ -120,7 +120,7 @@ func (eb *emailBuilder) parseMultiPart() (string, error) {
 }
 
 func correctLineBreak(message string) string {
-	return string(strings.ReplaceAll(message, "\\n", clrf))
+	return strings.ReplaceAll(message, "\\n", clrf)
 }
 
 func (eb *emailBuilder) SendEmail() error {
