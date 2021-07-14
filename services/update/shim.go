@@ -36,7 +36,7 @@ func getSourceCode(style models.Style) string {
 	return style.Original
 }
 
-func UpdateBatch(batch models.Style) {
+func Batch(batch models.Style) {
 	if batch.Archived {
 		return
 	}

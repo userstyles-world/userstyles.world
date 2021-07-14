@@ -22,7 +22,7 @@ func roleToString(role models.Role) string {
 }
 
 func UserGet(c *fiber.Ctx) error {
-	u, _ := APIUser(c)
+	u, _ := User(c)
 
 	if !utils.Contains(u.Scopes, "user") {
 		return c.Status(403).

@@ -21,7 +21,7 @@ var ParseAPIJWT = jwtware.New("apiUser", func(t *jwt.Token) (interface{}, error)
 })
 
 func ProtectedAPI(c *fiber.Ctx) error {
-	if _, ok := APIUser(c); !ok {
+	if _, ok := User(c); !ok {
 		return c.Status(401).
 			JSON(fiber.Map{
 				"data": "You need to provide an access_token within the Authorization header.",
@@ -45,7 +45,7 @@ type JWTAPIUser struct {
 	StyleID uint
 }
 
-func APIUser(c *fiber.Ctx) (*JWTAPIUser, bool) {
+func User(c *fiber.Ctx) (*JWTAPIUser, bool) {
 	s := MapClaim(c)
 	u := &JWTAPIUser{}
 

@@ -24,7 +24,7 @@ func ImportedStyles() {
 
 		for _, style := range styles[i:j] {
 			time.Sleep(time.Second)
-			go UpdateBatch(style)
+			go Batch(style)
 		}
 
 		time.Sleep(time.Second * 15)

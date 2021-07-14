@@ -16,7 +16,7 @@ import (
 )
 
 func StylesGet(c *fiber.Ctx) error {
-	u, _ := APIUser(c)
+	u, _ := User(c)
 
 	if !utils.Contains(u.Scopes, "style") {
 		return c.Status(403).
@@ -42,7 +42,7 @@ func StylesGet(c *fiber.Ctx) error {
 var JSONParser = &oj.Parser{Reuse: true}
 
 func StylePost(c *fiber.Ctx) error {
-	u, _ := APIUser(c)
+	u, _ := User(c)
 	sStyleID := c.Params("id")
 
 	styleID, err := strconv.Atoi(sStyleID)
@@ -112,7 +112,7 @@ func StylePost(c *fiber.Ctx) error {
 }
 
 func DeleteStyle(c *fiber.Ctx) error {
-	u, _ := APIUser(c)
+	u, _ := User(c)
 	sStyleID := c.Params("id")
 
 	styleID, err := strconv.Atoi(sStyleID)
@@ -169,7 +169,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 }
 
 func NewStyle(c *fiber.Ctx) error {
-	u, _ := APIUser(c)
+	u, _ := User(c)
 
 	if !utils.Contains(u.Scopes, "style") {
 		return c.Status(403).

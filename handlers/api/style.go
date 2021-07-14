@@ -8,7 +8,7 @@ import (
 )
 
 func StyleGet(c *fiber.Ctx) error {
-	u, _ := APIUser(c)
+	u, _ := User(c)
 
 	// /authorize_style tokens contains a positive StyleID
 	if u.StyleID == 0 {
