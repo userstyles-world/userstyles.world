@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     {{ range .BannedUsers }}
-                        <tr>
+                        <tr id="entry_{{ .ID }}">
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .CreatedAt | Date }}</td>
                             <td>{{ .TargetUserName }}</td>
@@ -63,7 +63,7 @@
                 </thead>
                 <tbody>
                     {{ range .RemovedStyles }}
-                        <tr>
+                        <tr id="entry_{{ .ID }}">
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .CreatedAt | Date }}</td>
                             <td>{{ .TargetData }}</td>

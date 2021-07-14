@@ -9,6 +9,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/utils"
 )
 
 func Ban(c *fiber.Ctx) error {
@@ -42,6 +43,42 @@ func Ban(c *fiber.Ctx) error {
 		"User":   u,
 		"Params": user,
 	})
+}
+
+func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
+	modLogEntry := baseURL + "/modlog#entry_" + strconv.Itoa(int(modLogID))
+
+	partPlain := utils.NewPart().
+		SetBody("Hi " + user.Username + ",\n" +
+			"We'd like to notice you about a recent action from our moderation team:\n\n" +
+			"You have been banned from our platform.\n" +
+			"You can check for more information about this action on the modlog: " + modLogEntry + "\n\n" +
+			"If you'd like to come in touch with us, pleas email us at feedback@userstyles.world\n" +
+			"Regards,\n" + "The Moderation Team")
+	partHTML := utils.NewPart().
+		SetBody("<p>Hi " + user.Username + ",</p>\n" +
+			"<br>" +
+			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
+			"<br><br>" +
+			"<p>You have been banned from our platform.</p>\n" +
+			"<p>You can check for more information about this action on the " +
+			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
+			"<p>If you'd like to come in touch with us, pleas email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.<p>\n" +
+			"<br><br>" +
+			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
+		SetContentType("text/html")
+
+	err := utils.NewEmail().
+		SetTo(user.Email).
+		SetSubject("Moderation notice").
+		AddPart(*partPlain).
+		AddPart(*partHTML).
+		SendEmail()
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func ConfirmBan(c *fiber.Ctx) error {
@@ -103,13 +140,20 @@ func ConfirmBan(c *fiber.Ctx) error {
 
 	// Add banned user log entry.
 	modlog := new(models.Log)
-	if err := modlog.AddLog(logEntry); err != nil {
+	if err := modlog.AddLog(&logEntry); err != nil {
 		log.Printf("Failed to add user %d to ModLog, err: %s", targetUser.ID, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
 		})
 	}
+
+	go func(baseURL string, user *models.User, modLogID uint) {
+		// Send a email about they've been banned.
+		if err := sendBanEmail(baseURL, targetUser, modLogID); err != nil {
+			log.Printf("Couldn't send ban email for user %d, err: %s", user.ID, err.Error())
+		}
+	}(c.BaseURL(), targetUser, logEntry.ID)
 
 	return c.Redirect("/dashboard")
 }

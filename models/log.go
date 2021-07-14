@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 
 	"userstyles.world/modules/database"
@@ -25,27 +27,37 @@ type Log struct {
 	TargetUserName string
 }
 
+type APILog struct {
+	ID             uint
+	CreatedAt      time.Time
+	UserID         uint
+	Username       string
+	Reason         string
+	Kind           LogKind
+	TargetData     string
+	TargetUserName string
+}
+
 // AddLog adds a new log to the database.
-func (l *Log) AddLog(log Log) (err error) {
+func (l *Log) AddLog(logEntry *Log) (err error) {
 	err = database.Conn.
 		Debug().
 		Model(Log{}).
-		Create(&log).
+		Create(logEntry).
 		Error
 	if err != nil {
 		return errors.ErrFailedLogAddition
 	}
-
 	return nil
 }
 
 // GetLogOfKind returns all the logs of the specified kind and
 // select the correct user Author.
-func GetLogOfKind(kind LogKind) (q *[]Log, err error) {
+func GetLogOfKind(kind LogKind) (q *[]APILog, err error) {
 	err = database.Conn.
 		Debug().
 		Model(Log{}).
-		Select("logs.*, u.id, u.username").
+		Select("logs.*, u.username").
 		Joins("join users u on u.id = logs.user_id").
 		Where("kind = ?", kind).
 		Find(&q).
