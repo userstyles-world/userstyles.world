@@ -26,8 +26,8 @@ func TestSimpleKey(t *testing.T) {
 		BytesPerInsert: 2,
 	}
 
-	sealedText := SealText(jwtToken, AEAD_CRYPTO, scrambleConfig)
-	unSealedText, err := OpenText(UnsafeString(sealedText), AEAD_CRYPTO, scrambleConfig)
+	sealedText := sealText(jwtToken, AEAD_CRYPTO, scrambleConfig)
+	unSealedText, err := openText(UnsafeString(sealedText), AEAD_CRYPTO, scrambleConfig)
 	if err != nil {
 		t.Error(err)
 	}
@@ -49,7 +49,7 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *co
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = SealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+		_ = sealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
@@ -59,11 +59,11 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *co
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := SealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+	ct := sealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = OpenText(UnsafeString(ct), AEAD_CRYPTO, scrambleConfig)
+		_, _ = openText(UnsafeString(ct), AEAD_CRYPTO, scrambleConfig)
 	}
 }
 
@@ -137,7 +137,7 @@ func TestNonceEncoding(t *testing.T) {
 	nonce := "1124551523355"
 	text := "ohnoweowfsdfsfdsfsd"
 
-	dest := UnsafeString(ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 3, 3))
+	dest := UnsafeString(scrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 3, 3))
 	if len(dest) == len(nonce)+len(text) && dest != "112ohn455owe152owf335sdf5sfdsfsd" {
 		t.Error("Nonce scrambling failed.")
 	}
@@ -149,7 +149,7 @@ func TestNonceDescrambling(t *testing.T) {
 	nonce := "1241312231412"
 	text := "HellloBeautfikfuldasa"
 
-	dest := ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 2, 3)
+	dest := scrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 2, 3)
 
 	if len(dest) == len(nonce)+len(text) && string(dest) != "124He131ll223lo141Be2autfikfuldasa" {
 		t.Error("Nonce descrambling failed.")
@@ -157,7 +157,7 @@ func TestNonceDescrambling(t *testing.T) {
 
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
-	descrambledNonce, descrambledText, err := DescrambleNonce(dest, len(nonce), 2, 3)
+	descrambledNonce, descrambledText, err := descrambleNonce(dest, len(nonce), 2, 3)
 
 	if err != nil {
 		t.Error("Couldn't descramble, errored:", err)
@@ -178,7 +178,7 @@ func TestNonceDescramblingInsaneConfig(t *testing.T) {
 	nonce := "123132131312312312312312312312313123123123123123"
 	text := "HellloBeautfikfuldasa"
 
-	dest := ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 9, 20)
+	dest := scrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 9, 20)
 
 	if len(dest) == len(nonce)+len(text) && string(dest) != "12313213131231231231HellloBea23123123123131231231utfikfuld23123123asa" {
 		t.Error("Nonce descrambling failed.")
@@ -186,7 +186,7 @@ func TestNonceDescramblingInsaneConfig(t *testing.T) {
 
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
-	descrambledNonce, descrambledText, err := DescrambleNonce(dest, len(nonce), 9, 20)
+	descrambledNonce, descrambledText, err := descrambleNonce(dest, len(nonce), 9, 20)
 
 	if err != nil {
 		t.Error("Couldn't descramble, errored:", err)
@@ -207,7 +207,7 @@ func TestNonceDescramblingPerfectStop(t *testing.T) {
 	nonce := "1234567890"
 	text := "abcdefghijklmnopqr"
 
-	dest := ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 3, 1)
+	dest := scrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 3, 1)
 
 	if len(dest) == len(nonce)+len(text) && string(dest) != "1abc2def3ghi4jkl5mno6pqr7890" {
 		t.Error("Nonce descrambling failed.")
@@ -215,7 +215,7 @@ func TestNonceDescramblingPerfectStop(t *testing.T) {
 
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
-	descrambledNonce, descrambledText, err := DescrambleNonce(dest, len(nonce), 3, 1)
+	descrambledNonce, descrambledText, err := descrambleNonce(dest, len(nonce), 3, 1)
 
 	if err != nil {
 		t.Error("Couldn't descramble, errored:", err)
@@ -236,7 +236,7 @@ func TestNonceDescramblingWithOverflow(t *testing.T) {
 	nonce := "124131223141274483127131231"
 	text := "HellloBeautfikfuldasa"
 
-	dest := ScrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 2, 1)
+	dest := scrambleNonce(UnsafeBytes(nonce), UnsafeBytes(text), 2, 1)
 
 	if string(dest) != "1He2ll4lo1Be3au1tf2ik2fu3ld1as4a1274483127131231" {
 		t.Error("Nonce descrambling failed.")
@@ -244,7 +244,7 @@ func TestNonceDescramblingWithOverflow(t *testing.T) {
 
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
-	descrambledNonce, descrambledText, err := DescrambleNonce(dest, len(nonce), 2, 1)
+	descrambledNonce, descrambledText, err := descrambleNonce(dest, len(nonce), 2, 1)
 
 	if err != nil {
 		t.Error("Couldn't descramble, errored:", err)
@@ -263,32 +263,32 @@ func TestNonceDescramblingOnIncorrectInput(t *testing.T) {
 	t.Parallel()
 
 	dest := []byte("helloI'mMaliciousInput")
-	_, _, err := DescrambleNonce(dest, 24, 4, 1)
+	_, _, err := descrambleNonce(dest, 24, 4, 1)
 
 	if err == nil {
 		t.Error("Descrambling should fail on incorrect input")
 	}
 
 	dest = []byte("hello")
-	_, _, err = DescrambleNonce(dest, 24, 4, 1)
+	_, _, err = descrambleNonce(dest, 24, 4, 1)
 
 	if err == nil {
 		t.Error("Descrambling should fail on incorrect input")
 	}
 
 	dest = []byte("22")
-	_, _, err = DescrambleNonce(dest, 2, 4, 1)
+	_, _, err = descrambleNonce(dest, 2, 4, 1)
 
 	if err == nil {
 		t.Error("Descrambling should fail on incorrect input")
 	}
 
 	dest = []byte("333")
-	_, _, _ = DescrambleNonce(dest, 2, 4, 1)
+	_, _, _ = descrambleNonce(dest, 2, 4, 1)
 
 	dest = []byte("4444")
-	_, _, _ = DescrambleNonce(dest, 3, 1, 1)
+	_, _, _ = descrambleNonce(dest, 3, 1, 1)
 
 	dest = []byte("5555")
-	_, _, _ = DescrambleNonce(dest, 4, 3, 4)
+	_, _, _ = descrambleNonce(dest, 4, 3, 4)
 }

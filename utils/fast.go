@@ -34,7 +34,7 @@ func EncodeToString(src []byte) string {
 	return UnsafeString(buf)
 }
 
-func DecodeString(s string) ([]byte, error) {
+func decodeBase64(s string) ([]byte, error) {
 	dbuf := make([]byte, len(s)*6/8)
 	n, err := base64.RawURLEncoding.Decode(dbuf, UnsafeBytes(s))
 	return dbuf[:n], err
