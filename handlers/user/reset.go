@@ -83,7 +83,11 @@ func ResetPost(c *fiber.Ctx) error {
 		return renderError
 	}
 
-	claims := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		log.Println("Couldn't decode key because it couldn't type assert token.Claims")
+		return renderError
+	}
 
 	user, err := models.FindUserByEmail(claims["email"].(string))
 	if err != nil {
