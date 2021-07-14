@@ -12,70 +12,70 @@ import (
 
 var (
 	auth = sasl.NewPlainClient("", config.EMAIL_ADDRESS, config.EMAIL_PWD)
-	CLRF = "\r\n"
+	clrf = "\r\n"
 )
 
-type EmailBuilder struct {
-	To       string
-	From     string
-	Subject  string
+type emailBuilder struct {
+	to       string
+	from     string
+	subject  string
 	boundary string
-	Parts    []MimePart
+	parts    []mimePart
 }
 
-type MimePart struct {
-	ContentType             string
-	ContentTransferEncoding string
-	Body                    string
+type mimePart struct {
+	contentType             string
+	contentTransferEncoding string
+	body                    string
 }
 
-func NewEmail() *EmailBuilder {
-	return &EmailBuilder{}
+func NewEmail() *emailBuilder {
+	return &emailBuilder{}
 }
 
-func (eb *EmailBuilder) SetTo(to string) *EmailBuilder {
-	eb.To = to
+func (eb *emailBuilder) SetTo(to string) *emailBuilder {
+	eb.to = to
 	return eb
 }
 
-func (eb *EmailBuilder) SetFrom(from string) *EmailBuilder {
-	eb.From = from
+func (eb *emailBuilder) SetFrom(from string) *emailBuilder {
+	eb.from = from
 	return eb
 }
 
-func (eb *EmailBuilder) SetSubject(subject string) *EmailBuilder {
-	eb.Subject = subject
+func (eb *emailBuilder) SetSubject(subject string) *emailBuilder {
+	eb.subject = subject
 	return eb
 }
 
-func NewPart() *MimePart {
-	return &MimePart{}
+func NewPart() *mimePart {
+	return &mimePart{}
 }
 
-func (mp *MimePart) SetContentType(contentType string) *MimePart {
-	mp.ContentType = contentType
+func (mp *mimePart) SetContentType(contentType string) *mimePart {
+	mp.contentType = contentType
 	return mp
 }
 
-func (mp *MimePart) SetContentTransferEncoding(contentTransferEncoding string) *MimePart {
-	mp.ContentTransferEncoding = contentTransferEncoding
+func (mp *mimePart) SetContentTransferEncoding(contentTransferEncoding string) *mimePart {
+	mp.contentTransferEncoding = contentTransferEncoding
 	return mp
 }
 
-func (mp *MimePart) SetBody(body string) *MimePart {
-	mp.Body = body
+func (mp *mimePart) SetBody(body string) *mimePart {
+	mp.body = body
 	return mp
 }
 
-func (eb *EmailBuilder) AddPart(part MimePart) *EmailBuilder {
-	eb.Parts = append(eb.Parts, part)
+func (eb *emailBuilder) AddPart(part mimePart) *emailBuilder {
+	eb.parts = append(eb.parts, part)
 	return eb
 }
 
-func (eb *EmailBuilder) parseMultiPart() (string, error) {
+func (eb *emailBuilder) parseMultiPart() (string, error) {
 	output := ""
 	boundary := "--" + eb.boundary
-	partsLen := len(eb.Parts)
+	partsLen := len(eb.parts)
 
 	if partsLen == 0 {
 		return "", errors.ErrNoParts
@@ -84,57 +84,57 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 	if partsLen > 1 {
 		output += "Content-Type: multipart/alternative; boundary=\"" + eb.boundary + "\"\n\n"
 	} else {
-		part0 := eb.Parts[0]
-		if part0.ContentTransferEncoding == "" {
-			part0.ContentTransferEncoding = "8bit"
+		part0 := eb.parts[0]
+		if part0.contentTransferEncoding == "" {
+			part0.contentTransferEncoding = "8bit"
 		}
-		if part0.ContentType == "" {
-			part0.ContentType = "text/plain"
+		if part0.contentType == "" {
+			part0.contentType = "text/plain"
 		}
-		output += "Content-Type: " + part0.ContentType + ";charset=\"utf-8\"\n" +
-			"Content-Transfer-Encoding: " + part0.ContentTransferEncoding + "\n\n"
+		output += "Content-Type: " + part0.contentType + ";charset=\"utf-8\"\n" +
+			"Content-Transfer-Encoding: " + part0.contentTransferEncoding + "\n\n"
 	}
 
 	for i := 0; i < partsLen; i++ {
-		part := eb.Parts[i]
+		part := eb.parts[i]
 
-		if part.Body == "" {
+		if part.body == "" {
 			return "", errors.ErrNoPartBody
 		}
-		if part.ContentTransferEncoding == "" {
-			part.ContentTransferEncoding = "8bit"
+		if part.contentTransferEncoding == "" {
+			part.contentTransferEncoding = "8bit"
 		}
-		if part.ContentType == "" {
-			part.ContentType = "text/plain"
+		if part.contentType == "" {
+			part.contentType = "text/plain"
 		}
 		if partsLen > 1 {
 			output += boundary + "\n" +
-				"Content-Type: " + part.ContentType + "; charset=\"utf-8\"\n" +
-				"Content-Transfer-Encoding: " + part.ContentTransferEncoding + "\n" +
+				"Content-Type: " + part.contentType + "; charset=\"utf-8\"\n" +
+				"Content-Transfer-Encoding: " + part.contentTransferEncoding + "\n" +
 				"\n"
 		}
-		output += part.Body + "\n\n"
+		output += part.body + "\n\n"
 	}
 
 	return output, nil
 }
 
 func correctLineBreak(message string) string {
-	return string(strings.ReplaceAll(message, "\\n", CLRF))
+	return string(strings.ReplaceAll(message, "\\n", clrf))
 }
 
-func (eb *EmailBuilder) SendEmail() error {
+func (eb *emailBuilder) SendEmail() error {
 	eb.boundary = UnsafeString(RandStringBytesMaskImprSrcUnsafe(30))
 
-	if eb.From == "" {
-		eb.From = config.EMAIL_ADDRESS
+	if eb.from == "" {
+		eb.from = config.EMAIL_ADDRESS
 	}
 
-	if eb.To == "" {
+	if eb.to == "" {
 		return errors.ErrNoToParameter
 	}
 
-	if eb.Subject == "" {
+	if eb.subject == "" {
 		return errors.ErrNoSubject
 	}
 
@@ -143,11 +143,11 @@ func (eb *EmailBuilder) SendEmail() error {
 		return err
 	}
 
-	r := strings.NewReader(correctLineBreak("To: " + eb.To + "\n" +
-		"From:" + eb.From + "\n" +
-		"Subject:" + eb.Subject + "\n" +
+	r := strings.NewReader(correctLineBreak("To: " + eb.to + "\n" +
+		"From:" + eb.from + "\n" +
+		"Subject:" + eb.subject + "\n" +
 		"MIME-Version: 1.0\n" +
 		bodyMessage))
 
-	return smtp.SendMail("mail.userstyles.world:587", auth, config.EMAIL_ADDRESS, []string{eb.To}, r)
+	return smtp.SendMail("mail.userstyles.world:587", auth, config.EMAIL_ADDRESS, []string{eb.to}, r)
 }
