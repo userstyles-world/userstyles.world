@@ -247,3 +247,26 @@ form,
         }
     }
 }
+
+@keyframes highlight-2 {
+    0% {
+        background-color: var(--ac-3);
+    }
+    100% {
+        background-color: none;
+    }
+}
+@keyframes highlight-1 {
+    0% {
+        background-color: var(--ac-3);
+    }
+    100% {
+        background-color: var(--bg-3);
+    }
+}
+tbody tr:nth-child(2n):target {
+    animation: highlight-2 3s;
+}
+tbody tr:nth-child(2n-1):target {
+    animation: highlight-1 3s;
+}
