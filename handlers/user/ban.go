@@ -53,7 +53,7 @@ func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
 			"We'd like to notice you about a recent action from our moderation team:\n\n" +
 			"You have been banned from our platform.\n" +
 			"You can check for more information about this action on the modlog: " + modLogEntry + "\n\n" +
-			"If you'd like to come in touch with us, pleas email us at feedback@userstyles.world\n" +
+			"If you'd like to come in touch with us,please email us at feedback@userstyles.world\n" +
 			"Regards,\n" + "The Moderation Team")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
@@ -63,7 +63,8 @@ func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
 			"<p>You have been banned from our platform.</p>\n" +
 			"<p>You can check for more information about this action on the " +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
-			"<p>If you'd like to come in touch with us, pleas email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.<p>\n" +
+			"<p>If you'd like to come in touch with us, please email us at " +
+			"<a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.<p>\n" +
 			"<br><br>" +
 			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
 		SetContentType("text/html")

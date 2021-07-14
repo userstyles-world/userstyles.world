@@ -55,7 +55,9 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	}
 
 	if len(styles) == 0 {
-		return c.Redirect(fmt.Sprintf("/api/oauth/style/new?token=%s&oauthID=%d", secureToken, OAuth.ID), fiber.StatusSeeOther)
+		return c.Redirect(fmt.Sprintf(
+			"/api/oauth/style/new?token=%s&oauthID=%d", secureToken, OAuth.ID),
+			fiber.StatusSeeOther)
 	}
 
 	log.Println(styleInfo)
