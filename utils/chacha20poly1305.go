@@ -66,7 +66,6 @@ func scrambleNonce(nonce, text []byte, step, bytesPerInsert int) []byte {
 	// Loop trough the text every x `steps`.
 mainLoop:
 	for i := 0; i < len(encodedText); i += (step + bytesPerInsert) {
-
 		// Insert `bytesPerInsert` bytes of nonce at the index.
 		for j := 0; j < bytesPerInsert; j++ {
 			if len(restNonce) == 0 {
