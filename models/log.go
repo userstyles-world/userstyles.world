@@ -16,7 +16,7 @@ const (
 	LogRemoveStyle
 )
 
-// Log struct has all the relavant information for a log entry
+// Log struct has all the relavant information for a log entry.
 type Log struct {
 	gorm.Model
 	UserID         uint
