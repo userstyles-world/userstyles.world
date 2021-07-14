@@ -54,9 +54,13 @@ func Dashboard(c *fiber.Ctx) error {
 		log.Printf("Couldn't find style histories, err: %s", err.Error())
 	}
 
-	dailyHistory, totalHistory, err := charts.GetStyleHistory(*history)
-	if err != nil {
-		log.Printf("Failed to render history for all styles, err: %s\n", err.Error())
+	// Render graphs.
+	var dailyHistory, totalHistory string
+	if len(*history) > 0 {
+		dailyHistory, totalHistory, err = charts.GetStyleHistory(*history)
+		if err != nil {
+			log.Printf("Failed to render history for all styles, err: %s\n", err.Error())
+		}
 	}
 
 	return c.Render("core/dashboard", fiber.Map{

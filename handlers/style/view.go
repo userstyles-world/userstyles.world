@@ -51,9 +51,13 @@ func GetStylePage(c *fiber.Ctx) error {
 		log.Printf("No style stats for style %s, err: %s", id, err.Error())
 	}
 
-	dailyHistory, totalHistory, err := charts.GetStyleHistory(*history)
-	if err != nil {
-		log.Printf("Failed to render history for style %d, err: %s\n", id, err.Error())
+	// Render graphs.
+	var dailyHistory, totalHistory string
+	if len(*history) > 0 {
+		dailyHistory, totalHistory, err = charts.GetStyleHistory(*history)
+		if err != nil {
+			log.Printf("Failed to render history for style %d, err: %s\n", id, err.Error())
+		}
 	}
 
 	return c.Render("style/view", fiber.Map{
