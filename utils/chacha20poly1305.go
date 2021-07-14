@@ -96,7 +96,7 @@ mainLoop:
 // descrambleNonce will take a text, bytesPerInsert, step and the length of the nonce.
 // And it will return the nonce and descrambled text.
 func descrambleNonce(scrambledText []byte, nonceSize, step, bytesPerInsert int) ([]byte, []byte, error) {
-	// Store the lenght of the scrambledText.
+	// Store the length of the scrambledText.
 	textLen := len(scrambledText)
 
 	if nonceSize >= textLen {
@@ -126,7 +126,7 @@ func descrambleNonce(scrambledText []byte, nonceSize, step, bytesPerInsert int) 
 	originialTextLen := textLen - nonceSize
 
 	// Then we calculate how many places that text had "places" to add bytes to.
-	// We also add bytesPerInsert, because this caluclation to don't take in account.
+	// We also add bytesPerInsert, because this calculation to don't take in account.
 	// The very first few bytes in text are part of the scrambled nonce.
 	placesToInsertByte := originialTextLen/step + bytesPerInsert
 
