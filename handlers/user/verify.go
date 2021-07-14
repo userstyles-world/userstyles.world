@@ -47,7 +47,14 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	claims := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Register failed",
+				"Error": "Internal server error.",
+			})
+	}
 
 	regErr := database.Conn.Create(&models.User{
 		Username: claims["username"].(string),
