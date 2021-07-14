@@ -56,6 +56,10 @@ As of July 2021, statistics work like so:
 - Update counter is calculated based on install statistics and when it was
   created/updated in database.
 
+And because of that it can happen, a style have more installations than views,
+because you don't necessary need to visit a style to have it being installed,
+e.g. third-party applications directly installing the style.
+
 
 ### How do I remove the `Get Stylus` button?
 
