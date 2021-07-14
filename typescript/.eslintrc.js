@@ -87,5 +87,8 @@ module.exports = {
         'unicorn/no-zero-fractions': 'error',
         'unicorn/number-literal-case': 'error',
         'unicorn/prefer-ternary': 'error',
+        'unicorn/prefer-object-has-own': 'error',
+        'unicorn/require-post-message-target-origin': 'error',
+        'unicorn/require-array-join-separator': 'error',
     },
 };
