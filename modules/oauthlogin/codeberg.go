@@ -15,7 +15,7 @@ import (
 type codeberg struct {
 }
 
-const codebergStr = "gitlab"
+const codebergStr = "codeberg"
 
 func (codeberg) oauthMakeURL() string {
 	// Base URL.
