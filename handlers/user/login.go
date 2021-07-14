@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"log"
 	"net/url"
 	"time"
@@ -40,12 +41,14 @@ func LoginPost(c *fiber.Ctx) error {
 
 	err := utils.Validate().StructPartial(form, "Email", "Password")
 	if err != nil {
-		errors := err.(validator.ValidationErrors)
-		log.Println("Validation errors:", errors)
+		var validationError validator.ValidationErrors
+		if ok := errors.As(err, &validationError); ok {
+			log.Println("Validation errors:", validationError)
+		}
 
 		return c.Render("user/login", fiber.Map{
 			"Title":  "Login failed",
-			"Errors": errors,
+			"Errors": "Failed to login. Make sure your input is correct.",
 		})
 	}
 

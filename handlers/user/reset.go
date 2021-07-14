@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"log"
 	"time"
 
@@ -129,8 +130,10 @@ func RecoverPost(c *fiber.Ctx) error {
 	}
 
 	if err := utils.Validate().StructPartial(u, "email"); err != nil {
-		errors := err.(validator.ValidationErrors)
-		log.Println("Validation errors:", errors)
+		var validationError validator.ValidationErrors
+		if ok := errors.As(err, &validationError); ok {
+			log.Println("Validation errors:", validationError)
+		}
 
 		return c.Status(fiber.StatusInternalServerError).
 			Render("user/recover", fiber.Map{

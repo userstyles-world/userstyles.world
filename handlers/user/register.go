@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"log"
 	"strings"
 	"time"
@@ -34,9 +35,10 @@ func RegisterPost(c *fiber.Ctx) error {
 
 	err := utils.Validate().StructPartial(u, "Username", "Email", "Password")
 	if err != nil {
-		errors := err.(validator.ValidationErrors)
-		log.Println("Validation errors:", errors)
-
+		var validationError validator.ValidationErrors
+		if ok := errors.As(err, &validationError); ok {
+			log.Println("Validation errors:", validationError)
+		}
 		return c.Status(fiber.StatusInternalServerError).
 			Render("user/register", fiber.Map{
 				"Title": "Register failed",
