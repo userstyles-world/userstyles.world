@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"regexp"
 	"strings"
 
 	"github.com/emersion/go-sasl"
@@ -12,9 +11,8 @@ import (
 )
 
 var (
-	auth      = sasl.NewPlainClient("", config.EMAIL_ADDRESS, config.EMAIL_PWD)
-	emailLine = regexp.MustCompile(`(\\r)?\\n`)
-	CLRF      = []byte("\r\n")
+	auth = sasl.NewPlainClient("", config.EMAIL_ADDRESS, config.EMAIL_PWD)
+	CLRF = "\r\n"
 )
 
 type EmailBuilder struct {
@@ -122,7 +120,7 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 }
 
 func correctLineBreak(message string) string {
-	return string(emailLine.ReplaceAll(UnsafeBytes(message), CLRF))
+	return string(strings.ReplaceAll(message, "\\n", CLRF))
 }
 
 func (eb *EmailBuilder) SendEmail() error {
