@@ -40,7 +40,6 @@ func getInstalls(id int64) (i int64) {
 	return i
 }
 
-
 func getPreviousHistory(id uint) (q *models.History) {
 	database.Conn.
 		Model(models.History{}).
