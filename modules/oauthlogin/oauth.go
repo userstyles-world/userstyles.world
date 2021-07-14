@@ -1,20 +1,21 @@
-package utils
+package oauthlogin
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
+	"userstyles.world/utils"
 )
 
+type Service string
+
 const (
-	codeberg = "codeberg"
-	gitlab   = "gitlab"
-	github   = "github"
+	CodebergService Service = "codeberg"
+	GitlabService   Service = "gitlab"
+	GithubService   Service = "github"
 )
 
 type OAuthTokenResponse struct {
@@ -29,7 +30,7 @@ type userResponse struct {
 	LoginName string `json:"login"`
 
 	// Gitlab has this bug with the email :)
-	// BUt does include within the /user endpoint.
+	// But does include within the /user endpoint.
 	Email string `json:"email"`
 }
 
@@ -49,7 +50,7 @@ type emailResponseStruct struct {
 	ConfirmedAt string `json:"confirmed_at"`
 }
 
-type GiteaLikeAccessJSON struct {
+type authURLPostBody struct {
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
 	Code         string `json:"code"`
@@ -57,61 +58,79 @@ type GiteaLikeAccessJSON struct {
 	RedirectURI  string `json:"redirect_uri"`
 }
 
-func OauthMakeURL(service string) string {
-	if service == "" {
+type ProviderFunctions interface {
+	// Get the provider specific URL to be logged in with.
+	oauthMakeURL() string
+
+	// Let's the implementation append to the redirect URL.
+	appendToRedirect(data interface{}) string
+
+	// See if the current implementation allows state.
+	enableState() bool
+
+	// Get the providers specic URL to get the auth token.
+	getAuthTokenURL(data interface{}) string
+
+	// Check if the provider needs to set a POST body for the request.
+	isAuthTokenPost() bool
+
+	// And if the provider needs to set such body, we get it via the special function.
+	getAuthTokenPostBody(data interface{}) authURLPostBody
+
+	// Let the provider's implementation do some work before sending the request.
+	beforeRequest(body authURLPostBody, req *http.Request) error
+
+	// Get the `/user` endpoint of the provider.
+	getUserEndpoint() string
+
+	// Return the type `Service` of the provider.
+	getServiceType() Service
+
+	// Get the '/email' endpoint of the provider.
+	getEmailEndpoint() string
+}
+
+var (
+	githubFunc   = github{}
+	gitlabFunc   = gitlab{}
+	codebergFunc = codeberg{}
+)
+
+func GetInterfaceForService(service string) (ProviderFunctions, error) {
+	switch Service(service) {
+	case GithubService:
+		return githubFunc, nil
+	case GitlabService:
+		return gitlabFunc, nil
+	case CodebergService:
+		return codebergFunc, nil
+	}
+	return nil, errors.ErrNoServiceDetected
+}
+
+func OauthMakeURL(serviceType string) string {
+	service, err := GetInterfaceForService(serviceType)
+	if err != nil {
 		return ""
 	}
-	oauthURL := ""
-	var nonsenseState string
-	switch service {
-	case github:
-		nonsenseState = UnsafeString(RandStringBytesMaskImprSrcUnsafe(16))
-		// Base URL.
-		oauthURL = "https://github.com/login/oauth/authorize"
-		// Add our app client ID.
-		oauthURL += "?client_id=" + config.GITHUB_CLIENT_ID
-		// Add email scope.
-		oauthURL += "&scope=" + url.QueryEscape("user:email")
-		// Our non-guessable state of 16 characters.
-		oauthURL += "&state=" + nonsenseState
-	case gitlab:
-		// Base URL.
-		oauthURL = "https://gitlab.com/oauth/authorize"
-		// Add our app client ID.
-		oauthURL += "?client_id=" + config.GITLAB_CLIENT_ID
-		// Define we want a code back
-		oauthURL += "&response_type=code"
-		// Add read_user scope.
-		oauthURL += "&scope=read_user"
-	case codeberg:
-		// Base URL.
-		oauthURL = "https://codeberg.org/login/oauth/authorize"
-		// Add our app client ID.
-		oauthURL += "?client_id=" + config.CODEBERG_CLIENT_ID
-		// Define we want a code back
-		oauthURL += "&response_type=code"
+
+	oauthURL := service.oauthMakeURL()
+	var state string
+	if service.enableState() {
+		state = utils.UnsafeString(utils.RandStringBytesMaskImprSrcUnsafe(16))
+		oauthURL += "&state=" + state
 	}
 	if oauthURL == "" {
 		return ""
 	}
 
-	// Trying to follow our stateless design we encrypt the
-	// Nonsense state so we later can re-use by decrypting it.
-	// And than have the actual value. Also we use this to specify
-	// From which site the callback was from.
-	redirectURL := config.OAuthURL()
-	if service == github {
-		redirectURL += EncryptText(nonsenseState, AEAD_OAUTH, config.ScrambleConfig) + "/"
-	} else {
-		redirectURL += service + "/"
-	}
-	oauthURL += "&redirect_uri=" + redirectURL
-
+	oauthURL += "&redirect_uri=" + config.OAuthURL() + service.appendToRedirect(state)
 	return oauthURL
 }
 
-func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
-	if service == "" {
+func CallbackOAuth(tempCode, state, serviceType string) (OAuthResponse, error) {
+	service, err := GetInterfaceForService(serviceType)
+	if err != nil {
 		return OAuthResponse{}, errors.ErrNoServiceDetected
 	}
 	// Now the hard part D:
@@ -119,39 +138,16 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	// With that auth code we need to ask nicely for the user's email.
 	// Which is then passed back.
 
-	// Base URL
-	// Add our app client ID.
-	// Add our client secret.
-	var authURL string
-	var body GiteaLikeAccessJSON
-	switch service {
-	case github:
-		authURL = "https://github.com/login/oauth/access_token"
-		authURL += "?client_id=" + config.GITHUB_CLIENT_ID
-		authURL += "&client_secret=" + config.GITHUB_CLIENT_SECRET
-		// Add the nonsense state we uses earlier.
-		authURL += "&state=" + state
-	case gitlab:
-		authURL = "https://gitlab.com/oauth/token"
-		authURL += "?client_id=" + config.GITLAB_CLIENT_ID
-		authURL += "&client_secret=" + config.GITLAB_CLIENT_SECRET
-		// Define we log in trough the temp code.
-		authURL += "&grant_type=authorization_code"
-		// Specify the the redirect uri? It is required
-		authURL += "&redirect_uri=" + url.PathEscape(config.OAuthURL()+"gitlab/")
-	case codeberg:
-		authURL = "https://codeberg.org/login/oauth/access_token"
-		body = GiteaLikeAccessJSON{
-			ClientID:     config.CODEBERG_CLIENT_ID,
-			ClientSecret: config.CODEBERG_CLIENT_SECRET,
-			Code:         tempCode,
-			GrantType:    "authorization_code",
-			RedirectURI:  config.OAuthURL() + "codeberg/",
-		}
-	}
+	var body authURLPostBody
+	authURL := service.getAuthTokenURL(state)
 	if authURL == "" {
 		return OAuthResponse{}, errors.ErrNoAuthURL
 	}
+
+	if service.isAuthTokenPost() {
+		body = service.getAuthTokenPostBody(tempCode)
+	}
+
 	if body.ClientID == "" {
 		// Add the temp code.
 		authURL += "&code=" + tempCode
@@ -161,17 +157,13 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	if err != nil {
 		return OAuthResponse{}, err
 	}
+
 	// Ensure we get a json response.
 	req.Header.Set("Accept", "application/json")
-	if body.ClientID != "" {
-		bodyString, err := json.Marshal(body)
-		if err != nil {
-			return OAuthResponse{}, err
-		}
-		req.Body = ioutil.NopCloser(strings.NewReader(UnsafeString(bodyString)))
-		req.ContentLength = int64(len(bodyString))
-		req.Header.Set("Content-Type", "application/json")
+	if err = service.beforeRequest(body, req); err != nil {
+		return OAuthResponse{}, err
 	}
+
 	res, err := client.Do(req)
 	if err != nil {
 		return OAuthResponse{}, err
@@ -190,22 +182,15 @@ func CallbackOAuth(tempCode, state, service string) (OAuthResponse, error) {
 	return getUserInformation(service, responseJSON)
 }
 
-func getUserInformation(service string, responseJSON OAuthTokenResponse) (OAuthResponse, error) {
+func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenResponse) (OAuthResponse, error) {
 	client := &http.Client{}
-	var userEndpoint string
-	switch service {
-	case github:
-		userEndpoint = "https://api.github.com/user"
-	case gitlab:
-		userEndpoint = "https://gitlab.com/api/v4/user"
-	case codeberg:
-		userEndpoint = "https://codeberg.org/api/v1/user"
-	}
+	userEndpoint := service.getUserEndpoint()
+
 	userInformationReq, err := http.NewRequest("GET", userEndpoint, nil)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
-	if service == github {
+	if service.getServiceType() == GithubService {
 		// Recommended
 		userInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
 	}
@@ -234,7 +219,9 @@ func getUserInformation(service string, responseJSON OAuthTokenResponse) (OAuthR
 	}
 	oauthResponse.Username = strings.ToLower(oauthResponse.Username)
 
-	if service == "gitlab" {
+	// Because of gitlab oauth's implementation we already receive the email at this point.
+	// Meaning we don't need to do another request.
+	if service.getServiceType() == GitlabService {
 		if UserResponse.Email == "" {
 			return OAuthResponse{}, errors.ErrPrimaryEmailNotVerified
 		}
@@ -245,20 +232,15 @@ func getUserInformation(service string, responseJSON OAuthTokenResponse) (OAuthR
 	return getUserEmail(service, responseJSON, oauthResponse)
 }
 
-func getUserEmail(service string, responseJSON OAuthTokenResponse, oauthResponse OAuthResponse) (OAuthResponse, error) {
+func getUserEmail(service ProviderFunctions, responseJSON OAuthTokenResponse, oauthResponse OAuthResponse) (OAuthResponse, error) {
 	client := &http.Client{}
-	var emailEndpoint string
-	switch service {
-	case github:
-		emailEndpoint = "https://api.github.com/user/emails"
-	case codeberg:
-		emailEndpoint = "https://codeberg.org/api/v1/user/emails"
-	}
+	emailEndpoint := service.getEmailEndpoint()
+
 	emailInformationReq, err := http.NewRequest("GET", emailEndpoint, nil)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
-	if service == github {
+	if service.getServiceType() == GithubService {
 		// Recommended
 		emailInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
 	}
@@ -273,6 +255,7 @@ func getUserEmail(service string, responseJSON OAuthTokenResponse, oauthResponse
 	if resEmailInformation.StatusCode != 200 {
 		return OAuthResponse{}, errors.ErrNot200Ok
 	}
+
 	var emailResponse []emailResponseStruct
 	err = json.NewDecoder(resEmailInformation.Body).Decode(&emailResponse)
 	if err != nil {

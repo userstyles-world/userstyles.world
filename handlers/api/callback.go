@@ -10,6 +10,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/oauthlogin"
 	"userstyles.world/utils"
 )
 
@@ -54,7 +55,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		service = redirectCode
 	}
 
-	response, err := utils.CallbackOAuth(tempCode, rState, service)
+	response, err := oauthlogin.CallbackOAuth(tempCode, rState, service)
 	if err != nil {
 		log.Println("Ouch, the response failed, due to: " + err.Error())
 		return c.Next()

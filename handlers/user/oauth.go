@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
-	"userstyles.world/utils"
+	"userstyles.world/modules/oauthlogin"
 )
 
 func AuthLoginGet(c *fiber.Ctx) error {
@@ -16,7 +16,7 @@ func AuthLoginGet(c *fiber.Ctx) error {
 	}
 
 	oauthType := c.Params("type")
-	redirectURI := utils.OauthMakeURL(oauthType)
+	redirectURI := oauthlogin.OauthMakeURL(oauthType)
 
 	return c.Redirect(redirectURI, fiber.StatusSeeOther)
 }
