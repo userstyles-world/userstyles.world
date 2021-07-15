@@ -229,16 +229,22 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 		return oauthResponse, nil
 	}
 
-	return getUserEmail(service, responseJSON, oauthResponse)
+	email, err := getUserEmail(service, responseJSON)
+	if err != nil {
+		return OAuthResponse{}, err
+	}
+	oauthResponse.Email = email
+
+	return oauthResponse, nil
 }
 
-func getUserEmail(service ProviderFunctions, responseJSON OAuthTokenResponse, oauthResponse OAuthResponse) (OAuthResponse, error) {
+func getUserEmail(service ProviderFunctions, responseJSON OAuthTokenResponse) (string, error) {
 	client := &http.Client{}
 	emailEndpoint := service.getEmailEndpoint()
 
 	emailInformationReq, err := http.NewRequest("GET", emailEndpoint, nil)
 	if err != nil {
-		return OAuthResponse{}, err
+		return "", err
 	}
 	if service.getServiceType() == GithubService {
 		// Recommended
@@ -249,31 +255,32 @@ func getUserEmail(service ProviderFunctions, responseJSON OAuthTokenResponse, oa
 
 	resEmailInformation, err := client.Do(emailInformationReq)
 	if err != nil {
-		return OAuthResponse{}, err
+		return "", err
 	}
 	defer resEmailInformation.Body.Close()
 	if resEmailInformation.StatusCode != 200 {
-		return OAuthResponse{}, errors.ErrNot200Ok
+		return "", errors.ErrNot200Ok
 	}
 
 	var emailResponse []emailResponseStruct
 	err = json.NewDecoder(resEmailInformation.Body).Decode(&emailResponse)
 	if err != nil {
-		return OAuthResponse{}, err
+		return "", err
 	}
 
 	// Check if primary email is verified
 	var email emailResponseStruct
+	primaryEmail := ""
 	for i := 0; i < len(emailResponse); i++ {
 		email = emailResponse[i]
 		if email.Verified && email.Primary {
-			oauthResponse.Email = email.Email
+			primaryEmail = email.Email
 			break
 		}
 	}
-	if oauthResponse.Email == "" {
-		return OAuthResponse{}, errors.ErrPrimaryEmailNotVerified
+	if primaryEmail == "" {
+		return "", errors.ErrPrimaryEmailNotVerified
 	}
 
-	return oauthResponse, nil
+	return primaryEmail, nil
 }
