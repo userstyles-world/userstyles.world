@@ -1,10 +1,13 @@
 export function ShareButton() {
-    const i = document.getElementById('share') as HTMLInputElement;
+    const parentElement = document.getElementById('share') as HTMLInputElement;
     const shareButton = document.getElementById('btn-share') as HTMLButtonElement;
-    shareButton && shareButton.addEventListener('click', () => {
-        i.select();
+    if (!shareButton) {
+        return;
+    }
+    shareButton.addEventListener('click', () => {
+        parentElement.select();
         document.execCommand('copy');
-        i.blur();
+        parentElement.blur();
         shareButton.classList.add('copied');
     });
 }

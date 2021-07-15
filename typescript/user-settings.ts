@@ -13,7 +13,10 @@ export function SetValues(settings: UserSettings) {
 
 export function SaveUserSettingsButton(onSettingsUpdate: () => void) {
     const saveButton = document.getElementById(`${PREFIX}--save`) as HTMLButtonElement;
-    saveButton && saveButton.addEventListener('click', () => {
+    if (!saveButton) {
+        return;
+    }
+    saveButton.addEventListener('click', () => {
         const newSettings: Partial<UserSettings> = {};
 
         newSettings.colorScheme =
@@ -23,5 +26,5 @@ export function SaveUserSettingsButton(onSettingsUpdate: () => void) {
 
         storeNewSettings(newSettings);
         onSettingsUpdate();
-    });
+    }, {passive: true});
 }

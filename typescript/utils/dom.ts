@@ -11,7 +11,7 @@ if (!isDOMReady()) {
             readyStateListeners.clear();
         }
     };
-    document.addEventListener('readystatechange', onReadyStateChange);
+    document.addEventListener('readystatechange', onReadyStateChange, {passive: true});
 }
 
 export const removeElement = (element: HTMLElement) => {
