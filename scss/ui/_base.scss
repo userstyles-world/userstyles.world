@@ -191,14 +191,17 @@ label[for="remember"] {
     }
 }
 
-@media screen and (max-width: 1180px) {
+@media screen and (max-width: 1250px) {
     .header {
         flex-flow: row wrap;
         > .share { width: 100% }
         > .actions {
             margin: 1rem 0 0;
             flex-flow: row wrap;
-            .btn { margin-bottom: 0.5rem }
+            .btn {
+                margin-bottom: 0.5rem;
+                &:first-child { margin-left: 0 }
+            }
         }
     }
 }
