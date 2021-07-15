@@ -34,6 +34,9 @@
         {{ with .TotalHistory }}
             <div class="chart total mt:m">{{ . | unescape }}</div>
         {{ end }}
+        {{ with .UserHistory }}
+            <div class="chart users mt:m">{{ . | unescape }}</div>
+        {{ end }}
     </section>
 
     <section class="users mt:l">

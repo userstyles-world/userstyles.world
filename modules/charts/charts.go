@@ -97,3 +97,38 @@ func GetStyleHistory(history []models.History) (string, string, error) {
 
 	return daily.String(), total.String(), nil
 }
+
+func GetUserHistory(users []models.User) (string, error) {
+	userBars := []chart.Value{}
+	userData := map[string]int{}
+	for _, user := range users {
+		joined := user.CreatedAt.Format("2006-01-02")
+		if _, ok := userData[joined]; !ok {
+			userData[joined] = 1
+		} else {
+			userData[joined] += 1
+		}
+	}
+
+	for k, v := range userData {
+		point := chart.Value{Value: float64(v), Label: k}
+		userBars = append(userBars, point)
+	}
+
+	usersGraph := chart.BarChart{
+		Title: "User history",
+		Background: chart.Style{
+			Padding: chart.Box{Top: 20, Bottom: 20},
+		},
+		Height: 360,
+		Bars:   userBars,
+	}
+
+	userHistory := bytes.NewBuffer([]byte{})
+	userFailed := userHistory.Len() != 220
+	if err := usersGraph.Render(chart.SVG, userHistory); err != nil && userFailed {
+		return "", err
+	}
+
+	return userHistory.String(), nil
+}

@@ -44,6 +44,15 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
+	// Render user history.
+	var userHistory string
+	if len(users) > 0 {
+		userHistory, err = charts.GetUserHistory(users)
+		if err != nil {
+			log.Printf("Failed to render user history, err: %s\n", err.Error())
+		}
+	}
+
 	sort.Slice(users, func(i, j int) bool {
 		return users[i].ID > users[j].ID
 	})
@@ -54,7 +63,7 @@ func Dashboard(c *fiber.Ctx) error {
 		log.Printf("Couldn't find style histories, err: %s", err.Error())
 	}
 
-	// Render graphs.
+	// Render style history.
 	var dailyHistory, totalHistory string
 	if len(*history) > 0 {
 		dailyHistory, totalHistory, err = charts.GetStyleHistory(*history)
@@ -70,5 +79,6 @@ func Dashboard(c *fiber.Ctx) error {
 		"Users":        users,
 		"DailyHistory": dailyHistory,
 		"TotalHistory": totalHistory,
+		"UserHistory":  userHistory,
 	})
 }
