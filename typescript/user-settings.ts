@@ -8,6 +8,7 @@ export function SetValues(settings: UserSettings) {
         return;
     }
     (document.getElementById(`${PREFIX}--color-scheme`) as HTMLSelectElement).value = settings.colorScheme;
+    (document.getElementById(`${PREFIX}--entries-behavior`) as HTMLSelectElement).value = settings.entriesBehavior;
 }
 
 export function SaveUserSettingsButton(onSettingsUpdate: () => void) {
@@ -17,6 +18,8 @@ export function SaveUserSettingsButton(onSettingsUpdate: () => void) {
 
         newSettings.colorScheme =
             (document.getElementById(`${PREFIX}--color-scheme`) as HTMLSelectElement).value as any;
+        newSettings.entriesBehavior =
+            (document.getElementById(`${PREFIX}--entries-behavior`) as HTMLSelectElement).value as any;
 
         storeNewSettings(newSettings);
         onSettingsUpdate();

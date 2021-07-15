@@ -17,3 +17,11 @@ if (!isDOMReady()) {
 export const removeElement = (element: HTMLElement) => {
     element && element.remove();
 };
+
+export const doDomOperation = (callback: () => void) => {
+    if (isDOMReady()) {
+        callback();
+    } else {
+        addDOMReadyListener(callback);
+    }
+};

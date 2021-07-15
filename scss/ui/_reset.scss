@@ -274,12 +274,13 @@ tbody tr:nth-child(2n-1):target {
 .spoiler {
     color: transparent;
     background-color: var(--bg-5);
-    transition: color 0.5s linear;
+    transition: all 0.3s linear;
     line-height: 1.5rem;
     position: relative;
 
-    &:hover {
+    &:not(.spoiler-click):hover {
         color: inherit;
+        background-color: inherit;
         a {
             color: var(--ac-1);
         }
@@ -289,13 +290,12 @@ tbody tr:nth-child(2n-1):target {
         }
     }
     a {
-        transition: color 0.5s linear;
         color: transparent;
     }
 
     &::after {
-        transition: opacity 0.5s linear;
-        transition-delay: 0.5s;
+        transition: opacity 0.3s linear;
+        transition-delay: 0.3s;
         content: 'Censored entry';
         top: 0;
         left: 0;
