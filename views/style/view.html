@@ -28,7 +28,7 @@
                     <input
                         id="share"
                         class="bg:2" readonly
-                        value="{{ printf "https://userstyles.world%s" .Slug }}"
+                        value="{{ printf "%s%s" .BaseURL .Slug }}"
                     ></input>
                     <button
                         type="submit"

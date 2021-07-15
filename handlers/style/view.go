@@ -70,6 +70,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		"WeeklyUpdates":  models.GetWeeklyUpdatesForStyle(id),
 		"Url":            fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
 		"Slug":           c.Path(),
+		"BaseURL":        c.BaseURL(),
 		"DailyHistory":   dailyHistory,
 		"TotalHistory":   totalHistory,
 	})
