@@ -1,8 +1,8 @@
-{{ $webp := printf "/api/style/preview/%d.webp" .ID }}
+{{ $img := printf "/api/style/preview/" }}
 {{ if .Preview }}
     <picture>
-        <source srcset="{{ $webp }}" type="image/webp">
-        <img src="/api/style/preview/{{ .ID }}.jpeg"
+        <source srcset="{{ $img }}{{ .ID }}.webp" type="image/webp">
+        <img src="{{ $img }}{{ .ID }}.jpeg"
             alt="{{ .Name }} screenshot"
             loading="lazy">
     </picture>

@@ -30,9 +30,9 @@
             right: 0;
             bottom: 0;
             left: 0;
-            display: grid;
-            place-items: center;
-            place-content: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         img[alt] {
@@ -41,6 +41,7 @@
             object-fit: contain;
             position: unset;
             max-width: 100%;
+            height: unset;
             width: unset;
         }
 

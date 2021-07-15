@@ -8,8 +8,13 @@
         {{- end }}
         <div class="card">
             <div class="screenshot">
-                {{ $webp := printf "/api/style/preview/%d.webp" .Style.ID }}
-                <img class="blurred" src="{{ $webp }}">
+                <picture class="blurred">
+                    {{ $img := printf "/api/style/preview/" }}
+                    <source srcset="{{ $img }}{{ .Style.ID }}.webp" type="image/webp">
+                    <img
+                        src="{{ $img }}{{ .Style.ID }}.jpeg"
+                        loading="lazy">
+                </picture>
                 {{ template "partials/preview-image" .Style }}
             </div>
         </div>
