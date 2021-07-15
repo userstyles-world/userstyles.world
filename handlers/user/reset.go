@@ -53,7 +53,6 @@ func ResetGet(c *fiber.Ctx) error {
 	})
 }
 
-// TODO: Send email that password has been changed.
 func ResetPost(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
 		log.Printf("User %d has set session, redirecting.", u.ID)
@@ -111,6 +110,38 @@ func ResetPost(c *fiber.Ctx) error {
 			"Error": "Internal server error.",
 		})
 	}
+
+	// Sends email that the password has been changed.
+	// But we do it in a separate routine, so we can render the view for the user.
+	go func(user *models.User) {
+		partPlain := utils.NewPart().
+			SetBody("Hi " + user.Username + ",\n" +
+				"We'd like to notice you about a recent action of your account\n\n" +
+				"We've authorized a password change. Which was verified by email.\n" +
+				"If you don't recognize this account, please email us at feedback@userstyles.world.\n\n" +
+				"Regards,\n" + "The UserStyles.world team")
+		partHTML := utils.NewPart().
+			SetBody("<p>Hi " + user.Username + ",</p>\n" +
+				"<br>" +
+				"<p>We'd like to notice you about a recent action of your account</p>\n" +
+				"<br><br>" +
+				"<p>We've authorized a password change. Which was verified by email.</p>\n" +
+				"<p>If you don't recognize this account, " +
+				"please email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.</p>\n" +
+				"<br><br>" +
+				"<p>Regards,</p>\n" + "<p>The UserStyles.world team</p>").
+			SetContentType("text/html")
+
+		err := utils.NewEmail().
+			SetTo(user.Email).
+			SetSubject("Account change").
+			AddPart(*partPlain).
+			AddPart(*partHTML).
+			SendEmail()
+		if err != nil {
+			log.Println("Sending email failed, err:", err)
+		}
+	}(user)
 
 	return c.Render("user/verification", fiber.Map{
 		"Title":        "Successful reset",
