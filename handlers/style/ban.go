@@ -73,7 +73,6 @@ func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, mod
 		AddPart(*partPlain).
 		AddPart(*partHTML).
 		SendEmail()
-
 	if err != nil {
 		return err
 	}

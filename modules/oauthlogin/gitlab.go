@@ -9,8 +9,7 @@ import (
 
 // This is just an empty stub.
 // However we will link all necessary functions to this stub.
-type gitlab struct {
-}
+type gitlab struct{}
 
 const gitlabStr = "gitlab"
 

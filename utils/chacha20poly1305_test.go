@@ -215,7 +215,6 @@ func TestNonceDescramblingPerfectStop(t *testing.T) {
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
 	descrambledNonce, descrambledText, err := descrambleNonce(dest, len(nonce), 3, 1)
-
 	if err != nil {
 		t.Error("Couldn't descramble, errored:", err)
 	}
@@ -244,7 +243,6 @@ func TestNonceDescramblingWithOverflow(t *testing.T) {
 	// In production we know the Nonce of a specific hash, due to,
 	// that AEAD is used. Which used a hard-coded length.
 	descrambledNonce, descrambledText, err := descrambleNonce(dest, len(nonce), 2, 1)
-
 	if err != nil {
 		t.Error("Couldn't descramble, errored:", err)
 	}

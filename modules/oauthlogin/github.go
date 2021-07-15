@@ -10,8 +10,7 @@ import (
 
 // This is just an empty stub.
 // However we will link all necessary functions to this stub.
-type github struct {
-}
+type github struct{}
 
 func (github) oauthMakeURL() string {
 	// Base URL.

@@ -75,7 +75,6 @@ func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
 		AddPart(*partPlain).
 		AddPart(*partHTML).
 		SendEmail()
-
 	if err != nil {
 		return err
 	}

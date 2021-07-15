@@ -12,8 +12,7 @@ import (
 
 // This is just an empty stub.
 // However we will link all necessary functions to this stub.
-type codeberg struct {
-}
+type codeberg struct{}
 
 const codebergStr = "codeberg"
 
