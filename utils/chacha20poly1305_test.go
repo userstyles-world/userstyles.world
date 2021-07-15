@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/form3tech-oss/jwt-go"
+
 	"userstyles.world/modules/config"
 )
 
