@@ -270,3 +270,42 @@ tbody tr:nth-child(2n):target {
 tbody tr:nth-child(2n-1):target {
     animation: highlight-1 3s;
 }
+
+.spoiler {
+    color: transparent;
+    background-color: var(--bg-5);
+    transition: color 0.5s linear;
+    line-height: 1.5rem;
+    position: relative;
+
+    &:hover {
+        color: inherit;
+        a {
+            color: var(--ac-1);
+        }
+        &::after {
+            content: '' !important;
+            opacity: 0;
+        }
+    }
+    a {
+        transition: color 0.5s linear;
+        color: transparent;
+    }
+
+    &::after {
+        transition: opacity 0.5s linear;
+        transition-delay: 0.5s;
+        content: 'Censored entry';
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        position: absolute;
+        text-align: center;
+        color: var(--fg-1);
+        top: calc(50% - 0.8rem);
+        bottom: unset;
+    }
+}

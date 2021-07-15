@@ -136,6 +136,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 		Kind:           models.LogBanUser,
 		TargetUserName: targetUser.Username,
 		Reason:         strings.TrimSpace(c.FormValue("reason")),
+		Censor:         c.FormValue("censor") == "on",
 	}
 
 	// Add banned user log entry.

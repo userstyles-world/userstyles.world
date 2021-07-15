@@ -19,9 +19,14 @@ const (
 // Log struct has all the relavant information for a log entry.
 type Log struct {
 	gorm.Model
-	UserID         uint
-	Username       string
-	Reason         string
+	UserID   uint
+	Username string
+	Reason   string
+
+	// This isn't the Censor you'd expect.
+	// It will only just wrap the style's information into a spoiler.
+	// This will be used for disturbing names.
+	Censor         bool
 	Kind           LogKind
 	TargetData     string
 	TargetUserName string
@@ -33,6 +38,7 @@ type APILog struct {
 	UserID         uint
 	Username       string
 	Reason         string
+	Censor         bool
 	Kind           LogKind
 	TargetData     string
 	TargetUserName string

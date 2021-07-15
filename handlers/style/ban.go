@@ -110,6 +110,7 @@ func BanPost(c *fiber.Ctx) error {
 		TargetUserName: s.Username,
 		TargetData:     s.Name,
 		Reason:         strings.TrimSpace(c.FormValue("reason")),
+		Censor:         c.FormValue("censor") == "on",
 	}
 
 	// Add banned style log entry.
