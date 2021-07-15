@@ -35,15 +35,12 @@ func GetStylePage(c *fiber.Ctx) error {
 		return c.Redirect(url, fiber.StatusSeeOther)
 	}
 
-	// Count views.
-	_, err = models.AddStatsToStyle(id, c.IP(), false)
-	if err != nil {
-		log.Println("Failed to add stats to style, err:", err)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"User":  u,
-		})
-	}
+	go func(id, ip string) {
+		// Count views.
+		if _, err := models.AddStatsToStyle(id, ip, false); err != nil {
+			log.Println("Failed to add stats to style, err:", err)
+		}
+	}(id, c.IP())
 
 	// Get history data.
 	history, err := new(models.History).GetStatsForStyle(id)

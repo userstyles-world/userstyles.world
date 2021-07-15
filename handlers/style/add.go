@@ -125,9 +125,11 @@ func CreatePost(c *fiber.Ctx) error {
 		}
 	}
 
-	if err = search.IndexStyle(s.ID); err != nil {
-		log.Printf("Re-indexing style %d failed, err: %s", s.ID, err.Error())
-	}
+	go func(syle *models.Style) {
+		if err = search.IndexStyle(syle.ID); err != nil {
+			log.Printf("Re-indexing style %d failed, err: %s", syle.ID, err.Error())
+		}
+	}(s)
 
 	if OAuthID != "" {
 		return handleAPIStyle(c, secureToken, OAuthID, styleID, s)
