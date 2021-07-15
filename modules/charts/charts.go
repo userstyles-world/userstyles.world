@@ -16,7 +16,6 @@ func GetStyleHistory(history []models.History) (string, string, error) {
 	dailyUpdates := make([]float64, 0, historyLen)
 	dailyInstalls := make([]float64, 0, historyLen)
 	totalViews := make([]float64, 0, historyLen)
-	totalUpdates := make([]float64, 0, historyLen)
 	totalInstalls := make([]float64, 0, historyLen)
 
 	for _, v := range history {
@@ -25,7 +24,6 @@ func GetStyleHistory(history []models.History) (string, string, error) {
 		dailyUpdates = append(dailyUpdates, float64(v.DailyUpdates))
 		dailyInstalls = append(dailyInstalls, float64(v.DailyInstalls))
 		totalViews = append(totalViews, float64(v.TotalViews))
-		totalUpdates = append(totalUpdates, float64(v.TotalUpdates))
 		totalInstalls = append(totalInstalls, float64(v.TotalInstalls))
 	}
 
@@ -74,11 +72,6 @@ func GetStyleHistory(history []models.History) (string, string, error) {
 				Name:    "Total installs",
 				XValues: dates,
 				YValues: totalInstalls,
-			},
-			chart.TimeSeries{
-				Name:    "Total updates",
-				XValues: dates,
-				YValues: totalUpdates,
 			},
 			chart.TimeSeries{
 				Name:    "Total views",
