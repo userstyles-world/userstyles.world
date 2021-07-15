@@ -35,7 +35,10 @@ func MapClaim(c *fiber.Ctx) jwt.MapClaims {
 	if !ok {
 		return nil
 	}
-	claims := user.Claims.(jwt.MapClaims)
+	claims, ok := user.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil
+	}
 
 	return claims
 }

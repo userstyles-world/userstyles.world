@@ -35,8 +35,10 @@ func MapClaim(c *fiber.Ctx) lib.MapClaims {
 	if !ok {
 		return nil
 	}
-	claims := user.Claims.(lib.MapClaims)
-
+	claims, ok := user.Claims.(lib.MapClaims)
+	if !ok {
+		return nil
+	}
 	return claims
 }
 
@@ -49,12 +51,18 @@ func User(c *fiber.Ctx) (*models.APIUser, bool) {
 	}
 
 	// Type assertion will convert interface{} to other types.
-	u.Username = s["name"].(string)
-	if s["email"] != nil {
-		u.Email = s["email"].(string)
+	if name, ok := s["name"].(string); ok {
+		u.Username = name
 	}
-	u.ID = uint(s["id"].(float64))
-	u.Role = models.Role(s["role"].(float64))
+	if email, ok := s["email"].(string); ok {
+		u.Email = email
+	}
+	if id, ok := s["id"].(float64); ok {
+		u.ID = uint(id)
+	}
+	if role, ok := s["role"].(float64); ok {
+		u.Role = models.Role(role)
+	}
 
 	return u, true
 }

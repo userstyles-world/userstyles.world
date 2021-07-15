@@ -166,7 +166,14 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 				"data": "JWT Token error, please notify the admins.",
 			})
 	}
-	claims := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		return c.Status(500).
+			JSON(fiber.Map{
+				"data": "JWT Token error, please notify the admins.",
+			})
+	}
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {

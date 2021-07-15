@@ -95,7 +95,11 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
-	claims := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		log.Println("Error: Couldn't get claims from JWT Token:", err.Error())
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {
@@ -160,7 +164,11 @@ func OAuthStyleNewPost(c *fiber.Ctx) error {
 		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
-	claims := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		log.Println("WARNING!: Invalid conversion")
+		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+	}
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {
