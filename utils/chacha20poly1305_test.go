@@ -282,11 +282,20 @@ func TestNonceDescramblingOnIncorrectInput(t *testing.T) {
 	}
 
 	dest = []byte("333")
-	_, _, _ = descrambleNonce(dest, 2, 4, 1)
+	_, _, err = descrambleNonce(dest, 2, 4, 1)
+	if err != nil {
+		t.Error("Descrambling should't fall")
+	}
 
 	dest = []byte("4444")
-	_, _, _ = descrambleNonce(dest, 3, 1, 1)
+	_, _, err = descrambleNonce(dest, 3, 1, 1)
+	if err != nil {
+		t.Error("Descrambling should't fall")
+	}
 
-	dest = []byte("5555")
-	_, _, _ = descrambleNonce(dest, 4, 3, 4)
+	dest = []byte("55555")
+	_, _, err = descrambleNonce(dest, 4, 3, 4)
+	if err != nil {
+		t.Error("Descrambling should't fall")
+	}
 }
