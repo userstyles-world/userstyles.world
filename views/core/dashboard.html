@@ -22,6 +22,12 @@
         <p class="fg:3">WIP functionality to help with moderation.</p>
     </section>
 
+    <section class="summary">
+        <h2 class="td:d">Summary</h2>
+        <p>{{ len .Users }} users ({{ .Summary.NewUsers }} today)</p>
+        <p>{{ len .Styles }} styles ({{ .Summary.NewStyles }} today)</p>
+    </section>
+
     <section class="history">
         <h2 class="td:d">History</h2>
         <p>Learn more about style statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>

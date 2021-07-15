@@ -3,6 +3,7 @@ package core
 import (
 	"log"
 	"sort"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -11,8 +12,15 @@ import (
 	"userstyles.world/modules/charts"
 )
 
+type stats struct {
+	NewUsers  int
+	NewStyles int
+}
+
 func Dashboard(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	t := time.Now().Format("2006-01-02")
+	s := stats{}
 
 	// Don't allow regular users to see this page.
 	if u.Role < models.Moderator {
@@ -31,6 +39,13 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
+	// Summary of new styles.
+	for _, v := range styles {
+		if v.CreatedAt.Format("2006-01-02") == t {
+			s.NewStyles++
+		}
+	}
+
 	sort.Slice(styles, func(i, j int) bool {
 		return styles[i].ID > styles[j].ID
 	})
@@ -42,6 +57,13 @@ func Dashboard(c *fiber.Ctx) error {
 			"Title": "Users not found",
 			"User":  u,
 		})
+	}
+
+	// Summary of new users.
+	for _, v := range users {
+		if v.CreatedAt.Format("2006-01-02") == t {
+			s.NewUsers++
+		}
 	}
 
 	// Render user history.
@@ -77,6 +99,7 @@ func Dashboard(c *fiber.Ctx) error {
 		"User":         u,
 		"Styles":       styles,
 		"Users":        users,
+		"Summary":      s,
 		"DailyHistory": dailyHistory,
 		"TotalHistory": totalHistory,
 		"UserHistory":  userHistory,
