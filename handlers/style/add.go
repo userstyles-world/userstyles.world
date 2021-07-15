@@ -117,7 +117,7 @@ func CreatePost(c *fiber.Ctx) error {
 			})
 		}
 		if s.Preview == "" {
-			s.Preview = "https://userstyles.world/api/preview/" + styleID + ".jpeg"
+			s.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
 			database.Conn.
 				Model(new(models.Style)).
 				Where("id", styleID).

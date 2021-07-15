@@ -106,7 +106,7 @@ func EditPost(c *fiber.Ctx) error {
 		_ = os.Remove(images.CacheFolder + styleID + ".jpeg")
 		_ = os.Remove(images.CacheFolder + styleID + ".webp")
 
-		q.Preview = "https://userstyles.world/api/preview/" + styleID + ".jpeg"
+		q.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
 	}
 
 	if q.Preview != s.Preview {
