@@ -2,6 +2,7 @@ package charts
 
 import (
 	"bytes"
+	"sort"
 	"time"
 
 	"github.com/userstyles-world/go-chart/v2"
@@ -103,8 +104,15 @@ func GetUserHistory(users []models.User) (string, error) {
 		}
 	}
 
-	for k, v := range userData {
-		point := chart.Value{Value: float64(v), Label: k}
+	// Sort user history in ascending order.
+	keys := make([]string, 0, len(userData))
+	for k := range userData {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		point := chart.Value{Value: float64(userData[k]), Label: k}
 		userBars = append(userBars, point)
 	}
 
