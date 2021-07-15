@@ -111,10 +111,13 @@ func GetUserHistory(users []models.User) (string, error) {
 	usersGraph := chart.BarChart{
 		Title: "User history",
 		Background: chart.Style{
-			Padding: chart.Box{Top: 20, Bottom: 20},
+			Padding: chart.Box{Top: 40},
 		},
 		Height: 360,
 		Bars:   userBars,
+		XAxis: chart.Style{
+			TextRotationDegrees: 90.0,
+		},
 	}
 
 	userHistory := bytes.NewBuffer([]byte{})
