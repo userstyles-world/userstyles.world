@@ -137,8 +137,8 @@
             <h2 class="mt:0 mb:m td:d">Source code</h2>
             {{ $code := "" }}
             {{ if .Style.TruncateCode }}
-                <mark class="mb:s">Source code has over 150k characters, so we truncated it. You can inspect the full source code on install link.</mark>
-                {{ $code = printf "%.150000s..." .Style.Code }}
+                <mark class="mb:s">Source code has over 100k characters, so we truncated it. You can inspect the full source code on install link.</mark>
+                {{ $code = printf "%.100000s..." .Style.Code }}
             {{ else }}
                 {{ $code = printf "%s" .Style.Code }}
             {{ end }}
