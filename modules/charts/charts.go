@@ -106,7 +106,7 @@ func GetUserHistory(users []models.User) (string, error) {
 		if _, ok := userData[joined]; !ok {
 			userData[joined] = 1
 		} else {
-			userData[joined] += 1
+			userData[joined]++
 		}
 	}
 
