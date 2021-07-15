@@ -1,6 +1,6 @@
 export interface UserSettings {
     colorScheme: 'dark' | 'light' | 'follow-system';
-    entriesBehavior: 'hover' | 'click';
+    entriesBehavior: 'hover' | 'click' | 'no-hide';
 }
 
 const DEFAULT_SETTINGS: UserSettings = {

@@ -19,5 +19,11 @@ export function changeEntriesBehavior(behavior: UserSettings['entriesBehavior'])
                 entry.style.cursor = 'pointer';
             });
         }
+        if ('no-hide' === behavior) {
+            document.querySelector('#explaination').remove();
+            document.querySelectorAll('.spoiler').forEach((entry: HTMLElement) => {
+                entry.classList.remove('spoiler');
+            });
+        }
     });
 }
