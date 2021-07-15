@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	auth = sasl.NewPlainClient("", config.EMAIL_ADDRESS, config.EMAIL_PWD)
+	auth = sasl.NewPlainClient("", config.EmailAddress, config.EmailPassword)
 	clrf = "\r\n"
 )
 
@@ -127,7 +127,7 @@ func (eb *EmailBuilder) SendEmail() error {
 	eb.boundary = UnsafeString(RandStringBytesMaskImprSrcUnsafe(30))
 
 	if eb.from == "" {
-		eb.from = config.EMAIL_ADDRESS
+		eb.from = config.EmailAddress
 	}
 
 	if eb.to == "" {
@@ -149,5 +149,5 @@ func (eb *EmailBuilder) SendEmail() error {
 		"MIME-Version: 1.0\n" +
 		bodyMessage))
 
-	return smtp.SendMail("mail.userstyles.world:587", auth, config.EMAIL_ADDRESS, []string{eb.to}, r)
+	return smtp.SendMail("mail.userstyles.world:587", auth, config.EmailAddress, []string{eb.to}, r)
 }

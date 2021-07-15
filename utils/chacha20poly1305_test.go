@@ -27,8 +27,8 @@ func TestSimpleKey(t *testing.T) {
 		BytesPerInsert: 2,
 	}
 
-	sealedText := sealText(jwtToken, AEAD_CRYPTO, scrambleConfig)
-	unSealedText, err := openText(UnsafeString(sealedText), AEAD_CRYPTO, scrambleConfig)
+	sealedText := sealText(jwtToken, AEADCrypto, scrambleConfig)
+	unSealedText, err := openText(UnsafeString(sealedText), AEADCrypto, scrambleConfig)
 	if err != nil {
 		t.Error(err)
 	}
@@ -50,7 +50,7 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *co
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = sealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+		_ = sealText(UnsafeString(buf), AEADCrypto, scrambleConfig)
 	}
 }
 
@@ -60,11 +60,11 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *co
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := sealText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+	ct := sealText(UnsafeString(buf), AEADCrypto, scrambleConfig)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = openText(UnsafeString(ct), AEAD_CRYPTO, scrambleConfig)
+		_, _ = openText(UnsafeString(ct), AEADCrypto, scrambleConfig)
 	}
 }
 
@@ -76,7 +76,7 @@ func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.Scra
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = EncryptText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+		_ = EncryptText(UnsafeString(buf), AEADCrypto, scrambleConfig)
 	}
 }
 
@@ -86,11 +86,11 @@ func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *conf
 	b.ReportAllocs()
 	b.SetBytes(int64(len(buf)))
 
-	ct := EncryptText(UnsafeString(buf), AEAD_CRYPTO, scrambleConfig)
+	ct := EncryptText(UnsafeString(buf), AEADCrypto, scrambleConfig)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _ = DecryptText(ct, AEAD_CRYPTO, scrambleConfig)
+		_, _ = DecryptText(ct, AEADCrypto, scrambleConfig)
 	}
 }
 

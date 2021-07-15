@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	JWTSigningKey = []byte(config.JWT_SIGNING_KEY)
+	JWTSigningKey = []byte(config.JWTSigningKey)
 	SigningMethod = "HS512"
 )
 

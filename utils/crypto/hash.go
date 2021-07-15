@@ -13,7 +13,7 @@ func CreateHashedRecord(id, ip string) (string, error) {
 	record := ip + " " + id
 
 	// Generate unique hash.
-	h := hmac.New(sha512.New, []byte(config.STATS_KEY))
+	h := hmac.New(sha512.New, []byte(config.StatsKey))
 	if _, err := h.Write([]byte(record)); err != nil {
 		return "", err
 	}

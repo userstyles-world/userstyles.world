@@ -12,7 +12,7 @@ import (
 var salt = getSalt()
 
 func getSalt() int {
-	salt, err := strconv.Atoi(config.SALT)
+	salt, err := strconv.Atoi(config.Salt)
 	if err != nil {
 		log.Fatalln("Failed to convert SALT env variable, err:", err)
 	}

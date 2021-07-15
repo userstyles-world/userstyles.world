@@ -30,7 +30,7 @@ func (jt *JWTTokenBuilder) SetExpiration(duration time.Time) *JWTTokenBuilder {
 
 func (jt *JWTTokenBuilder) GetSignedString(customKey []byte) (string, error) {
 	if customKey == nil {
-		customKey = []byte(config.JWT_SIGNING_KEY)
+		customKey = []byte(config.JWTSigningKey)
 	}
 	return jt.SignedString(customKey)
 }

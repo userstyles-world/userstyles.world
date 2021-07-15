@@ -108,7 +108,7 @@ func (s APIStyle) TruncateCode() bool {
 
 func getDBSession() (tx *gorm.DB) {
 	var log logger.LogLevel
-	switch config.DB_DEBUG {
+	switch config.DBDebug {
 	case "error":
 		log = logger.Error
 	case "warn":

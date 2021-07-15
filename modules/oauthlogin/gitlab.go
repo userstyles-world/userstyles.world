@@ -16,7 +16,7 @@ const gitlabStr = "gitlab"
 func (gitlab) oauthMakeURL() string {
 	oauthURL := "https://gitlab.com/oauth/authorize"
 	// Add our app client ID.
-	oauthURL += "?client_id=" + config.GITLAB_CLIENT_ID
+	oauthURL += "?client_id=" + config.GitlabClientID
 	// Define we want a code back
 	oauthURL += "&response_type=code"
 	// Add read_user scope.
@@ -34,8 +34,8 @@ func (gitlab) appendToRedirect(data interface{}) string {
 
 func (gitlab) getAuthTokenURL(data interface{}) string {
 	authURL := "https://gitlab.com/oauth/token"
-	authURL += "?client_id=" + config.GITLAB_CLIENT_ID
-	authURL += "&client_secret=" + config.GITLAB_CLIENT_SECRET
+	authURL += "?client_id=" + config.GitlabClientID
+	authURL += "&client_secret=" + config.GitlabClientSecret
 	// Define we log in trough the temp code.
 	authURL += "&grant_type=authorization_code"
 	// Specify the the redirect uri, because it is required

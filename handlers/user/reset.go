@@ -41,7 +41,7 @@ func ResetGet(c *fiber.Ctx) error {
 		return renderError
 	}
 
-	_, err := utils.DecryptText(key, utils.AEAD_CRYPTO, config.ScrambleConfig)
+	_, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Printf("Couldn't decode key due to: %s\n", err.Error())
 		return renderError
@@ -72,7 +72,7 @@ func ResetPost(c *fiber.Ctx) error {
 		return renderError
 	}
 
-	unSealedText, err := utils.DecryptText(key, utils.AEAD_CRYPTO, config.ScrambleConfig)
+	unSealedText, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Printf("Couldn't decode key due to: %s\n", err.Error())
 		return renderError
@@ -193,7 +193,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/reset/" + utils.EncryptText(jwt, utils.AEAD_CRYPTO, config.ScrambleConfig)
+	link := c.BaseURL() + "/reset/" + utils.EncryptText(jwt, utils.AEADCrypto, config.ScrambleConfig)
 
 	partPlain := utils.NewPart().
 		SetBody("We have received a request to reset the password for your UserStyles.world account.\n\n" +

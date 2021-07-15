@@ -127,5 +127,5 @@ func Initialize() {
 	}))
 	app.Use(core.NotFound)
 
-	log.Fatal(app.Listen(config.PORT))
+	log.Fatal(app.Listen(config.Port))
 }

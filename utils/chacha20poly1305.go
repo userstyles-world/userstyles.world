@@ -11,11 +11,11 @@ import (
 )
 
 var (
-	AEAD_CRYPTO      cipher.AEAD
-	AEAD_OAUTH       cipher.AEAD
-	AEAD_OAUTHP      cipher.AEAD
-	VerifySigningKey = []byte(config.VERIFY_JWT_SIGNING_KEY)
-	OAuthPSigningKey = []byte(config.OAUTHP_JWT_SIGNING_KEY)
+	AEADCrypto       cipher.AEAD
+	AEADOAuth        cipher.AEAD
+	AEADOAuthp       cipher.AEAD
+	VerifySigningKey = []byte(config.VerifyJWTSigningKey)
+	OAuthPSigningKey = []byte(config.OAuthpJWTSigningKey)
 	signingMethod    = "HS512"
 )
 
@@ -23,23 +23,23 @@ func InitalizeCrypto() {
 	var aead cipher.AEAD
 	var err error
 
-	aead, err = chacha20poly1305.NewX([]byte(config.CRYPTO_KEY))
+	aead, err = chacha20poly1305.NewX([]byte(config.CryptoKey))
 	if err != nil {
 		panic("Cannot create AEAD_CRYPTO chipher, due to " + err.Error())
 	}
-	AEAD_CRYPTO = aead
+	AEADCrypto = aead
 
-	aead, err = chacha20poly1305.NewX([]byte(config.OAUTH_KEY))
+	aead, err = chacha20poly1305.NewX([]byte(config.OAuthKey))
 	if err != nil {
 		panic("Cannot create AEAD_OAUTH chipher, due to " + err.Error())
 	}
-	AEAD_OAUTH = aead
+	AEADOAuth = aead
 
-	aead, err = chacha20poly1305.NewX([]byte(config.OAUTH_KEY))
+	aead, err = chacha20poly1305.NewX([]byte(config.OAuthKey))
 	if err != nil {
 		panic("Cannot create AEAD_OAUTHP chipher, due to " + err.Error())
 	}
-	AEAD_OAUTHP = aead
+	AEADOAuthp = aead
 }
 
 func sealText(text string, aead cipher.AEAD, nonceScrambling *config.ScrambleSettings) []byte {

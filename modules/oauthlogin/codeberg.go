@@ -20,7 +20,7 @@ func (codeberg) oauthMakeURL() string {
 	// Base URL.
 	oauthURL := "https://codeberg.org/login/oauth/authorize"
 	// Add our app client ID.
-	oauthURL += "?client_id=" + config.CODEBERG_CLIENT_ID
+	oauthURL += "?client_id=" + config.CodebergClientID
 	// Define we want a code back
 	oauthURL += "&response_type=code"
 
@@ -45,8 +45,8 @@ func (codeberg) isAuthTokenPost() bool {
 
 func (codeberg) getAuthTokenPostBody(data interface{}) authURLPostBody {
 	return authURLPostBody{
-		ClientID:     config.CODEBERG_CLIENT_ID,
-		ClientSecret: config.CODEBERG_CLIENT_SECRET,
+		ClientID:     config.CodebergClientID,
+		ClientSecret: config.CodebergClientSecret,
 		Code:         data.(string),
 		GrantType:    "authorization_code",
 		RedirectURI:  config.OAuthURL() + "codeberg/",

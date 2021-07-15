@@ -38,7 +38,7 @@ func New() *html.Engine {
 			return template.HTML("dev")
 		}
 
-		return template.HTML(config.GIT_COMMIT)
+		return template.HTML(config.GitCommit)
 	})
 
 	engine.AddFunc("Date", func(time time.Time) template.HTML {

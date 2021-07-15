@@ -16,7 +16,7 @@ func (github) oauthMakeURL() string {
 	// Base URL.
 	oauthURL := "https://github.com/login/oauth/authorize"
 	// Add our app client ID.
-	oauthURL += "?client_id=" + config.GITHUB_CLIENT_ID
+	oauthURL += "?client_id=" + config.GitHubClientID
 	// Add email scope.
 	oauthURL += "&scope=" + url.QueryEscape("user:email")
 
@@ -32,13 +32,13 @@ func (github) appendToRedirect(state interface{}) string {
 	// Nonsense state so we later can re-use by decrypting it.
 	// And than have the actual value. Also we use this to specify
 	// From which site the callback was from.
-	return utils.EncryptText(state.(string), utils.AEAD_OAUTH, config.ScrambleConfig) + "/"
+	return utils.EncryptText(state.(string), utils.AEADOAuth, config.ScrambleConfig) + "/"
 }
 
 func (github) getAuthTokenURL(state interface{}) string {
 	authURL := "https://github.com/login/oauth/access_token"
-	authURL += "?client_id=" + config.GITHUB_CLIENT_ID
-	authURL += "&client_secret=" + config.GITHUB_CLIENT_SECRET
+	authURL += "?client_id=" + config.GitHubClientID
+	authURL += "&client_secret=" + config.GitHubClientSecret
 	// Add the nonsense state we uses earlier.
 	authURL += "&state=" + state.(string)
 

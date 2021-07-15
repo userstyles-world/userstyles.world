@@ -221,8 +221,8 @@ func seed() {
 		},
 	}
 
-	if config.DB_RANDOM_DATA != "false" {
-		amount, _ := strconv.Atoi(config.DB_RANDOM_DATA)
+	if config.DBRandomData != "false" {
+		amount, _ := strconv.Atoi(config.DBRandomData)
 		s, u := generateData(amount)
 		styles = append(styles, s...)
 		users = append(users, u...)
