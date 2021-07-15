@@ -11,7 +11,7 @@ import (
 )
 
 // This is just an empty stub.
-// However we will link all neccessary functions to this stub.
+// However we will link all necessary functions to this stub.
 type codeberg struct {
 }
 
