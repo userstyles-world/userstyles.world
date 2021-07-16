@@ -1,0 +1,25 @@
+<div class="wrapper py:l">
+    <style type="text/css" media="screen">
+        textarea { min-height: 120px }
+    </style>
+
+    <section class="ta:c">
+        <h1>{{ .Title }}</h1>
+        <p>Your review will be publicly visible.</p>
+    </section>
+    <section class="limit mt:l mx:a">
+        <form class="form-wrapper" method="post" action="/styles/review/{{ .ID }}">
+            <label for="ratitng">Rating</label>
+            <input required type="number" name="rating" min="1" max="5" value="5">
+
+            <label for="description">Comment</label>
+            <i class="fg:3">Please avoid reporting bugs and/or feature requests here.</i>
+            <textarea type="text" name="comment">{{ .Comment }}</textarea>
+
+            <div class="mt:m">
+                <button class="btn primary mr:s" type="submit">Confirm</button>
+                <a class="fg:1" href="/style/{{ .ID }}">Cancel</a>
+            </div>
+        </form>
+    </section>
+</div>

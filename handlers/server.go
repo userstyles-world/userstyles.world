@@ -83,6 +83,8 @@ func Initialize() {
 	app.Post("/style/:id/promote", jwtware.Protected, style.Promote)
 	app.Get("/styles/ban/:id", jwtware.Protected, style.BanGet)
 	app.Post("/styles/ban/:id", jwtware.Protected, style.BanPost)
+	app.Get("/styles/review/:id", jwtware.Protected, style.ReviewGet)
+	app.Post("/styles/review/:id", jwtware.Protected, style.ReviewPost)
 	app.Get("/oauth_settings/:id?", jwtware.Protected, oauthprovider.OAuthSettingsGet)
 	app.Post("/oauth_settings/:id?", jwtware.Protected, oauthprovider.OAuthSettingsPost)
 	app.Get("/user/ban/:id", jwtware.Protected, user.Ban)

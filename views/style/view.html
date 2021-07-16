@@ -6,8 +6,9 @@
 
     <section class="reviews">
         <h2 class="td:d">Reviews</h2>
+        <a href="/styles/review/{{ .Style.ID }}">Add your review</a>
         {{ with .Reviews }}
-            {{ range . }}<p>{{ printf "%#v" . }}</p><br>{{ end }}
+            {{/* range . }}<p>{{ printf "%#v" . }}</p><br>{{ end */}}
             <table>
                 <thead>
                     <tr>
