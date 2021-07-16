@@ -26,6 +26,7 @@ var tables = []struct {
 	{"oauths", &models.OAuth{}},
 	{"histories", &models.History{}},
 	{"logs", &models.Log{}},
+	{"reviews", &models.Review{}},
 }
 
 func connect() (*gorm.DB, error) {

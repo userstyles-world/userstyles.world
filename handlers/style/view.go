@@ -57,6 +57,11 @@ func GetStylePage(c *fiber.Ctx) error {
 		}
 	}
 
+	reviews, err := new(models.Review).FindAllForStyle(id)
+	if err != nil {
+		log.Printf("Failed to get reviews for style %v, err: %v", id, err)
+	}
+
 	return c.Render("style/view", fiber.Map{
 		"Title":          data.Name,
 		"User":           u,
@@ -70,5 +75,6 @@ func GetStylePage(c *fiber.Ctx) error {
 		"BaseURL":        c.BaseURL(),
 		"DailyHistory":   dailyHistory,
 		"TotalHistory":   totalHistory,
+		"Reviews":        reviews,
 	})
 }
