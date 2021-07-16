@@ -43,6 +43,14 @@ func ReviewPost(c *fiber.Ctx) error {
 		})
 	}
 
+	// Check if rating is out of range.
+	if r < 1 || r > 5 {
+		return c.Render("err", fiber.Map{
+			"Title": "Rating is out of range",
+			"User":  u,
+		})
+	}
+
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.Render("err", fiber.Map{
