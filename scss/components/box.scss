@@ -29,4 +29,8 @@
         .datetime { color: inherit }
         a:hover { text-decoration: underline }
     }
+
+    &-body {
+        white-space: break-spaces;
+    }
 }

@@ -158,7 +158,10 @@
                         reviewed and gave {{ $v.Rating }}/5 ⭐ on
                         <a class="datetime" href="#id-{{ $id }}">{{ $v.CreatedAt.Format "January 02, 2006 at 15:04" }}</a>
                     </div>
-                    <div class="Box-body mt:m">{{- .Comment -}}</div>
+
+                    {{ with $v.Comment }}
+                        <div class="Box-body mt:m">{{ . }}</div>
+                    {{ end }}
                 </div>
             {{ end }}
         {{ else }}
