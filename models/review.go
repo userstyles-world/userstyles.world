@@ -24,6 +24,7 @@ func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
 		// Preload(clause.Associations).
 		Preload("User").
 		Model(Review{}).
+		Order("id DESC").
 		Find(&q, "style_id = ? ", id).
 		Error
 

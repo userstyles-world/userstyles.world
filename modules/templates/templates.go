@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"fmt"
 	"html/template"
 	"time"
 
@@ -43,6 +44,10 @@ func New() *html.Engine {
 
 	engine.AddFunc("Date", func(time time.Time) template.HTML {
 		return template.HTML(time.Format("January 02, 2006 15:04"))
+	})
+
+	engine.AddFunc("subtract", func(a, b int) template.HTML {
+		return template.HTML(fmt.Sprintf("%d", a-b))
 	})
 
 	engine.AddFunc("unescape", func(s string) template.HTML {

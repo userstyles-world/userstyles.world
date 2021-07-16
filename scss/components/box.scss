@@ -9,6 +9,7 @@
         margin-bottom: 1rem;
 
         &::after {
+            z-index: -1;
             content: '';
             width: 2px;
             height: 1rem;
@@ -17,5 +18,15 @@
             background-color: var(--bg-2);
         }
     }
-}
 
+    &:target {
+        border-color: var(--ac-2);
+        box-shadow: 0 0 0 0.25rem var(--ac-5);
+    }
+
+    &-header {
+        color: var(--fg-2);
+        .datetime { color: inherit }
+        a:hover { text-decoration: underline }
+    }
+}

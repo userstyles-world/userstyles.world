@@ -150,11 +150,13 @@
         <h2 class="td:d">Reviews</h2>
         <a href="/styles/review/{{ .Style.ID }}">Add your review</a>
         {{ with .Reviews }}
-            {{ range . }}
-                <div class="Box mt:m">
+            {{ range $k, $v := . }}
+                {{ $id := subtract (len $.Reviews) $k }}
+                <div class="Box mt:m" id="id-{{ $id }}">
                     <div class="Box-header">
-                        <a class="username" href="/user/{{ .User.Username }}">{{ .User.Name }}</a>
-                        reviewed and gave {{ .Rating }}/5 ⭐ on {{ .CreatedAt | Date }}.
+                        <a class="username" href="/user/{{ $v.User.Username }}"><b>{{ $v.User.Name }}</b></a>
+                        reviewed and gave {{ $v.Rating }}/5 ⭐ on
+                        <a class="datetime" href="#id-{{ $id }}">{{ $v.CreatedAt.Format "January 02, 2006 at 15:04" }}</a>
                     </div>
                     <div class="Box-body mt:m">{{- .Comment -}}</div>
                 </div>
