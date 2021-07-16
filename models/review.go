@@ -33,3 +33,7 @@ func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
 
 	return q, nil
 }
+
+func (r Review) CreateForStyle(id interface{}) error {
+	return database.Conn.Debug().Create(&r).Error
+}
