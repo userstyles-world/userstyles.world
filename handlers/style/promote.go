@@ -1,12 +1,55 @@
 package style
 
 import (
+	"log"
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/utils"
 )
+
+func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL string) {
+	user, err := models.FindUserByID(strconv.Itoa(int(userID)))
+	if err != nil {
+		log.Println("Couldn't find user:", err)
+		return
+	}
+
+	modProfile := baseURL + "/user/" + modName
+
+	partPlain := utils.NewPart().
+		SetBody("Hi " + user.Username + ",\n" +
+			"We'd like to notice you about a recent action from our moderation team:\n\n" +
+			"Your style \"" + style.Name + "\" has been promoted to be featured on the homepage!\n" +
+			"It has been promoted by the moderator" + modName + ", checkout their profile: " + modProfile + ".\n\n" +
+			"Regards,\n" + "The Moderation Team")
+	partHTML := utils.NewPart().
+		SetBody("<p>Hi " + user.Username + ",</p>\n" +
+			"<br>\n" +
+			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
+			"<br><br>\n" +
+			"<p>Your style \"" + style.Name + "\" has been promoted to be featured on the homepage!\n</p>\n" +
+			"<p>It has been promoted by the moderator " +
+			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modProfile + "\">" + modName + "</a>.</p>\n" +
+			"<br><br>\n" +
+			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
+		SetContentType("text/html")
+
+	err = utils.NewEmail().
+		SetTo(user.Email).
+		SetSubject("Style is being featured").
+		AddPart(*partPlain).
+		AddPart(*partHTML).
+		SendEmail()
+	if err != nil {
+		log.Println("Couldn't send email:", err)
+		return
+	}
+}
 
 func Promote(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
@@ -22,6 +65,7 @@ func Promote(c *fiber.Ctx) error {
 
 	style, err := models.GetStyleByID(p)
 	if err != nil {
+		log.Println("Couldn't get the style:", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -35,10 +79,17 @@ func Promote(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
+		log.Println("Couldn't feature style:", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to promote a style",
 			"User":  u,
 		})
+	}
+
+	// Ahem!!! We don't save the new value of Featured to the current style.
+	// So we have to reverse check it ;)
+	if !style.Featured {
+		go sendPromotionEmail(style.UserID, style, u.Username, c.BaseURL())
 	}
 
 	return c.Redirect("/style/"+p, fiber.StatusSeeOther)
