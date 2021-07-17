@@ -3,6 +3,7 @@ package templates
 import (
 	"fmt"
 	"html/template"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/template/html"
@@ -15,7 +16,6 @@ import (
 
 var ext = md.CommonExtensions | md.AutoHeadingIDs
 
-
 var appConfig = map[string]interface{}{
 	"copyright":       time.Now().Year(),
 	"appName":         config.AppName,
@@ -26,7 +26,6 @@ var appConfig = map[string]interface{}{
 
 func New() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
-
 
 	engine.AddFunc("config", func(key string) template.HTML {
 		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
@@ -61,7 +60,7 @@ func New() *html.Engine {
 	})
 
 	engine.AddFunc("subtract", func(a, b int) template.HTML {
-		return template.HTML(fmt.Sprintf("%d", a-b))
+		return template.HTML(strconv.FormatInt(int64(a-b), 10))
 	})
 
 	engine.AddFunc("unescape", func(s string) template.HTML {
