@@ -21,28 +21,28 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	fv := c.Query("sort")
-	sort.Slice(s, func(i, j int) bool {
-		switch fv {
-		case "newest":
-			return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix()
-		case "oldest":
-			return s[i].CreatedAt.Unix() < s[j].CreatedAt.Unix()
-		case "recentlyupdated":
-			return s[i].UpdatedAt.Unix() > s[j].UpdatedAt.Unix()
-		case "leastupdated":
-			return s[i].UpdatedAt.Unix() < s[j].UpdatedAt.Unix()
-		case "mostinstalls":
-			return s[i].Installs > s[j].Installs
-		case "leastinstalls":
-			return s[i].Installs < s[j].Installs
-		case "mostviews":
-			return s[i].Views > s[j].Views
-		case "leastviews":
-			return s[i].Views < s[j].Views
-		default:
-			return s[i].CreatedAt.Unix() < s[j].CreatedAt.Unix()
-		}
-	})
+	var sortFunction func(i, j int) bool
+	switch fv {
+	case "newest":
+		sortFunction = func(i, j int) bool { return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix() }
+	case "oldest":
+		sortFunction = func(i, j int) bool { return s[i].CreatedAt.Unix() < s[j].CreatedAt.Unix() }
+	case "recentlyupdated":
+		sortFunction = func(i, j int) bool { return s[i].UpdatedAt.Unix() > s[j].UpdatedAt.Unix() }
+	case "leastupdated":
+		sortFunction = func(i, j int) bool { return s[i].UpdatedAt.Unix() < s[j].UpdatedAt.Unix() }
+	case "mostinstalls":
+		sortFunction = func(i, j int) bool { return s[i].Installs > s[j].Installs }
+	case "leastinstalls":
+		sortFunction = func(i, j int) bool { return s[i].Installs < s[j].Installs }
+	case "mostviews":
+		sortFunction = func(i, j int) bool { return s[i].Views > s[j].Views }
+	case "leastviews":
+		sortFunction = func(i, j int) bool { return s[i].Views < s[j].Views }
+	}
+	if sortFunction != nil {
+		sort.Slice(s, sortFunction)
+	}
 
 	return c.Render("core/explore", fiber.Map{
 		"Title":  "Explore",
