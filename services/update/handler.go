@@ -7,10 +7,12 @@ import (
 	"userstyles.world/models"
 )
 
-var size = 5
+var size = 20
 
 func ImportedStyles() {
 	styles, err := models.GetImportedStyles()
+	log.Printf("Updating %d mirrored styles.\n", len(styles))
+
 	if err != nil {
 		log.Printf("Failed to find imported styles, err: %v", err)
 		return // stop if error occurs
@@ -23,10 +25,12 @@ func ImportedStyles() {
 		}
 
 		for _, style := range styles[i:j] {
-			time.Sleep(time.Second)
+			time.Sleep(500 * time.Millisecond)
 			go Batch(style)
 		}
 
 		time.Sleep(time.Second * 15)
 	}
+
+	log.Println("Mirrored styles have been updated.")
 }
