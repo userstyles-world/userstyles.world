@@ -43,3 +43,13 @@ func (r *Review) FindLastForStyle(styleID, userID interface{}) error {
 	return database.Conn.Debug().
 		Last(&r, "style_id = ? and user_id = ?", styleID, userID).Error
 }
+
+func (r *Review) FindLastFromUser(styleID, userID interface{}) error {
+	return database.Conn.
+		Debug().
+		Preload("User").
+		Model(Review{}).
+		Order("id DESC").
+		Last(&r, "style_id = ? and user_id = ?", styleID, userID).
+		Error
+}

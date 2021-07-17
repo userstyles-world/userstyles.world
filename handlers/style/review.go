@@ -15,6 +15,23 @@ func ReviewGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
 
+	// Prevent spam.
+	reviewSpam := new(models.Review)
+	if err := reviewSpam.FindLastFromUser(id, u.ID); err != nil {
+		log.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
+	}
+
+	if reviewSpam.ID > 0 {
+		now := time.Now().Add(-24 * 7 * time.Hour)
+		if now.Before(reviewSpam.CreatedAt) {
+			c.Status(fiber.StatusUnauthorized)
+			return c.Render("err", fiber.Map{
+				"Title": "You can post only one review per week",
+				"User":  u,
+			})
+		}
+	}
+
 	return c.Render("style/review", fiber.Map{
 		"Title": "Review style",
 		"User":  u,
@@ -26,6 +43,14 @@ func ReviewPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	cmt := c.FormValue("comment")
 
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Invalid style ID",
+			"User":  u,
+		})
+	}
+
 	// Check if style exists.
 	style, err := models.GetStyleByID(c.Params("id"))
 	if err != nil {
@@ -36,15 +61,24 @@ func ReviewPost(c *fiber.Ctx) error {
 		})
 	}
 
-	r, err := strconv.Atoi(c.FormValue("rating"))
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Invalid style ID",
-			"User":  u,
-		})
+	// Prevent spam.
+	reviewSpam := new(models.Review)
+	if err := reviewSpam.FindLastFromUser(id, u.ID); err != nil {
+		fmt.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
 	}
 
-	id, err := strconv.Atoi(c.Params("id"))
+	if reviewSpam.ID > 0 {
+		now := time.Now().Add(-7 * 24 * time.Hour)
+		if now.After(reviewSpam.CreatedAt) {
+			c.Status(fiber.StatusUnauthorized)
+			return c.Render("err", fiber.Map{
+				"Title": "You can post only one review per week",
+				"User":  u,
+			})
+		}
+	}
+
+	r, err := strconv.Atoi(c.FormValue("rating"))
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Invalid style ID",
