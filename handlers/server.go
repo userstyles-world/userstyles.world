@@ -46,7 +46,7 @@ func Initialize() {
 	app.Use(core.HSTSMiddleware)
 	app.Use(compress.New())
 	if config.Production {
-		app.Use(limiter.New(limiter.Config{Max: 300}))
+		app.Use(limiter.New(limiter.Config{Max: 600}))
 	}
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
