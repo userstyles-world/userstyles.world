@@ -148,7 +148,9 @@
 
     <section class="reviews">
         <h2 class="td:d">Reviews</h2>
-        <a href="/styles/review/{{ .Style.ID }}">Add your review</a>
+        {{ if .User.ID }}
+            <a href="/styles/review/{{ $.Style.ID }}">Add your review</a>
+        {{ end }}
         {{ with .Reviews }}
             {{ range $k, $v := . }}
                 {{ $id := subtract (len $.Reviews) $k }}
