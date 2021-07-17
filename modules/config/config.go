@@ -44,6 +44,7 @@ var (
 		BytesPerInsert: getEnvInt("NONCE_SCRAMBLE_BYTES_PER_INSERT", 3),
 	}
 
+	AppName         = "UserStyles.world"
 	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
 	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
 )

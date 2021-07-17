@@ -1,8 +1,7 @@
-{{ $title := "UserStyles.world" }}
 {{ $commit := printf "%.8s" GitCommit }}
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<meta name="title" content="{{ $title }}">
+<meta name="title" content="{{ config "appName" }}">
 <meta name="color-scheme" content="dark light">
 <meta name="description" content="A new site to explore userstyles.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +9,7 @@
 <link rel="stylesheet" href="/css/main.css?v={{ $commit }}" type="text/css" media="screen">
 <link rel="mask-icon" href="/mascot.svg" color="blue">
 <link rel="icon" href="/favicon.ico">
-<title>{{ .Title }} — {{ $title }}</title>
+<title>{{ .Title }} — {{ config "appName" }}</title>
 {{ with .Profile }}
 <meta property="og:type" content="profile">
 <meta property="og:url" content="{{ printf `https://userstyles.world/user/%s` .Username }}">

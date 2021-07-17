@@ -4,10 +4,10 @@
             <div class="mascot">
                 {{- template "partials/mascot" . -}}
             </div>
-            <h1>UserStyles.world</h1>
+            <h1>{{ config "appName" }}</h1>
             <p>A free and open-source, community-driven, modern alternative to <code>userstyles.org</code>. For the community, by the community.</p>
             <p class="stats">
-                UserStyles.world is home to {{ printf "%d " .Params.TotalUsers -}}
+                {{ config "appName" }} is home to {{ printf "%d " .Params.TotalUsers -}}
                 users and {{ .Params.TotalStyles }} userstyles.
 
                 Styles have been viewed {{ printf "%d " .Params.WeeklyViews -}}
