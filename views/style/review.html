@@ -7,10 +7,13 @@
         <h1>{{ .Title }}</h1>
         <p>Your review will be publicly visible.</p>
     </section>
+
     <section class="limit mt:l mx:a">
+        {{ template "partials/alert" . }}
         <form class="form-wrapper" method="post" action="/styles/review/{{ .ID }}">
             <label for="ratitng">Rating</label>
-            <input required type="number" name="rating" min="1" max="5" placeholder="Choose a rating">
+            <input required type="number" name="rating" min="1" max="5"
+                value="{{ .Rating }}" placeholder="Choose a rating">
 
             <label for="description">Comment</label>
             <i class="fg:3">Please avoid reporting bugs and/or feature requests here.</i>

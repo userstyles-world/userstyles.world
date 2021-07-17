@@ -44,19 +44,35 @@ func ReviewPost(c *fiber.Ctx) error {
 		})
 	}
 
-	// Check if rating is out of range.
-	if r < 1 || r > 5 {
-		return c.Render("err", fiber.Map{
-			"Title": "Rating is out of range",
-			"User":  u,
-		})
-	}
-
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Invalid style ID",
 			"User":  u,
+		})
+	}
+
+	// Check if rating is out of range.
+	if r < 1 || r > 5 {
+		return c.Render("style/review", fiber.Map{
+			"Title":   "Review style",
+			"User":    u,
+			"ID":      id,
+			"Error":   "Rating is out of range",
+			"Rating":  r,
+			"Comment": cmt,
+		})
+	}
+
+	// Prevent spam.
+	if len(cmt) > 500 {
+		return c.Render("style/review", fiber.Map{
+			"Title":   "Review style",
+			"User":    u,
+			"ID":      id,
+			"Error":   "Comment can't be longer than 500 characters",
+			"Rating":  r,
+			"Comment": cmt,
 		})
 	}
 
