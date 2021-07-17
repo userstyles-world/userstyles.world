@@ -76,5 +76,20 @@ func ReviewPost(c *fiber.Ctx) error {
 		})
 	}
 
+	// Create a notification.
+	notification := models.Notification{
+		Seen:     false,
+		Kind:     models.KindReview,
+		UserID:   int(u.ID),
+		StyleID:  id,
+		ReviewID: r,
+	}
+
+	go func(notification models.Notification) {
+		if err := notification.Create(); err != nil {
+			log.Printf("Failed to create a notification for %d, err: %v", id, err)
+		}
+	}(notification)
+
 	return c.Redirect(fmt.Sprintf("/style/%d", id), fiber.StatusSeeOther)
 }
