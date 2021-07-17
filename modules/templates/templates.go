@@ -15,8 +15,21 @@ import (
 
 var ext = md.CommonExtensions | md.AutoHeadingIDs
 
+
+var appConfig = map[string]interface{}{
+	"copyright":       time.Now().Year(),
+	"appName":         config.AppName,
+	"appSourceCode":   config.AppSourceCode,
+	"appLatestCommit": config.AppLatestCommit,
+}
+
 func New() *html.Engine {
 	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
+
+
+	engine.AddFunc("config", func(key string) template.HTML {
+		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
+	})
 
 	engine.AddFunc("MarkdownSafe", func(s string) template.HTML {
 		gen := md.Run([]byte(s), md.WithExtensions(ext))

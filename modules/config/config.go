@@ -43,6 +43,9 @@ var (
 		StepSize:       getEnvInt("NONCE_SCRAMBLE_STEP", 2),
 		BytesPerInsert: getEnvInt("NONCE_SCRAMBLE_BYTES_PER_INSERT", 3),
 	}
+
+	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
+	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
 )
 
 func getEnvInt(name string, defaultValue int) int {
