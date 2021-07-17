@@ -63,6 +63,15 @@ func Promote(c *fiber.Ctx) error {
 		})
 	}
 
+	id, err := strconv.Atoi(p)
+	if err != nil {
+		log.Println("Couldn't convert %v to int, err: %v", p, err)
+		return c.Render("err", fiber.Map{
+			"Title": "Couldn't convert style ID",
+			"User":  u,
+		})
+	}
+
 	style, err := models.GetStyleByID(p)
 	if err != nil {
 		log.Println("Couldn't get the style:", err)
@@ -90,6 +99,21 @@ func Promote(c *fiber.Ctx) error {
 	// So we have to reverse check it ;)
 	if !style.Featured {
 		go sendPromotionEmail(style.UserID, style, u.Username, c.BaseURL())
+
+		// Create a notification.
+		notification := models.Notification{
+			Seen:     false,
+			Kind:     models.KindStylePromotion,
+			TargetID: int(style.UserID),
+			UserID:   int(u.ID),
+			StyleID:  id,
+		}
+
+		go func(notification models.Notification) {
+			if err := notification.Create(); err != nil {
+				log.Printf("Failed to create a notification for %d, err: %v", id, err)
+			}
+		}(notification)
 	}
 
 	return c.Redirect("/style/"+p, fiber.StatusSeeOther)

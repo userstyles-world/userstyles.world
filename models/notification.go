@@ -26,7 +26,7 @@ type Notification struct {
 	StyleID int
 
 	Review   Review
-	ReviewID int
+	ReviewID int `gorm:"default:null"`
 }
 
 func (n Notification) Create() error {
