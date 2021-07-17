@@ -29,6 +29,7 @@ var (
 	EmailAddress         = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
 	EmailPassword        = getEnv("EMAIL_PWD", "hahah_not_your_password")
 	GitCommit            = getEnv("GIT_COMMIT", "unset")
+	GitVersion           = getEnv("GIT_VERSION", "unset")
 	GitHubClientID       = getEnv("GITHUB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	GitHubClientSecret   = getEnv("GITHUB_CLIENT_SECRET", "OurSecretHere?_www.youtube.com/watch?v=dQw4w9WgXcQ")
 	GitlabClientID       = getEnv("GITLAB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")

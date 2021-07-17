@@ -19,6 +19,7 @@ var ext = md.CommonExtensions | md.AutoHeadingIDs
 var appConfig = map[string]interface{}{
 	"copyright":       time.Now().Year(),
 	"appName":         config.AppName,
+	"appVersion":      config.GitVersion,
 	"appSourceCode":   config.AppSourceCode,
 	"appLatestCommit": config.AppLatestCommit,
 }
