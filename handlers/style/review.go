@@ -27,7 +27,8 @@ func ReviewPost(c *fiber.Ctx) error {
 	cmt := c.FormValue("comment")
 
 	// Check if style exists.
-	if _, err := models.GetStyleByID(c.Params("id")); err != nil {
+	style, err := models.GetStyleByID(c.Params("id"))
+	if err != nil {
 		c.Status(fiber.StatusNotFound)
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -76,20 +77,25 @@ func ReviewPost(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create a notification.
-	notification := models.Notification{
-		Seen:     false,
-		Kind:     models.KindReview,
-		UserID:   int(u.ID),
-		StyleID:  id,
-		ReviewID: r,
-	}
-
-	go func(notification models.Notification) {
-		if err := notification.Create(); err != nil {
-			log.Printf("Failed to create a notification for %d, err: %v", id, err)
+	if err = review.FindLastForStyle(id, u.ID); err != nil {
+		log.Printf("Failed to find review for style %v, err: %v", id, err)
+	} else {
+		// Create a notification.
+		notification := models.Notification{
+			Seen:     false,
+			Kind:     models.KindReview,
+			TargetID: int(style.UserID),
+			UserID:   int(u.ID),
+			StyleID:  id,
+			ReviewID: int(review.ID),
 		}
-	}(notification)
+
+		go func(notification models.Notification) {
+			if err := notification.Create(); err != nil {
+				log.Printf("Failed to create a notification for %d, err: %v", id, err)
+			}
+		}(notification)
+	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", id), fiber.StatusSeeOther)
 }

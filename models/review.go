@@ -38,3 +38,8 @@ func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
 func (r Review) CreateForStyle(id interface{}) error {
 	return database.Conn.Debug().Create(&r).Error
 }
+
+func (r *Review) FindLastForStyle(styleID, userID interface{}) error {
+	return database.Conn.Debug().
+		Last(&r, "style_id = ? and user_id = ?", styleID, userID).Error
+}

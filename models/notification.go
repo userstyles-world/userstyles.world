@@ -10,12 +10,14 @@ type Kind int
 
 const (
 	KindReview Kind = iota
+	KindStylePromotion
 )
 
 type Notification struct {
 	gorm.Model
-	Seen bool
-	Kind Kind
+	Seen     bool
+	Kind     Kind
+	TargetID int
 
 	User   User
 	UserID int
