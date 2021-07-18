@@ -46,8 +46,6 @@ func GetStyleEtag(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"data": "style not found"})
 	}
 
-	// TODO: add a possible update stat?
-
 	// Follows the format "source code length - MD5 Checksum of source code"
 	etagValue := fmt.Sprintf("\"%v-%v\"", len(style.Code), crc32.ChecksumIEEE([]byte(style.Code)))
 
