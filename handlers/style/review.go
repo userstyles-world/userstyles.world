@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -69,7 +70,7 @@ func ReviewPost(c *fiber.Ctx) error {
 
 	if reviewSpam.ID > 0 {
 		now := time.Now().Add(-7 * 24 * time.Hour)
-		if now.After(reviewSpam.CreatedAt) {
+		if now.Before(reviewSpam.CreatedAt) {
 			c.Status(fiber.StatusUnauthorized)
 			return c.Render("err", fiber.Map{
 				"Title": "You can post only one review per week",
