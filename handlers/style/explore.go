@@ -37,9 +37,18 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	// Adjust max pages.
-	maxPages, remainder := styleCount/40, styleCount%40
+	maxPages, remainder := int(styleCount)/40, styleCount%40
 	if remainder > 0 {
 		maxPages++
+	}
+
+	// If the page is greater than the max pages, display the last page.
+	// Or if the page is less than 1, display the first page.
+	if pageNow > maxPages {
+		pageNow = maxPages
+	}
+	if pageNow < 1 {
+		pageNow = 1
 	}
 
 	s, err := models.GetAllAvailableStylesPaginated(pageNow)
