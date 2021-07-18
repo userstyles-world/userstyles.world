@@ -28,11 +28,11 @@ func (gitlab) enableState() bool {
 	return false
 }
 
-func (gitlab) appendToRedirect(data interface{}) string {
+func (gitlab) appendToRedirect(_ interface{}) string {
 	return gitlabStr + "/"
 }
 
-func (gitlab) getAuthTokenURL(data interface{}) string {
+func (gitlab) getAuthTokenURL(_ interface{}) string {
 	authURL := "https://gitlab.com/oauth/token"
 	authURL += "?client_id=" + config.GitlabClientID
 	authURL += "&client_secret=" + config.GitlabClientSecret
@@ -48,11 +48,11 @@ func (gitlab) isAuthTokenPost() bool {
 	return false
 }
 
-func (gitlab) getAuthTokenPostBody(data interface{}) authURLPostBody {
+func (gitlab) getAuthTokenPostBody(_ interface{}) authURLPostBody {
 	return authURLPostBody{}
 }
 
-func (gitlab) beforeRequest(body authURLPostBody, req *http.Request) error {
+func (gitlab) beforeRequest(_ authURLPostBody, _ *http.Request) error {
 	return nil
 }
 
