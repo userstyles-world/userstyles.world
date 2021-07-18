@@ -2,6 +2,78 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/userstyles-world/userstyles.world/compare/v1.4.0...v1.5.0) (2021-07-18)
+
+
+### Features
+
+* **client:** improve UI for pagination component ([d48d2b1](https://github.com/userstyles-world/userstyles.world/commit/d48d2b18fda2298187e821f6ff4c2bfac34d0339))
+* **cron:** speed up updating mirrored styles ([d94f27a](https://github.com/userstyles-world/userstyles.world/commit/d94f27ac74c7e29a99a293bdcc187efea2320d78))
+* **css:** add highlight to modlog entry ([047a9ee](https://github.com/userstyles-world/userstyles.world/commit/047a9eea84cd65b237c58b3804a24f704e7de255))
+* **dashboard:** add total History graph ([14906d2](https://github.com/userstyles-world/userstyles.world/commit/14906d208c19aa00e2a60652963605693f7cca88))
+* **dashboard:** add User History charts ([08ac417](https://github.com/userstyles-world/userstyles.world/commit/08ac4175ddcc438e5eb4d235a4f4a98793fc0d71))
+* **dashboard:** summarize new daily users/styles ([b4223a7](https://github.com/userstyles-world/userstyles.world/commit/b4223a717c95e88f3b3efdd3e6426dce940f485d))
+* **email:** change email when password is resetted ([fd7eea6](https://github.com/userstyles-world/userstyles.world/commit/fd7eea66719dbb4f0f0a0b8131c5348eb3db2207))
+* **html:** add anchors to Review entries ([03f531b](https://github.com/userstyles-world/userstyles.world/commit/03f531b0a3ce71b794559b28b45d63a0f9f5924a))
+* **html:** improve the look for Review entries ([67c0820](https://github.com/userstyles-world/userstyles.world/commit/67c0820c13905c6235dd1dbf27fae9021758a7b5))
+* **html:** show current release tag in the footer ([2b04944](https://github.com/userstyles-world/userstyles.world/commit/2b049443624b59827903aefdeeff32cc42c9496c))
+* **mock db:** add style scope for default oauth app ([0ac8ab8](https://github.com/userstyles-world/userstyles.world/commit/0ac8ab84f5779fc65022e70a05a056ce17248b94))
+* **models:** add notifications for style reviews ([b943c95](https://github.com/userstyles-world/userstyles.world/commit/b943c95d2ff8493cd88ab8d3b427443e1dd0f284))
+* **modlog:** add don't hide behavior ([5d9b56b](https://github.com/userstyles-world/userstyles.world/commit/5d9b56b5c3689c991fc68d18bd96a21a2a1dbfa2))
+* **modlog:** add modlog entry for removed styles ([74fa19f](https://github.com/userstyles-world/userstyles.world/commit/74fa19f6823cf6de8a6be7e93eae4c56891d938c))
+* **modlog:** add option to change censor behavior ([deb9db1](https://github.com/userstyles-world/userstyles.world/commit/deb9db10c945cfc19d00143df31de5402ca5c3a2))
+* **modlog:** allow entries to inside spoilers ([18ab383](https://github.com/userstyles-world/userstyles.world/commit/18ab3831bf7f41962cca74bf53d490edccfe2282))
+* **modlog:** send email about mod actions to designated person ([7efcece](https://github.com/userstyles-world/userstyles.world/commit/7efcece6f34804daee82030d11053db6fa07030f))
+* **oauthP:** add metadata validation ([7c6d2c5](https://github.com/userstyles-world/userstyles.world/commit/7c6d2c519b4021c409721d909741c0e4bac0c334))
+* **reviews:** add core logic for Style reviews ([6b2d97f](https://github.com/userstyles-world/userstyles.world/commit/6b2d97f46fd07344be00d872356f9f897d816ef7))
+* **reviews:** add logic to render Review form ([d95ce85](https://github.com/userstyles-world/userstyles.world/commit/d95ce855916a6f66dbba666ba3d9a304675714cb))
+* **reviews:** add spam prevention for reviews ([1d4f3d1](https://github.com/userstyles-world/userstyles.world/commit/1d4f3d1b4b73bf14fefb14f59964993c6d5617ea))
+* **reviews:** connect database logic to front-end ([15bde83](https://github.com/userstyles-world/userstyles.world/commit/15bde83f818b565ba1f5fcd7eeb03523b6b532d6))
+* **reviews:** prevent too long or tall comments ([458791b](https://github.com/userstyles-world/userstyles.world/commit/458791bca6d02edaaf8dae94c0d68d771292b245))
+* **server:** increase limiter's max connections ([827f2a7](https://github.com/userstyles-world/userstyles.world/commit/827f2a795a703a79c3294252fd52d777ffa5ea27))
+* **styles:** 150k -> 100k chars for large styles ([acaf361](https://github.com/userstyles-world/userstyles.world/commit/acaf361a15ed6e3a31473ddad5076976c980cbd3))
+* **styles:** add promotions to notifications ([c5477ad](https://github.com/userstyles-world/userstyles.world/commit/c5477ad9b885affbddbdaf0d7b85519de3c6b48e))
+* **styles:** add total History graph in details ([92b0503](https://github.com/userstyles-world/userstyles.world/commit/92b050319899422c125ee4c2dac4ece1aa44f2e2))
+* **styles:** implement ban functionality ([12fac37](https://github.com/userstyles-world/userstyles.world/commit/12fac374ca63397de69a3350481f75c0216f9a0c))
+* **styles:** implement pagination on Explore page ([17f78a9](https://github.com/userstyles-world/userstyles.world/commit/17f78a90438498cf3d3ff15859fae2d9dbacbe3b))
+* **styles:** send email on style promotion ([8a790a5](https://github.com/userstyles-world/userstyles.world/commit/8a790a5d2978d67187575d5bdb4ec6ca0f10ac00))
+* **templates:** add global `config` function ([3544371](https://github.com/userstyles-world/userstyles.world/commit/35443713fbe4e6cbacf52b58aaac022e5b9c1f31))
+
+
+### Bug Fixes
+
+* **alloc:** ensure it's non-zero initialized ([b4e6e1b](https://github.com/userstyles-world/userstyles.world/commit/b4e6e1b5874a748180030821c6c70cc867fddcb7))
+* **archive:** return nil instead of empty style ([2eb7196](https://github.com/userstyles-world/userstyles.world/commit/2eb7196e2bf396351c61441543f57db8e7ceccb0))
+* **charts:** avoid rendering empty History charts ([775c7cb](https://github.com/userstyles-world/userstyles.world/commit/775c7cbb42c895b1fbbb653c7dd4c26fecd2068f))
+* **charts:** remove total updates from the charts ([f3ba4fb](https://github.com/userstyles-world/userstyles.world/commit/f3ba4fbb36eecb9bc9fb42332488fbe250d7e779))
+* **core:** account for remainder in pagination ([4f5f02a](https://github.com/userstyles-world/userstyles.world/commit/4f5f02a0479be0d15799e73a1a138393b0e0e3d8))
+* **core:** Correct incorrect page numbers ([d834b82](https://github.com/userstyles-world/userstyles.world/commit/d834b82563b421cf7e861d62b304e23875a29623))
+* **crypto:** don't use non-zero initalizion ([17068bb](https://github.com/userstyles-world/userstyles.world/commit/17068bb4ca41da9cc4c392b4ee321ef974ddbdb2))
+* **css:** add [@media](https://github.com/media) ([0b57dcc](https://github.com/userstyles-world/userstyles.world/commit/0b57dcc87f42e9ab085f4fc010584bc326a87679))
+* **css:** resolve some issues with buttons/forms ([231fb3a](https://github.com/userstyles-world/userstyles.world/commit/231fb3a407c8e1365a17d6f9204421952ba3c9bc))
+* **css:** switch back to flexbox in Style previews ([968605c](https://github.com/userstyles-world/userstyles.world/commit/968605cff8d1a1886a7af22dd17d97ed8d33ff7b)), closes [#67](https://github.com/userstyles-world/userstyles.world/issues/67)
+* **dashboard:** improve item order in User History ([d2815c4](https://github.com/userstyles-world/userstyles.world/commit/d2815c43d3b94f29e9bd7c525ff7d958b131021c))
+* **dashboard:** make User History chart readable ([7c8c804](https://github.com/userstyles-world/userstyles.world/commit/7c8c804a40c1c484a4cc1418544c6a247f8468de))
+* **email:** globalify email struct ([d03ada8](https://github.com/userstyles-world/userstyles.world/commit/d03ada8c0237aaacb781b43b14983ff98dcf2cc0))
+* **errors:** don't expose literal errors ([899f88e](https://github.com/userstyles-world/userstyles.world/commit/899f88ef222cc88f9884fba35af81cc689e7dfb7))
+* **gocritic:** fix false positive ([ba8f23c](https://github.com/userstyles-world/userstyles.world/commit/ba8f23ca99210e8dc0f630b294985a785396d760))
+* **imports:** use import from defined name ([9c39b79](https://github.com/userstyles-world/userstyles.world/commit/9c39b7998883039ad853088ad4253517ba334e94))
+* **log:** use correct log functions ([9feaea3](https://github.com/userstyles-world/userstyles.world/commit/9feaea3df1c10645a1d9166428c3d8935944ec8d))
+* **mail:** Fix mail with only 1 part. ([7629d73](https://github.com/userstyles-world/userstyles.world/commit/7629d734b19679d50193473befddfaa3da4802bb))
+* **oauth_login:** correct codebergStr ([2b54c05](https://github.com/userstyles-world/userstyles.world/commit/2b54c05cf73bc3cfecfcdce4a5e69b8e1990ad2f))
+* **oauth:** broken code ([4d7e52b](https://github.com/userstyles-world/userstyles.world/commit/4d7e52befb19903f83e35850bea95d96fb70c6ed))
+* **printf:** use correct type for string ([674018d](https://github.com/userstyles-world/userstyles.world/commit/674018d00dd37b39e1ecab91036db0b6f29307ec))
+* **reviews:** add correct data for review entries ([75dba69](https://github.com/userstyles-world/userstyles.world/commit/75dba6916f8b3529f9dece458a13c1afc008755c))
+* **reviews:** check if rating is out of range ([5b8fafe](https://github.com/userstyles-world/userstyles.world/commit/5b8fafe3225a3c52285497f8494035b842b3b9b3))
+* **reviews:** resolve empty/multi-line comments ([60713ec](https://github.com/userstyles-world/userstyles.world/commit/60713ec3c06d8283858e78c60f47b94f6e67b1e7))
+* **reviews:** use correct time function ([fd91a39](https://github.com/userstyles-world/userstyles.world/commit/fd91a39c9dcfc01a91175177e75c635d84e6e7a6))
+* **search:** sort by default on relevance ([6f860fa](https://github.com/userstyles-world/userstyles.world/commit/6f860fa3fad60f00734650a8d2d55f6b605f7300))
+* **styles:** hide review link to logged-out users ([d2082a3](https://github.com/userstyles-world/userstyles.world/commit/d2082a32dc12dafda61922b87326ad70b6961b94))
+* **styles:** resolve a bug with preview image URLs ([e18255a](https://github.com/userstyles-world/userstyles.world/commit/e18255a35efbdc41d660e8c1ac29c8a054d705e9)), closes [#67](https://github.com/userstyles-world/userstyles.world/issues/67)
+* **styles:** update to new USo-archive links ([1427178](https://github.com/userstyles-world/userstyles.world/commit/14271785aefa77a456a14bc7eb011050962b40c1))
+* **todo:** remove non-possible todo ([9561f2c](https://github.com/userstyles-world/userstyles.world/commit/9561f2c121782e683a795e5f9322e0f6f490d835))
+* **typecheck:** don't force types without checks ([f39bebb](https://github.com/userstyles-world/userstyles.world/commit/f39bebb9ad55a33116856294de5dbfc8ae295b6e))
+
 ## [1.4.0](https://github.com/userstyles-world/userstyles.world/compare/v1.3.0...v1.4.0) (2021-07-12)
 
 
