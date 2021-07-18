@@ -49,21 +49,21 @@ func StylePost(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(403).
 			JSON(fiber.Map{
-				"data": "Couldn't parse param \"id\"",
+				"data": "Error: Couldn't parse param \"id\"",
 			})
 	}
 
 	if u.StyleID == 0 && !utils.Contains(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
-				"data": "You need the \"style\" scope to do this.",
+				"data": "Error: You need the \"style\" scope to do this.",
 			})
 	}
 
 	if u.StyleID != 0 && uint(styleID) != u.StyleID {
 		return c.Status(403).
 			JSON(fiber.Map{
-				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
+				"data": "Error: This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
 			})
 	}
 
@@ -77,9 +77,10 @@ func StylePost(c *fiber.Ctx) error {
 	if style.UserID != u.ID {
 		return c.Status(403).
 			JSON(fiber.Map{
-				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
+				"data": "Error: This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
 			})
 	}
+
 	var postStyle models.Style
 	err = JSONParser.Unmarshal(c.Body(), &postStyle)
 	if err != nil {
@@ -93,6 +94,18 @@ func StylePost(c *fiber.Ctx) error {
 	postStyle.ID = style.ID
 	postStyle.UserID = u.ID
 	postStyle.Featured = style.Featured
+
+	code := usercss.ParseFromString(postStyle.Code)
+	if errs := usercss.BasicMetadataValidation(code); errs != nil {
+		var errors string
+		for i := 0; i < len(errs); i++ {
+			errors += errs[i].Code.Error() + ";"
+		}
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "Error: " + errors,
+			})
+	}
 
 	err = models.UpdateStyle(&postStyle)
 	if err != nil {
