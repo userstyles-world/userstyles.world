@@ -216,7 +216,7 @@ func GetStyleCount() (i int64, err error) {
 
 func GetAllAvailableStylesPaginated(page int) ([]StyleCard, error) {
 	q := new([]StyleCard)
-	size := 50
+	size := 40
 	offset := (page - 1) * size
 
 	s1 := "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
