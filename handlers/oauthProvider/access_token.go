@@ -58,13 +58,13 @@ func TokenPost(c *fiber.Ctx) error {
 		log.Println("Error: couldn't type convert state to string")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
-	var userID uint
-	if floatUserID, ok := claims["userID"].(float64); ok {
-		userID = uint(floatUserID)
-	} else {
+
+	floatUserID, ok := claims["userID"].(float64)
+	if !ok {
 		log.Println("Error: couldn't type convert userID to float64")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
+	userID := uint(floatUserID)
 
 	fStyleID, ok := claims["styleID"].(float64)
 	if !ok {
