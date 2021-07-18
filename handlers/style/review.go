@@ -120,7 +120,7 @@ func ReviewPost(c *fiber.Ctx) error {
 	}
 
 	// Add review to database.
-	if err := review.CreateForStyle(id); err != nil {
+	if err := review.CreateForStyle(); err != nil {
 		log.Printf("Failed to add review to style %v, err: %v", id, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to add your review",
