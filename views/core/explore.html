@@ -27,4 +27,10 @@
             <p class="ta:c">No userstyles found.</p>
         {{ end }}
     </section>
+
+    <section class="Pagination mt:m mb:m flex jc:c ai:c">
+        <div>
+            back: {{ .PageBack }} / now: {{ .PageNow }} next: {{ .PageNext }} / max: {{ .PageMax }}
+        </div>
+    </section>
 </div>

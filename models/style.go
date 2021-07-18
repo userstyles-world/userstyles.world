@@ -206,6 +206,39 @@ func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
 	return q, nil
 }
 
+func GetStyleCount() (i int64, err error) {
+	if err := database.Conn.Select("count(id)").Model(Style{}).Count(&i).Error; err != nil {
+		return 0, err
+	}
+
+	return i, nil
+}
+
+func GetAllAvailableStylesPaginated(page int) ([]StyleCard, error) {
+	q := new([]StyleCard)
+	size := 50
+	offset := (page - 1) * size
+
+	s1 := "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
+	s2 := "(select count(id) from stats s where s.style_id = styles.id and s.install > 0) installs, "
+	s3 := "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
+	stmt := s1 + s2 + s3
+
+	err := getDBSession().
+		Select(stmt).
+		Model(Style{}).
+		Joins("join users u on u.id = styles.user_id").
+		Offset(offset).
+		Limit(size).
+		Find(q).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return *q, nil
+}
+
 func GetAllAvailableStyles() ([]StyleCard, error) {
 	q := new([]StyleCard)
 	stmt := `

@@ -2,6 +2,7 @@ package style
 
 import (
 	"sort"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -11,8 +12,33 @@ import (
 
 func GetExplore(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	page := c.Query("page")
 
-	s, err := models.GetAllAvailableStyles()
+	var pageNow int
+	if page != "" {
+		i, err := strconv.Atoi(page)
+		if err != nil {
+			return c.Render("err", fiber.Map{
+				"Title": "Invalid page size",
+				"User":  u,
+			})
+		}
+		pageNow = i
+	} else {
+		pageNow = 1
+	}
+
+	styleCount, err := models.GetStyleCount()
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Failed to add pagination",
+			"User":  u,
+		})
+	}
+
+	maxPages := styleCount / 50
+
+	s, err := models.GetAllAvailableStylesPaginated(pageNow)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Styles not found",
@@ -45,9 +71,13 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	return c.Render("core/explore", fiber.Map{
-		"Title":  "Explore",
-		"User":   u,
-		"Styles": s,
-		"Sort":   fv,
+		"Title":    "Explore",
+		"User":     u,
+		"Styles":   s,
+		"Sort":     fv,
+		"PageMax":  maxPages,
+		"PageNow":  pageNow,
+		"PageBack": pageNow - 1,
+		"PageNext": pageNow + 1,
 	})
 }
