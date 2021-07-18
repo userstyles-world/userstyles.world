@@ -1,0 +1,48 @@
+.Pagination {
+    padding: 0.25rem;
+    border-radius: var(--br-2);
+    border: 1px solid var(--bg-4);
+    background-color: var(--bg-2);
+
+    &-button,
+    &-active {
+        padding: 0.5rem;
+        border-radius: var(--br-3);
+        color: var(--fg-1);
+    }
+
+    &-active {
+        background-color: var(--ac-4);
+    }
+
+    > * {
+        min-width: 40px;
+        position: relative;
+        text-align: center;
+        &:not(:last-child) {
+            margin-right: 0.5rem;
+            &::after {
+                content: '|';
+                right: -0.438rem;
+                font-size: 1rem;
+                position: absolute;
+                color: var(--bg-4);
+            }
+        }
+    }
+
+    &-button {
+        &:hover { background-color: var(--bg-3) }
+        &:focus {
+            border-color: var(--ac-2);
+            box-shadow: inset 0 0 0 1px var(--ac-3), 0 0 0 0.2rem var(--ac-5);
+        }
+        &:-moz-focusring {
+            outline: 1px solid transparent;
+        }
+    }
+
+    &-active {
+        background-color: var(--ac-4);
+    }
+}

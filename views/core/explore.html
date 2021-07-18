@@ -28,9 +28,21 @@
         {{ end }}
     </section>
 
-    <section class="Pagination mt:m mb:m flex jc:c ai:c">
-        <div>
-            back: {{ .PageBack }} / now: {{ .PageNow }} next: {{ .PageNext }} / max: {{ .PageMax }}
+    <section class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
+        <div class="Pagination flex jc:c ai:c">
+            {{ if not (eq .PageNow 1) }}
+                <a class="Pagination-button min" href="/explore?page=1">First page</a>
+            {{ end }}
+            {{ if not (or (eq .PageNow 1) (eq .PageBack 1)) }}
+                <a class="Pagination-button back" href="/explore?page={{ .PageBack }}">{{ .PageBack }}</a>
+            {{ end }}
+            <div class="Pagination-active now">{{ .PageNow }}</div>
+            {{ if not (or (eq .PageNow .PageMax) (eq .PageNext .PageMax)) }}
+                <a class="Pagination-button next" href="/explore?page={{ .PageNext }}">{{ .PageNext }}</a>
+            {{ end }}
+            {{ if not (eq .PageNow .PageMax) }}
+                <a class="Pagination-button max" href="/explore?page={{ .PageMax }}">Last page</a>
+            {{ end }}
         </div>
     </section>
 </div>
