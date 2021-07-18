@@ -57,7 +57,7 @@ func (s *StringList) Scan(src interface{}) (err error) {
 		return errors.ErrIncompatibleType
 	}
 	if err != nil {
-		return
+		return err
 	}
 	*s = scopes
 	return nil
