@@ -65,7 +65,7 @@ func Promote(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(p)
 	if err != nil {
-		log.Println("Couldn't convert %v to int, err: %v", p, err)
+		log.Printf("Couldn't convert %s to int, err: %s\n", p, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Couldn't convert style ID",
 			"User":  u,

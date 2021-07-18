@@ -65,7 +65,7 @@ func ReviewPost(c *fiber.Ctx) error {
 	// Prevent spam.
 	reviewSpam := new(models.Review)
 	if err := reviewSpam.FindLastFromUser(id, u.ID); err != nil {
-		fmt.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
+		log.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
 	}
 
 	if reviewSpam.ID > 0 {
