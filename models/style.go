@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/modules/config"
@@ -214,7 +215,7 @@ func GetStyleCount() (i int64, err error) {
 	return i, nil
 }
 
-func GetAllAvailableStylesPaginated(page int) ([]StyleCard, error) {
+func GetAllAvailableStylesPaginated(page int, orderStatement clause.OrderByColumn) ([]StyleCard, error) {
 	q := new([]StyleCard)
 	size := 40
 	offset := (page - 1) * size
@@ -228,6 +229,7 @@ func GetAllAvailableStylesPaginated(page int) ([]StyleCard, error) {
 		Select(stmt).
 		Model(Style{}).
 		Joins("join users u on u.id = styles.user_id").
+		Order(orderStatement).
 		Offset(offset).
 		Limit(size).
 		Find(q).Error

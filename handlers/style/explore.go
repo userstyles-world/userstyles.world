@@ -1,10 +1,11 @@
 package style
 
 import (
-	"sort"
+	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm/clause"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -50,37 +51,72 @@ func GetExplore(c *fiber.Ctx) error {
 	if pageNow < 1 {
 		pageNow = 1
 	}
+	fv := c.Query("sort")
+	var orderFunction clause.OrderByColumn
+	switch fv {
+	case "newest":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "created_at", Table: "styles"},
+			Desc:    true,
+			Reorder: false,
+		}
+	case "oldest":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "created_at", Table: "styles"},
+			Desc:    false,
+			Reorder: false,
+		}
+	case "recentlyupdated":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "updated_at", Table: "styles"},
+			Desc:    true,
+			Reorder: false,
+		}
+	case "leastupdated":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "updated_at", Table: "styles"},
+			Desc:    false,
+			Reorder: false,
+		}
+	case "mostinstalls":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "installs"},
+			Desc:    true,
+			Reorder: false,
+		}
+	case "leastinstalls":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "installs"},
+			Desc:    false,
+			Reorder: false,
+		}
+	case "mostviews":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "views"},
+			Desc:    true,
+			Reorder: false,
+		}
+	case "leastviews":
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "views"},
+			Desc:    false,
+			Reorder: false,
+		}
+	default:
+		orderFunction = clause.OrderByColumn{
+			Column:  clause.Column{Name: "id", Table: "styles"},
+			Desc:    false,
+			Reorder: false,
+		}
+	}
 
-	s, err := models.GetAllAvailableStylesPaginated(pageNow)
+	s, err := models.GetAllAvailableStylesPaginated(pageNow, orderFunction)
 	if err != nil {
+		log.Println("Couldn't get paginated styles, ", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Styles not found",
 			"User":  u,
 		})
-	}
-
-	fv := c.Query("sort")
-	var sortFunction func(i, j int) bool
-	switch fv {
-	case "newest":
-		sortFunction = func(i, j int) bool { return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix() }
-	case "oldest":
-		sortFunction = func(i, j int) bool { return s[i].CreatedAt.Unix() < s[j].CreatedAt.Unix() }
-	case "recentlyupdated":
-		sortFunction = func(i, j int) bool { return s[i].UpdatedAt.Unix() > s[j].UpdatedAt.Unix() }
-	case "leastupdated":
-		sortFunction = func(i, j int) bool { return s[i].UpdatedAt.Unix() < s[j].UpdatedAt.Unix() }
-	case "mostinstalls":
-		sortFunction = func(i, j int) bool { return s[i].Installs > s[j].Installs }
-	case "leastinstalls":
-		sortFunction = func(i, j int) bool { return s[i].Installs < s[j].Installs }
-	case "mostviews":
-		sortFunction = func(i, j int) bool { return s[i].Views > s[j].Views }
-	case "leastviews":
-		sortFunction = func(i, j int) bool { return s[i].Views < s[j].Views }
-	}
-	if sortFunction != nil {
-		sort.Slice(s, sortFunction)
 	}
 
 	return c.Render("core/explore", fiber.Map{
