@@ -205,15 +205,15 @@ func OAuthPJwtKeyFunction(t *jwt.Token) (interface{}, error) {
 	return OAuthPSigningKey, nil
 }
 
-func EncryptText(text string, aead cipher.AEAD, config *config.ScrambleSettings) string {
+func EncryptText(text string, aead cipher.AEAD, settings *config.ScrambleSettings) string {
 	// We have to prepare the encrypted text for transport
 	// Seal Text -> Base64(URL Version)
-	sealedText := sealText(text, aead, config)
+	sealedText := sealText(text, aead, settings)
 
 	return EncodeToString(sealedText)
 }
 
-func DecryptText(preparedText string, aead cipher.AEAD, config *config.ScrambleSettings) (string, error) {
+func DecryptText(preparedText string, aead cipher.AEAD, settings *config.ScrambleSettings) (string, error) {
 	// Now we have to reverse the process.
 	// Decode Base64(URL version) -> Unseal Text
 	enryptedText, err := decodeBase64(preparedText)
@@ -221,7 +221,7 @@ func DecryptText(preparedText string, aead cipher.AEAD, config *config.ScrambleS
 		return "", err
 	}
 
-	decryptedText, err := openText(UnsafeString(enryptedText), aead, config)
+	decryptedText, err := openText(UnsafeString(enryptedText), aead, settings)
 	if err != nil {
 		return "", err
 	}

@@ -107,20 +107,20 @@ func (s APIStyle) TruncateCode() bool {
 }
 
 func getDBSession() (tx *gorm.DB) {
-	var log logger.LogLevel
+	var logLevel logger.LogLevel
 	switch config.DBDebug {
 	case "error":
-		log = logger.Error
+		logLevel = logger.Error
 	case "warn":
-		log = logger.Warn
+		logLevel = logger.Warn
 	case "info":
-		log = logger.Info
+		logLevel = logger.Info
 	default:
-		log = logger.Silent
+		logLevel = logger.Silent
 	}
 
 	return database.Conn.Session(&gorm.Session{
-		Logger: database.Conn.Logger.LogMode(log),
+		Logger: database.Conn.Logger.LogMode(logLevel),
 	})
 }
 
