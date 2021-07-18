@@ -27,8 +27,8 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
 	}
-	OAuth, err := models.GetOAuthByClientID(clientID)
-	if err != nil || OAuth.ID == 0 {
+	oauth, err := models.GetOAuthByClientID(clientID)
+	if err != nil || oauth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
 
@@ -56,7 +56,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 
 	if len(styles) == 0 {
 		return c.Redirect(fmt.Sprintf(
-			"/api/oauth/style/new?token=%s&oauthID=%d", secureToken, OAuth.ID),
+			"/api/oauth/style/new?token=%s&oauthID=%d", secureToken, oauth.ID),
 			fiber.StatusSeeOther)
 	}
 
@@ -64,11 +64,11 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	arguments := fiber.Map{
 		"User":        u,
 		"Styles":      styles,
-		"OAuth":       OAuth,
+		"OAuth":       oauth,
 		"StyleInfo":   url.QueryEscape(styleInfo),
 		"SecureToken": secureToken,
 	}
-	for _, v := range OAuth.Scopes {
+	for _, v := range oauth.Scopes {
 		arguments["Scope_"+v] = true
 	}
 
@@ -79,8 +79,8 @@ func OAuthStylePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	styleID, oauthID, secureToken := c.Query("styleID"), c.Query("oauthID"), c.Query("token")
 
-	OAuth, err := models.GetOAuthByID(oauthID)
-	if err != nil || OAuth.ID == 0 {
+	oauth, err := models.GetOAuthByID(oauthID)
+	if err != nil || oauth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
@@ -141,15 +141,15 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		returnCode += "&state=" + state
 	}
 
-	return c.Redirect(OAuth.RedirectURI + "/" + returnCode)
+	return c.Redirect(oauth.RedirectURI + "/" + returnCode)
 }
 
 func OAuthStyleNewPost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	oauthID, secureToken := c.Query("oauthID"), c.Query("token")
 
-	OAuth, err := models.GetOAuthByID(oauthID)
-	if err != nil || OAuth.ID == 0 {
+	oauth, err := models.GetOAuthByID(oauthID)
+	if err != nil || oauth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 

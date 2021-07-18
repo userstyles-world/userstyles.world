@@ -74,11 +74,11 @@ func User(c *fiber.Ctx) (*JWTAPIUser, bool) {
 	u.Role = user.Role
 
 	// As these are "optional" we need to check them first.
-	if Scopes, ok := s["scopes"].(string); ok {
-		u.Scopes = strings.Split(Scopes, ",")
+	if scopes, ok := s["scopes"].(string); ok {
+		u.Scopes = strings.Split(scopes, ",")
 	}
-	if StyleID, ok := s["styleID"].(float64); ok {
-		u.StyleID = uint(StyleID)
+	if styleID, ok := s["styleID"].(float64); ok {
+		u.StyleID = uint(styleID)
 	}
 	return u, true
 }

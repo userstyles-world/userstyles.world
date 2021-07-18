@@ -35,7 +35,7 @@ func CreateGet(c *fiber.Ctx) error {
 
 func CreatePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
-	secureToken, OAuthID := c.Query("token"), c.Query("oauthID")
+	secureToken, oauthID := c.Query("token"), c.Query("oauthID")
 
 	// Check if userstyle name is empty.
 	if strings.TrimSpace(c.FormValue("name")) == "" {
@@ -66,9 +66,9 @@ func CreatePost(c *fiber.Ctx) error {
 			"Method": "add",
 			"Errors": errs,
 		}
-		if OAuthID != "" {
+		if oauthID != "" {
 			arguments["Method"] = "add_api"
-			arguments["OAuthID"] = OAuthID
+			arguments["OAuthID"] = oauthID
 			arguments["SecureToken"] = secureToken
 		}
 		return c.Render("style/create", arguments)
@@ -131,8 +131,8 @@ func CreatePost(c *fiber.Ctx) error {
 		}
 	}(s)
 
-	if OAuthID != "" {
-		return handleAPIStyle(c, secureToken, OAuthID, styleID, s)
+	if oauthID != "" {
+		return handleAPIStyle(c, secureToken, oauthID, styleID, s)
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
@@ -141,8 +141,8 @@ func CreatePost(c *fiber.Ctx) error {
 func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *models.Style) error {
 	u, _ := jwtware.User(c)
 
-	OAuth, err := models.GetOAuthByID(oauthID)
-	if err != nil || OAuth.ID == 0 {
+	oauth, err := models.GetOAuthByID(oauthID)
+	if err != nil || oauth.ID == 0 {
 		return c.Status(400).
 			JSON(fiber.Map{
 				"data": "Incorrect oauthID specified",
@@ -221,5 +221,5 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		returnCode += "&state=" + state
 	}
 
-	return c.Redirect(OAuth.RedirectURI + "/" + returnCode)
+	return c.Redirect(oauth.RedirectURI + "/" + returnCode)
 }

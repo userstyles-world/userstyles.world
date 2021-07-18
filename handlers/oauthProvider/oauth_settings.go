@@ -145,6 +145,6 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		})
 	}
 
-	OAuthID := strconv.FormatUint(uint64(dbOAuth.ID), 10)
-	return c.Redirect("/oauth_settings/"+OAuthID, fiber.StatusSeeOther)
+	oauthID := strconv.FormatUint(uint64(dbOAuth.ID), 10)
+	return c.Redirect("/oauth_settings/"+oauthID, fiber.StatusSeeOther)
 }

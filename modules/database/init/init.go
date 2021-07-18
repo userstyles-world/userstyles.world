@@ -195,7 +195,7 @@ func seed() {
 		},
 	}
 
-	OAuths := []models.OAuth{
+	oauths := []models.OAuth{
 		{
 			UserID:       1,
 			Name:         "USw integration",
@@ -207,7 +207,7 @@ func seed() {
 		},
 	}
 
-	Logs := []models.Log{
+	logs := []models.Log{
 		{
 			UserID:         1,
 			Reason:         "I like to abuse powers.",
@@ -236,10 +236,10 @@ func seed() {
 	for i := range styles {
 		database.Conn.Create(&styles[i])
 	}
-	for i := range OAuths {
-		database.Conn.Create(&OAuths[i])
+	for i := range oauths {
+		database.Conn.Create(&oauths[i])
 	}
-	for i := range Logs {
-		database.Conn.Create(&Logs[i])
+	for i := range logs {
+		database.Conn.Create(&logs[i])
 	}
 }

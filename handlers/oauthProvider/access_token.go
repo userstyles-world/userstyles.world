@@ -27,11 +27,11 @@ func TokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "No code specified")
 	}
 
-	OAuth, err := models.GetOAuthByClientID(clientID)
-	if err != nil || OAuth.ID == 0 {
+	oauth, err := models.GetOAuthByClientID(clientID)
+	if err != nil || oauth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
-	if OAuth.ClientSecret != clientSecret {
+	if oauth.ClientSecret != clientSecret {
 		return errorMessage(c, 400, "Incorrect client_secret specified")
 	}
 
@@ -89,7 +89,7 @@ func TokenPost(c *fiber.Ctx) error {
 			GetSignedString(utils.OAuthPSigningKey)
 	} else {
 		jwt, err = utils.NewJWTToken().
-			SetClaim("scopes", strings.Join(OAuth.Scopes, ",")).
+			SetClaim("scopes", strings.Join(oauth.Scopes, ",")).
 			SetClaim("userID", user.ID).
 			GetSignedString(utils.OAuthPSigningKey)
 	}

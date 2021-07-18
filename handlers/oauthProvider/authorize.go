@@ -55,8 +55,8 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
 	}
-	OAuth, err := models.GetOAuthByClientID(clientID)
-	if err != nil || OAuth.ID == 0 {
+	oauth, err := models.GetOAuthByClientID(clientID)
+	if err != nil || oauth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect client_id specified")
 	}
 
@@ -66,8 +66,8 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	}
 
 	// Check if the user has already authorized this OAuth application.
-	if utils.Contains(user.AuthorizedOAuth, strconv.Itoa(int(OAuth.ID))) {
-		return redirectFunction(c, state, OAuth.RedirectURI)
+	if utils.Contains(user.AuthorizedOAuth, strconv.Itoa(int(oauth.ID))) {
+		return redirectFunction(c, state, oauth.RedirectURI)
 	}
 
 	// Convert it to actual []string
@@ -75,7 +75,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 
 	// Just check if the application has actually set if they will request these scopes.
 	if !utils.Every(scopes, func(name interface{}) bool {
-		return utils.Contains(OAuth.Scopes, name.(string))
+		return utils.Contains(oauth.Scopes, name.(string))
 	}) {
 		return errorMessage(c, 400, "An scope was provided which isn't selected in the OAuth's settings selection.")
 	}
@@ -97,10 +97,10 @@ func AuthorizeGet(c *fiber.Ctx) error {
 
 	arguments := fiber.Map{
 		"User":        u,
-		"OAuth":       OAuth,
+		"OAuth":       oauth,
 		"SecureToken": utils.EncryptText(jwt, utils.AEADOAuthp, config.ScrambleConfig),
 	}
-	for _, v := range OAuth.Scopes {
+	for _, v := range oauth.Scopes {
 		arguments["Scope_"+v] = true
 	}
 
@@ -111,8 +111,8 @@ func AuthPost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	oauthID, secureToken := c.Params("id"), c.Params("token")
 
-	OAuth, err := models.GetOAuthByID(oauthID)
-	if err != nil || OAuth.ID == 0 {
+	oauth, err := models.GetOAuthByID(oauthID)
+	if err != nil || oauth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
@@ -151,5 +151,5 @@ func AuthPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
-	return redirectFunction(c, claims["state"].(string), OAuth.RedirectURI)
+	return redirectFunction(c, claims["state"].(string), oauth.RedirectURI)
 }

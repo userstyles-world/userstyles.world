@@ -206,26 +206,26 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 		return OAuthResponse{}, errors.ErrNot200Ok
 	}
 
-	var UserResponse userResponse
+	var userResponseJSON userResponse
 	var oauthResponse OAuthResponse
-	err = json.NewDecoder(resUserInformation.Body).Decode(&UserResponse)
+	err = json.NewDecoder(resUserInformation.Body).Decode(&userResponseJSON)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
 
-	oauthResponse.Username = UserResponse.UserName
-	if UserResponse.LoginName != "" {
-		oauthResponse.Username = UserResponse.LoginName
+	oauthResponse.Username = userResponseJSON.UserName
+	if userResponseJSON.LoginName != "" {
+		oauthResponse.Username = userResponseJSON.LoginName
 	}
 	oauthResponse.Username = strings.ToLower(oauthResponse.Username)
 
 	// Because of gitlab oauth's implementation we already receive the email at this point.
 	// Meaning we don't need to do another request.
 	if service.getServiceType() == GitlabService {
-		if UserResponse.Email == "" {
+		if userResponseJSON.Email == "" {
 			return OAuthResponse{}, errors.ErrPrimaryEmailNotVerified
 		}
-		oauthResponse.Email = UserResponse.Email
+		oauthResponse.Email = userResponseJSON.Email
 		return oauthResponse, nil
 	}
 
