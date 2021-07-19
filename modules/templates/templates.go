@@ -66,6 +66,9 @@ func New() *html.Engine {
 
 	engine.AddFunc("paginate", func(page int, sort string) template.HTML {
 		s := fmt.Sprintf("/explore?page=%v", page)
+		if sort != "" {
+			s += fmt.Sprintf("&sort=%v", sort)
+		}
 
 		return template.HTML(strings.QueryUnescape(s))
 	})

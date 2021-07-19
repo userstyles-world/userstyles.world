@@ -6,6 +6,8 @@
 
     <section class="mt:l">
         <form class="form-wrapper plain advanced flex" method="get" action="/explore">
+            <input type="text" name="page"
+                value="{{ with .PageNow }}{{ . }}{{ else }}1{{ end }}" hidden>
             <div class="section flex ai:c ml:a mr:m">
                 {{ template "partials/form-sort" . }}
             </div>
