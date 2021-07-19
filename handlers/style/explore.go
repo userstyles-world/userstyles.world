@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm/clause"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -52,62 +51,26 @@ func GetExplore(c *fiber.Ctx) error {
 		pageNow = 1
 	}
 	fv := c.Query("sort")
-	var orderFunction clause.OrderByColumn
+	var orderFunction string
 	switch fv {
 	case "newest":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "created_at", Table: "styles"},
-			Desc:    true,
-			Reorder: false,
-		}
+		orderFunction = "styles.created_at DESC"
 	case "oldest":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "created_at", Table: "styles"},
-			Desc:    false,
-			Reorder: false,
-		}
+		orderFunction = "styles.created_at ASC"
 	case "recentlyupdated":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "updated_at", Table: "styles"},
-			Desc:    true,
-			Reorder: false,
-		}
+		orderFunction = "styles.updated_at DESC"
 	case "leastupdated":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "updated_at", Table: "styles"},
-			Desc:    false,
-			Reorder: false,
-		}
+		orderFunction = "styles.updated_at ASC"
 	case "mostinstalls":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "installs"},
-			Desc:    true,
-			Reorder: false,
-		}
+		orderFunction = "installs DESC"
 	case "leastinstalls":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "installs"},
-			Desc:    false,
-			Reorder: false,
-		}
+		orderFunction = "installs ASC"
 	case "mostviews":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "views"},
-			Desc:    true,
-			Reorder: false,
-		}
+		orderFunction = "views DESC"
 	case "leastviews":
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "views"},
-			Desc:    false,
-			Reorder: false,
-		}
+		orderFunction = "views ASC"
 	default:
-		orderFunction = clause.OrderByColumn{
-			Column:  clause.Column{Name: "id", Table: "styles"},
-			Desc:    false,
-			Reorder: false,
-		}
+		orderFunction = "styles.id ASC"
 	}
 
 	s, err := models.GetAllAvailableStylesPaginated(pageNow, orderFunction)

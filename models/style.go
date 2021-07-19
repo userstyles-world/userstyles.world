@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/modules/config"
@@ -215,7 +214,7 @@ func GetStyleCount() (i int64, err error) {
 	return i, nil
 }
 
-func GetAllAvailableStylesPaginated(page int, orderStatement clause.OrderByColumn) ([]StyleCard, error) {
+func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCard, error) {
 	q := new([]StyleCard)
 	size := 40
 	offset := (page - 1) * size
