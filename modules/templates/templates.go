@@ -12,6 +12,7 @@ import (
 	md "github.com/russross/blackfriday/v2"
 
 	"userstyles.world/modules/config"
+	"userstyles.world/utils/strings"
 )
 
 var ext = md.CommonExtensions | md.AutoHeadingIDs
@@ -61,6 +62,12 @@ func New() *html.Engine {
 
 	engine.AddFunc("subtract", func(a, b int) template.HTML {
 		return template.HTML(strconv.FormatInt(int64(a-b), 10))
+	})
+
+	engine.AddFunc("paginate", func(page int, sort string) template.HTML {
+		s := fmt.Sprintf("/explore?page=%v", page)
+
+		return template.HTML(strings.QueryUnescape(s))
 	})
 
 	engine.AddFunc("unescape", func(s string) template.HTML {

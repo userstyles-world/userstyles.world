@@ -31,17 +31,17 @@
     <section class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
         <div class="Pagination flex jc:c ai:c">
             {{ if not (eq .PageNow 1) }}
-                <a class="Pagination-button min" href="/explore?page=1">First page</a>
+                <a class="Pagination-button min" href="{{ paginate 1 .Sort }}">First page</a>
             {{ end }}
             {{ if not (or (eq .PageNow 1) (eq .PageBack 1)) }}
-                <a class="Pagination-button back" href="/explore?page={{ .PageBack }}">{{ .PageBack }}</a>
+                <a class="Pagination-button back" href="{{ paginate .PageBack .Sort }}">{{ .PageBack }}</a>
             {{ end }}
             <div class="Pagination-active now">{{ .PageNow }}</div>
             {{ if not (or (eq .PageNow .PageMax) (eq .PageNext .PageMax)) }}
-                <a class="Pagination-button next" href="/explore?page={{ .PageNext }}">{{ .PageNext }}</a>
+                <a class="Pagination-button next" href="{{ paginate .PageNext .Sort }}">{{ .PageNext }}</a>
             {{ end }}
             {{ if not (eq .PageNow .PageMax) }}
-                <a class="Pagination-button max" href="/explore?page={{ .PageMax }}">Last page</a>
+                <a class="Pagination-button max" href="{{ paginate .PageMax .Sort }}">Last page</a>
             {{ end }}
         </div>
     </section>
