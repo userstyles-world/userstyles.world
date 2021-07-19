@@ -83,13 +83,14 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	return c.Render("core/explore", fiber.Map{
-		"Title":    "Explore",
-		"User":     u,
-		"Styles":   s,
-		"Sort":     fv,
-		"PageMax":  maxPages,
-		"PageNow":  pageNow,
-		"PageBack": pageNow - 1,
-		"PageNext": pageNow + 1,
+		"Title":     "Explore",
+		"User":      u,
+		"Styles":    s,
+		"Sort":      fv,
+		"PageMax":   maxPages,
+		"PageNow":   pageNow,
+		"PageBack":  pageNow - 1,
+		"PageNext":  pageNow + 1,
+		"Canonical": "explore",
 	})
 }

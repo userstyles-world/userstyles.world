@@ -41,11 +41,12 @@ func Search(c *fiber.Ctx) error {
 	}
 
 	return c.Render("core/search", fiber.Map{
-		"Title":  "Search",
-		"User":   u,
-		"Styles": s,
-		"Value":  q,
-		"Root":   c.OriginalURL() == "/search",
-		"Sort":   fv,
+		"Title":     "Search",
+		"User":      u,
+		"Styles":    s,
+		"Value":     q,
+		"Root":      c.OriginalURL() == "/search",
+		"Sort":      fv,
+		"Canonical": "search",
 	})
 }

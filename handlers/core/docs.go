@@ -44,8 +44,9 @@ func GetDocs(c *fiber.Ctx) error {
 	}
 
 	return c.Render("core/docs", fiber.Map{
-		"Title":   title,
-		"User":    u,
-		"content": content,
+		"Title":     title,
+		"User":      u,
+		"content":   content,
+		"Canonical": "docs",
 	})
 }

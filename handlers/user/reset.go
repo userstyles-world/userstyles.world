@@ -22,7 +22,8 @@ func RecoverGet(c *fiber.Ctx) error {
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 	return c.Render("user/recover", fiber.Map{
-		"Title": "Reset",
+		"Title":     "Reset",
+		"Canonical": "recover",
 	})
 }
 

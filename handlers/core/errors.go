@@ -18,7 +18,8 @@ func NotFound(c *fiber.Ctx) error {
 		})
 	}
 	return c.Render("err", fiber.Map{
-		"User":  u,
-		"Title": "Page not found",
+		"User":      u,
+		"Title":     "Page not found",
+		"Canonical": "404",
 	})
 }

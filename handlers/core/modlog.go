@@ -33,5 +33,6 @@ func GetModLog(c *fiber.Ctx) error {
 		"RemovedStyles": removedStyles,
 		"User":          u,
 		"Title":         "Mod Log",
+		"Canonical":     "modlog",
 	})
 }

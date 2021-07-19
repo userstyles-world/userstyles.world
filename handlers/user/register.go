@@ -22,7 +22,8 @@ func RegisterGet(c *fiber.Ctx) error {
 	}
 
 	return c.Render("user/register", fiber.Map{
-		"Title": "Register",
+		"Title":     "Register",
+		"Canonical": "register",
 	})
 }
 

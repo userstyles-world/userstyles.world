@@ -95,6 +95,13 @@ func New() *html.Engine {
 }`
 	})
 
+	engine.AddFunc("canonical", func(url interface{}) template.HTML {
+		if url == nil {
+			return template.HTML(config.BaseURL())
+		}
+		return template.HTML(config.BaseURL() + "/" + url.(string))
+	})
+
 	if !config.Production {
 		engine.Reload(true)
 	}

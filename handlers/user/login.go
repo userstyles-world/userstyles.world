@@ -21,7 +21,8 @@ func LoginGet(c *fiber.Ctx) error {
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 	arguments := fiber.Map{
-		"Title": "Login",
+		"Title":     "Login",
+		"Canonical": "login",
 	}
 
 	if r := c.Query("r"); r != "" {

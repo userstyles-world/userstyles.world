@@ -77,9 +77,13 @@ func getEnv(name, fallback string) string {
 
 // OAuthURL returns the proper callback URL depending on the environment.
 func OAuthURL() string {
-	if Production {
-		return "https://userstyles.world/api/callback/"
-	}
+	return BaseURL() + "/api/callback/"
+}
 
-	return "http://localhost" + Port + "/api/callback/"
+// BaseURL returns the proper BaseURL.
+func BaseURL() string {
+	if Production {
+		return "https://userstyles.world"
+	}
+	return "http://localhost" + Port
 }
