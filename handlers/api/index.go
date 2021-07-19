@@ -3,8 +3,10 @@ package api
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/patrickmn/go-cache"
 
 	"userstyles.world/models"
 )
@@ -19,6 +21,8 @@ type USoFormat struct {
 	WeeklyInstalls int64  `json:"w"`
 	ID             uint   `json:"i"`
 }
+
+var mem = cache.New(5*time.Minute, 10*time.Minute)
 
 func convertToUSoFormat(s models.APIStyle) USoFormat {
 	id := fmt.Sprintf("%d", s.ID) // Convert uint to string.
@@ -71,13 +75,25 @@ func GetStyleIndex(c *fiber.Ctx) error {
 
 	// Used by Stylus integration.
 	if c.Params("format") == "uso-format" {
-		formattedStyles := make([]USoFormat, len(*styles))
-		for i, style := range *styles {
-			formattedStyles[i] = convertToUSoFormat(style)
+	Convert:
+		cached, found := mem.Get("index")
+		if !found {
+			formatted := make([]USoFormat, len(*styles))
+			for i, style := range *styles {
+				formatted[i] = convertToUSoFormat(style)
+			}
+
+			mem.Set("index", formatted, 10*time.Minute)
+			goto Convert
+		}
+
+		index, ok := cached.([]USoFormat)
+		if !ok {
+			goto Convert
 		}
 
 		return c.JSON(fiber.Map{
-			"data": formattedStyles,
+			"data": index,
 		})
 	}
 
