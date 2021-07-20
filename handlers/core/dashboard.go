@@ -63,7 +63,7 @@ func Dashboard(c *fiber.Ctx) error {
 	// TODO: Refactor.
 	// Get styles.
 	var styles []models.StyleCard
-	if c.Query("styles") != "" {
+	if c.Query("data") == "styles" {
 		s, err := models.GetAllAvailableStyles()
 		if err != nil {
 			return c.Render("err", fiber.Map{
@@ -82,7 +82,7 @@ func Dashboard(c *fiber.Ctx) error {
 	// Get users.
 	var userHistory string
 	var users []models.User
-	if c.Query("users") != "" {
+	if c.Query("data") == "users" {
 		u, err := models.FindAllUsers()
 		if err != nil {
 			return c.Render("err", fiber.Map{

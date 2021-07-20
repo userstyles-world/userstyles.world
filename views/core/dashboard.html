@@ -83,9 +83,11 @@
                     {{ end }}
                 </tbody>
             </table>
-        {{ end }}
         {{ else }}
             <p class="fg:3">No users found.</p>
+        {{ end }}
+        {{ else }}
+            <a href="/dashboard?data=users">See all users</a>
         {{ end }}
     </section>
 
@@ -100,9 +102,11 @@
                     {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
-        {{ end }}
         {{ else }}
             <p class="fg:3">No userstyles found.</p>
+        {{ end }}
+        {{ else }}
+            <a href="/dashboard?data=styles">See all styles</a>
         {{ end }}
     </section>
 </div>
