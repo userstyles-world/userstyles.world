@@ -15,6 +15,8 @@
         }
         table tr > * { padding: 0.5rem }
         tbody tr:nth-child(2n-1) { background-color: var(--bg-3) }
+        section > p { font-size: 1.5rem }
+        section > p > span { font-size: 1rem }
     </style>
 
     <section class="mt:m ta:c">
@@ -22,10 +24,14 @@
         <p class="fg:3">WIP functionality to help with moderation.</p>
     </section>
 
-    <section class="summary">
-        <h2 class="td:d">Summary</h2>
-        <p>{{ len .Users }} users ({{ .Summary.NewUsers }} today)</p>
-        <p>{{ len .Styles }} styles ({{ .Summary.NewStyles }} today)</p>
+    <section class="overview">
+        <h2 class="td:d">Overview</h2>
+        {{ with .LatestStyle }}
+            <p>{{ $.TotalStyles }} total styles <span>({{ .Count }} today)</span></p>
+        {{ end }}
+        {{ with .LatestUser }}
+            <p>{{ $.TotalUsers }} total users <span>({{ .Count }} today)</span></p>
+        {{ end }}
     </section>
 
     <section class="history">

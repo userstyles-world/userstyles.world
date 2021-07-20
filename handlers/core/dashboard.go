@@ -10,17 +10,29 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/charts"
+	"userstyles.world/modules/database"
 )
 
-type stats struct {
-	NewUsers  int
-	NewStyles int
+type count struct {
+	CreatedAt time.Time
+	Date      string
+	Count     int
+}
+
+func getCount(t string) (c []count, err error) {
+	err = database.Conn.Debug().
+		Select("created_at, date(created_at) Date, count(distinct id) Count").
+		Table(t).Group("Date").Find(&c, "deleted_at is null").Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
 func Dashboard(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	t := time.Now().Format("2006-01-02")
-	s := stats{}
 
 	// Don't allow regular users to see this page.
 	if u.Role < models.Moderator {
@@ -30,6 +42,48 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
+	// Get User statistics.
+	userCount, err := getCount("users")
+	if err != nil {
+		log.Printf("Failed to get user statistics, err: %v\n", err)
+	}
+
+	var totalUsers int
+	for _, v := range userCount {
+		totalUsers += v.Count
+	}
+
+	t := time.Now().Format("2006-01-02")
+	latestUser := userCount[len(userCount)-1]
+	if t != latestUser.Date {
+		latestUser = count{
+			CreatedAt: time.Now(),
+			Date:      t,
+			Count:     0,
+		}
+	}
+
+	// Get Style statistics.
+	styleCount, err := getCount("styles")
+	if err != nil {
+		log.Printf("Failed to get style statistics, err: %v\n", err)
+	}
+
+	var totalStyles int
+	for _, v := range styleCount {
+		totalStyles += v.Count
+	}
+
+	latestStyle := styleCount[len(styleCount)-1]
+	if t != latestStyle.Date {
+		latestStyle = count{
+			CreatedAt: time.Now(),
+			Date:      t,
+			Count:     0,
+		}
+	}
+
+	// TODO: Refactor.
 	// Get styles.
 	styles, err := models.GetAllAvailableStyles()
 	if err != nil {
@@ -37,13 +91,6 @@ func Dashboard(c *fiber.Ctx) error {
 			"Title": "Styles not found",
 			"User":  u,
 		})
-	}
-
-	// Summary of new styles.
-	for _, v := range styles {
-		if v.CreatedAt.Format("2006-01-02") == t {
-			s.NewStyles++
-		}
 	}
 
 	sort.Slice(styles, func(i, j int) bool {
@@ -57,13 +104,6 @@ func Dashboard(c *fiber.Ctx) error {
 			"Title": "Users not found",
 			"User":  u,
 		})
-	}
-
-	// Summary of new users.
-	for _, v := range users {
-		if v.CreatedAt.Format("2006-01-02") == t {
-			s.NewUsers++
-		}
 	}
 
 	// Render user history.
@@ -97,9 +137,12 @@ func Dashboard(c *fiber.Ctx) error {
 	return c.Render("core/dashboard", fiber.Map{
 		"Title":        "Dashboard",
 		"User":         u,
+		"TotalStyles":  totalStyles,
+		"LatestStyle":  latestStyle,
+		"TotalUsers":   totalUsers,
+		"LatestUser":   latestUser,
 		"Styles":       styles,
 		"Users":        users,
-		"Summary":      s,
 		"DailyHistory": dailyHistory,
 		"TotalHistory": totalHistory,
 		"UserHistory":  userHistory,
