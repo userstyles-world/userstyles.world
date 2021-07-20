@@ -80,7 +80,6 @@ func Dashboard(c *fiber.Ctx) error {
 	}
 
 	// Get users.
-	var userHistory string
 	var users []models.User
 	if c.Query("data") == "users" {
 		u, err := models.FindAllUsers()
@@ -91,19 +90,20 @@ func Dashboard(c *fiber.Ctx) error {
 			})
 		}
 
-		// Render user history.
-		if len(users) > 0 {
-			userHistory, err = charts.GetUserHistory(users)
-			if err != nil {
-				log.Printf("Failed to render user history, err: %s\n", err.Error())
-			}
-		}
-
 		sort.Slice(users, func(i, j int) bool {
 			return users[i].ID > users[j].ID
 		})
 
 		users = u
+	}
+
+	// Render user history.
+	var userHistory string
+	if len(userCount) > 0 {
+		userHistory, err = charts.GetUserHistory(userCount, time.Now().AddDate(0, -1, 0))
+		if err != nil {
+			log.Printf("Failed to render user history, err: %s\n", err.Error())
+		}
 	}
 
 	// Get history data.

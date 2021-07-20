@@ -2,7 +2,6 @@ package charts
 
 import (
 	"bytes"
-	"sort"
 	"time"
 
 	"github.com/userstyles-world/go-chart/v2"
@@ -92,28 +91,15 @@ func GetStyleHistory(history []models.History) (string, string, error) {
 	return daily.String(), total.String(), nil
 }
 
-func GetUserHistory(users []models.User) (string, error) {
+func GetUserHistory(users []models.DashStats, t time.Time) (string, error) {
 	userBars := []chart.Value{}
-	userData := map[string]int{}
 	for _, user := range users {
-		joined := user.CreatedAt.Format("2006-01-02")
-		if _, ok := userData[joined]; !ok {
-			userData[joined] = 1
-		} else {
-			userData[joined]++
+		if user.CreatedAt.After(t) {
+			userBars = append(userBars, chart.Value{
+				Label: user.Date,
+				Value: float64(user.Count),
+			})
 		}
-	}
-
-	// Sort user history in ascending order.
-	keys := make([]string, 0, len(userData))
-	for k := range userData {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-
-	for _, k := range keys {
-		point := chart.Value{Value: float64(userData[k]), Label: k}
-		userBars = append(userBars, point)
 	}
 
 	usersGraph := chart.BarChart{
