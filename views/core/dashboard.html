@@ -53,8 +53,9 @@
 
     <section class="users mt:l">
         <h2 class="td:d">Users</h2>
-        <p class="fg:3 mb:m">{{ len .Users }} users in total.</p>
+        <p class="fg:3 mb:m">{{ with .Users }}{{ len . }} users in total.{{ end }}</p>
 
+        {{ if .Users }}
         {{ if gt (len .Users) 1 }}
             <table>
                 <thead>
@@ -82,14 +83,16 @@
                     {{ end }}
                 </tbody>
             </table>
+        {{ end }}
         {{ else }}
-            <p class="ta:c">No users found.</p>
+            <p class="fg:3">No users found.</p>
         {{ end }}
     </section>
 
     <section class="styles mt:l">
         <h2 class="td:d">Styles</h2>
-        <p class="fg:3 mb:m">{{ len .Styles }} styles in total.</p>
+        <p class="fg:3 mb:m">{{ with .Styles }}{{ len . }} styles in total.{{ end }}</p>
+        {{ if .Styles }}
         {{ if gt (len .Styles) 1 }}
             {{/* template "partials/debug-styles" . */}}
             <div class="grid flex rwrap mx:r mt:m">
@@ -97,8 +100,9 @@
                     {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
+        {{ end }}
         {{ else }}
-            <p class="ta:c">No userstyles found.</p>
+            <p class="fg:3">No userstyles found.</p>
         {{ end }}
     </section>
 </div>

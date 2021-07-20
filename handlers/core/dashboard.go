@@ -62,39 +62,49 @@ func Dashboard(c *fiber.Ctx) error {
 
 	// TODO: Refactor.
 	// Get styles.
-	styles, err := models.GetAllAvailableStyles()
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Styles not found",
-			"User":  u,
-		})
-	}
+	var styles []models.StyleCard
+	if c.Query("styles") != "" {
+		s, err := models.GetAllAvailableStyles()
+		if err != nil {
+			return c.Render("err", fiber.Map{
+				"Title": "Styles not found",
+				"User":  u,
+			})
+		}
 
-	sort.Slice(styles, func(i, j int) bool {
-		return styles[i].ID > styles[j].ID
-	})
+		sort.Slice(styles, func(i, j int) bool {
+			return styles[i].ID > styles[j].ID
+		})
+
+		styles = s
+	}
 
 	// Get users.
-	users, err := models.FindAllUsers()
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Users not found",
-			"User":  u,
-		})
-	}
-
-	// Render user history.
 	var userHistory string
-	if len(users) > 0 {
-		userHistory, err = charts.GetUserHistory(users)
+	var users []models.User
+	if c.Query("users") != "" {
+		u, err := models.FindAllUsers()
 		if err != nil {
-			log.Printf("Failed to render user history, err: %s\n", err.Error())
+			return c.Render("err", fiber.Map{
+				"Title": "Users not found",
+				"User":  u,
+			})
 		}
-	}
 
-	sort.Slice(users, func(i, j int) bool {
-		return users[i].ID > users[j].ID
-	})
+		// Render user history.
+		if len(users) > 0 {
+			userHistory, err = charts.GetUserHistory(users)
+			if err != nil {
+				log.Printf("Failed to render user history, err: %s\n", err.Error())
+			}
+		}
+
+		sort.Slice(users, func(i, j int) bool {
+			return users[i].ID > users[j].ID
+		})
+
+		users = u
+	}
 
 	// Get history data.
 	history, err := new(models.History).GetStatsForAllStyles()
