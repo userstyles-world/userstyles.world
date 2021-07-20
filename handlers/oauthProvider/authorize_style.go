@@ -22,7 +22,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 	c.Response().Header.Set("X-Frame-Options", "DENY")
 
-	clientID, state := c.Query("client_id"), c.Query("state")
+	clientID, state, vendorData := c.Query("client_id"), c.Query("state"), c.Query("vendor_data")
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
 	}
@@ -55,7 +55,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 
 	if len(styles) == 0 {
 		return c.Redirect(fmt.Sprintf(
-			"/api/oauth/style/new?token=%s&oauthID=%d", secureToken, oauth.ID),
+			"/api/oauth/style/new?token=%s&oauthID=%d&vendor_data=%s", secureToken, oauth.ID, vendorData),
 			fiber.StatusSeeOther)
 	}
 
@@ -64,6 +64,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 		"Styles":      styles,
 		"OAuth":       oauth,
 		"SecureToken": secureToken,
+		"VendorData":  vendorData,
 	}
 	for _, v := range oauth.Scopes {
 		arguments["Scope_"+v] = true

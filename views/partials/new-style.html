@@ -1,4 +1,4 @@
-{{- $method := printf "api/oauth/style/new?token=%s&oauthID=%d" .SecureToken .OAuth.ID -}}
+{{- $method := printf "api/oauth/style/new?token=%s&oauthID=%d&vendor_data=%s" .SecureToken .OAuth.ID .VendorData -}}
 <div class="card col gap animate">
     <picture class="no-screenshot flex jc:c ai:c">
         {{- template "icons/plus" -}}
