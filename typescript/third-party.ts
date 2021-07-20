@@ -11,18 +11,18 @@ const fillInformationOnForm = (key: string, value: string) => {
     element.value = value;
 };
 
-const DEFAULT_USERSTYLE_META = `/* ==UserStyle==
-@name           A new userstyle!
+const DEFAULT_USERSTYLE_META = (name: string) => `/* ==UserStyle==
+@name           ${name || 'A new userstyle!'}
 @namespace      userstyles.world
 @version        1.0.0
 ==/UserStyle== */\n`;
 
-const handleSourceCode = (sourceCode: string) => {
+const handleSourceCode = (sourceCode: string, name: string) => {
     if (!sourceCode) {
         return;
     }
     if (!/\/\* *?==UserStyle==/g.test(sourceCode)) {
-        sourceCode = `${DEFAULT_USERSTYLE_META}${sourceCode}`;
+        sourceCode = `${DEFAULT_USERSTYLE_META(name)}${sourceCode}`;
     }
     fillInformationOnForm('code', sourceCode);
 };
@@ -47,7 +47,7 @@ const onMessage = (ev: MessageEvent<any>) => {
                 fillInformationOnForm('license', metaData['license']);
                 fillInformationOnForm('homepage', metaData['homepage']);
             }
-            handleSourceCode(data['sourceCode']);
+            handleSourceCode(data['sourceCode'], data['name']);
         }
     }
 };
