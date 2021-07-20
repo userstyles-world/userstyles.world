@@ -10,26 +10,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/charts"
-	"userstyles.world/modules/database"
 )
-
-type count struct {
-	CreatedAt time.Time
-	Date      string
-	Count     int
-}
-
-func getCount(t string) (c []count, err error) {
-	err = database.Conn.Debug().
-		Select("created_at, date(created_at) Date, count(distinct id) Count").
-		Table(t).Group("Date").Find(&c, "deleted_at is null").Error
-
-	if err != nil {
-		return nil, err
-	}
-
-	return c, nil
-}
 
 func Dashboard(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
@@ -43,43 +24,39 @@ func Dashboard(c *fiber.Ctx) error {
 	}
 
 	// Get User statistics.
-	userCount, err := getCount("users")
+	userCount, err := new(models.DashStats).GetCounts("users")
 	if err != nil {
 		log.Printf("Failed to get user statistics, err: %v\n", err)
 	}
 
-	var totalUsers int
-	for _, v := range userCount {
-		totalUsers += v.Count
-	}
+	totalUsers := userCount[len(userCount)-1].CountSum
 
 	t := time.Now().Format("2006-01-02")
 	latestUser := userCount[len(userCount)-1]
 	if t != latestUser.Date {
-		latestUser = count{
+		latestUser = models.DashStats{
 			CreatedAt: time.Now(),
 			Date:      t,
 			Count:     0,
+			CountSum:  0,
 		}
 	}
 
 	// Get Style statistics.
-	styleCount, err := getCount("styles")
+	styleCount, err := new(models.DashStats).GetCounts("styles")
 	if err != nil {
 		log.Printf("Failed to get style statistics, err: %v\n", err)
 	}
 
-	var totalStyles int
-	for _, v := range styleCount {
-		totalStyles += v.Count
-	}
+	totalStyles := styleCount[len(styleCount)-1].CountSum
 
 	latestStyle := styleCount[len(styleCount)-1]
 	if t != latestStyle.Date {
-		latestStyle = count{
+		latestStyle = models.DashStats{
 			CreatedAt: time.Now(),
 			Date:      t,
 			Count:     0,
+			CountSum:  0,
 		}
 	}
 

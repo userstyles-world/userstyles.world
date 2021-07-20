@@ -29,6 +29,27 @@ type SiteStats struct {
 	WeeklyUpdates                 int64
 }
 
+type DashStats struct {
+	CreatedAt time.Time
+	Date      string
+	Count     int
+	CountSum  int
+}
+
+func (_ DashStats) GetCounts(t string) (q []DashStats, err error) {
+	stmt := "created_at, date(created_at) Date, count(distinct id) Count,"
+	stmt += "sum(count (distinct id)) over (order by date(created_at)) CountSum"
+
+	err = database.Conn.Debug().
+		Select(stmt).Table(t).Group("Date").Find(&q, "deleted_at is null").Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return q, nil
+}
+
 func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
 	s := new(Stats)
 
