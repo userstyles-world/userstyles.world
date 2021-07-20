@@ -36,6 +36,7 @@ var (
 	GitlabClientSecret   = getEnv("GITLAB_CLIENT_SECRET", "www.youtube.com/watch?v=dQw4w9WgXcQ")
 	CodebergClientID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	CodebergClientSecret = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
+	PerformanceMonitor   = getEnv("PERFORMANCE_MONITOR", "false") == "true"
 
 	// Production is used for various "feature flags".
 	Production = DB != "dev.db"

@@ -8,9 +8,12 @@ import (
 	"userstyles.world/models"
 )
 
-var monitorhandler = monitor.New()
+var monitorhandler func(c *fiber.Ctx) error
 
 func Monitor(c *fiber.Ctx) error {
+	if monitorhandler == nil {
+		monitorhandler = monitor.New()
+	}
 	u, _ := jwt.User(c)
 
 	// Only first user (admin) is allowed.

@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/markbates/pkger"
 
 	"userstyles.world/handlers/api"
@@ -50,6 +51,11 @@ func Initialize() {
 	}
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
+	if config.PerformanceMonitor {
+		app.Use(pprof.New())
+		app.Get("/monitor", jwtware.Protected, core.Monitor)
+	}
+
 	app.Get("/", core.Home)
 	app.Get("/search", core.Search)
 	app.Get("/login", user.LoginGet)
@@ -90,7 +96,6 @@ func Initialize() {
 	app.Get("/user/ban/:id", jwtware.Protected, user.Ban)
 	app.Post("/user/ban/:id", jwtware.Protected, user.ConfirmBan)
 	app.Get("/dashboard", jwtware.Protected, core.Dashboard)
-	app.Get("/monitor", jwtware.Protected, core.Monitor)
 
 	v1 := app.Group("/api", api.ParseAPIJWT)
 	v1.Head("/style/:id.user.css", api.GetStyleEtag)
