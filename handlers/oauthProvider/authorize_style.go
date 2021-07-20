@@ -3,7 +3,6 @@ package oauthprovider
 import (
 	"fmt"
 	"log"
-	"net/url"
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -23,7 +22,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 	c.Response().Header.Set("X-Frame-Options", "DENY")
 
-	clientID, state, styleInfo := c.Query("client_id"), c.Query("state"), c.Query("styleInfo")
+	clientID, state := c.Query("client_id"), c.Query("state")
 	if clientID == "" {
 		return errorMessage(c, 400, "No client_id specified")
 	}
@@ -60,12 +59,10 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 			fiber.StatusSeeOther)
 	}
 
-	log.Println(styleInfo)
 	arguments := fiber.Map{
 		"User":        u,
 		"Styles":      styles,
 		"OAuth":       oauth,
-		"StyleInfo":   url.QueryEscape(styleInfo),
 		"SecureToken": secureToken,
 	}
 	for _, v := range oauth.Scopes {
