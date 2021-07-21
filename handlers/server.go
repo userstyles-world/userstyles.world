@@ -45,6 +45,7 @@ func Initialize() {
 	}
 
 	app.Use(core.HSTSMiddleware)
+	app.Use(core.CSPMiddleware)
 	app.Use(compress.New())
 	if config.Production {
 		app.Use(limiter.New(limiter.Config{Max: 600}))
