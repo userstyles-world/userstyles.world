@@ -12,6 +12,7 @@ require (
 	github.com/go-playground/validator/v10 v10.7.0
 	github.com/gofiber/fiber/v2 v2.14.0
 	github.com/gofiber/template v1.6.13
+	github.com/jarcoal/httpmock v1.0.8
 	github.com/markbates/pkger v0.17.1
 	github.com/microcosm-cc/bluemonday v1.0.15
 	github.com/ohler55/ojg v1.10.0
