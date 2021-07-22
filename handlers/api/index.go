@@ -65,7 +65,32 @@ func fixCategory(cat string) string {
 	return cat
 }
 
-func GetStyleIndex(c *fiber.Ctx) error {
+func getUSoIndex(c *fiber.Ctx) error {
+Convert:
+	cached, found := mem.Get("index")
+	if !found {
+		styles, err := models.GetAllStylesForIndexAPI()
+		if err != nil {
+			return c.JSON(fiber.Map{
+				"data": "styles not found",
+			})
+		}
+
+		formatted := make([]USoFormat, len(*styles))
+		for i, style := range *styles {
+			formatted[i] = convertToUSoFormat(style)
+		}
+
+		mem.Set("index", formatted, 10*time.Minute)
+		goto Convert
+	}
+
+	return c.JSON(fiber.Map{
+		"data": cached,
+	})
+}
+
+func getFullIndex(c *fiber.Ctx) error {
 	styles, err := models.GetAllStylesForIndexAPI()
 	if err != nil {
 		return c.JSON(fiber.Map{
@@ -73,31 +98,16 @@ func GetStyleIndex(c *fiber.Ctx) error {
 		})
 	}
 
-	// Used by Stylus integration.
-	if c.Params("format") == "uso-format" {
-	Convert:
-		cached, found := mem.Get("index")
-		if !found {
-			formatted := make([]USoFormat, len(*styles))
-			for i, style := range *styles {
-				formatted[i] = convertToUSoFormat(style)
-			}
-
-			mem.Set("index", formatted, 10*time.Minute)
-			goto Convert
-		}
-
-		index, ok := cached.([]USoFormat)
-		if !ok {
-			goto Convert
-		}
-
-		return c.JSON(fiber.Map{
-			"data": index,
-		})
-	}
-
 	return c.JSON(fiber.Map{
 		"data": styles,
 	})
+}
+
+func GetStyleIndex(c *fiber.Ctx) error {
+	switch c.Params("format") {
+	case "uso-format":
+		return getUSoIndex(c)
+	default:
+		return getFullIndex(c)
+	}
 }
