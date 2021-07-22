@@ -75,6 +75,7 @@ func Initialize() {
 	app.Get("~:name", user.Profile)
 	app.Get("/docs/:document?", core.GetDocs)
 	app.Get("/modlog", core.GetModLog)
+	app.Get("/link/:site", core.GetLinkedSite)
 
 	app.Get("/logout", jwtware.Protected, user.Logout)
 	app.Get("/account", jwtware.Protected, user.Account)

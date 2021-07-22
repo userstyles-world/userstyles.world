@@ -50,6 +50,9 @@ var (
 	AppName         = "UserStyles.world"
 	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
 	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
+
+	AppLinkChat   = "https://matrix.to/#/!mewOpQBfQfwHLEvVbZ:matrix.org"
+	AppLinkSource = "https://github.com/userstyles-world/userstyles.world"
 )
 
 func getEnvInt(name string, defaultValue int) int {
