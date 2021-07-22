@@ -18,7 +18,7 @@ import (
 func StylesGet(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.Contains(u.Scopes, "style") {
+	if !utils.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"style\" scope to do this.",
@@ -53,7 +53,7 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
-	if u.StyleID == 0 && !utils.Contains(u.Scopes, "style") {
+	if u.StyleID == 0 && !utils.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error: You need the \"style\" scope to do this.",
@@ -184,7 +184,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 func NewStyle(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.Contains(u.Scopes, "style") {
+	if !utils.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"style\" scope to do this.",

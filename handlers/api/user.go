@@ -24,7 +24,7 @@ func roleToString(role models.Role) string {
 func UserGet(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.Contains(u.Scopes, "user") {
+	if !utils.ContainsString(u.Scopes, "user") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"user\" scope to do this.",
