@@ -51,9 +51,11 @@ func getPreviousHistory(id uint) (q *models.History) {
 }
 
 func StyleStatistics() {
+again:
 	styles, err := models.GetAllStyleIDs()
 	if err != nil {
 		log.Warn.Println("Failed to get IDs for all styles:", err.Error())
+		goto again
 	}
 
 	// Store style stats.
