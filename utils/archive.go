@@ -122,7 +122,7 @@ func unmarshalJSON(raw []byte) (Data, error) {
 	data := Data{}
 	err := json.Unmarshal(raw, &data)
 	if err != nil {
-		log.Info.Printf("Failed to unmarshal style JSON:", err.Error())
+		log.Info.Println("Failed to unmarshal style JSON:", err.Error())
 		return data, err
 	}
 

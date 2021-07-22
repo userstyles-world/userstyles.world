@@ -231,7 +231,6 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 		Offset(offset).
 		Limit(size).
 		Find(q).Error
-
 	if err != nil {
 		return nil, err
 	}

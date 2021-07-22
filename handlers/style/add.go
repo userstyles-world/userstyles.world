@@ -127,7 +127,7 @@ func CreatePost(c *fiber.Ctx) error {
 
 	go func(style *models.Style) {
 		if err = search.IndexStyle(style.ID); err != nil {
-			log.Warn.Printf("Failed to re-index style %d: %\ns", style.ID, err.Error())
+			log.Warn.Printf("Failed to re-index style %d: %s\n", style.ID, err.Error())
 		}
 	}(s)
 

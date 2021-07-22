@@ -48,9 +48,8 @@ func TestSendMail(t *testing.T) {
 	defer l.Close()
 
 	// prevent data race on bcmdbuf
-	var done = make(chan struct{})
+	done := make(chan struct{})
 	go func(data []string) {
-
 		defer close(done)
 
 		conn, err := l.Accept()
