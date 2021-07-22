@@ -82,7 +82,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		SetSubject("Verify your email address").
 		AddPart(*partPlain).
 		AddPart(*partHTML).
-		SendEmail()
+		SendEmail(config.IMAPServer)
 
 	if err != nil {
 		log.Println("Couldn't send a email, due to", err)

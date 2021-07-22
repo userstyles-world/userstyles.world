@@ -113,7 +113,11 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 				"Content-Transfer-Encoding: " + part.contentTransferEncoding + "\n" +
 				"\n"
 		}
-		output += part.body + "\n\n"
+		output += part.body
+		if partsLen-i > 1 {
+			output += "\n"
+		}
+
 	}
 
 	return output, nil
@@ -123,7 +127,7 @@ func correctLineBreak(message string) string {
 	return strings.ReplaceAll(message, "\\n", clrf)
 }
 
-func (eb *EmailBuilder) SendEmail() error {
+func (eb *EmailBuilder) SendEmail(imapServer string) error {
 	eb.boundary = UnsafeString(RandStringBytesMaskImprSrcUnsafe(30))
 
 	if eb.from == "" {
@@ -143,11 +147,11 @@ func (eb *EmailBuilder) SendEmail() error {
 		return err
 	}
 
-	r := strings.NewReader(correctLineBreak("To: " + eb.to + "\n" +
-		"From:" + eb.from + "\n" +
-		"Subject:" + eb.subject + "\n" +
+	r := strings.NewReader(correctLineBreak("From: " + eb.from + "\n" +
+		"To: " + eb.to + "\n" +
+		"Subject: " + eb.subject + "\n" +
 		"MIME-Version: 1.0\n" +
 		bodyMessage))
 
-	return smtp.SendMail("mail.userstyles.world:587", auth, config.EmailAddress, []string{eb.to}, r)
+	return smtp.SendMail(imapServer, auth, eb.from, []string{eb.to}, r)
 }

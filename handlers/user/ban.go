@@ -9,6 +9,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/utils"
 )
 
@@ -74,7 +75,7 @@ func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
 		SetSubject("Moderation notice").
 		AddPart(*partPlain).
 		AddPart(*partHTML).
-		SendEmail()
+		SendEmail(config.IMAPServer)
 	if err != nil {
 		return err
 	}

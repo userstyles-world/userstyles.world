@@ -8,6 +8,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/utils"
 )
@@ -44,7 +45,7 @@ func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL st
 		SetSubject("Style is being featured").
 		AddPart(*partPlain).
 		AddPart(*partHTML).
-		SendEmail()
+		SendEmail(config.IMAPServer)
 	if err != nil {
 		log.Println("Couldn't send email:", err)
 		return

@@ -138,7 +138,7 @@ func ResetPost(c *fiber.Ctx) error {
 			SetSubject("Account change").
 			AddPart(*partPlain).
 			AddPart(*partHTML).
-			SendEmail()
+			SendEmail(config.IMAPServer)
 		if err != nil {
 			log.Println("Sending email failed, err:", err)
 		}
@@ -215,7 +215,7 @@ func RecoverPost(c *fiber.Ctx) error {
 		SetSubject("Reset your password").
 		AddPart(*partPlain).
 		AddPart(*partHTML).
-		SendEmail()
+		SendEmail(config.IMAPServer)
 
 	if emailErr != nil {
 		return c.Status(fiber.StatusInternalServerError).
