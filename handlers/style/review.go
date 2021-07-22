@@ -2,7 +2,6 @@ package style
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/log"
 )
 
 func ReviewGet(c *fiber.Ctx) error {
@@ -19,7 +19,7 @@ func ReviewGet(c *fiber.Ctx) error {
 	// Prevent spam.
 	reviewSpam := new(models.Review)
 	if err := reviewSpam.FindLastFromUser(id, u.ID); err != nil {
-		log.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
+		log.Info.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
 	}
 
 	if reviewSpam.ID > 0 {
@@ -65,7 +65,7 @@ func ReviewPost(c *fiber.Ctx) error {
 	// Prevent spam.
 	reviewSpam := new(models.Review)
 	if err := reviewSpam.FindLastFromUser(id, u.ID); err != nil {
-		log.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
+		log.Info.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
 	}
 
 	if reviewSpam.ID > 0 {
@@ -121,7 +121,7 @@ func ReviewPost(c *fiber.Ctx) error {
 
 	// Add review to database.
 	if err := review.CreateForStyle(); err != nil {
-		log.Printf("Failed to add review to style %v, err: %v", id, err)
+		log.Warn.Printf("Failed to add review to style %v: %v\n", id, err)
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to add your review",
 			"User":  u,
@@ -129,7 +129,7 @@ func ReviewPost(c *fiber.Ctx) error {
 	}
 
 	if err = review.FindLastForStyle(id, u.ID); err != nil {
-		log.Printf("Failed to find review for style %v, err: %v", id, err)
+		log.Warn.Printf("Failed to find review for style %v: %v\n", id, err)
 	} else {
 		// Create a notification.
 		notification := models.Notification{
@@ -143,7 +143,7 @@ func ReviewPost(c *fiber.Ctx) error {
 
 		go func(notification models.Notification) {
 			if err := notification.Create(); err != nil {
-				log.Printf("Failed to create a notification for %d, err: %v", id, err)
+				log.Warn.Printf("Failed to create a notification for %d: %v\n", id, err)
 			}
 		}(notification)
 	}

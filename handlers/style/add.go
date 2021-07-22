@@ -3,7 +3,6 @@ package style
 import (
 	"fmt"
 	"io"
-	"log"
 	"mime/multipart"
 	"os"
 	"strconv"
@@ -19,6 +18,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
+	"userstyles.world/modules/log"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )
@@ -88,7 +88,7 @@ func CreatePost(c *fiber.Ctx) error {
 		if ff, _ := c.FormFile("preview"); ff != nil {
 			image, err = ff.Open()
 			if err != nil {
-				log.Println("Opening image , err:", err)
+				log.Warn.Println("Failed to open image:", err.Error())
 				return c.Render("err", fiber.Map{
 					"Title": "Internal server error.",
 					"User":  u,
@@ -98,7 +98,7 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 	s, err = models.CreateStyle(s)
 	if err != nil {
-		log.Println("Style creation failed, err:", err)
+		log.Warn.Println("Failed to create style:", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -110,7 +110,7 @@ func CreatePost(c *fiber.Ctx) error {
 		data, _ := io.ReadAll(image)
 		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
 		if err != nil {
-			log.Println("Style creation failed, err:", err)
+			log.Warn.Println("Failed to write image:", err.Error())
 			return c.Render("err", fiber.Map{
 				"Title": "Internal server error.",
 				"User":  u,
@@ -125,9 +125,9 @@ func CreatePost(c *fiber.Ctx) error {
 		}
 	}
 
-	go func(syle *models.Style) {
-		if err = search.IndexStyle(syle.ID); err != nil {
-			log.Printf("Re-indexing style %d failed, err: %s", syle.ID, err.Error())
+	go func(style *models.Style) {
+		if err = search.IndexStyle(style.ID); err != nil {
+			log.Warn.Printf("Failed to re-index style %d: %\ns", style.ID, err.Error())
 		}
 	}(s)
 
@@ -151,7 +151,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 
 	unsealedText, err := utils.DecryptText(secureToken, utils.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "JWT Token error, please notify the admins.",
@@ -160,7 +160,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "JWT Token error, please notify the admins.",
@@ -168,7 +168,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to parse JWT claims:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "JWT Token error, please notify the admins.",
@@ -177,7 +177,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {
-		log.Println("WARNING!: Invalid userID")
+		log.Warn.Println("Failed to get userID from parsed token.")
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "JWT Token error, please notify the admins.",
@@ -186,7 +186,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 
 	state, ok := claims["state"].(string)
 	if !ok {
-		log.Println("WARNING!: Invalid state")
+		log.Warn.Println("Invalid JWT state.")
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "JWT Token error, please notify the admins.",
@@ -194,7 +194,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 	}
 
 	if style.UserID != u.ID {
-		log.Println("WARNING!: Invalid style's user ID")
+		log.Warn.Println("Failed to match style author and userID.")
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "JWT Token error, please notify the admins.",
@@ -208,7 +208,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		SetExpiration(time.Now().Add(time.Minute * 10)).
 		GetSignedString(utils.OAuthPSigningKey)
 	if err != nil {
-		log.Println("Error: Couldn't create JWT Token:", err.Error())
+		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "JWT Token error, please notify the admins.",

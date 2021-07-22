@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +10,7 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )
@@ -116,7 +116,7 @@ func StylePost(c *fiber.Ctx) error {
 	}
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {
-		log.Printf("Re-indexing style %d failed, err: %s", postStyle.ID, err.Error())
+		log.Warn.Printf("Failed to re-index style %d: %s", postStyle.ID, err.Error())
 	}
 
 	return c.JSON(fiber.Map{
@@ -165,7 +165,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		log.Printf("Failed to delete style, err: %#+v\n", err)
+		log.Warn.Println("Failed to delete style from database:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "Error: Couldn't delete style",
@@ -173,7 +173,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 	}
 
 	if err = search.DeleteStyle(style.ID); err != nil {
-		log.Printf("Couldn't delete style %d failed, err: %s", style.ID, err.Error())
+		log.Warn.Printf("Failed to delte style %d from index: %s", style.ID, err.Error())
 	}
 
 	return c.JSON(fiber.Map{
@@ -194,7 +194,7 @@ func NewStyle(c *fiber.Ctx) error {
 	var postStyle models.Style
 	err := JSONParser.Unmarshal(c.Body(), &postStyle)
 	if err != nil {
-		log.Println(err)
+		log.Warn.Println("Failed to convert new style to a struct")
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "Error: Couldn't convert style to struct.",
@@ -240,7 +240,7 @@ func NewStyle(c *fiber.Ctx) error {
 	}
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {
-		log.Printf("Re-indexing style %d failed, err: %s", postStyle.ID, err.Error())
+		log.Warn.Printf("Failed to re-index style %d: %s", postStyle.ID, err.Error())
 	}
 
 	return c.JSON(fiber.Map{

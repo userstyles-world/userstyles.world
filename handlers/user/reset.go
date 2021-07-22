@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -13,12 +12,13 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
 func RecoverGet(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
-		log.Printf("User %d has set session, redirecting.", u.ID)
+		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 	return c.Render("user/recover", fiber.Map{
@@ -29,7 +29,7 @@ func RecoverGet(c *fiber.Ctx) error {
 
 func ResetGet(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
-		log.Printf("User %d has set session, redirecting.", u.ID)
+		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
@@ -44,7 +44,7 @@ func ResetGet(c *fiber.Ctx) error {
 
 	_, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
-		log.Printf("Couldn't decode key due to: %s\n", err.Error())
+		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError
 	}
 
@@ -56,7 +56,7 @@ func ResetGet(c *fiber.Ctx) error {
 
 func ResetPost(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
-		log.Printf("User %d has set session, redirecting.", u.ID)
+		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
@@ -75,18 +75,19 @@ func ResetPost(c *fiber.Ctx) error {
 
 	unSealedText, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
-		log.Printf("Couldn't decode key due to: %s\n", err.Error())
+		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError
 	}
+
 	token, err := jwt.Parse(unSealedText, utils.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
-		log.Printf("Couldn't decode key due to: %s\n", err.Error())
+		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return renderError
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		log.Println("Couldn't decode key because it couldn't type assert token.Claims")
+		log.Warn.Println("Failed to parse JWT claims.")
 		return renderError
 	}
 
@@ -105,7 +106,7 @@ func ResetPost(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		log.Println("Updating user failed, err:", err)
+		log.Warn.Println("Failed to update user:", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"Error": "Internal server error.",
@@ -140,7 +141,7 @@ func ResetPost(c *fiber.Ctx) error {
 			AddPart(*partHTML).
 			SendEmail(config.IMAPServer)
 		if err != nil {
-			log.Println("Sending email failed, err:", err)
+			log.Warn.Println("Failed to send an email:", err.Error())
 		}
 	}(user)
 
@@ -153,7 +154,7 @@ func ResetPost(c *fiber.Ctx) error {
 
 func RecoverPost(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
-		log.Printf("User %d has set session, redirecting.", u.ID)
+		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
@@ -164,7 +165,7 @@ func RecoverPost(c *fiber.Ctx) error {
 	if err := utils.Validate().StructPartial(u, "email"); err != nil {
 		var validationError validator.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
-			log.Println("Validation errors:", validationError)
+			log.Warn.Println("Validation errors:", validationError)
 		}
 
 		return c.Status(fiber.StatusInternalServerError).

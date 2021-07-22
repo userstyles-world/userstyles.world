@@ -2,13 +2,13 @@ package style
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/charts"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils/strings"
 )
 
@@ -38,14 +38,14 @@ func GetStylePage(c *fiber.Ctx) error {
 	go func(id, ip string) {
 		// Count views.
 		if _, err := models.AddStatsToStyle(id, ip, false); err != nil {
-			log.Println("Failed to add stats to style, err:", err)
+			log.Warn.Printf("Failed to add stats to style %s: %s\n", id, err.Error())
 		}
 	}(id, c.IP())
 
 	// Get history data.
 	history, err := new(models.History).GetStatsForStyle(id)
 	if err != nil {
-		log.Printf("No style stats for style %s, err: %s", id, err.Error())
+		log.Warn.Printf("Failed to get stats for style %s: %s", id, err.Error())
 	}
 
 	// Render graphs.
@@ -53,13 +53,13 @@ func GetStylePage(c *fiber.Ctx) error {
 	if len(*history) > 0 {
 		dailyHistory, totalHistory, err = charts.GetStyleHistory(*history)
 		if err != nil {
-			log.Printf("Failed to render history for style %s, err: %s\n", id, err.Error())
+			log.Warn.Printf("Failed to render history for style %s: %s\n", id, err.Error())
 		}
 	}
 
 	reviews, err := new(models.Review).FindAllForStyle(id)
 	if err != nil {
-		log.Printf("Failed to get reviews for style %v, err: %v", id, err)
+		log.Warn.Printf("Failed to get reviews for style %s: %v\n", id, err.Error())
 	}
 
 	return c.Render("style/view", fiber.Map{

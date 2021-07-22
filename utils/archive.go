@@ -3,7 +3,6 @@ package utils
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/errors"
+	"userstyles.world/modules/log"
 )
 
 const (
@@ -37,19 +37,19 @@ type Data struct {
 func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	id, err := extractID(url)
 	if err != nil {
-		log.Printf("failed to extract id, err: %v\n", err)
+		log.Info.Println("Failed to extract style id:", err.Error())
 		return nil, errors.ErrFailedProcessData
 	}
 
 	data, err := fetchJSON(id)
 	if err != nil {
-		log.Printf("failed to fetch json, err: %v\n", err)
+		log.Info.Println("Failed to fetch style JSON:", err.Error())
 		return nil, errors.ErrFailedFetch
 	}
 
 	res, err := unmarshalJSON(data)
 	if err != nil {
-		log.Printf("failed to unmarshal json, err: %v\n", err)
+		log.Info.Println("Failed to unmarshal style JSON:", err.Error())
 		return nil, errors.ErrFailedProcessData
 	}
 
@@ -57,7 +57,7 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	source := StyleURL + id + ".user.css"
 	uc, err := usercss.ParseFromURL(source)
 	if err != nil {
-		log.Printf("failed to parse style from URL, err: %v\n", err)
+		log.Info.Printf("Failed to parse style from URL %v: %v\n", source, err)
 		return nil, errors.ErrFailedFetch
 	}
 
@@ -99,14 +99,14 @@ func fetchJSON(id string) ([]byte, error) {
 
 	req, err := http.Get(url)
 	if err != nil {
-		log.Println("Error fetching URL:", err)
+		log.Warn.Println("Error fetching style URL:", err.Error())
 		return nil, err
 	}
 	defer req.Body.Close()
 
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		log.Println("Error reading body:", err)
+		log.Info.Println("Error reading body:", err.Error())
 		return nil, err
 	}
 
@@ -122,7 +122,7 @@ func unmarshalJSON(raw []byte) (Data, error) {
 	data := Data{}
 	err := json.Unmarshal(raw, &data)
 	if err != nil {
-		log.Printf("failed to unmarshal json, err: %v\n", err)
+		log.Info.Printf("Failed to unmarshal style JSON:", err.Error())
 		return data, err
 	}
 

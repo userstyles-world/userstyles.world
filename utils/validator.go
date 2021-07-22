@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"log"
 	"regexp"
 
 	"github.com/go-playground/validator/v10"
+	"userstyles.world/modules/log"
 )
 
 var (
@@ -15,12 +15,12 @@ var (
 
 func InitializeValidator() {
 	if err := v.RegisterValidation("username", usernameValidation); err != nil {
-		log.Println("Cannot register username validation")
+		log.Warn.Println("Cannot register username validation")
 		panic(err)
 	}
 
 	if err := v.RegisterValidation("displayName", displayNameValidation); err != nil {
-		log.Println("Cannot register displayName validation")
+		log.Warn.Println("Cannot register displayName validation")
 		panic(err)
 	}
 

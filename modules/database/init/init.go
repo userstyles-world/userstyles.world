@@ -1,7 +1,7 @@
 package init
 
 import (
-	"log"
+	l "log"
 	"os"
 	"strconv"
 	"time"
@@ -13,6 +13,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -32,7 +33,7 @@ var tables = []struct {
 
 func connect() (*gorm.DB, error) {
 	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		l.New(os.Stdout, "\r\n", l.LstdFlags),
 		logger.Config{
 			SlowThreshold: time.Second,
 			LogLevel:      logLevel(),
@@ -54,20 +55,20 @@ func connect() (*gorm.DB, error) {
 func Initialize() {
 	conn, err := connect()
 	if err != nil {
-		log.Fatalf("Failed to connect database, err: %s\n", err.Error())
+		log.Warn.Fatal("Failed to connect database:", err.Error())
 	}
 
 	database.Conn = conn
-	log.Println("Database successfully connected.")
+	log.Info.Println("Database successfully connected.")
 
 	shouldSeed := false
 	// Generate data for development.
 	if dropTables() && !config.Production {
 		for _, table := range tables {
 			if err := drop(table.model); err != nil {
-				log.Fatalf("Failed to drop %s, err: %s", table.name, err.Error())
+				log.Warn.Fatalf("Failed to drop %s, err: %s\n", table.name, err.Error())
 			}
-			log.Printf("Dropped database table %s.\n", table.name)
+			log.Info.Println("Dropped database table", table.name)
 		}
 		shouldSeed = true
 	}
@@ -75,9 +76,9 @@ func Initialize() {
 	// Migrate tables.
 	for _, table := range tables {
 		if err := migrate(table.model); err != nil {
-			log.Fatalf("Failed to migrate %s, err: %s", table.name, err.Error())
+			log.Warn.Fatalf("Failed to migrate %s, err: %s\n", table.name, err.Error())
 		}
-		log.Printf("Migrated database table %s.\n", table.name)
+		log.Info.Println("Migrated database table", table.name)
 	}
 	if shouldSeed {
 		seed()
@@ -118,8 +119,8 @@ func generateData(amount int) ([]models.Style, []models.User) {
 }
 
 func seed() {
-	log.Println("Seeding database mock data.")
-	defer log.Println("Finished seeding mock data.")
+	log.Info.Println("Seeding database mock data.")
+	defer log.Info.Println("Finished seeding mock data.")
 
 	users := []models.User{
 		{

@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"log"
 	"net/url"
 	"time"
 
@@ -12,12 +11,13 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
 func LoginGet(c *fiber.Ctx) error {
 	if u, ok := jwt.User(c); ok {
-		log.Printf("User %d has set session, redirecting.", u.ID)
+		log.Warn.Printf("User %d has set session, redirecting.", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 	arguments := fiber.Map{
@@ -44,7 +44,7 @@ func LoginPost(c *fiber.Ctx) error {
 	if err != nil {
 		var validationError validator.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
-			log.Println("Validation errors:", validationError)
+			log.Warn.Println("Validation errors:", validationError)
 		}
 
 		return c.Render("user/login", fiber.Map{
@@ -55,7 +55,7 @@ func LoginPost(c *fiber.Ctx) error {
 
 	user, err := models.FindUserByEmail(form.Email)
 	if err != nil {
-		log.Printf("Failed to find %s, error: %s", form.Email, err)
+		log.Warn.Printf("Failed to find %s: %s", form.Email, err.Error())
 
 		return c.Status(fiber.StatusUnauthorized).
 			Render("user/login", fiber.Map{
@@ -73,7 +73,7 @@ func LoginPost(c *fiber.Ctx) error {
 
 	match := utils.CompareHashedPassword(user.Password, form.Password)
 	if match != nil {
-		log.Printf("Failed to match hash for user: %#+v\n", user.Email)
+		log.Warn.Println("Failed to match hash for user:", user.Email)
 
 		return c.Status(fiber.StatusInternalServerError).
 			Render("user/login", fiber.Map{

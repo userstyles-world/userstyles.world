@@ -1,12 +1,12 @@
 package update
 
 import (
-	"log"
 	"strings"
 
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/log"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )
@@ -48,7 +48,7 @@ func Batch(batch models.Style) {
 	if isUSo(batch.Original) && batch.MirrorMeta {
 		importedStyle, err := utils.ImportFromArchive(batch.Original, models.APIUser{})
 		if err != nil {
-			log.Printf("Updater: Failed to ImportFromArchive, err: %v\n", err)
+			log.Warn.Println("Failed to import a style from archive:", err.Error())
 		}
 
 		// Run update if fields differ.
@@ -59,10 +59,10 @@ func Batch(batch models.Style) {
 			s.Description = importedStyle.Description
 
 			if err = models.UpdateStyle(s); err != nil {
-				log.Printf("Updater: Mirroring meta for %d failed, err: %s", batch.ID, err)
+				log.Warn.Printf("Failed to mirror meta for %d: %s\n", batch.ID, err.Error())
 			}
 			if err = search.IndexStyle(s.ID); err != nil {
-				log.Printf("Re-indexing style %d failed, err: %s", s.ID, err.Error())
+				log.Warn.Printf("Failedto re-index style %d: %s\n", s.ID, err.Error())
 			}
 		}
 	}
@@ -70,22 +70,22 @@ func Batch(batch models.Style) {
 	// Get new style source code.
 	style, err := usercss.ParseFromURL(getSourceCode(batch))
 	if err != nil {
-		log.Printf("Updater: Cannot fetch style %d.\n", batch.ID)
+		log.Warn.Printf("Failed to parse a style %d from URL: %s\n", batch.ID, err.Error())
 		return
 	}
 
 	// Exit if source code doesn't pass validation.
 	if errs := usercss.BasicMetadataValidation(style); errs != nil {
-		log.Printf("Updater: Cannot validate style %d.\n", batch.ID)
+		log.Warn.Printf("Failed to validate style %d.\n", batch.ID)
 		return
 	}
 
 	// Mirror source code if versions don't match.
 	if style.Version != usercss.ParseFromString(batch.Code).Version {
-		log.Printf("Updater: Style %d was changed.\n", batch.ID)
+		log.Warn.Printf("Version for style %d was changed.\n", batch.ID)
 		s.Code = style.SourceCode
 		if err := models.UpdateStyle(s); err != nil {
-			log.Printf("Updater: Mirroring code for %d failed, err: %s", batch.ID, err)
+			log.Warn.Printf("Failed to mirror code for %d: %s\n", batch.ID, err)
 		}
 	}
 }

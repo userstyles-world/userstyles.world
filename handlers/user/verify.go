@@ -1,8 +1,6 @@
 package user
 
 import (
-	"log"
-
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 
@@ -10,12 +8,13 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
 func VerifyGet(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
-		log.Printf("User %d has set session, redirecting.", u.ID)
+		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
@@ -31,7 +30,7 @@ func VerifyGet(c *fiber.Ctx) error {
 
 	unSealedText, err := utils.DecryptText(base64Key, utils.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
-		log.Printf("Couldn't decode key due to: %s\n", err.Error())
+		log.Warn.Printf("Failed to decode JWT text: %s\n", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title":  "Verifcation key not found",
 			"Error:": "Key was not found",
@@ -40,7 +39,7 @@ func VerifyGet(c *fiber.Ctx) error {
 
 	token, err := jwt.Parse(unSealedText, utils.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
-		log.Printf("Couldn't decode key due to: %s\n", err.Error())
+		log.Warn.Printf("Failed to decode JWT token: %s\n", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title":  "Verifcation key not found",
 			"Error:": "Key was not found",
@@ -63,7 +62,7 @@ func VerifyGet(c *fiber.Ctx) error {
 	})
 
 	if regErr.Error != nil {
-		log.Printf("Failed to register %s, error: %s", claims["email"].(string), regErr.Error)
+		log.Warn.Printf("Failed to register %s: %s", claims["email"].(string), regErr.Error)
 
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{

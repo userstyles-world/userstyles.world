@@ -1,7 +1,6 @@
 package core
 
 import (
-	"log"
 	"sort"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/charts"
+	"userstyles.world/modules/log"
 )
 
 func Dashboard(c *fiber.Ctx) error {
@@ -26,7 +26,7 @@ func Dashboard(c *fiber.Ctx) error {
 	// Get User statistics.
 	userCount, err := new(models.DashStats).GetCounts("users")
 	if err != nil {
-		log.Printf("Failed to get user statistics, err: %v\n", err)
+		log.Info.Println("Failed to get user statistics:", err.Error())
 	}
 
 	totalUsers := userCount[len(userCount)-1].CountSum
@@ -45,7 +45,7 @@ func Dashboard(c *fiber.Ctx) error {
 	// Get Style statistics.
 	styleCount, err := new(models.DashStats).GetCounts("styles")
 	if err != nil {
-		log.Printf("Failed to get style statistics, err: %v\n", err)
+		log.Info.Println("Failed to get style statistics:", err.Error())
 	}
 
 	totalStyles := styleCount[len(styleCount)-1].CountSum
@@ -102,14 +102,14 @@ func Dashboard(c *fiber.Ctx) error {
 	if len(userCount) > 0 {
 		userHistory, err = charts.GetUserHistory(userCount, time.Now().AddDate(0, -1, 0))
 		if err != nil {
-			log.Printf("Failed to render user history, err: %s\n", err.Error())
+			log.Info.Println("Failed to render user history:", err.Error())
 		}
 	}
 
 	// Get history data.
 	history, err := new(models.History).GetStatsForAllStyles()
 	if err != nil {
-		log.Printf("Couldn't find style histories, err: %s", err.Error())
+		log.Info.Println("Couldn't find style histories:", err.Error())
 	}
 
 	// Render style history.
@@ -117,7 +117,7 @@ func Dashboard(c *fiber.Ctx) error {
 	if len(*history) > 0 {
 		dailyHistory, totalHistory, err = charts.GetStyleHistory(*history)
 		if err != nil {
-			log.Printf("Failed to render history for all styles, err: %s\n", err.Error())
+			log.Info.Println("Failed to render style history:", err.Error())
 		}
 	}
 

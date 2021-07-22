@@ -1,7 +1,6 @@
 package user
 
 import (
-	"log"
 	"strconv"
 	"strings"
 
@@ -10,6 +9,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -113,7 +113,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	// Delete from database.
 	user := new(models.User)
 	if err := user.DeleteWhereID(targetUser.ID); err != nil {
-		log.Printf("Failed to ban user %d, err: %s", id, err)
+		log.Warn.Printf("Failed to ban user %d: %s\n", id, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -123,7 +123,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	// Delete user's styles.
 	styles := new(models.Style)
 	if err := styles.BanWhereUserID(targetUser.ID); err != nil {
-		log.Printf("Failed to ban styles from user %d, err: %s", id, err)
+		log.Warn.Printf("Failed to ban styles from user %d: %s\n", id, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -143,7 +143,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	// Add banned user log entry.
 	modlog := new(models.Log)
 	if err := modlog.AddLog(&logEntry); err != nil {
-		log.Printf("Failed to add user %d to ModLog, err: %s", targetUser.ID, err)
+		log.Warn.Printf("Failed to add user %d to ModLog: %s\n", targetUser.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -153,7 +153,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	go func(baseURL string, user *models.User, modLogID uint) {
 		// Send a email about they've been banned.
 		if err := sendBanEmail(baseURL, targetUser, modLogID); err != nil {
-			log.Printf("Couldn't send ban email for user %d, err: %s", user.ID, err.Error())
+			log.Warn.Printf("Failed to send an email to user %d: %s", user.ID, err.Error())
 		}
 	}(c.BaseURL(), targetUser, logEntry.ID)
 

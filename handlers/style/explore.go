@@ -1,13 +1,13 @@
 package style
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/log"
 )
 
 func GetExplore(c *fiber.Ctx) error {
@@ -75,7 +75,7 @@ func GetExplore(c *fiber.Ctx) error {
 
 	s, err := models.GetAllAvailableStylesPaginated(pageNow, orderFunction)
 	if err != nil {
-		log.Println("Couldn't get paginated styles, ", err)
+		log.Warn.Println("Failed to get paginated styles:", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Styles not found",
 			"User":  u,

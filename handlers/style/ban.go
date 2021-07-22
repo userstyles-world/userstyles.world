@@ -1,7 +1,6 @@
 package style
 
 import (
-	"log"
 	"strconv"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )
@@ -117,7 +117,7 @@ func BanPost(c *fiber.Ctx) error {
 	// Add banned style log entry.
 	modlog := new(models.Log)
 	if err := modlog.AddLog(&logEntry); err != nil {
-		log.Printf("Failed to add style %d to ModLog, err: %s", s.ID, err)
+		log.Warn.Printf("Failed to add style %d to ModLog: %s", s.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -127,7 +127,7 @@ func BanPost(c *fiber.Ctx) error {
 	// Delete from database.
 	q := new(models.Style)
 	if err = database.Conn.Delete(q, "styles.id = ?", id).Error; err != nil {
-		log.Printf("Failed to delete style, err: %#+v\n", err)
+		log.Warn.Printf("Failed to delete style %d: %s\n", s.ID, err.Error())
 		c.Status(fiber.StatusInternalServerError)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
@@ -138,18 +138,18 @@ func BanPost(c *fiber.Ctx) error {
 	go func(baseURL string, style *models.APIStyle, modLogID uint) {
 		// Delete from search index.
 		if err = search.DeleteStyle(style.ID); err != nil {
-			log.Printf("Couldn't delete style %d failed, err: %s", style.ID, err.Error())
+			log.Warn.Printf("Failed to delete style %d: %s", style.ID, err.Error())
 		}
 
 		targetUser, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
 		if err != nil {
-			log.Printf("Couldn't find user %d failed, err: %s", style.UserID, err.Error())
+			log.Warn.Printf("Failed to find user %d: %s", style.UserID, err.Error())
 			return
 		}
 
-		// Send a email about their removed style.
+		// Notify the author about style removal.
 		if err := sendBanEmail(baseURL, targetUser, style, modLogID); err != nil {
-			log.Printf("Couldn't send ban email for style %d, err: %s", style.ID, err.Error())
+			log.Warn.Printf("Failed to mail author for style %d: %s", style.ID, err.Error())
 		}
 	}(c.BaseURL(), s, logEntry.ID)
 

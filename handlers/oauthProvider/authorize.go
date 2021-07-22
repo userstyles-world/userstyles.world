@@ -1,7 +1,6 @@
 package oauthprovider
 
 import (
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -12,6 +11,7 @@ import (
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -31,7 +31,7 @@ func redirectFunction(c *fiber.Ctx, state, redirectURI string) error {
 		SetExpiration(time.Now().Add(time.Minute * 10)).
 		GetSignedString(utils.OAuthPSigningKey)
 	if err != nil {
-		log.Println("Error: Couldn't create JWT Token:", err.Error())
+		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
@@ -91,7 +91,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.OAuthPSigningKey)
 	if err != nil {
-		log.Println("Error: Couldn't make a JWT Token due to:", err.Error())
+		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, please notify the admins.")
 	}
 
@@ -118,36 +118,37 @@ func AuthPost(c *fiber.Ctx) error {
 
 	unsealedText, err := utils.DecryptText(secureToken, utils.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
+
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		log.Println("Error: Couldn't parse JWT Token:", err.Error())
+		log.Warn.Println("Failed to parse JWT token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {
-		log.Println("WARNING!: Invalid userID")
+		log.Warn.Println("Failed to get userID from parsed token")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	user, err := models.FindUserByName(u.Username)
 	if err != nil {
-		log.Println("Error: Couldn't retrieve user:", err.Error())
+		log.Warn.Printf("Failed to find user %v: %v\n", userID, err)
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	user.AuthorizedOAuth = append(user.AuthorizedOAuth, oauthID)
 	if err = models.UpdateUser(user); err != nil {
-		log.Println("Error: couldn't update user:", err.Error())
+		log.Warn.Printf("Failed to update user %d: %v\n", user.ID, err)
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 

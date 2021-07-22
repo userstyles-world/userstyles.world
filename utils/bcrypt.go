@@ -1,11 +1,10 @@
 package utils
 
 import (
-	"log"
-
 	"golang.org/x/crypto/bcrypt"
 
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 )
 
 var salt = config.Salt
@@ -13,7 +12,7 @@ var salt = config.Salt
 func GenerateHashedPassword(pw string) string {
 	hash, err := bcrypt.GenerateFromPassword([]byte(pw), salt)
 	if err != nil {
-		log.Println(err)
+		log.Warn.Println(err)
 	}
 
 	return string(hash)

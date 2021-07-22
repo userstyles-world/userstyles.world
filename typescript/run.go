@@ -3,10 +3,10 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/evanw/esbuild/pkg/api"
+	"userstyles.world/modules/log"
 )
 
 var (
@@ -32,9 +32,9 @@ func main() {
 		watch = &api.WatchMode{
 			OnRebuild: func(result api.BuildResult) {
 				if len(result.Errors) > 0 {
-					log.Printf("watch build failed: %d errors\n", len(result.Errors))
+					log.Info.Printf("Watch build failed: %d errors\n", len(result.Errors))
 				} else {
-					log.Printf("watch build succeeded: %d warnings\n", len(result.Warnings))
+					log.Info.Printf("Watch build succeeded: %d warnings\n", len(result.Warnings))
 				}
 			},
 		}

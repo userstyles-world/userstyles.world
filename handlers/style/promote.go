@@ -1,7 +1,6 @@
 package style
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,13 +9,14 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
 func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL string) {
 	user, err := models.FindUserByID(strconv.Itoa(int(userID)))
 	if err != nil {
-		log.Println("Couldn't find user:", err)
+		log.Warn.Printf("Couldn't find user %d: %s", userID, err.Error())
 		return
 	}
 
@@ -47,7 +47,7 @@ func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL st
 		AddPart(*partHTML).
 		SendEmail(config.IMAPServer)
 	if err != nil {
-		log.Println("Couldn't send email:", err)
+		log.Warn.Println("Failed to send email:", err.Error())
 		return
 	}
 }
@@ -66,7 +66,7 @@ func Promote(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(p)
 	if err != nil {
-		log.Printf("Couldn't convert %s to int, err: %s\n", p, err)
+		log.Info.Printf("Failed to convert %s to int: %s\n", p, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Couldn't convert style ID",
 			"User":  u,
@@ -75,7 +75,7 @@ func Promote(c *fiber.Ctx) error {
 
 	style, err := models.GetStyleByID(p)
 	if err != nil {
-		log.Println("Couldn't get the style:", err)
+		log.Warn.Println("Failed to get the style:", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
@@ -89,7 +89,7 @@ func Promote(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		log.Println("Couldn't feature style:", err)
+		log.Warn.Printf("Failed to promote style %d: %s\n", style.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to promote a style",
 			"User":  u,
@@ -112,7 +112,7 @@ func Promote(c *fiber.Ctx) error {
 
 		go func(notification models.Notification) {
 			if err := notification.Create(); err != nil {
-				log.Printf("Failed to create a notification for %d, err: %v", id, err)
+				log.Warn.Printf("Failed to create a notification for %d, err: %v", id, err.Error())
 			}
 		}(notification)
 	}

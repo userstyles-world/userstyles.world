@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"gorm.io/gorm"
@@ -369,7 +368,6 @@ func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
 		First(q, "styles.id = ?", id).
 		Error
 	if err != nil {
-		log.Printf("Problem with style id %s, err: %v", id, err)
 		return q, err
 	}
 

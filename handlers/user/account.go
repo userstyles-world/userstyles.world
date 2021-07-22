@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -11,6 +10,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -33,6 +33,8 @@ func setSocials(u *models.User, k, v string) {
 
 func Account(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+
+	log.Info.Println("User", u.ID, "visited account page.")
 
 	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
@@ -85,7 +87,7 @@ func EditAccount(c *fiber.Ctx) error {
 		if err := utils.Validate().StructPartial(user, "DisplayName"); err != nil {
 			var validationError validator.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
-				log.Println("Validation errors:", validationError)
+				log.Info.Println("Validation errors:", validationError)
 			}
 			user.DisplayName = prev
 
@@ -116,7 +118,7 @@ func EditAccount(c *fiber.Ctx) error {
 		if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
 			var validationError validator.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
-				log.Println("Validation errors:", validationError)
+				log.Info.Println("Validation errors:", validationError)
 			}
 			user.Biography = prev
 
@@ -141,7 +143,7 @@ func EditAccount(c *fiber.Ctx) error {
 		Error
 
 	if dbErr != nil {
-		log.Println("Updating style failed, err:", err)
+		log.Warn.Println("Updating user profile failed, err:", err)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,

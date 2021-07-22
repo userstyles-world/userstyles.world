@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"log"
 	"strings"
 	"time"
 
@@ -12,12 +11,13 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
 func RegisterGet(c *fiber.Ctx) error {
 	if u, ok := jwt.User(c); ok {
-		log.Printf("User %d has set session, redirecting.", u.ID)
+		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 
@@ -38,7 +38,7 @@ func RegisterPost(c *fiber.Ctx) error {
 	if err != nil {
 		var validationError validator.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
-			log.Println("Validation errors:", validationError)
+			log.Info.Println("Validation errors:", validationError)
 		}
 		return c.Status(fiber.StatusInternalServerError).
 			Render("user/register", fiber.Map{
@@ -54,7 +54,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.VerifySigningKey)
 	if err != nil {
-		log.Println("Couldn't create a JWT Token, due to", err)
+		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
 				"Title": "Internal server error",
@@ -85,7 +85,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		SendEmail(config.IMAPServer)
 
 	if err != nil {
-		log.Println("Couldn't send a email, due to", err)
+		log.Warn.Println("Failed to send an email:", err.Error())
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
 				"Title": "Internal server error",

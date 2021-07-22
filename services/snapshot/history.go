@@ -1,11 +1,11 @@
 package snapshot
 
 import (
-	"log"
 	"time"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 )
 
 func getViews(id int64) (i int64) {
@@ -53,7 +53,7 @@ func getPreviousHistory(id uint) (q *models.History) {
 func StyleStatistics() {
 	styles, err := models.GetAllStyleIDs()
 	if err != nil {
-		log.Fatalln(err)
+		log.Warn.Println("Failed to get IDs for all styles:", err.Error())
 	}
 
 	// Store style stats.
@@ -82,6 +82,7 @@ func StyleStatistics() {
 		*stats = append(*stats, item)
 	}
 
-	log.Println("Stats history.")
+	log.Info.Println("Collecting stats history.")
 	database.Conn.Debug().Create(stats)
+	log.Info.Println("Stats history is collected.")
 }

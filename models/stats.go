@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"log"
 	"strconv"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils/crypto"
 )
 
@@ -157,7 +157,7 @@ SELECT
 	lastDay := time.Now().AddDate(0, 0, -1)
 
 	if err := database.Conn.Raw(q, sql.Named("d", lastDay)).Scan(&p).Error; err != nil {
-		log.Printf("Failed to get homepage stats, err: %v\n", err)
+		log.Warn.Println("Failed to get homepage stats:", err.Error())
 	}
 
 	return &p

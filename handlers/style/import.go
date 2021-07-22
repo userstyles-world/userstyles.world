@@ -2,7 +2,6 @@ package style
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,6 +9,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -51,7 +51,7 @@ func ImportPost(c *fiber.Ctx) error {
 		// Get userstyle.
 		uc, err := usercss.ParseFromURL(r)
 		if err != nil {
-			log.Println("ParsingFromURL err:", err)
+			log.Warn.Println("Failed to parse userstyle from URL:", err.Error())
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to fetch external userstyle",
 				"User":  u,
@@ -91,7 +91,7 @@ func ImportPost(c *fiber.Ctx) error {
 
 	s, err = models.CreateStyle(s)
 	if err != nil {
-		log.Println("Style import failed, err:", err)
+		log.Warn.Println("Failed to import style from URL:", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,

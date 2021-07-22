@@ -1,13 +1,12 @@
 package style
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/search"
 )
 
@@ -60,7 +59,7 @@ func DeletePost(c *fiber.Ctx) error {
 
 	q := new(models.Style)
 	if err = database.Conn.Delete(q, "styles.id = ?", p).Error; err != nil {
-		log.Printf("Failed to delete style, err: %#+v\n", err)
+		log.Warn.Printf("Failed to delete style %d: %s\n", s.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
 			"User":  u,
@@ -68,7 +67,7 @@ func DeletePost(c *fiber.Ctx) error {
 	}
 
 	if err = search.DeleteStyle(s.ID); err != nil {
-		log.Printf("Couldn't delete style %d failed, err: %s", s.ID, err.Error())
+		log.Warn.Printf("Failed to delte style %d: %s", s.ID, err.Error())
 	}
 
 	return c.Redirect("/account", fiber.StatusSeeOther)

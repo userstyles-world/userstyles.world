@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,6 +18,7 @@ import (
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/modules/templates"
 	"userstyles.world/utils"
 )
@@ -136,5 +136,5 @@ func Initialize() {
 	}))
 	app.Use(core.NotFound)
 
-	log.Fatal(app.Listen(config.Port))
+	log.Warn.Fatal(app.Listen(config.Port))
 }

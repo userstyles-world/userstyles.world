@@ -2,7 +2,6 @@ package oauthprovider
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -11,6 +10,7 @@ import (
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -42,14 +42,14 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.OAuthPSigningKey)
 	if err != nil {
-		log.Println("Error: Couldn't make a JWT Token due to:", err.Error())
+		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, please notify the admins.")
 	}
 	secureToken := utils.EncryptText(jwt, utils.AEADOAuthp, config.ScrambleConfig)
 
 	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
-		log.Println("Error: Mo styles find for user", err.Error())
+		log.Info.Println("Failed to get styles from user:", err.Error())
 		return errorMessage(c, 500, "Couldn't retrieve styles of user")
 	}
 
@@ -84,41 +84,42 @@ func OAuthStylePost(c *fiber.Ctx) error {
 
 	unsealedText, err := utils.DecryptText(secureToken, utils.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
+
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		log.Println("Error: Couldn't get claims from JWT Token:", err.Error())
+		log.Warn.Println("Failed to parse JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {
-		log.Println("WARNING!: Invalid userID")
+		log.Warn.Println("Failed to get userID from parsed token.")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	state, ok := claims["state"].(string)
 	if !ok {
-		log.Println("WARNING!: Invalid state")
+		log.Warn.Println("Invalid JWT state.")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	style, err := models.GetStyleByID(styleID)
 	if err != nil {
-		log.Println("Error: Style wasn't found, due to: ", err.Error())
+		log.Warn.Printf("Failed to find style %v: %v\n", styleID, err)
 		return errorMessage(c, 500, "Couldn't retrieve style of user")
 	}
 
 	if style.UserID != u.ID {
-		log.Println("WARNING!: Invalid style's user ID")
+		log.Warn.Println("Failed to match style author and userID.")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
@@ -129,7 +130,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		SetExpiration(time.Now().Add(time.Minute * 10)).
 		GetSignedString(utils.OAuthPSigningKey)
 	if err != nil {
-		log.Println("Error: Couldn't create JWT Token:", err.Error())
+		log.Warn.Println("Failed to create JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
@@ -153,30 +154,30 @@ func OAuthStyleNewPost(c *fiber.Ctx) error {
 
 	unsealedText, err := utils.DecryptText(secureToken, utils.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		log.Println("WARNING!: Invalid conversion")
+		log.Warn.Println("Failed to parse JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	userID, ok := claims["userID"].(float64)
 	if !ok || userID != float64(u.ID) {
-		log.Println("WARNING!: Invalid userID")
+		log.Warn.Println("Failed to get userID from parsed token.")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	_, ok = claims["state"].(string)
 	if !ok {
-		log.Println("WARNING!: Invalid state")
+		log.Warn.Println("Invalid JWT state.")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 

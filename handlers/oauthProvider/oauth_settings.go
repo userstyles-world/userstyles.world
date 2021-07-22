@@ -2,7 +2,6 @@ package oauthprovider
 
 import (
 	"errors"
-	"log"
 	"strconv"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -35,7 +35,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 	}
 
 	if err != nil {
-		log.Printf("Failed to oauth, err: %#+v\n", err)
+		log.Warn.Printf("Failed to OAuth %d: %s\n", oauth.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
 			"User":  u,
@@ -96,6 +96,7 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 
 func OAuthSettingsPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	id := c.Params("id")
 
 	q := models.OAuth{
 		Name:        c.FormValue("name"),
@@ -110,7 +111,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	if err := utils.Validate().StructPartial(q, "Name", "Description"); err != nil {
 		var validationError validator.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
-			log.Println("Validation errors:", validationError)
+			log.Info.Println("Validation errors:", validationError)
 		}
 
 		arguments := fiber.Map{
@@ -129,7 +130,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 
 	var err error
 	var dbOAuth *models.OAuth
-	if id := c.Params("id"); id != "" {
+	if id != "" {
 		err = models.UpdateOAuth(&q, id)
 	} else {
 		q.ClientID = utils.UnsafeString((utils.RandStringBytesMaskImprSrcUnsafe(32)))
@@ -138,7 +139,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	}
 
 	if err != nil {
-		log.Println("Updating style failed, err:", err)
+		log.Warn.Printf("Updating OAuth settings for %v failed: %s\n", id, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,

@@ -2,7 +2,6 @@ package oauthprovider
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -10,6 +9,7 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
@@ -37,31 +37,31 @@ func TokenPost(c *fiber.Ctx) error {
 
 	unsealedText, err := utils.DecryptText(tCode, utils.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
-		log.Println("Error: Couldn't unseal JWT Token:", err.Error())
+		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		log.Println("Error: Couldn't type assert JWT Token:", err.Error())
+		log.Warn.Println("Failed to parse JWT Token:", err.Error())
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	state, ok := claims["state"].(string)
 	if !ok {
-		log.Println("Error: couldn't type convert state to string")
+		log.Warn.Println("Invalid JWT state.")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 
 	floatUserID, ok := claims["userID"].(float64)
 	if !ok {
-		log.Println("Error: couldn't type convert userID to float64")
+		log.Warn.Println("Failed to get userID from parsed token.")
 		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
 	}
 	userID := uint(floatUserID)

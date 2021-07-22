@@ -3,11 +3,11 @@ package images
 import (
 	"io"
 	"io/fs"
-	"log"
 	"net/http"
 	"os"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/log"
 )
 
 type ImageInfo struct {
@@ -21,7 +21,7 @@ var CacheFolder = "./data/images/"
 func Initialize() {
 	if fileInfo := fileExist(CacheFolder); fileInfo == nil {
 		if err := os.Mkdir(CacheFolder, 0o755); err != nil {
-			log.Fatalln(err)
+			log.Warn.Fatalln(err)
 		}
 	}
 }
@@ -47,7 +47,7 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 
 		req, err := http.Get(style.Preview)
 		if err != nil {
-			log.Println("Error fetching URL:", err)
+			log.Warn.Println("Error fetching image URL:", err)
 			return ImageInfo{}, err
 		}
 		defer req.Body.Close()
@@ -56,13 +56,13 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 		data, _ := io.ReadAll(req.Body)
 		err = os.WriteFile(original, data, 0o600)
 		if err != nil {
-			log.Println("Error processing:", err)
+			log.Warn.Println("Error processing image:", err)
 			return ImageInfo{}, err
 		}
 
 		err = DecodeImage(original, jpeg, ImageTypeJPEG)
 		if err != nil {
-			log.Println("Error processing:", err)
+			log.Warn.Println("Error processing image:", err)
 			return ImageInfo{}, err
 		}
 

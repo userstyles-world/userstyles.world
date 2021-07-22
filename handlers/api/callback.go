@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"strings"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/log"
 	"userstyles.world/modules/oauthlogin"
 	"userstyles.world/utils"
 )
@@ -31,7 +31,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	// Get the necessary information.
 	redirectCode, tempCode, state := c.Params("rcode"), c.Query("code"), c.Query("state")
 	if redirectCode == "" || tempCode == "" {
-		log.Println("No redirectcode or tempCode was detected")
+		log.Info.Println("No redirectCode or tempCode was detected.")
 		// Give them the bad enpoint error.
 		return c.Next()
 	}
@@ -42,13 +42,13 @@ func CallbackGet(c *fiber.Ctx) error {
 		// Decode the string so we get our actual information back.
 		code, err := utils.DecryptText(redirectCode, utils.AEADOAuth, config.ScrambleConfig)
 		if err != nil {
-			log.Println("Error: Couldn't decode our prepared text.")
+			log.Warn.Println("Failed to decode prepared text.")
 			return c.Next()
 		}
 		rState = code
 
 		if rState != state {
-			log.Println("Error: The state doesn't match!")
+			log.Warn.Println("Failed to match states.")
 			return c.Next()
 		}
 	} else {
@@ -57,7 +57,7 @@ func CallbackGet(c *fiber.Ctx) error {
 
 	response, err := oauthlogin.CallbackOAuth(tempCode, rState, service)
 	if err != nil {
-		log.Println("Ouch, the response failed, due to: " + err.Error())
+		log.Warn.Println("Ouch, the response failed:", err.Error())
 		return c.Next()
 	}
 
@@ -75,7 +75,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		regErr := database.Conn.Create(user)
 
 		if regErr.Error != nil {
-			log.Printf("Failed to register %s, error: %s", response.Username, regErr.Error)
+			log.Warn.Printf("Failed to register %s: %s", response.Username, regErr.Error)
 			return c.Status(fiber.StatusInternalServerError).
 				JSON(fiber.Map{
 					"data": "Internal Error.",
@@ -86,7 +86,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	// TODO: Simplify this logic.
 	if (user.OAuthProvider == "none" || user.OAuthProvider != service) &&
 		!strings.EqualFold(getSocialMediaValue(user, service), response.Username) {
-		log.Println("User detected but the social media value wasn't set of this user.")
+		log.Warn.Println("User detected but the social media value wasn't set of this user.")
 		return c.Next()
 	}
 
@@ -98,7 +98,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		SetExpiration(expiration).
 		GetSignedString(nil)
 	if err != nil {
-		log.Println("Couldn't create JWT Token, due to " + err.Error())
+		log.Warn.Println("Failed to create JWT Token:", err.Error())
 		return c.Status(fiber.StatusInternalServerError).
 			JSON(fiber.Map{
 				"data": "Internal Error.",

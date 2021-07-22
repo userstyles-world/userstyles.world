@@ -2,7 +2,6 @@ package style
 
 import (
 	"io"
-	"log"
 	"os"
 	"strings"
 
@@ -12,6 +11,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
+	"userstyles.world/modules/log"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -86,7 +86,7 @@ func EditPost(c *fiber.Ctx) error {
 	if preview, _ := c.FormFile("preview"); preview != nil {
 		image, err := preview.Open()
 		if err != nil {
-			log.Println("Opening image , err:", err)
+			log.Warn.Println("Failed to open image:", err.Error())
 			return c.Render("err", fiber.Map{
 				"Title": "Internal server error.",
 				"User":  u,
@@ -95,7 +95,7 @@ func EditPost(c *fiber.Ctx) error {
 		data, _ := io.ReadAll(image)
 		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
 		if err != nil {
-			log.Println("Style creation failed, err:", err)
+			log.Warn.Println("Failed to create style:", err.Error())
 			return c.Render("err", fiber.Map{
 				"Title": "Internal server error.",
 				"User":  u,
@@ -125,7 +125,7 @@ func EditPost(c *fiber.Ctx) error {
 		Error
 
 	if err != nil {
-		log.Println("Updating style failed, err:", err)
+		log.Warn.Println("Failed to update style:", err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error.",
 			"User":  u,
