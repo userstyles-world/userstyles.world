@@ -41,13 +41,16 @@
             <i>No style history. Come back in a couple of days.</i>
         {{ end }}
         {{ with .DailyHistory }}
-            <div class="chart daily mt:m">{{ . | unescape }}</div>
+            <div class="chart stats daily mt:m">{{ . | unescape }}</div>
         {{ end }}
         {{ with .TotalHistory }}
-            <div class="chart total mt:m">{{ . | unescape }}</div>
+            <div class="chart stats total mt:m">{{ . | unescape }}</div>
         {{ end }}
         {{ with .UserHistory }}
             <div class="chart users mt:m">{{ . | unescape }}</div>
+        {{ end }}
+        {{ with .StyleHistory }}
+            <div class="chart styles mt:m">{{ . | unescape }}</div>
         {{ end }}
     </section>
 

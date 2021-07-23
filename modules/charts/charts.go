@@ -91,7 +91,7 @@ func GetStyleHistory(history []models.History) (string, string, error) {
 	return daily.String(), total.String(), nil
 }
 
-func GetUserHistory(users []models.DashStats, t time.Time) (string, error) {
+func GetUserHistory(users []models.DashStats, t time.Time, title string) (string, error) {
 	userBars := []chart.Value{}
 	for _, user := range users {
 		if user.CreatedAt.After(t) {
@@ -103,7 +103,7 @@ func GetUserHistory(users []models.DashStats, t time.Time) (string, error) {
 	}
 
 	usersGraph := chart.BarChart{
-		Title: "User history",
+		Title: title,
 		Background: chart.Style{
 			Padding: chart.Box{Top: 40},
 		},

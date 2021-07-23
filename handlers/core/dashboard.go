@@ -14,6 +14,7 @@ import (
 
 func Dashboard(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	week := time.Now().AddDate(0, -1, 0)
 
 	// Don't allow regular users to see this page.
 	if u.Role < models.Moderator {
@@ -60,7 +61,6 @@ func Dashboard(c *fiber.Ctx) error {
 		}
 	}
 
-	// TODO: Refactor.
 	// Get styles.
 	var styles []models.StyleCard
 	if c.Query("data") == "styles" {
@@ -100,7 +100,16 @@ func Dashboard(c *fiber.Ctx) error {
 	// Render user history.
 	var userHistory string
 	if len(userCount) > 0 {
-		userHistory, err = charts.GetUserHistory(userCount, time.Now().AddDate(0, -1, 0))
+		userHistory, err = charts.GetUserHistory(userCount, week, "User history")
+		if err != nil {
+			log.Info.Println("Failed to render style history:", err.Error())
+		}
+	}
+
+	// Render style history.
+	var styleHistory string
+	if len(styleCount) > 0 {
+		styleHistory, err = charts.GetUserHistory(styleCount, week, "Style history")
 		if err != nil {
 			log.Info.Println("Failed to render user history:", err.Error())
 		}
@@ -133,5 +142,6 @@ func Dashboard(c *fiber.Ctx) error {
 		"DailyHistory": dailyHistory,
 		"TotalHistory": totalHistory,
 		"UserHistory":  userHistory,
+		"StyleHistory": styleHistory,
 	})
 }

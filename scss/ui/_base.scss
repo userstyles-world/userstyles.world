@@ -220,20 +220,20 @@ label[for="remember"] {
         > path {
             &[style*='fill:rgba(255'] { fill: var(--bg-2) !important }
             &[style*='stroke:rgba(51'] { stroke: var(--bg-5) !important }
+        }
+        > text {
+            fill: var(--fg-3) !important;
+            font-family: var(--font-sans) !important;
+        }
+
+        // Exclude bar charts.
+        &:not([height='360']) > path {
             &:nth-last-child(-n+10) {
                 stroke-linecap: round;
                 stroke-linejoin: round;
                 stroke-width: 2 !important;
                 // &:hover { stroke-width: 4 !important }
             }
-            &:nth-last-child(7) {
-                stroke-width: 1 !important;
-                transform: translate(-1px);
-            }
-        }
-        > text {
-            fill: var(--fg-3) !important;
-            font-family: var(--font-sans) !important;
         }
     }
 }
