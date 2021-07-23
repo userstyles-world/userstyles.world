@@ -8,3 +8,4 @@ Table of Content
 - [Changelog](/docs/changelog "Changelog page")
 - [Privacy Policy](/docs/privacy "Privacy page")
 - [Security Policy](/docs/security "Security page")
+- [Cryptographic usages](/docs/crypto "Cryptographic page")
