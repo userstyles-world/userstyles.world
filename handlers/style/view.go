@@ -51,7 +51,7 @@ func GetStylePage(c *fiber.Ctx) error {
 	// Render graphs.
 	var dailyHistory, totalHistory string
 	if len(*history) > 0 {
-		dailyHistory, totalHistory, err = charts.GetStyleHistory(*history)
+		dailyHistory, totalHistory, err = charts.GetStatsHistory(*history)
 		if err != nil {
 			log.Warn.Printf("Failed to render history for style %s: %s\n", id, err.Error())
 		}

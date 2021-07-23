@@ -9,7 +9,7 @@ import (
 	"userstyles.world/models"
 )
 
-func GetStyleHistory(history []models.History) (string, string, error) {
+func GetStatsHistory(history []models.History) (string, string, error) {
 	historyLen := len(history)
 	dates := make([]time.Time, 0, historyLen)
 	dailyViews := make([]float64, 0, historyLen)
@@ -91,13 +91,13 @@ func GetStyleHistory(history []models.History) (string, string, error) {
 	return daily.String(), total.String(), nil
 }
 
-func GetUserHistory(users []models.DashStats, t time.Time, title string) (string, error) {
-	userBars := []chart.Value{}
-	for _, user := range users {
-		if user.CreatedAt.After(t) {
-			userBars = append(userBars, chart.Value{
-				Label: user.Date,
-				Value: float64(user.Count),
+func GetModelHistory(vals []models.DashStats, t time.Time, title string) (string, error) {
+	bars := []chart.Value{}
+	for _, val := range vals {
+		if val.CreatedAt.After(t) {
+			bars = append(bars, chart.Value{
+				Label: val.Date,
+				Value: float64(val.Count),
 			})
 		}
 	}
@@ -108,17 +108,17 @@ func GetUserHistory(users []models.DashStats, t time.Time, title string) (string
 			Padding: chart.Box{Top: 40},
 		},
 		Height: 360,
-		Bars:   userBars,
+		Bars:   bars,
 		XAxis: chart.Style{
 			TextRotationDegrees: 90.0,
 		},
 	}
 
-	userHistory := bytes.NewBuffer([]byte{})
-	userFailed := userHistory.Len() != 220
-	if err := usersGraph.Render(chart.SVG, userHistory); err != nil && userFailed {
+	b := bytes.NewBuffer([]byte{})
+	notEnoughData := b.Len() != 220
+	if err := usersGraph.Render(chart.SVG, b); err != nil && notEnoughData {
 		return "", err
 	}
 
-	return userHistory.String(), nil
+	return b.String(), nil
 }
