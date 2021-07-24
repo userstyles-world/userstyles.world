@@ -28,18 +28,18 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     transition: $x, $y, $z;
     border: 1px solid var(--bg-3);
     background-color: var(--bg-2);
-    color: var(--fg-3);
+    color: var(--fg-2);
     outline: none;
 
     ::-moz-focus-inner { outline: none }
 
     &:hover {
-        color: var(--fg-2);
+        color: var(--fg-1);
         border-color: var(--bg-4);
     }
 
     &:not(.active):focus {
-        color: var(--fg-2);
+        color: var(--fg-1);
         border-color: var(--bg-5);
         box-shadow: 0 0 0 0.25rem var(--bg-2);
     }
@@ -59,11 +59,11 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     &.primary {
         color: var(--fg-1);
         border-color: var(--ac-3);
-        background-color: var(--ac-5);
+        background-color: var(--ac-4);
 
         &:hover {
+            color: var(--inverse);
             border-color: var(--ac-2);
-            background-color: var(--ac-3);
         }
 
         &:not(.active):focus {
@@ -74,15 +74,15 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     }
 
     &.stylus {
-        color: var(--inverse);
+        color: var(--fg-1);
         border-color: var(--st-3);
-        background-color: var(--st-5);
+        background-color: var(--st-4);
 
-        &::after { color: var(--inverse) }
+        &::after { color: inherit }
 
         &:hover {
+            color: var(--inverse);
             border-color: var(--st-2);
-            background-color: var(--st-3);
         }
 
         &:not(.active):focus {
@@ -90,14 +90,12 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
             border-color: var(--st-2);
             box-shadow: 0 0 0 0.25rem var(--st-5);
         }
+    }
 
-
-        [data-color-scheme="light"] & {
-            border-color: var(--st-5);
-            &:not(.active):focus {
-                border-color: var(--st-5);
-                box-shadow: 0 0 0 0.25rem var(--st-2);
-            }
+    // Override light mode colors.
+    [data-color-scheme="light"] & {
+        &.primary, &.stylus {
+            color: var(--inverse) !important;
         }
     }
 }

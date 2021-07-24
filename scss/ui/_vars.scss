@@ -8,7 +8,7 @@ $st-dark:  #27fffb;
 $bg-light: #eeeeee;
 $fg-light: #101010;
 $ac-light: #0b459b;
-$st-light: #66edd9;
+$st-light: darken(#66edd9, 60%);
 
 $mode: (
     "dark": (
@@ -24,14 +24,14 @@ $mode: (
         "fg-5": darken($fg-dark, 48%),
         "ac-1": darken($ac-dark,  0%),
         "ac-2": darken($ac-dark, 16%),
-        "ac-3": darken($ac-dark, 24%),
-        "ac-4": darken($ac-dark, 32%),
-        "ac-5": darken($ac-dark, 40%),
+        "ac-3": darken($ac-dark, 28%),
+        "ac-4": darken($ac-dark, 40%),
+        "ac-5": darken($ac-dark, 44%),
         "st-1": darken($st-dark,  0%),
-        "st-2": darken($st-dark, 20%),
-        "st-3": darken($st-dark, 28%),
-        "st-4": darken($st-dark, 32%),
-        "st-5": darken($st-dark, 40%),
+        "st-2": darken($st-dark, 18%),
+        "st-3": darken($st-dark, 30%),
+        "st-4": darken($st-dark, 42%),
+        "st-5": darken($st-dark, 46%),
         "bg-t": transparentize($bg-dark, 0.3),
         "sh-m": "0 4px 12px -2px #0006, 0 6px 4px -4px #0002",
     ),
@@ -47,15 +47,15 @@ $mode: (
         "fg-4": lighten($fg-light, 24%),
         "fg-5": lighten($fg-light, 32%),
         "ac-1": lighten($ac-light,  0%),
-        "ac-2": lighten($ac-light, 16%),
-        "ac-3": lighten($ac-light, 24%),
-        "ac-4": lighten($ac-light, 32%),
-        "ac-5": lighten($ac-light, 40%),
-        "st-1": darken($st-light,  0%),
-        "st-2": darken($st-light, 20%),
-        "st-3": darken($st-light, 28%),
-        "st-4": darken($st-light, 32%),
-        "st-5": darken($st-light, 40%),
+        "ac-2": lighten($ac-light,  8%),
+        "ac-3": lighten($ac-light, 16%),
+        "ac-4": lighten($ac-light, 24%),
+        "ac-5": lighten($ac-light, 48%),
+        "st-1": lighten($st-light,  0%),
+        "st-2": lighten($st-light,  8%),
+        "st-3": lighten($st-light, 16%),
+        "st-4": lighten($st-light, 24%),
+        "st-5": transparentize(lighten($st-light, 24%), 0.5),
         "bg-t": transparentize($bg-light, 0.2),
         "sh-m": "0 4px 16px -4px #0004, 0 4px 4px -4px #0001",
     ),
