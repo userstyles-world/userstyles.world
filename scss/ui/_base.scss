@@ -7,6 +7,7 @@ a {
     &::after {
         font-size: 0.7rem;
         vertical-align: super;
+        align-self: flex-start;
         color: var(--fg-3);
     }
     &[href^='http']::after { content: '[\01F517]' }
