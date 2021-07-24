@@ -33,7 +33,10 @@
     <section class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
         <div class="Pagination flex jc:c ai:c">
             {{ if not (eq .PageNow 1) }}
-                <a class="Pagination-button min" href="{{ paginate 1 .Sort }}">First page</a>
+                <a class="Pagination-button min" href="{{ paginate 1 .Sort }}">1 — First</a>
+            {{ end }}
+            {{ if (gt (subtract .PageBack 1) "1") }}
+                <div class="Pagination-ellipsis">…</div>
             {{ end }}
             {{ if not (or (eq .PageNow 1) (eq .PageBack 1)) }}
                 <a class="Pagination-button back" href="{{ paginate .PageBack .Sort }}">{{ .PageBack }}</a>
@@ -42,8 +45,11 @@
             {{ if not (or (eq .PageNow .PageMax) (eq .PageNext .PageMax)) }}
                 <a class="Pagination-button next" href="{{ paginate .PageNext .Sort }}">{{ .PageNext }}</a>
             {{ end }}
+            {{ if (gt (subtract .PageMax .PageNext) "1") }}
+                <div class="Pagination-ellipsis">…</div>
+            {{ end }}
             {{ if not (eq .PageNow .PageMax) }}
-                <a class="Pagination-button max" href="{{ paginate .PageMax .Sort }}">Last page</a>
+                <a class="Pagination-button max" href="{{ paginate .PageMax .Sort }}">{{ .PageMax }} — Last</a>
             {{ end }}
         </div>
     </section>

@@ -1,13 +1,13 @@
 .Pagination {
-    padding: 0.25rem;
-    border-radius: var(--br-2);
+    padding: 0.125rem;
+    border-radius: var(--br-3);
     border: 1px solid var(--bg-4);
     background-color: var(--bg-2);
 
     &-button,
     &-active {
         padding: 0.5rem;
-        border-radius: var(--br-3);
+        border-radius: calc(var(--br-3) - 1px);
         color: var(--fg-1);
     }
 
@@ -16,7 +16,7 @@
     }
 
     > * {
-        min-width: 40px;
+        min-width: 32px;
         position: relative;
         text-align: center;
         &:not(:last-child) {
@@ -42,7 +42,6 @@
         }
     }
 
-    &-active {
-        background-color: var(--ac-4);
-    }
+    &-ellipsis { color: var(--fg-4) }
+    &-active { background-color: var(--bg-4) }
 }
