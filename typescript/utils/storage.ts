@@ -1,11 +1,13 @@
 export interface UserSettings {
     colorScheme: 'dark' | 'light' | 'follow-system';
     entriesBehavior: 'hover' | 'click' | 'no-hide';
+    redirect: string;
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
     colorScheme: 'follow-system',
     entriesBehavior: 'click',
+    redirect: '',
 };
 
 const localStorageKey = 'user-preferences';

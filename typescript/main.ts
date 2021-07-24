@@ -1,4 +1,6 @@
-import {changeEntriesBehavior} from 'page/modlog';
+import {checkRedirect} from './page/account';
+import {saveRedirect} from './page/login';
+import {changeEntriesBehavior} from './page/modlog';
 import {InitalizeColorScheme as initalizeColorScheme} from './color-scheme';
 import {ShareButton} from './share-button';
 import {BroadcastReady} from './third-party';
@@ -35,6 +37,12 @@ function pageSpecificFunctions(settings: UserSettings) {
     switch (location.pathname) {
         case '/modlog':
             changeEntriesBehavior(settings.entriesBehavior);
+            break;
+        case '/login':
+            saveRedirect();
+            break;
+        case '/account':
+            checkRedirect(settings.redirect);
             break;
     }
 }
