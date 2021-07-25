@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+	"runtime"
 	"sort"
 	"time"
 
@@ -9,8 +11,84 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/charts"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
+
+var system struct {
+	Uptime     string
+	GoRoutines int
+
+	MemAllocated uint64
+	MemTotal     uint64
+	MemSys       uint64
+	Lookups      uint64
+	MemMallocs   uint64
+	MemFrees     uint64
+
+	HeapAlloc    uint64
+	HeapSys      uint64
+	HeapInuse    uint64
+	HeapIdle     uint64
+	HeapReleased uint64
+	HeapObjects  uint64
+
+	StackInuse uint64
+	StackSys   uint64
+
+	MSpanSys    uint64
+	MSpanInuse  uint64
+	MCacheSys   uint64
+	MCacheInuse uint64
+	BuckHashSys uint64
+	GCSys       uint64
+	OtherSys    uint64
+
+	NextGC       uint64
+	LastGC       string
+	PauseTotalNs string
+	PauseNs      string
+	NumGC        uint32
+}
+
+func getSystemStatus() {
+	system.Uptime = time.Since(config.AppUptime).Round(time.Second).String()
+	system.GoRoutines = runtime.NumGoroutine()
+
+	m := new(runtime.MemStats)
+	runtime.ReadMemStats(m)
+
+	system.MemAllocated = m.Alloc
+	system.MemTotal = m.TotalAlloc
+	system.MemSys = m.Sys
+	system.Lookups = m.Lookups
+	system.MemMallocs = m.Mallocs
+	system.MemFrees = m.Frees
+
+	system.HeapAlloc = m.HeapAlloc
+	system.HeapSys = m.HeapSys
+	system.HeapInuse = m.HeapInuse
+	system.HeapIdle = m.HeapIdle
+	system.HeapReleased = m.HeapReleased
+	system.HeapObjects = m.HeapObjects
+
+	system.StackInuse = m.StackInuse
+	system.StackSys = m.StackSys
+
+	system.MSpanSys = m.MCacheInuse
+	system.MSpanInuse = m.MSpanInuse
+	system.MCacheSys = m.MCacheSys
+	system.MCacheInuse = m.MCacheInuse
+	system.BuckHashSys = m.BuckHashSys
+	system.GCSys = m.GCSys
+	system.OtherSys = m.OtherSys
+
+	system.NextGC = m.NextGC
+	system.LastGC = fmt.Sprintf("%.1fs", float64(time.Now().UnixNano()-int64(m.LastGC))/1000/1000/1000)
+	system.PauseTotalNs = fmt.Sprintf("%.1fs", float64(m.PauseTotalNs)/1000/1000/1000)
+	system.PauseNs = fmt.Sprintf("%.3fs", float64(m.PauseNs[(m.NumGC+255)%256])/1000/1000/1000)
+	system.NumGC = m.NumGC
+}
 
 func Dashboard(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
@@ -23,6 +101,8 @@ func Dashboard(c *fiber.Ctx) error {
 			"User":  u,
 		})
 	}
+
+	getSystemStatus()
 
 	// Get User statistics.
 	userCount, err := new(models.DashStats).GetCounts("users")
@@ -141,5 +221,6 @@ func Dashboard(c *fiber.Ctx) error {
 		"TotalHistory": totalHistory,
 		"UserHistory":  userHistory,
 		"StyleHistory": styleHistory,
+		"System":       system,
 	})
 }

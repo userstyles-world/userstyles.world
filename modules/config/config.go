@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 type ScrambleSettings struct {
@@ -50,6 +51,7 @@ var (
 	AppName         = "UserStyles.world"
 	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
 	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
+	AppUptime       = time.Now()
 
 	AppLinkChat   = "https://matrix.to/#/!mewOpQBfQfwHLEvVbZ:matrix.org"
 	AppLinkSource = "https://github.com/userstyles-world/userstyles.world"

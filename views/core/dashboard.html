@@ -32,6 +32,43 @@
         {{ with .LatestUser }}
             <p>{{ $.TotalUsers }} total users <span>({{ .Count }} today)</span></p>
         {{ end }}
+        {{ with .System }}
+            <table>
+                <tbody>
+                    <tr><td>Uptime</td><td>{{ .Uptime }}</td></tr>
+                    <tr><td>Current goroutines</td><td>{{ .GoRoutines }}</td></tr>
+                    <tr><td>Allocated memory</td><td>{{ .MemAllocated }}</td></tr>
+                    <tr><td>Total allocated memory</td><td>{{ .MemTotal }}</td></tr>
+                    <tr><td>Memory obtained</td><td>{{ .MemSys }}</td></tr>
+                    <tr><td>Pointer lookup times</td><td>{{ .Lookups }}</td></tr>
+                    <tr><td>Memory allocations</td><td>{{ .MemMallocs }}</td></tr>
+                    <tr><td>Memory frees</td><td>{{ .MemFrees }}</td></tr>
+
+                    <tr><td>Current heap usage</td><td>{{ .HeapAlloc }}</td></tr>
+                    <tr><td>Heap memory obtained</td><td>{{ .HeapSys }}</td></tr>
+                    <tr><td>Heap memory idle</td><td>{{ .HeapIdle }}</td></tr>
+                    <tr><td>Heap memory in use</td><td>{{ .HeapInuse }}</td></tr>
+                    <tr><td>Heap memory released</td><td>{{ .HeapReleased }}</td></tr>
+                    <tr><td>Heap objects</td><td>{{ .HeapObjects }}</td></tr>
+
+                    <tr><td>Bootstrap stack usage</td><td>{{ .StackInuse }}</td></tr>
+                    <tr><td>Stack memory obtained</td><td>{{ .StackSys }}</td></tr>
+                    <tr><td>MSpan structures usage</td><td>{{ .MSpanInuse }}</td></tr>
+                    <tr><td>MSpan structures obtained</td><td>{{ .MSpanSys }}</td></tr>
+                    <tr><td>MCache structures usage</td><td>{{ .MCacheInuse }}</td></tr>
+                    <tr><td>MCache structures obtained</td><td>{{ .MCacheSys }}</td></tr>
+                    <tr><td>Profiling bucket hash table obtained</td><td>{{ .BuckHashSys }}</td></tr>
+                    <tr><td>GC metadata obtained</td><td>{{ .GCSys }}</td></tr>
+                    <tr><td>Other system allocation obtained</td><td>{{ .OtherSys }}</td></tr>
+
+                    <tr><td>Next GC recycle</td><td>{{ .NextGC }}</td></tr>
+                    <tr><td>Since last GC time</td><td>{{ .LastGC }}</td></tr>
+                    <tr><td>Total GC pause</td><td>{{ .PauseTotalNs }}</td></tr>
+                    <tr><td>Last GC pause</td><td>{{ .PauseNs }}</td></tr>
+                    <tr><td>GC times</td><td>{{ .NumGC }}</td></tr>
+                </tbody>
+            </table>
+        {{ end }}
     </section>
 
     <section class="history">
