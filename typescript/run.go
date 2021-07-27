@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/evanw/esbuild/pkg/api"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
 
@@ -29,6 +30,9 @@ func main() {
 		sourceMap = api.SourceMapNone
 	}
 	if shouldWatch {
+		// Ensure we're seeing the error messages in stdout.
+		config.Production = false
+		log.Initialize()
 		watch = &api.WatchMode{
 			OnRebuild: func(result api.BuildResult) {
 				if len(result.Errors) > 0 {
