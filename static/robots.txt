@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /js
+Disallow: /css
+Disallow: /dashboard
+Disallow: /search

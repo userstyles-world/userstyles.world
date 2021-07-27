@@ -7,7 +7,7 @@ import (
 var (
 	headerCSP = []byte(fiber.HeaderContentSecurityPolicy)
 
-	valueCSP = []byte("default-src 'none'; font-src https://fonts.imma.link; img-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; base-uri 'none'; object-src 'none'; worker-src 'none'; child-src 'none'; frame-src 'none';")
+	valueCSP = []byte("default-src 'none'; font-src https://fonts.imma.link; img-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; base-uri 'none'; object-src 'none'; worker-src 'none'; child-src 'none'; frame-src 'none'; connect-src 'self';")
 )
 
 // CSPMiddleware adds the CSP Header
