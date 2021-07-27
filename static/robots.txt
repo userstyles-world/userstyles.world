@@ -4,3 +4,5 @@ Disallow: /js
 Disallow: /css
 Disallow: /dashboard
 Disallow: /search
+Disallow: /modlog
+Disallow: /api/
