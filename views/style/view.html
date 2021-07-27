@@ -13,7 +13,8 @@
                     <source srcset="{{ $img }}{{ .Style.ID }}.webp" type="image/webp">
                     <img
                         src="{{ $img }}{{ .Style.ID }}.jpeg"
-                        loading="lazy">
+                        loading="lazy"
+                        alt="Blurred background-picture of actual preview image">
                 </picture>
                 {{ template "partials/preview-image" .Style }}
             </div>
@@ -25,12 +26,11 @@
             {{ if .Slug }}
                 <div class="share flex ai:c mr:m">
                     <span class="mr:s">Share style</span>
-                    <input
-                        id="share"
-                        class="bg:2" readonly
-                        value="{{ printf "%s%s" .BaseURL .Slug }}"
-                    ></input>
+                    <span
+                        id="share" class="bg:2 input-like"
+                    >{{ printf "%s%s" .BaseURL .Slug }}</span>
                     <button
+                        aria-label="Copy Style URL to clipboard"
                         type="submit"
                         tooltip-data="Style URL has been copied to your clipboard."
                         id="btn-share" class="btn iflex ml:s ai:c">
