@@ -2,6 +2,7 @@ package core
 
 import (
 	"os"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -9,6 +10,14 @@ import (
 )
 
 func readFile(f string) (s string) {
+	if !strings.HasPrefix(f, "docs/") {
+		f = "docs/" + f
+	}
+
+	if !strings.HasSuffix(f, ".md") {
+		f = f + ".md"
+	}
+
 	b, err := os.ReadFile(f)
 	if err != nil {
 		return ""
@@ -23,22 +32,22 @@ func GetDocs(c *fiber.Ctx) error {
 	var title, content string
 	switch c.Params("document") {
 	case "":
-		content = readFile("docs/readme.md")
+		content = readFile("readme")
 		title = "Documentation"
 	case "changelog":
-		content = readFile("docs/changelog.md")
+		content = readFile("changelog")
 		title = "Changelog"
 	case "faq":
-		content = readFile("docs/faq.md")
+		content = readFile("faq")
 		title = "Frequently Asked Questions"
 	case "privacy":
-		content = readFile("docs/privacy.md")
+		content = readFile("privacy")
 		title = "Privacy Policy"
 	}
 
 	if content == "" {
 		return c.Render("err", fiber.Map{
-			"Title": "Couldn't load the document.",
+			"Title": "Failed to load the document",
 			"User":  u,
 		})
 	}
