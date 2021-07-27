@@ -8,6 +8,7 @@ import {SaveUserSettingsButton, SetValues} from './user-settings';
 import {doDomOperation} from './utils/dom';
 import type {UserSettings} from './utils/storage';
 import {getSettings} from './utils/storage';
+import {checkIfStyleInstalled} from 'page/view-style';
 
 const WhenDOMReady = () => {
     ShareButton();
@@ -33,6 +34,7 @@ const onSettingsUpdate = () => {
 // And having it sit in the memory is kinda useless.
 initalizeColorScheme(getSettings().colorScheme);
 
+const styleViewRegex = /\/style\/\d+\/(?!promote)\S*/;
 function pageSpecificFunctions(settings: UserSettings) {
     switch (location.pathname) {
         case '/modlog':
@@ -44,6 +46,9 @@ function pageSpecificFunctions(settings: UserSettings) {
         case '/account':
             checkRedirect(settings.redirect);
             break;
+    }
+    if (location.pathname.startsWith('/style/') && styleViewRegex.test(location.pathname)) {
+        checkIfStyleInstalled();
     }
 }
 
