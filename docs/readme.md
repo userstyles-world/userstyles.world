@@ -7,3 +7,4 @@ Table of Content
 - [FAQ](/docs/faq "Frequently Asked Questions")
 - [Changelog](/docs/changelog "Changelog page")
 - [Privacy Policy](/docs/privacy "Privacy page")
+- [Security Policy](/docs/security "Security page")
