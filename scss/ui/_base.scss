@@ -236,3 +236,10 @@ label[for="remember"] {
         }
     }
 }
+
+.Style-source {
+    overflow: hidden;
+    border-radius: var(--br-3);
+    border: 1px solid var(--bg-4);
+    > pre { border: none } // TODO: Remove when refactoring.
+}
