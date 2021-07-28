@@ -13,7 +13,7 @@
         <form class="form-wrapper" method="post" action="/styles/review/{{ .ID }}">
             <label for="alert">Notice ⚠</label>
             <p class="mt:s pb:m">In order to prevent spam, you can write only one review for every style per week. Please proofread your comment (if you anything to add) since we don't have an edit page yet.</p>
-            <label for="ratitng">Rating</label>
+            <label for="rating">Rating</label>
             <input required type="number" name="rating" min="1" max="5"
                 value="{{ .Rating }}" placeholder="Choose a rating">
 
