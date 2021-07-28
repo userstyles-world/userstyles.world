@@ -21,9 +21,9 @@ per month (as of July 2021), and domain costs $22 per year.
 ### Why isn't [insert here] implemented?
 
 Well, it could be for various reasons. Contact us directly, or open a new issue
-over at [the issue tracker] and let's discuss your it.
+over at [the issue tracker] and lets discuss it.
 
-[issue tracker]: https://github.com/userstyles-world/userstyles.world/issues/new/choose
+[the issue tracker]: https://github.com/userstyles-world/userstyles.world/issues/new/choose
 
 
 ### How can I contact the admins?
