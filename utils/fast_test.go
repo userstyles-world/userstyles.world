@@ -96,7 +96,7 @@ func TestJSON(t *testing.T) {
 	}
 }
 
-// Test the `EncodeToString` function
+// Test the `EncodeToString` function.
 func TestBase64Encoding(t *testing.T) {
 	t.Parallel()
 

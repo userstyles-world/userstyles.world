@@ -6,6 +6,8 @@ import (
 	"github.com/jarcoal/httpmock"
 	"userstyles.world/models"
 	"userstyles.world/modules/errors"
+
+	libError "errors"
 )
 
 func TestArchiveImporting(t *testing.T) {
@@ -59,7 +61,7 @@ func TestExtractingID(t *testing.T) {
 	for _, c := range cases {
 		actual, err := extractID(c.a)
 		if expecErr, ok := c.expected.(error); ok {
-			if err != expecErr {
+			if !libError.Is(err, expecErr) {
 				t.Errorf("%s: Expected error %v, got %v", c.desc, expecErr, err)
 			}
 		} else if actual != c.expected {

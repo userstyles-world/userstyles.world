@@ -19,7 +19,7 @@ func sliceEqual(a, b []int) bool {
 func TestFilter(t *testing.T) {
 	t.Parallel()
 
-	var tests = []struct {
+	tests := []struct {
 		input     []int
 		predicate func(interface{}) bool
 		expected  []int
@@ -44,7 +44,7 @@ func TestFilter(t *testing.T) {
 func TestContainsString(t *testing.T) {
 	t.Parallel()
 
-	var tests = []struct {
+	tests := []struct {
 		input    []string
 		entry    string
 		expected bool
@@ -74,7 +74,7 @@ func containInString(input []string) func(name string) bool {
 func TestEveryString(t *testing.T) {
 	t.Parallel()
 
-	var tests = []struct {
+	tests := []struct {
 		input     []string
 		predicate func(string) bool
 		expected  bool
