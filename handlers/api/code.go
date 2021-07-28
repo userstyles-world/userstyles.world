@@ -8,6 +8,7 @@ import (
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/log"
 )
 
 func GetStyleSource(c *fiber.Ctx) error {
@@ -24,13 +25,12 @@ func GetStyleSource(c *fiber.Ctx) error {
 	url := "https://userstyles.world/api/style/" + id + ".user.css"
 	uc.OverrideUpdateURL(url)
 
-	// Count installs.
-	_, err = models.AddStatsToStyle(id, c.IP(), true)
-	if err != nil {
-		return c.JSON(fiber.Map{
-			"data": "Internal server error",
-		})
-	}
+	go func(id, ip string) {
+		// Count installs.
+		if _, err := models.AddStatsToStyle(id, ip, true); err != nil {
+			log.Warn.Printf("Failed to add stats to style %s: %s\n", id, err.Error())
+		}
+	}(id, c.IP())
 
 	c.Set("Content-Type", "text/css")
 	return c.SendString(uc.SourceCode)
