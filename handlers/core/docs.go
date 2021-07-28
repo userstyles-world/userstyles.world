@@ -44,7 +44,7 @@ func GetDocs(c *fiber.Ctx) error {
 		content = readFile("privacy")
 		title = "Privacy Policy"
 	case "security":
-		content = readFile("docs/security.md")
+		content = readFile("security")
 		title = "Security Policy"
 	}
 
