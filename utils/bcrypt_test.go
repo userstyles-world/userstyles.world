@@ -25,6 +25,7 @@ func BenchmarkDefaultCost(b *testing.B) {
 }
 
 func TestBcryptingIsCorrect(t *testing.T) {
+	t.Parallel()
 	pass := "allmine"
 	expectedHash := "$2a$10"
 
