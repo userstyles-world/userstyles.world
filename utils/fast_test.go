@@ -88,7 +88,10 @@ func TestJSON(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := UnsafeBytes(oj.JSON(c.a, &oj.Options{OmitNil: true, UseTags: true, Sort: true}))
+		actual, err := oj.Marshal(c.a, &oj.Options{OmitNil: true, UseTags: true, Sort: true})
+		if err != nil {
+			t.Fatalf("%s: %s", c.desc, err)
+		}
 		if !bytes.Equal(actual, c.expected) {
 			t.Fatalf("%s: expected: %s got: %s",
 				c.desc, c.expected, actual)

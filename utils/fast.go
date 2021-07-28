@@ -41,5 +41,5 @@ func decodeBase64(s string) ([]byte, error) {
 }
 
 func JSONEncoder(value interface{}) ([]byte, error) {
-	return UnsafeBytes(oj.JSON(value, jsonEncoderOptions)), nil
+	return oj.Marshal(value, jsonEncoderOptions)
 }
