@@ -18,7 +18,7 @@ require (
 	github.com/ohler55/ojg v1.12.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/russross/blackfriday/v2 v2.1.0
-	github.com/userstyles-world/go-chart/v2 v2.4.2
+	github.com/userstyles-world/go-chart/v2 v2.4.4
 	github.com/vednoc/go-usercss-parser v0.9.2
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	gorm.io/driver/sqlite v1.1.4
