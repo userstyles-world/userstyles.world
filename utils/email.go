@@ -117,7 +117,6 @@ func (eb *EmailBuilder) parseMultiPart() (string, error) {
 		if partsLen-i > 1 {
 			output += "\n"
 		}
-
 	}
 
 	return output, nil

@@ -15,7 +15,7 @@ func readFile(f string) (s string) {
 	}
 
 	if !strings.HasSuffix(f, ".md") {
-		f = f + ".md"
+		f += ".md"
 	}
 
 	b, err := os.ReadFile(f)
