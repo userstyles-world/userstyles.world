@@ -1,9 +1,10 @@
-# Cryptographic
+# Cryptographic usages
 
-In this document, the usage of cryptographic functions is being explained.
-Hereby we try to explain it in plain English while avoiding the use of too many technical terms.
-We first explain which functions are used, and after that we will describe our exact use-case for them.
-Please refer to the Cryptographic terms below to understand what they mean.
+The goal of this document is to explain the usage of cryptographic functions in
+plain English, and avoid the use of too many technical terms.
+
+We will first explain which functions are used, and after that we will describe
+our exact use-cases for them.
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
@@ -33,24 +34,33 @@ Please refer to the Cryptographic terms below to understand what they mean.
 
 ### Hashing/Hash
 
-Hashing is the process of a (cryptographic) hashing function that takes an input,
-and returns a long stream of text (string) which cannot be reversed or linked back to the original input.
-This output is called a "hash".
+Hashing is the process of a (cryptographic) hashing function that takes an
+input, and returns a long stream of characters (string) which cannot be reversed
+or linked back to the original input. This output is called a "hash".
 
 ### Encryption
 
-Encryption is a term used to describe a process whereby a given input and a given key,
-is turned into a unique string. However, unlike the hashing process, this unique string can be linked/reversed back
-to the original input if you have the given key whereby this input was encrypted. 
+Encryption is a term used to describe a process where a given input and a given
+key is turned into a unique string. However, unlike the hashing process, this
+unique string can be linked/reversed back to the original input if you have the
+given key where this input was encrypted.
+
 
 ## Cryptographic functions
 
 ### JWT
 
-JSON Web Token("JWT") is our primary way to authenticate a user with the server and have confidence that it isn't a malicious attack.
-The confidence is guaranteed by the built-in [HMAC](#HMAC) signature which is mandatory. The HMAC is made out of a secret key (which only the server operators know), the payload (which has information regarding the user like the UserID), and the header (which contains information about the payload).
+JSON Web Token("JWT") is our primary way to authenticate a user with the server
+and have confidence that it isn't a malicious attack.
 
-The header + Payload is base64'ed (separated from each other). And with the Secret Key thrown into the HMAC function, which after that is being hashed by [SHA- 512](#SHA-512) function:
+The confidence is guaranteed by the built-in [HMAC](#HMAC) signature which is
+mandatory. The HMAC is made out of a secret key (which only the server operators
+know), the payload (which has information regarding the user like the UserID),
+and the header (which contains information about the payload).
+
+The header + payload are base64'ed (separated from each other). And with the
+secret key thrown into the HMAC function, which after that is being hashed by
+[SHA- 512](#SHA-512) function:
 
 ```dart
 HMAC_SHA512(
@@ -73,7 +83,6 @@ We currently only use the cryptographic hash function [SHA-512](#SHA-512) as has
 Secure Hash Algorithm("SHA") is a family of secure hash functions made by National Security Agency("NSA"). In particular, SHA-512 is a member of the SHA-2 series.
 
 The SHA-2 series is a well known standard and seen in real-life application for hashing.
-
 
 ### Chacha20poly1305
 
@@ -102,12 +111,10 @@ The tag is then used to authenticate the given message.
 
 ## Cryptographic usage
 
-
 ### User authentication
 
 A "cookie" is stored on the user's device which contains a [JWT](#JWT).
 This is used on the server to know if this device is authenticated with a specific user account.
-
 
 ### Register
 
@@ -166,7 +173,6 @@ Information whereby it's linked to a user:
 - user's ID.
 
 The JWT is signed by a long pseudo-random string which is only used for this action.
-
 
 
 ## Questions
