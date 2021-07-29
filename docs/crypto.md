@@ -60,7 +60,7 @@ and the header (which contains information about the payload).
 
 The header + payload are base64'ed (separated from each other). And with the
 secret key thrown into the HMAC function, which after that is being hashed by
-[SHA- 512](#SHA-512) function:
+[SHA-512](#SHA-512) function:
 
 ```dart
 HMAC_SHA512(
