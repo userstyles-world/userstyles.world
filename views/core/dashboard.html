@@ -17,6 +17,7 @@
         tbody tr:nth-child(2n-1) { background-color: var(--bg-3) }
         section > p { font-size: 1.5rem }
         section > p > span { font-size: 1rem }
+        .ac\:1 { color: var(--ac-1) }
     </style>
 
     <section class="mt:m ta:c">
@@ -35,6 +36,7 @@
         {{ with .System }}
             <table>
                 <tbody>
+                    <tr><td><b class="ac:1">General statistics</b></td><td></td></tr>
                     <tr><td>Uptime</td><td>{{ .Uptime }}</td></tr>
                     <tr><td>Current goroutines</td><td>{{ .GoRoutines }}</td></tr>
                     <tr><td>Allocated memory</td><td>{{ .MemAllocated }}</td></tr>
@@ -44,6 +46,7 @@
                     <tr><td>Memory allocations</td><td>{{ .MemMallocs }}</td></tr>
                     <tr><td>Memory frees</td><td>{{ .MemFrees }}</td></tr>
 
+                    <tr><td><b class="ac:1">Main allocation heap statistics</b></td><td></td></tr>
                     <tr><td>Current heap usage</td><td>{{ .HeapAlloc }}</td></tr>
                     <tr><td>Heap memory obtained</td><td>{{ .HeapSys }}</td></tr>
                     <tr><td>Heap memory idle</td><td>{{ .HeapIdle }}</td></tr>
@@ -51,6 +54,7 @@
                     <tr><td>Heap memory released</td><td>{{ .HeapReleased }}</td></tr>
                     <tr><td>Heap objects</td><td>{{ .HeapObjects }}</td></tr>
 
+                    <tr><td><b class="ac:1">Low-level fixed-size structure allocator statistics</b></td><td></td></tr>
                     <tr><td>Bootstrap stack usage</td><td>{{ .StackInuse }}</td></tr>
                     <tr><td>Stack memory obtained</td><td>{{ .StackSys }}</td></tr>
                     <tr><td>MSpan structures usage</td><td>{{ .MSpanInuse }}</td></tr>
@@ -61,6 +65,7 @@
                     <tr><td>GC metadata obtained</td><td>{{ .GCSys }}</td></tr>
                     <tr><td>Other system allocation obtained</td><td>{{ .OtherSys }}</td></tr>
 
+                    <tr><td><b class="ac:1">Garbage collector statistics</b></td><td></td></tr>
                     <tr><td>Next GC recycle</td><td>{{ .NextGC }}</td></tr>
                     <tr><td>Since last GC time</td><td>{{ .LastGC }}</td></tr>
                     <tr><td>Total GC pause</td><td>{{ .PauseTotalNs }}</td></tr>

@@ -6,6 +6,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/dustin/go-humanize"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -19,32 +20,31 @@ var system struct {
 	Uptime     string
 	GoRoutines int
 
-	MemAllocated uint64
-	MemTotal     uint64
-	MemSys       uint64
+	MemAllocated string
+	MemTotal     string
+	MemSys       string
 	Lookups      uint64
 	MemMallocs   uint64
 	MemFrees     uint64
 
-	HeapAlloc    uint64
-	HeapSys      uint64
-	HeapInuse    uint64
-	HeapIdle     uint64
-	HeapReleased uint64
+	HeapAlloc    string
+	HeapSys      string
+	HeapInuse    string
+	HeapIdle     string
+	HeapReleased string
 	HeapObjects  uint64
 
-	StackInuse uint64
-	StackSys   uint64
+	StackInuse  string
+	StackSys    string
+	MSpanSys    string
+	MSpanInuse  string
+	MCacheSys   string
+	MCacheInuse string
+	BuckHashSys string
+	GCSys       string
+	OtherSys    string
 
-	MSpanSys    uint64
-	MSpanInuse  uint64
-	MCacheSys   uint64
-	MCacheInuse uint64
-	BuckHashSys uint64
-	GCSys       uint64
-	OtherSys    uint64
-
-	NextGC       uint64
+	NextGC       string
 	LastGC       string
 	PauseTotalNs string
 	PauseNs      string
@@ -58,32 +58,32 @@ func getSystemStatus() {
 	m := new(runtime.MemStats)
 	runtime.ReadMemStats(m)
 
-	system.MemAllocated = m.Alloc
-	system.MemTotal = m.TotalAlloc
-	system.MemSys = m.Sys
+	system.MemAllocated = humanize.Bytes(m.Alloc)
+	system.MemTotal = humanize.Bytes(m.TotalAlloc)
+	system.MemSys = humanize.Bytes(m.Sys)
 	system.Lookups = m.Lookups
 	system.MemMallocs = m.Mallocs
 	system.MemFrees = m.Frees
 
-	system.HeapAlloc = m.HeapAlloc
-	system.HeapSys = m.HeapSys
-	system.HeapInuse = m.HeapInuse
-	system.HeapIdle = m.HeapIdle
-	system.HeapReleased = m.HeapReleased
+	system.HeapAlloc = humanize.Bytes(m.HeapAlloc)
+	system.HeapSys = humanize.Bytes(m.HeapSys)
+	system.HeapInuse = humanize.Bytes(m.HeapInuse)
+	system.HeapIdle = humanize.Bytes(m.HeapIdle)
+	system.HeapReleased = humanize.Bytes(m.HeapReleased)
 	system.HeapObjects = m.HeapObjects
 
-	system.StackInuse = m.StackInuse
-	system.StackSys = m.StackSys
+	system.StackInuse = humanize.Bytes(m.StackInuse)
+	system.StackSys = humanize.Bytes(m.StackSys)
 
-	system.MSpanSys = m.MCacheInuse
-	system.MSpanInuse = m.MSpanInuse
-	system.MCacheSys = m.MCacheSys
-	system.MCacheInuse = m.MCacheInuse
-	system.BuckHashSys = m.BuckHashSys
-	system.GCSys = m.GCSys
-	system.OtherSys = m.OtherSys
+	system.MSpanSys = humanize.Bytes(m.MCacheInuse)
+	system.MSpanInuse = humanize.Bytes(m.MSpanInuse)
+	system.MCacheSys = humanize.Bytes(m.MCacheSys)
+	system.MCacheInuse = humanize.Bytes(m.MCacheInuse)
+	system.BuckHashSys = humanize.Bytes(m.BuckHashSys)
+	system.GCSys = humanize.Bytes(m.GCSys)
+	system.OtherSys = humanize.Bytes(m.OtherSys)
 
-	system.NextGC = m.NextGC
+	system.NextGC = humanize.Bytes(m.NextGC)
 	system.LastGC = fmt.Sprintf("%.1fs", float64(time.Now().UnixNano()-int64(m.LastGC))/1000/1000/1000)
 	system.PauseTotalNs = fmt.Sprintf("%.1fs", float64(m.PauseTotalNs)/1000/1000/1000)
 	system.PauseNs = fmt.Sprintf("%.3fs", float64(m.PauseNs[(m.NumGC+255)%256])/1000/1000/1000)
