@@ -63,11 +63,25 @@ e.g. third-party applications directly installing the style.
 
 ### How do I remove the `Get Stylus` button?
 
-[Stylus extension] removes it automatically from `v1.5.18`, or can enable an
+[Stylus extension] removes it automatically from `v1.5.18`, or you can enable an
 option provided by [UserStyles.world Tweaks] userstyle.
 
 [Stylus extension]: https://github.com/openstyles/stylus
 [UserStyles.world Tweaks]: https://userstyles.world/style/1/userstyles-world-tweaks
+
+
+### Why is mirroring source code updates not working?
+
+First of all, make sure the checkbox "Mirror source code updates" is enabled. If
+it isn't enabled, enable it then save changes.
+
+If you're mirroring source code from a different URL than your userstyle was
+originally imported from, make sure that the new URL location is correct. It's
+correct if Stylus' install/reinstall page shows up when you visit it.
+
+Last but certainly not least, make sure that you increase `@version` field in
+the UserStyle metadata header. New userstyle will be mirrored if the new version
+doesn't match the one in the database.
 
 
 ### Why is there no support for traditional userstyles?
