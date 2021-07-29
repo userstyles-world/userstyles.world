@@ -1,5 +1,20 @@
 # FAQ
 
+<!-- markdown-toc start - Don't edit this section. -->
+**Table of Contents**
+
+- [General](#general)
+    - [What is monetization strategy?](#what-is-monetization-strategy)
+    - [Why isn't [insert here] implemented?](#why-isnt-insert-here-implemented)
+    - [How can I contact the admins?](#how-can-i-contact-the-admins)
+- [Userstyles](#userstyles)
+    - [Why are `@updateURL` fields overriden?](#why-are-updateurl-fields-overriden)
+    - [How do view/install/update statistics work?](#how-do-viewinstallupdate-statistics-work)
+    - [How do I remove the `Get Stylus` button?](#how-do-i-remove-the-get-stylus-button)
+    - [Why is mirroring source code updates not working?](#why-is-mirroring-source-code-updates-not-working)
+    - [Why is there no support for traditional userstyles?](#why-is-there-no-support-for-traditional-userstyles)
+
+<!-- markdown-toc end -->
 
 ## General
 

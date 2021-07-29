@@ -5,6 +5,30 @@ Hereby we try to explain it in plain English while avoiding the use of too many 
 We first explain which functions are used, and after that we will describe our exact use-case for them.
 Please refer to the Cryptographic terms below to understand what they mean.
 
+<!-- markdown-toc start - Don't edit this section. -->
+**Table of Contents**
+
+- [Cryptographic terms](#cryptographic-terms)
+    - [Hashing/Hash](#hashinghash)
+    - [Encryption](#encryption)
+- [Cryptographic functions](#cryptographic-functions)
+    - [JWT](#jwt)
+    - [HMAC](#hmac)
+    - [SHA-512](#sha-512)
+    - [Chacha20poly1305](#chacha20poly1305)
+    - [Chacha20](#chacha20)
+    - [Poly1305](#poly1305)
+- [Cryptographic usage](#cryptographic-usage)
+    - [User authentication](#user-authentication)
+    - [Register](#register)
+    - [Password reset](#password-reset)
+    - [Stats collection](#stats-collection)
+    - [OAuth](#oauth)
+- [Questions](#questions)
+
+<!-- markdown-toc end -->
+
+
 ## Cryptographic terms
 
 ### Hashing/Hash

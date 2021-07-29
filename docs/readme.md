@@ -2,7 +2,7 @@
 
 Here you can find the index for all of the internal documentation.
 
-Table of Content
+**Table of Contents**
 
 - [FAQ](/docs/faq "Frequently Asked Questions")
 - [Changelog](/docs/changelog "Changelog page")

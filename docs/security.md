@@ -1,9 +1,19 @@
 # Security Policy
 
+<!-- markdown-toc start - Don't edit this section. -->
+**Table of Contents**
+
+- [Supported Versions](#supported-versions)
+- [Reporting a Vulnerability](#reporting-a-vulnerability)
+
+<!-- markdown-toc end -->
+
+
 ## Supported Versions
 
 The supported version is easily defined, whatever current version the server(https://userstyles.world) is using.
 This can be seen in the footer whereby the specific git commit + version is specified.
+
 
 ## Reporting a Vulnerability
 

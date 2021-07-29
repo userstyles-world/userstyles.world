@@ -2,7 +2,8 @@
 
 Last updated June 14, 2021
 
-Table of Content
+<!-- markdown-toc start - Don't edit this section. -->
+**Table of Contents**
 
 - [Introduction](#introduction)
 - [What data do we collect?](#what-data-do-we-collect)
@@ -17,6 +18,8 @@ Table of Content
 - [Privacy policies of other websites](#privacy-policies-of-other-websites)
 - [Changes to our privacy policy](#changes-to-our-privacy-policy)
 - [How to contact us](#how-to-contact-us)
+
+<!-- markdown-toc end -->
 
 
 ## Introduction

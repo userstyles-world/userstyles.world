@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<!-- markdown-toc start - Don't edit this section. -->
+**Table of Contents**
+
+- [v1.5.0](#1-5-0-https-github-com-userstyles-world-userstyles-world-compare-v1-4-0-v1-5-0-2021-07-18)
+- [v1.4.0](#1-4-0-https-github-com-userstyles-world-userstyles-world-compare-v1-3-0-v1-4-0-2021-07-12)
+- [v1.3.0](#1-3-0-https-github-com-userstyles-world-userstyles-world-compare-v1-2-1-v1-3-0-2021-06-19)
+- [v1.2.1](#1-2-1-https-github-com-userstyles-world-userstyles-world-compare-v1-2-0-v1-2-1-2021-05-30)
+- [v1.2.0](#1-2-0-https-github-com-userstyles-world-userstyles-world-compare-v1-1-0-v1-2-0-2021-05-29)
+- [v1.1.0](#1-1-0-https-github-com-userstyles-world-userstyles-world-compare-v1-0-0-v1-1-0-2021-05-21)
+- [v1.0.0](#1-0-0-https-github-com-userstyles-world-userstyles-world-compare-fef3eb9-v1-0-0-2021-05-16)
+
+<!-- markdown-toc end -->
+
+
 ## [1.5.0](https://github.com/userstyles-world/userstyles.world/compare/v1.4.0...v1.5.0) (2021-07-18)
 
 
