@@ -1,13 +1,16 @@
 package core
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 var (
 	headerCSP = []byte(fiber.HeaderContentSecurityPolicy)
 
-	valueCSP = []byte("default-src 'none'; font-src https://fonts.imma.link; img-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; base-uri 'none'; object-src 'none'; worker-src 'none'; child-src 'none'; frame-src 'none'; connect-src 'self';")
+	valueCSPStrictForm = append(valueCSP, []byte(" form-action: 'self';")...)
+	valueCSP           = []byte("default-src 'none'; font-src https://fonts.imma.link; img-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'; upgrade-insecure-requests; base-uri 'none'; object-src 'none'; worker-src 'none'; child-src 'none'; frame-src 'none'; connect-src 'self';")
 )
 
 // CSPMiddleware adds the CSP Header
@@ -21,6 +24,15 @@ func CSPMiddleware(c *fiber.Ctx) error {
 	if string(c.Response().Header.Peek(fiber.HeaderContentType)) != fiber.MIMETextHTMLCharsetUTF8 {
 		return nil
 	}
-	c.Response().Header.SetCanonical(headerCSP, valueCSP)
+
+	// Special case for Chromium, which doesn't allow redirects after form submissions.
+	// So we disable form-action CSP for this special case.
+	// /api/oauth/style/link & /api/oauth/style/add
+	if strings.HasPrefix(c.Path(), "/api/oauth/style/") {
+		c.Response().Header.SetCanonical(headerCSP, valueCSP)
+	} else {
+		c.Response().Header.SetCanonical(headerCSP, valueCSPStrictForm)
+	}
+
 	return nil
 }
