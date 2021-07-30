@@ -1,16 +1,14 @@
 <div class="wrapper py:l">
     <style type="text/css" media="screen">
-        form {
+        .card form {
             margin: 0 !important;
             padding: 0 1rem 1rem !important;
             border: none !important;
             background: transparent;
         }
-        .card:last-child {
-            padding-top: 60px !important;
-            box-shadow: 0 -1px var(--bg-3) !important;
-            border-radius: 0 !important;
-        }
+        .card:last-child svg { width: 64px }
+        .card:last-child form { padding: 1rem !important }
+        .card:last-child .no-screenshot { box-shadow: 0 1px var(--bg-3) !important }
     </style>
 
     {{ template "partials/alert" . }}
