@@ -5,23 +5,28 @@
     </section>
 
     <section class="mt:l">
-        <form class="form-wrapper advanced" method="get" action="/search">
-            <div class="section">
+        <form class="Form Form-inline jc:c" method="get" action="/search">
+            <div class="Form-section Form-row">
                 <label for="q">Search keyword</label>
-                <input
-                    type="text" name="q" value="{{ .Value }}"
-                    required pattern=".+"
-                    placeholder="e.g. dark">
+                <div class="Form-row">
+                    <input
+                        type="text" name="q"
+                        value="{{ .Value }}"
+                        required pattern=".+"
+                        placeholder="e.g. dark">
+                </div>
             </div>
 
-            <div class="section">
+            <div class="Form-section Form-row">
                 {{ template "partials/form-sort" . }}
             </div>
 
-            <button
-                type="submit"
-                class="btn icon primary"
-            >{{ template "icons/search" 16 }} Search</button>
+            <div class="Form-control">
+                <button
+                    type="submit"
+                    class="btn icon primary"
+                >{{ template "icons/search" 16 }} Search</button>
+            </div>
         </form>
     </section>
 

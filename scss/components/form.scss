@@ -7,14 +7,38 @@
         background-color: var(--bg-2);
         border-radius: var(--br-3);
 
-        .Form-select { background-color: var(--bg-2) }
+        .Form-select { background-color: var(--bg-3) }
     }
 
-    &:not(&-row) {
+    &:not(&-inline) {
         .Form-section:not(:first-of-type),
         .Form-control {
             margin-top: 1rem;
         }
+    }
+
+    &-inline {
+        display: flex;
+
+        .Form-section { margin-right: 1rem }
+
+        @media screen and (max-width: 840px) {
+            flex-direction: column;
+
+            .Form-section {
+                margin-bottom: 1rem;
+                flex-direction: column;
+                label { margin-bottom: 0.5rem }
+            }
+
+            .Form-row { align-items: unset }
+        }
+    }
+
+    input {
+        font-size: 0.875rem;
+        min-width: 240px;
+        background-color: var(--bg-2);
     }
 
     label {
@@ -27,6 +51,11 @@
         align-items: center;
 
         label { margin: 0 0.5rem 0 0 }
+    }
+
+    &-menu {
+        display: flex;
+        align-items: center;
     }
 
     &-select {

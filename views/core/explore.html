@@ -5,16 +5,16 @@
     </section>
 
     <section class="mt:l">
-        <form class="Form Form-row" method="get" action="/explore">
+        <form class="Form Form-inline jc:c" method="get" action="/explore">
             <input type="text" name="page"
                 value="{{ with .PageNow }}{{ . }}{{ else }}1{{ end }}" hidden>
-            <div class="Form-section ml:a">
+            <div class="Form-section Form-row">
                 {{ template "partials/form-sort" . }}
             </div>
             <div class="Form-control">
                 <button
                     type="submit"
-                    class="btn icon primary ml:s"
+                    class="btn icon primary"
                 >{{ template "icons/search" 16 }} Sort</button>
             </div>
         </form>

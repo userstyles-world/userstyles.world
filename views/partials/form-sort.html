@@ -1,5 +1,5 @@
-<div class="Form-row ml:a">
-    <label for="sort">Sort by</label>
+<label for="sort">Sort by</label>
+<div class="Form-menu">
     <select class="Form-select" id="sort" name="sort">
         <option {{ if eq .Sort "" }}selected{{ end }} value="default">Default</option>
         <option {{ if eq .Sort "newest" }}selected{{ end }} value="newest">Recently added</option>
@@ -11,5 +11,5 @@
         <option {{ if eq .Sort "mostviews" }}selected{{ end }} value="mostviews">Most views</option>
         <option {{ if eq .Sort "leastviews" }}selected{{ end }} value="leastviews">Least views</option>
     </select>
-    {{ template "icons/chevrons-up-down" 18 }}
+    {{ template "icons/chevrons-up-down" 16 }}
 </div>
