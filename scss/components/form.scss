@@ -1,14 +1,20 @@
 .Form {
-    margin: 1rem auto 1rem 0;
-    padding: 1rem;
-    max-width: var(--form-max-width);
-    border: 1px solid var(--bg-4);
-    background-color: var(--bg-2);
-    border-radius: var(--br-3);
+    &-box {
+        margin: 1rem auto 1rem 0;
+        padding: 1rem;
+        max-width: var(--form-max-width);
+        border: 1px solid var(--bg-4);
+        background-color: var(--bg-2);
+        border-radius: var(--br-3);
 
-    &-section:not(:first-child),
-    &-control {
-        margin-top: 1rem;
+        .Form-select { background-color: var(--bg-2) }
+    }
+
+    &:not(&-row) {
+        .Form-section:not(:first-of-type),
+        .Form-control {
+            margin-top: 1rem;
+        }
     }
 
     label {
@@ -19,10 +25,11 @@
     &-row {
         display: flex;
         align-items: center;
+
+        label { margin: 0 0.5rem 0 0 }
     }
 
     &-select {
-        // outline: 1px solid red;
         padding: 0.4rem 1.5rem 0.4rem 0.5rem;
         font-size: 0.875rem;
         min-width: 240px;
@@ -30,7 +37,7 @@
         line-height: 1.9;
         color: var(--fg-1);
         border: 1px solid var(--bg-4);
-        background-color: var(--bg-3);
+        background-color: var(--bg-2);
         border-radius: var(--br-3);
         -moz-appearance: none;
         appearance: none;

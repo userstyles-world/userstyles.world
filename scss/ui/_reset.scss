@@ -131,14 +131,16 @@ pre {
     height: 20rem;
 }
 
-form,
-.form-wrapper {
+form:not(.Form),
+.form-wrapper:not(.Form) {
     margin: 1rem auto;
     padding: 1rem;
     max-width: var(--form-max-width);
     border: 1px solid var(--bg-4);
     background-color: var(--bg-2);
     border-radius: var(--br-3);
+
+    &.ml\:0 { margin-left: 0 !important }
 
     label { display: flex }
 
@@ -204,7 +206,7 @@ form,
     }
 }
 
-.form-wrapper.advanced {
+.form-wrapper.advanced:not(.Form) {
     &.plain {
         padding: 0px;
         border: none;
