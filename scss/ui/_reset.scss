@@ -70,7 +70,7 @@ button,
     &:focus {
         border-color: var(--ac-3);
         outline-color: transparent;
-        box-shadow: 0 0 0 0.25rem var(--ac-5);
+        box-shadow: 0 0 0 0.25rem var(--ac-f);
     }
 
     &:-moz-focusring {
@@ -98,7 +98,7 @@ textarea {
     &:focus:not([readonly]) {
         border-color: var(--ac-3);
         outline-color: transparent;
-        box-shadow: 0 0 0 0.25rem var(--ac-5);
+        box-shadow: 0 0 0 0.25rem var(--ac-f);
     }
 
     &.raw {
@@ -231,7 +231,7 @@ form,
         &:hover { border-color: var(--bg-5) }
         &:focus {
             border-color: var(--ac-3);
-            box-shadow: 0 0 0 0.25rem var(--ac-5);
+            box-shadow: 0 0 0 0.25rem var(--ac-f);
         }
 
         + svg {

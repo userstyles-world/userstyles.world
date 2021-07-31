@@ -42,7 +42,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     &:not(.active):focus {
         color: var(--fg-1);
         border-color: var(--bg-5);
-        box-shadow: 0 0 0 0.25rem var(--bg-2);
+        box-shadow: 0 0 0 0.25rem var(--bg-f);
     }
 
     &.active {
@@ -70,7 +70,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
         &:not(.active):focus {
             color: var(--inverse);
             border-color: var(--ac-2);
-            box-shadow: 0 0 0 0.25rem var(--ac-5);
+            box-shadow: 0 0 0 0.25rem var(--ac-f);
         }
     }
 
@@ -89,7 +89,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
         &:not(.active):focus {
             color: var(--inverse);
             border-color: var(--st-2);
-            box-shadow: 0 0 0 0.25rem var(--st-5);
+            box-shadow: 0 0 0 0.25rem var(--st-f);
         }
     }
 

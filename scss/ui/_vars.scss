@@ -26,13 +26,12 @@ $mode: (
         "ac-2": darken($ac-dark, 16%),
         "ac-3": darken($ac-dark, 28%),
         "ac-4": darken($ac-dark, 40%),
-        "ac-5": darken($ac-dark, 44%),
+        "ac-5": darken($ac-dark, 48%),
         "st-1": darken($st-dark,  0%),
-        "st-2": darken($st-dark, 18%),
+        "st-2": darken($st-dark, 20%),
         "st-3": darken($st-dark, 30%),
-        "st-4": darken($st-dark, 42%),
-        "st-5": darken($st-dark, 46%),
-        "bg-t": transparentize($bg-dark, 0.3),
+        "st-4": darken($st-dark, 40%),
+        "st-5": darken($st-dark, 50%),
         "sh-m": "0 4px 12px -2px #0006, 0 6px 4px -4px #0002",
     ),
     "light": (
@@ -55,7 +54,7 @@ $mode: (
         "st-2": lighten($st-light,  8%),
         "st-3": lighten($st-light, 16%),
         "st-4": lighten($st-light, 24%),
-        "st-5": transparentize(lighten($st-light, 24%), 0.5),
+        "st-5": lighten($st-light, 48%),
         "bg-t": transparentize($bg-light, 0.2),
         "sh-m": "0 4px 16px -4px #0004, 0 4px 4px -4px #0001",
     ),
@@ -75,15 +74,23 @@ $mode: (
 }
 
 [data-color-scheme="dark"] {
-    @each $key, $val in map-get($mode, "dark") {
+    $scheme: map-get($mode, "dark");
+    @each $key, $val in $scheme {
         --#{$key}: #{$val};
     }
+    --bg-f: #{ transparentize(map-get($scheme, "bg-4"), 0.7) };
+    --ac-f: #{ transparentize(map-get($scheme, "ac-3"), 0.7) };
+    --st-f: #{ transparentize(map-get($scheme, "st-3"), 0.7) };
 }
 
 [data-color-scheme="light"] {
-    @each $key, $val in map-get($mode, "light") {
+    $scheme: map-get($mode, "light");
+    @each $key, $val in $scheme {
         --#{$key}: #{$val};
     }
+    --bg-f: #{ transparentize(map-get($scheme, "bg-3"), 0.7) };
+    --ac-f: #{ transparentize(map-get($scheme, "ac-3"), 0.7) };
+    --st-f: #{ transparentize(map-get($scheme, "st-3"), 0.7) };
 }
 
 [data-darkreader-scheme="dark"], [data-color-scheme="dark"] {
