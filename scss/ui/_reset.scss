@@ -164,7 +164,6 @@ form,
     }
 
     > button {
-        cursor: pointer;
         line-height: initial;
     }
 
@@ -191,6 +190,7 @@ form,
             right: 1px;
             bottom: 1px;
             border: none;
+            cursor: pointer;
             &:focus {
                 top: 0px;
                 right: 0px;

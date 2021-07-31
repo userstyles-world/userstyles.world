@@ -21,16 +21,18 @@ img { width: 100% }
 hr { border: none; border-top: 1px solid var(--bg-3)  }
 
 .btn {
-    $x: color 0.2s ease-in-out;
-    $y: border-color 0.2s ease-in-out;
-    $z: background-color 0.2s ease-in-out;
+    $x: color 0.15s ease-in-out;
+    $y: border-color 0.15s ease-in-out;
+    $z: background-color 0.15s ease-in-out;
+    $s: box-shadow 0.15s ease-in-out;
     padding: 0.5rem 0.8rem;
     border-radius: var(--br-3);
-    transition: $x, $y, $z;
+    transition: $x, $y, $z, $s;
     border: 1px solid var(--bg-3);
     background-color: var(--bg-2);
     color: var(--fg-2);
     outline: none;
+    cursor: pointer;
 
     ::-moz-focus-inner { outline: none }
 
