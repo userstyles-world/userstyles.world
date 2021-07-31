@@ -89,23 +89,37 @@
 
         <h2 class="sub-title td:d mt:l">User settings</h1>
         <p>The use of user settings requires javascript.</p>
-        <div class="ml:0 form-wrapper">
-            <label>Color-scheme</label>
-            <select id="usr-settings--color-scheme">
-                <option value="follow-system">Follow system theme</option>
-                <option value="dark">Dark mode</option>
-                <option value="light">Light mode</option>
-            </select>
-            <label>Censored entries</label>
-            <select id="usr-settings--entries-behavior">
-                <option value="hover">Hover to see</option>
-                <option value="click">Click to see</option>
-                <option value="no-hide">Don't hide</option>
-            </select>
-            <button
-                id="usr-settings--save"
-                class="btn icon primary"
-            >{{ template "icons/save" 16 }} Save settings</button>
+        <div class="Form">
+            <div class="Form-section">
+                <label>Color-scheme</label>
+                <div class="Form-row">
+                    <select class="Form-select" id="usr-settings--color-scheme">
+                        <option value="follow-system">Follow system theme</option>
+                        <option value="dark">Dark mode</option>
+                        <option value="light">Light mode</option>
+                    </select>
+                    {{ template "icons/chevrons-up-down" 18 }}
+                </div>
+            </div>
+
+            <div class="Form-section">
+                <label>Censored entries</label>
+                <div class="Form-row">
+                    <select class="Form-select" id="usr-settings--entries-behavior">
+                        <option value="hover">Hover to see</option>
+                        <option value="click">Click to see</option>
+                        <option value="no-hide">Don't hide</option>
+                    </select>
+                    {{ template "icons/chevrons-up-down" 18 }}
+                </div>
+            </div>
+
+            <div class="Form-control">
+                <button
+                    id="usr-settings--save"
+                    class="btn icon primary"
+                >{{ template "icons/save" 16 }} Save settings</button>
+            </div>
         </div>
 
     </section>

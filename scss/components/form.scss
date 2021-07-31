@@ -1,0 +1,50 @@
+.Form {
+    margin: 1rem auto 1rem 0;
+    padding: 1rem;
+    max-width: var(--form-max-width);
+    border: 1px solid var(--bg-4);
+    background-color: var(--bg-2);
+    border-radius: var(--br-3);
+
+    &-section:not(:first-child),
+    &-control {
+        margin-top: 1rem;
+    }
+
+    label {
+        display: flex;
+        margin-bottom: 0.5rem;
+    }
+
+    &-row {
+        display: flex;
+        align-items: center;
+    }
+
+    &-select {
+        // outline: 1px solid red;
+        padding: 0.4rem 1.5rem 0.4rem 0.5rem;
+        font-size: 0.875rem;
+        min-width: 240px;
+        min-height: 42px;
+        line-height: 1.9;
+        color: var(--fg-1);
+        border: 1px solid var(--bg-4);
+        background-color: var(--bg-3);
+        border-radius: var(--br-3);
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+
+        &:hover { border-color: var(--bg-5) }
+        &:focus {
+            border-color: var(--ac-3);
+            box-shadow: 0 0 0 0.25rem var(--ac-f);
+        }
+
+        + svg {
+            margin-left: -1.5rem;
+            pointer-events: none;
+        }
+    }
+}
