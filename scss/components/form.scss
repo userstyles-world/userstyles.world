@@ -37,8 +37,10 @@
 
     input {
         font-size: 0.875rem;
-        min-width: 240px;
         background-color: var(--bg-2);
+
+        // Hack for checkboxes must not have minimum width.
+        &:not([type='checkbox']) { min-width: 240px }
     }
 
     label {

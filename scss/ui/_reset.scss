@@ -144,7 +144,7 @@ form:not(.Form),
 
     label { display: flex }
 
-    input,
+    input:not([type='checkbox']),
     textarea,
     select {
         width: 100%;
