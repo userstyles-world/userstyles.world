@@ -8,29 +8,40 @@
 
     <section class="login limit mx:a">
         {{ template "partials/btn-oauth" . }}
-        <form class="form-wrapper" method="post" action="/login{{- .Redirect -}}">
-            <label for="email">E-mail</label>
-            <input
-                required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
-                type="text" name="email"
-                placeholder="Your e-mail">
-            <label for="password">Password</label>
-            <input
-                required pattern="^[\S]{8,32}$"
-                type="password" name="password"
-                placeholder="Your password">
-            <div class="checkbox iflex mb:m">
-                <input type="checkbox" name="remember" id="remember">
-                {{ template "partials/checkboxes" }}
-                <label for="remember">Keep me logged in (for up to 3 months)</label>
+
+        <form class="Form Form-box" method="post" action="/login{{- .Redirect -}}">
+            <div class="Form-section Form-full">
+                <label for="email">Mail address</label>
+                <input
+                    required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
+                    type="text" name="email"
+                    placeholder="name@example.com">
             </div>
-            <span class="flex ai:c">
+
+            <div class="Form-section Form-full">
+                <label for="password">Password</label>
+                <input
+                    required pattern="^[\S]{8,32}$"
+                    type="password" name="password"
+                    placeholder="Minimum 8 characters">
+            </div>
+
+            <div class="Form-section">
+                <div class="Form-checkbox">
+                    <input type="checkbox" name="remember" id="remember">
+                    {{ template "partials/checkboxes" }}
+                    <label for="remember">Keep me logged in (for up to 3 months)</label>
+                </div>
+            </div>
+
+            <span class="Form-control Form-row">
                 <button class="btn icon primary" type="submit">
                     {{ template "icons/sign-in" 16 }} Sign in
                 </button>
                 <a class="ml:a" href="/recover">Forgot your password?</a>
             </span>
         </form>
+
         <p class="form-tip ta:c">
             <i class="fg:3">Don't have an account? Continue to <a href="/register">register page</a>.</i>
         </p>

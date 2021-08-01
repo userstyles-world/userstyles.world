@@ -8,25 +8,37 @@
 
     <section class="register limit mx:a">
         {{ template "partials/btn-oauth" . }}
-        <form class="form-wrapper" method="post" action="/register">
-            <label for="username">Username</label>
-            <input
-                required pattern="^[a-zA-Z0-9_]{5,20}$"
-                type="text" name="username"
-                placeholder="e.g. username (5–20 characters)">
-            <label for="email">E-mail</label>
-            <input
-                required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
-                type="text" name="email"
-                placeholder="e.g. username@example.org">
+
+        <form class="Form Form-box" method="post" action="/register">
+            <div class="Form-section Form-full">
+                <label for="username">Username</label>
+                <input
+                    required pattern="^[a-zA-Z0-9_]{5,20}$"
+                    type="text" name="username"
+                    placeholder="e.g. username (5–20 characters)">
+            </div>
+
+            <div class="Form-section Form-full">
+                <label for="email">E-mail</label>
+                <input
+                    required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
+                    type="text" name="email"
+                    placeholder="e.g. username@example.org">
+            </div>
+
+            <div class="Form-section Form-full">
             <label for="password">Password</label>
             <input
                 required pattern="^[\S]{8,32}$"
                 type="password" name="password"
                 placeholder="(8–32 characters)">
+            </div>
 
-            <button class="btn primary" type="submit">Register</button>
+            <div class="Form-control">
+                <button class="btn primary" type="submit">Register</button>
+            </div>
         </form>
+
         <p class="form-tip ta:c">
             <i class="fg:3">Already have an account? Continue to <a href="/login">login page</a>.</i>
         </p>

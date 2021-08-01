@@ -1,15 +1,4 @@
 .Form {
-    &-box {
-        margin: 1rem auto 1rem 0;
-        padding: 1rem;
-        max-width: var(--form-max-width);
-        border: 1px solid var(--bg-4);
-        background-color: var(--bg-2);
-        border-radius: var(--br-3);
-
-        .Form-select { background-color: var(--bg-3) }
-    }
-
     &:not(&-inline) {
         .Form-section:not(:first-of-type),
         .Form-control {
@@ -48,6 +37,20 @@
         margin-bottom: 0.5rem;
     }
 
+    &-box {
+        margin: 1rem auto 1rem 0;
+        padding: 1rem;
+        max-width: var(--form-max-width);
+        border: 1px solid var(--bg-4);
+        background-color: var(--bg-2);
+        border-radius: var(--br-3);
+
+        input,
+        select {
+            background-color: var(--bg-3);
+        }
+    }
+
     &-row {
         display: flex;
         align-items: center;
@@ -61,7 +64,7 @@
     }
 
     &-select {
-        padding: 0.4rem 1.5rem 0.4rem 0.5rem;
+        padding: 0.4rem 1.5rem 0.4rem 0.25rem;
         font-size: 0.875rem;
         min-width: 240px;
         min-height: 42px;
@@ -85,4 +88,8 @@
             pointer-events: none;
         }
     }
+
+    &-checkbox { display: flex }
+
+    &-full input:not([type='checkbox']) { min-width: 100% }
 }
