@@ -16,7 +16,7 @@ require (
 	github.com/jarcoal/httpmock v1.0.8
 	github.com/markbates/pkger v0.17.1
 	github.com/microcosm-cc/bluemonday v1.0.15
-	github.com/ohler55/ojg v1.10.0
+	github.com/ohler55/ojg v1.12.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/userstyles-world/go-chart/v2 v2.4.4

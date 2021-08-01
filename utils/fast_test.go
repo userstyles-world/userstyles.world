@@ -71,7 +71,7 @@ func TestJSON(t *testing.T) {
 	}{
 		{"SimpleTest", testStruct{
 			Name: "abcv",
-		}, []byte(`{"name":"abcv"}`)},
+		}, []byte(`{"Name":"abcv"}`)},
 		{"TestForMinimalStyle", search.MinimalStyle{
 			Name:        "abcv",
 			ID:          123,
@@ -84,11 +84,11 @@ func TestJSON(t *testing.T) {
 			Notes:       "This is a note",
 			Views:       99,
 			Installs:    69,
-		}, []byte(`{"created_at":0,"description":"This is a description","display_name":"Admin","id":123,"installs":69,"name":"abcv","notes":"This is a note","preview":"https://example.com/preview.png","updated_at":0,"username":"admin","views":99}`)},
+		}, []byte(`{"created_at":"1970-01-01T01:00:00+01:00","description":"This is a description","display_name":"Admin","id":123,"installs":69,"name":"abcv","notes":"This is a note","preview":"https://example.com/preview.png","updated_at":"1970-01-01T01:00:00+01:00","username":"admin","views":99}`)},
 	}
 
 	for _, c := range cases {
-		actual, err := oj.Marshal(c.a, &oj.Options{OmitNil: true, UseTags: true, Sort: true})
+		actual, err := oj.Marshal(c.a, &oj.Options{OmitNil: true, UseTags: true, Sort: false})
 		if err != nil {
 			t.Fatalf("%s: %s", c.desc, err)
 		}
