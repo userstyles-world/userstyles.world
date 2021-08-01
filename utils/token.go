@@ -3,7 +3,7 @@ package utils
 import (
 	"time"
 
-	"github.com/form3tech-oss/jwt-go"
+	"github.com/golang-jwt/jwt"
 
 	"userstyles.world/modules/config"
 )

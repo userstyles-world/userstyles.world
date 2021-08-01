@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt"
 	"github.com/vednoc/go-usercss-parser"
 
 	jwtware "userstyles.world/handlers/jwt"

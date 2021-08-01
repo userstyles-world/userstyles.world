@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/form3tech-oss/jwt-go"
+	"github.com/golang-jwt/jwt"
 )
 
 // Check if we can create a JWT Token and sign it properly.
@@ -112,5 +112,45 @@ func TestInvalidSignature2(t *testing.T) {
 	})
 	if err == nil {
 		t.Error("Invalid signature is valid")
+	}
+}
+
+func TestMapclaimsVerifyIssuedAtInvalidTypeString(t *testing.T) {
+	t.Parallel()
+
+	mapClaims := jwt.MapClaims{
+		"iat": "foo",
+	}
+	want := false
+	got := mapClaims.VerifyIssuedAt(0, false)
+	if want != got {
+		t.Fatalf("Failed to verify claims, wanted: %v got %v", want, got)
+	}
+}
+
+func TestMapclaimsVerifyNotBeforeInvalidTypeString(t *testing.T) {
+	t.Parallel()
+
+	mapClaims := jwt.MapClaims{
+		"nbf": "foo",
+	}
+	want := false
+	got := mapClaims.VerifyNotBefore(0, false)
+	if want != got {
+		t.Fatalf("Failed to verify claims, wanted: %v got %v", want, got)
+	}
+}
+
+func TestMapclaimsVerifyExpiresAtInvalidTypeString(t *testing.T) {
+	t.Parallel()
+
+	mapClaims := jwt.MapClaims{
+		"exp": "foo",
+	}
+	want := false
+	got := mapClaims.VerifyExpiresAt(0, false)
+
+	if want != got {
+		t.Fatalf("Failed to verify claims, wanted: %v got %v", want, got)
 	}
 }

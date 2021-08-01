@@ -3,8 +3,8 @@ package jwt
 import (
 	"strings"
 
-	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt"
 
 	"userstyles.world/modules/config"
 )

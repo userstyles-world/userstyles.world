@@ -3,7 +3,7 @@ package utils
 import (
 	"crypto/cipher"
 
-	"github.com/form3tech-oss/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/chacha20poly1305"
 
 	"userstyles.world/modules/config"

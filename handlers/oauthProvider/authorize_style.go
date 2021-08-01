@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt"
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"

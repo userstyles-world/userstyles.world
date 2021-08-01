@@ -8,11 +8,11 @@ require (
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
 	github.com/evanw/esbuild v0.12.16
-	github.com/form3tech-oss/jwt-go v3.2.3+incompatible
 	github.com/go-co-op/gocron v1.6.2
 	github.com/go-playground/validator/v10 v10.8.0
 	github.com/gofiber/fiber/v2 v2.15.0
 	github.com/gofiber/template v1.6.13
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jarcoal/httpmock v1.0.8
 	github.com/markbates/pkger v0.17.1
 	github.com/microcosm-cc/bluemonday v1.0.15
