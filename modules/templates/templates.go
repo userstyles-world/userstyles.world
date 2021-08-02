@@ -48,6 +48,15 @@ func New() *html.Engine {
 		return template.HTML(out)
 	})
 
+	engine.AddFunc("RemoveLastNewLine", func(s template.HTML) template.HTML {
+		sLen := len(s)
+		if sLen > 0 && s[sLen-1] == '\n' {
+			s = s[:sLen-1]
+		}
+
+		return template.HTML(s)
+	})
+
 	engine.AddFunc("GitCommit", func() template.HTML {
 		if !config.Production {
 			return template.HTML("dev")

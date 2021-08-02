@@ -14,12 +14,12 @@
 <meta property="og:type" content="profile">
 <meta property="og:url" content="{{ printf `https://userstyles.world/user/%s` .Username }}">
 <meta property="og:title" content="{{ .Name }}'s profile">
-<meta property="og:description" content="{{ .Biography | MarkdownUnsafe }}">
+<meta property="og:description" content="{{ .Biography | MarkdownUnsafe | RemoveLastNewLine }}">
 {{ end }}
 {{ with .Style }}
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ .Name }} by {{ .Username }}">
-<meta property="og:description" content="{{ .Description | MarkdownUnsafe }}">
+<meta property="og:description" content="{{ .Description | MarkdownUnsafe | RemoveLastNewLine }}">
 <meta property="og:image" content="{{ printf `https://userstyles.world/api/style/preview/%d.webp` .ID }}">
 {{ with $.Url -}}<meta property="og:url" content="{{ printf `https://userstyles.world%s` $.Slug }}">{{ end -}}
 {{ end }}
