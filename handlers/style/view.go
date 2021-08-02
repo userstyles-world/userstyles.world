@@ -76,6 +76,6 @@ func GetStylePage(c *fiber.Ctx) error {
 		"DailyHistory":   dailyHistory,
 		"TotalHistory":   totalHistory,
 		"Reviews":        reviews,
-		"Canonical":      "style/" + id,
+		"Canonical":      "style/" + id + "/" + slug,
 	})
 }
