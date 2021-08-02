@@ -18,12 +18,14 @@ type Review struct {
 	StyleID int
 }
 
+var modelReview = Review{}
+
 func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
 	err = database.Conn.
 		Debug().
 		// Preload(clause.Associations).
 		Preload("User").
-		Model(Review{}).
+		Model(modelReview).
 		Order("id DESC").
 		Find(&q, "style_id = ? ", id).
 		Error
@@ -48,7 +50,7 @@ func (r *Review) FindLastFromUser(styleID, userID interface{}) error {
 	return database.Conn.
 		Debug().
 		Preload("User").
-		Model(Review{}).
+		Model(modelReview).
 		Order("id DESC").
 		Last(&r, "style_id = ? and user_id = ?", styleID, userID).
 		Error

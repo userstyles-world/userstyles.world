@@ -39,6 +39,8 @@ type APIOAuth struct {
 // As gorm highly dislike slices, we have to implement, this ourself.
 type StringList []string
 
+var modelOAuth = OAuth{}
+
 func (s StringList) Value() (driver.Value, error) {
 	if len(s) == 0 {
 		return "[]", nil
@@ -69,9 +71,9 @@ func (OAuth) TableName() string {
 }
 
 func ListOAuthsOfUser(username string) (*[]APIOAuth, error) {
-	t, q := new(OAuth), new([]APIOAuth)
+	q := new([]APIOAuth)
 	err := getDBSession().
-		Model(t).
+		Model(modelOAuth).
 		Select("oauths.id, oauths.name, u.username").
 		Joins("join users u on u.id = oauths.user_id").
 		Find(q, "u.username = ?", username).
@@ -85,10 +87,10 @@ func ListOAuthsOfUser(username string) (*[]APIOAuth, error) {
 
 // GetOAuthByID note: Using ID as a string is fine in this case.
 func GetOAuthByID(id string) (*APIOAuth, error) {
-	t, q := new(OAuth), new(APIOAuth)
+	q := new(APIOAuth)
 	err := getDBSession().
 		Debug().
-		Model(t).
+		Model(modelOAuth).
 		Select("oauths.*,  u.username").
 		Joins("join users u on u.id = oauths.user_id").
 		First(q, "oauths.id = ?", id).
@@ -103,10 +105,10 @@ func GetOAuthByID(id string) (*APIOAuth, error) {
 
 // GetOAuthByClientID note: Using ID as a string is fine in this case.
 func GetOAuthByClientID(clientID string) (*APIOAuth, error) {
-	t, q := new(OAuth), new(APIOAuth)
+	q := new(APIOAuth)
 	err := getDBSession().
 		Debug().
-		Model(t).
+		Model(modelOAuth).
 		Select("oauths.*,  u.username").
 		Joins("join users u on u.id = oauths.user_id").
 		First(q, "oauths.client_id = ?", clientID).
@@ -134,7 +136,7 @@ func CreateOAuth(o *OAuth) (*OAuth, error) {
 func UpdateOAuth(o *OAuth, id string) error {
 	err := getDBSession().
 		Debug().
-		Model(OAuth{}).
+		Model(modelOAuth).
 		Where("id = ?", id).
 		Updates(o).
 		Error

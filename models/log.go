@@ -44,11 +44,13 @@ type APILog struct {
 	TargetUserName string
 }
 
+var modelLog = Log{}
+
 // AddLog adds a new log to the database.
 func (l *Log) AddLog(logEntry *Log) (err error) {
 	err = database.Conn.
 		Debug().
-		Model(Log{}).
+		Model(modelLog).
 		Create(logEntry).
 		Error
 	if err != nil {
@@ -62,7 +64,7 @@ func (l *Log) AddLog(logEntry *Log) (err error) {
 func GetLogOfKind(kind LogKind) (q *[]APILog, err error) {
 	err = database.Conn.
 		Debug().
-		Model(Log{}).
+		Model(modelLog).
 		Select("logs.*, u.username").
 		Joins("join users u on u.id = logs.user_id").
 		Where("kind = ?", kind).

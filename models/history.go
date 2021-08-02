@@ -18,10 +18,12 @@ type History struct {
 	TotalUpdates  int64
 }
 
+var modelHistory = History{}
+
 func (h History) GetStatsForStyle(id string) (q *[]History, err error) {
 	err = database.Conn.
 		Debug().
-		Model(History{}).
+		Model(modelHistory).
 		Where("style_id = ?", id).
 		Find(&q).
 		Error
@@ -35,7 +37,7 @@ func (h History) GetStatsForStyle(id string) (q *[]History, err error) {
 func (h History) GetStatsForAllStyles() (q *[]History, err error) {
 	err = database.Conn.
 		Debug().
-		Model(History{}).
+		Model(modelHistory).
 		Find(&q).
 		Error
 	if err != nil {
