@@ -58,8 +58,8 @@ var (
 )
 
 func getEnvInt(name string, defaultValue int) int {
-	envValue := getEnv(name, "__NOT_FOUND!")
-	if envValue == "__NOT_FOUND!" {
+	envValue := getEnv(name, "__NOT_FOUND__")
+	if envValue == "__NOT_FOUND__" {
 		return defaultValue
 	}
 
