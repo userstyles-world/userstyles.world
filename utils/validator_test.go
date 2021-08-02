@@ -50,7 +50,7 @@ func TestUsername(t *testing.T) {
 	InitializeValidator()
 
 	type testUsername struct {
-		Username string `validate:"username,min=5,max=20"`
+		Username string `validate:"username,min=3,max=32"`
 	}
 
 	cases := []struct {
@@ -58,12 +58,13 @@ func TestUsername(t *testing.T) {
 		actual      testUsername
 		expected    bool
 	}{
-		{"valid", testUsername{Username: "abcde"}, true},
-		{"valid numerics", testUsername{Username: "abcde123"}, true},
+		{"valid", testUsername{Username: "abc"}, true},
+		{"valid numerics", testUsername{Username: "123"}, true},
+		{"valid characters", testUsername{Username: "o-0"}, true},
 		{"invalid spaces", testUsername{Username: "abcde ef"}, false},
 		{"too short", testUsername{Username: "ab"}, false},
-		{"too long", testUsername{Username: "abcdefghijklmnopqrstuvwxyz"}, false},
-		{"invalid characters", testUsername{Username: "abcdefghijklmnopqrstuvwxyz_"}, false},
+		{"too long", testUsername{Username: "abcdefghijklmnopqrstuvwxyz1234567890"}, false},
+		{"invalid characters", testUsername{Username: "tes_"}, false},
 	}
 
 	for _, c := range cases {

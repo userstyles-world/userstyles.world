@@ -13,9 +13,10 @@
             <div class="Form-section Form-full">
                 <label for="username">Username</label>
                 <input
-                    required pattern="^[a-zA-Z0-9_]{5,20}$"
+                    required
+                    pattern="^[a-zA-Z0-9][a-zA-Z0-9-_]{1,30}[a-zA-Z0-9]$"
                     type="text" name="username"
-                    placeholder="e.g. username (5–20 characters)">
+                    placeholder="e.g. my-cool-username (3–32 characters)">
             </div>
 
             <div class="Form-section Form-full">

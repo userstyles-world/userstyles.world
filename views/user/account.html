@@ -33,7 +33,7 @@
             <label for="name">Set your display name</label>
             <input
                 type="text" name="name"
-                pattern="^[a-zA-Z0-9-_ ]{5,20}$"
+                pattern="^[a-zA-Z0-9-_ ]{3,32}$"
                 value="{{ .Params.DisplayName }}">
             <button class="btn icon primary" type="submit">{{ template "icons/save" 16 }} Save</button>
         </form>

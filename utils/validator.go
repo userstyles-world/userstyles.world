@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	usernameRule    = `^[a-zA-Z0-9_]+$`
+	usernameRule    = `^[a-zA-Z0-9][a-zA-Z0-9-_]+[a-zA-Z0-9]$`
 	displayNameRule = `^[a-zA-Z0-9-_ ]+$`
 	v               = validator.New()
 )
