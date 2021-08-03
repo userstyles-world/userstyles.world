@@ -13,8 +13,8 @@
         </p>
     </section>
 
-    <section id="details">
-        <h2 class="sub-title td:d">Information</h2>
+    <section id="info">
+        <h2 class="sub-title td:d mt:l">Information</h2>
         <p><span class="minw">ID</span>{{ .Params.ID }}</p>
         <p><span class="minw">Role</span>{{ .Params.RoleString }}</p>
         <p><span class="minw">Username</span>{{ .Params.Username }}</p>
@@ -26,28 +26,33 @@
         {{ end }}
         <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt | Date }}</p>
         <p class="updated"><span class="minw">Updated</span>{{ .Params.UpdatedAt | Date }}</p>
-
     </section>
 
     <section id="name">
         <h2 class="sub-title td:d mt:l">Display name</h2>
-        <div class="md">{{ .Params.DisplayName }}</div>
-        <form class="name ml:0" method="post" action="/account">
-            <label for="name">Set your display name</label>
-            <input
-                type="text" name="name"
-                pattern="^[a-zA-Z0-9-_ ]{3,32}$"
-                value="{{ .Params.DisplayName }}">
-            <button class="btn icon primary" type="submit">{{ template "icons/save" 16 }} Save</button>
+        <p>If set, display name will be used instead of username.</p>
+        <form class="Form mt:m" method="post" action="/account">
+            <div class="Form-section Form-max">
+                <label for="name">Set your display name</label>
+                <input
+                    type="text" name="name"
+                    pattern="^[a-zA-Z0-9-_ ]{3,32}$"
+                    value="{{ .Params.DisplayName }}">
+            </div>
+            <div class="Form-control">
+                <button
+                    type="submit"
+                    class="btn icon primary"
+                >{{ template "icons/save" 16 }} Save</button>
+            </div>
         </form>
-
     </section>
 
-    <section id="aboutme">
-        <h2 class="sub-title td:d mt:l">Biography</h2>
+    <section id="about">
+        <h2 class="sub-title td:d mt:l">About</h2>
         <div class="md">{{- .Params.Biography | MarkdownUnsafe -}}</div>
-        <form class="biography ml:0" method="post" action="/account">
-            <label for="name">Set your biography</label>
+        <form class="Form mt:m" method="post" action="/account">
+            <label for="name">Set your about info</label>
             <i class="fg:3">Supports Markdown syntax.</i>
             <textarea
                 pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
@@ -55,49 +60,70 @@
                 placeholder="e.g. I'd often make styles.">
                 {{- .Params.Biography -}}
             </textarea>
-            <button class="btn icon primary" type="submit">{{ template "icons/save" 16 }} Save</button>
+            <div class="Form-control">
+                <button
+                    type="submit"
+                    class="btn icon primary"
+                >{{ template "icons/save" 16 }} Save</button>
+            </div>
         </form>
     </section>
 
     <section id="socials">
         <h2 class="sub-title td:d mt:l">Socials</h2>
         <p>You can login via OAuth if you have an account on platforms listed below.</p>
-        <form class="socials ml:0" method="post" action="/account">
-            <label class="github" for="github">
-                {{- template "icons/github" . -}}
-                Github
-            </label>
-            <input
-                pattern="^[a-zA-Z0-9_-]*$"
-                type="text" name="github"
-                placeholder="e.g. username"
-                value="{{ .Params.Socials.Github }}"/>
-            <label class="gitlab" for="gitlab">
-                {{- template "icons/gitlab" . -}}
-                Gitlab
-            </label>
-            <input
-                pattern="^[a-zA-Z0-9_-]*$"
-                type="text" name="gitlab"
-                placeholder="e.g. username"
-                value="{{ .Params.Socials.Gitlab }}"/>
-            </input>
-            <label class="codeberg" for="codeberg">
-                {{- template "icons/codeberg" . -}}
-                Codeberg
-            </label>
-            <input
-                pattern="^[a-zA-Z0-9_-]*$"
-                type="text" name="codeberg"
-                placeholder="e.g. username"
-                value="{{ .Params.Socials.Codeberg }}"/>
-            </input>
-            <button class="btn icon primary" type="submit">{{ template "icons/save" 16 }} Save</button>
-        </form>
+        <form class="Form mt:m" method="post" action="/account">
+            <div class="Form-section">
+                <label class="icon github" for="github">
+                    {{- template "icons/github" . -}}
+                    Github
+                </label>
+                <input
+                    pattern="^[a-zA-Z0-9_-]*$"
+                    type="text" name="github"
+                    placeholder="Your username"
+                    value="{{ .Params.Socials.Github }}">
+            </div>
 
+            <div class="Form-section">
+                <label class="icon gitlab" for="gitlab">
+                    {{- template "icons/gitlab" . -}}
+                    Gitlab
+                </label>
+                <input
+                    pattern="^[a-zA-Z0-9_-]*$"
+                    type="text" name="gitlab"
+                    placeholder="Your username"
+                    value="{{ .Params.Socials.Gitlab }}">
+                </input>
+            </div>
+
+            <div class="Form-section">
+                <label class="icon codeberg" for="codeberg">
+                    {{- template "icons/codeberg" . -}}
+                    Codeberg
+                </label>
+                <input
+                    pattern="^[a-zA-Z0-9_-]*$"
+                    type="text" name="codeberg"
+                    placeholder="Your username"
+                    value="{{ .Params.Socials.Codeberg }}">
+                </input>
+            </div>
+
+            <div class="Form-control">
+                <button
+                    type="submit"
+                    class="btn icon primary"
+                >{{ template "icons/save" 16 }} Save</button>
+            </div>
+        </form>
+    </section>
+
+    <section id="settings">
         <h2 class="sub-title td:d mt:l">User settings</h1>
-        <p>The use of user settings requires javascript.</p>
-        <div class="Form Form-box">
+        <p>The use of user settings requires JavaScript.</p>
+        <div class="Form mt:m">
             <div class="Form-section">
                 <label>Color-scheme</label>
                 <div class="Form-row">
@@ -129,11 +155,10 @@
                 >{{ template "icons/save" 16 }} Save settings</button>
             </div>
         </div>
-
     </section>
 
     <section id="styles">
-        <h2 class="sub-title td:d">Userstyles</h2>
+        <h2 class="sub-title td:d mt:l">Userstyles</h2>
         {{ if ne (len .Styles) 0 }}
             <p class="description">{{ len .Styles }} styles in total.</p>
             {{/* template "partials/debug-styles" . */}}

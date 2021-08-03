@@ -24,17 +24,23 @@
         }
     }
 
-    input {
+    input,
+    textarea {
         font-size: 0.875rem;
         background-color: var(--bg-2);
-
-        // Hack for checkboxes must not have minimum width.
-        &:not([type='checkbox']) { min-width: 240px }
     }
+
+    // Hack for checkboxes must not have minimum width.
+    input:not([type='checkbox']) { min-width: 240px }
 
     label {
         display: flex;
         margin-bottom: 0.5rem;
+
+        svg {
+            width: 18px;
+            margin-right: 0.5rem;
+        }
     }
 
     &-box {
@@ -46,7 +52,8 @@
         border-radius: var(--br-3);
 
         input,
-        select {
+        select,
+        textarea {
             background-color: var(--bg-3);
         }
     }
