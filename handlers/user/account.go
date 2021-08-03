@@ -94,8 +94,8 @@ func EditAccount(c *fiber.Ctx) error {
 			l := len(name)
 			var e string
 			switch {
-			case l < 5 || l > 20:
-				e = "Display name must be between 5 and 20 characters."
+			case l < 3 || l > 32:
+				e = "Display name must be between 3 and 32 characters."
 			default:
 				e = "Make sure your input contains valid characters."
 			}
