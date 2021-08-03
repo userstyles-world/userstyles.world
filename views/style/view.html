@@ -8,13 +8,12 @@
         {{- end }}
         <div class="card">
             <div class="screenshot">
-                <picture class="blurred">
+                <picture class="blurred" aria-hidden="true">
                     {{ $img := printf "/api/style/preview/" }}
                     <source srcset="{{ $img }}{{ .Style.ID }}.webp" type="image/webp">
                     <img
                         src="{{ $img }}{{ .Style.ID }}.jpeg"
-                        loading="lazy"
-                        alt="Blurred background-picture of actual preview image">
+                        loading="lazy">
                 </picture>
                 {{ template "partials/preview-image" .Style }}
             </div>
