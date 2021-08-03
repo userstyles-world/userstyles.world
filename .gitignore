@@ -8,7 +8,6 @@ static/*/
 .vscode/
 public/
 .idea/
-cache/
 data/
 .auth
 *.db

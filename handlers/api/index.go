@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -70,17 +71,27 @@ Convert:
 			style.Category = fixCategory(style.Category)
 		}
 
-		cache.Store.Set("index", styles, 10*time.Minute)
-		if err := cache.SaveToDisk(cache.CachedIndex, *styles); err != nil {
+		// Save to disk and read it to avoid converting between types.
+		if err := cache.SaveToDisk(cache.CachedIndex, fiber.Map{
+			"data": *styles,
+		}); err != nil {
 			log.Warn.Println("Failed to cache USo-formatted index:", err)
+			goto Convert
 		}
+		b, err := os.ReadFile(cache.CachedIndex)
+		if err != nil {
+			log.Warn.Println("Failed to read uso-format.json:", err)
+			goto Convert
+		}
+
+		// Set cache for index endpoint.
+		cache.Store.Set("index", b, 10*time.Minute)
 
 		goto Convert
 	}
 
-	return c.JSON(fiber.Map{
-		"data": cached,
-	})
+	c.Set("Content-Type", "application/json")
+	return c.Send(cached.([]byte))
 }
 
 func getFullIndex(c *fiber.Ctx) error {
