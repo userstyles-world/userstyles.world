@@ -2,6 +2,7 @@ package main
 
 import (
 	"userstyles.world/handlers"
+	"userstyles.world/modules/cache"
 	database "userstyles.world/modules/database/init"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
@@ -12,6 +13,7 @@ import (
 
 func main() {
 	log.Initialize()
+	cache.Initialize()
 	utils.InitalizeCrypto()
 	utils.InitializeValidator()
 	database.Initialize()

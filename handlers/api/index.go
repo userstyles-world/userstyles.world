@@ -6,53 +6,13 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/patrickmn/go-cache"
 
 	"userstyles.world/models"
-	"userstyles.world/modules/database"
-	"userstyles.world/modules/errors"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 )
 
-type USoFormat struct {
-	Username       string `json:"an"`
-	Name           string `json:"n"`
-	Category       string `json:"c"`
-	Screenshot     string `json:"sn"`
-	UpdatedAt      int64  `json:"u"`
-	TotalInstalls  int64  `json:"t"`
-	WeeklyInstalls int64  `json:"w"`
-	ID             uint   `json:"i"`
-}
-
-type USoStyles []USoFormat
-
-func (s *USoStyles) Query() error {
-	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-
-	stmt := "styles.id, styles.name, styles.user_id, u.username, "
-	stmt += "styles.category, strftime('%s', styles.created_at) as created_at, "
-	stmt += "strftime('%s', styles.updated_at) as updated_at, "
-	stmt += "printf('https://userstyles.world/api/style/preview/%d.webp', styles.id) as screenshot, "
-	stmt += "(select count(*) from stats where stats.style_id = styles.id) as total_installs, "
-	stmt += "(select count(*) from stats where stats.style_id = styles.id and updated_at > ? and created_at < ?) as weekly_installs"
-
-	err := database.Conn.
-		Table("styles").
-		Select(stmt, lastWeek, lastWeek).
-		Joins("join users u on u.id = styles.user_id").
-		Find(&s).
-		Error
-	if err != nil {
-		return errors.ErrStylesNotFound
-	}
-
-	return nil
-}
-
-var mem = cache.New(5*time.Minute, 10*time.Minute)
-
-func convertToUSoFormat(s models.APIStyle) USoFormat {
+func convertToUSoFormat(s models.APIStyle) models.USoFormat {
 	id := fmt.Sprintf("%d", s.ID) // Convert uint to string.
 
 	var img string
@@ -60,7 +20,7 @@ func convertToUSoFormat(s models.APIStyle) USoFormat {
 		img = fmt.Sprintf("https://userstyles.world/api/style/preview/%d.webp", s.ID)
 	}
 
-	return USoFormat{
+	return models.USoFormat{
 		ID:             s.ID,
 		Name:           s.Name,
 		Category:       fixCategory(s.Category),
@@ -95,9 +55,9 @@ func fixCategory(cat string) string {
 
 func getUSoIndex(c *fiber.Ctx) error {
 Convert:
-	cached, found := mem.Get("index")
+	cached, found := cache.Store.Get("index")
 	if !found {
-		styles := new(USoStyles)
+		styles := new(models.USoStyles)
 		if err := styles.Query(); err != nil {
 			log.Warn.Fatal("API/index/uso-format err:", err.Error())
 			return c.JSON(fiber.Map{
@@ -110,7 +70,11 @@ Convert:
 			style.Category = fixCategory(style.Category)
 		}
 
-		mem.Set("index", styles, 10*time.Minute)
+		cache.Store.Set("index", styles, 10*time.Minute)
+		if err := cache.SaveToDisk(cache.CachedIndex, *styles); err != nil {
+			log.Warn.Println("Failed to cache USo-formatted index:", err)
+		}
+
 		goto Convert
 	}
 
