@@ -37,24 +37,33 @@
                 <a
                     class="Pagination-button icon min"
                     href="{{ paginate 1 .Sort }}"
+                    tooltip-data="Go to the first page"
                 >{{ template "icons/chevrons-left" 16 }}</a>
-                <div class="Pagination-divider"></div>
+            {{ else }}
+                <div class="Pagination-disabled">{{ template "icons/chevrons-left" 16 }}</div>
             {{ end }}
+
+            <div class="Pagination-divider"></div>
             {{ if not (eq .PageNow 1) }}
                 <a
                     class="Pagination-button icon back"
                     href="{{ paginate .PageBack .Sort }}"
+                    tooltip-data="Go to the previous page"
                 >{{ template "icons/chevron-left" 16 }}</a>
                 <div class="Pagination-divider"></div>
                 <a
                     class="Pagination-button back"
                     href="{{ paginate .PageBack .Sort }}"
                 >{{ .PageBack }}</a>
-                <div class="Pagination-divider"></div>
+            {{ else }}
+                <div class="Pagination-disabled">{{ template "icons/chevron-left" 16 }}</div>
             {{ end }}
-            <div class="Pagination-active now">{{ .PageNow }}</div>
+
+            <div class="Pagination-divider"></div>
+            <div class="Pagination-active now"><b>{{ .PageNow }}</b></div>
+            <div class="Pagination-divider"></div>
+
             {{ if not (eq .PageNow .PageMax) }}
-                <div class="Pagination-divider"></div>
                 <a
                     class="Pagination-button next"
                     href="{{ paginate .PageNext .Sort }}"
@@ -63,14 +72,21 @@
                 <a
                     class="Pagination-button icon next"
                     href="{{ paginate .PageNext .Sort }}"
+                    tooltip-data="Go to the next page"
                 >{{ template "icons/chevron-right" 16 }}</a>
+            {{ else }}
+                <div class="Pagination-disabled">{{ template "icons/chevron-right" 16 }}</div>
             {{ end }}
+
+            <div class="Pagination-divider"></div>
             {{ if not (eq .PageNow .PageMax) }}
-                <div class="Pagination-divider"></div>
                 <a
                     class="Pagination-button icon max"
                     href="{{ paginate .PageMax .Sort }}"
+                    tooltip-data="Go to the last page"
                 >{{ template "icons/chevrons-right" 16 }}</a>
+            {{ else }}
+                <div class="Pagination-disabled">{{ template "icons/chevrons-right" 16 }}</div>
             {{ end }}
         </div>
     </section>
