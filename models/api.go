@@ -34,7 +34,7 @@ func (s *USoStyles) Query() error {
 		Table("styles").
 		Select(stmt, lastWeek, lastWeek).
 		Joins("join users u on u.id = styles.user_id").
-		Find(&s).
+		Find(&s, "styles.deleted_at is null").
 		Error
 	if err != nil {
 		return errors.ErrStylesNotFound
