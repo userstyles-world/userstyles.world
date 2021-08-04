@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	stdstrings "strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -218,8 +219,20 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 	size := 40
 	offset := (page - 1) * size
 
+	var stmt string
+	if stdstrings.HasPrefix(orderStatement, "installs") {
+		stmt += "styles.id, "
+		stmt += "(select count(*) from stats s where s.style_id = styles.id and s.install) installs"
+	} else if stdstrings.HasPrefix(orderStatement, "views") {
+		stmt += "styles.id, "
+		stmt += "(select count(*) from stats s where s.style_id = styles.id and s.view) views"
+	} else {
+		stmt += "styles.id, styles.created_at, styles.updated_at"
+	}
+
 	nums := new([]StyleCard)
 	err := database.Conn.
+		Select(stmt).Joins("join users u on u.id = styles.user_id").
 		Table("styles").Order(orderStatement).Offset(offset).Limit(size).Find(&nums).Error
 	if err != nil {
 		return nil, err
@@ -230,7 +243,7 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 		styleIDs = append(styleIDs, int(partial.ID))
 	}
 
-	stmt := "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
+	stmt = "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
 	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.install > 0) installs, "
 	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
 
