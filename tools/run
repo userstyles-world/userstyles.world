@@ -23,7 +23,7 @@ check_dir() {
 
 export_secrets() {
     set -a 
-    . ./.auth
+    . data/.env
     set +a
 }
 
@@ -33,7 +33,7 @@ prod() {
     export_secrets
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
-        SALT="${4:15}" \
+        SALT="${4:-15}" \
         ./userstyles.world
 }
 
@@ -46,21 +46,17 @@ sass() {
     check_dir
 
     # Sassc fails if directory doesn't exist.
-    mkdir -p ./static/css
+    mkdir -p static/css
 
     if [ "$2" = "--watch" ]; then
         check_cmd inotifywait
         [ $? = 1 ] && exit
         while inotifywait -r -e close_write scss; do
-            _sass
+            sassc scss/main.scss static/css/main.css
         done
     else
-        _sass
+        sassc --style compressed scss/main.scss static/css/main.css
     fi
-}
-
-_sass() {
-    sassc --style compressed ./scss/main.scss ./static/css/main.css
 }
 
 drop() {
@@ -94,7 +90,7 @@ build() {
     sass
 
     log "compiling typescript"
-    go run ./typescript/run.go
+    go run typescript/run.go
 
     log "compiling executable"
     GOOS=linux go build \
@@ -107,7 +103,7 @@ ts() {
 
     env DEBUG="${2:-false}" \
         WATCH="${3:-false}" \
-        go run ./typescript/run.go
+        go run typescript/run.go
 }
 
 case "$1" in
