@@ -17,7 +17,7 @@ type Stats struct {
 	gorm.Model
 	Hash    string `gorm:"unique"`
 	Style   Style
-	StyleID int
+	StyleID int       `gorm:"index"`
 	Install time.Time `gorm:"default:null"`
 	View    time.Time `gorm:"default:null"`
 }
