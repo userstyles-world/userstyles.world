@@ -60,7 +60,7 @@ Convert:
 	if !found {
 		styles := new(models.USoStyles)
 		if err := styles.Query(); err != nil {
-			log.Warn.Fatal("API/index/uso-format err:", err.Error())
+			log.Warn.Println("Failed to get styles for USo-formatted index:", err.Error())
 			return c.JSON(fiber.Map{
 				"data": "styles not found",
 			})
