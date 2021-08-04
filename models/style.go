@@ -218,19 +218,26 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 	size := 40
 	offset := (page - 1) * size
 
-	s1 := "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
-	s2 := "(select count(id) from stats s where s.style_id = styles.id and s.install > 0) installs, "
-	s3 := "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
-	stmt := s1 + s2 + s3
+	nums := new([]StyleCard)
+	err := database.Conn.
+		Table("styles").Order(orderStatement).Offset(offset).Limit(size).Find(&nums).Error
+	if err != nil {
+		return nil, err
+	}
 
-	err := getDBSession().
-		Select(stmt).
-		Model(Style{}).
-		Joins("join users u on u.id = styles.user_id").
-		Order(orderStatement).
-		Offset(offset).
-		Limit(size).
-		Find(q).Error
+	var styleIDs []int
+	for _, partial := range *nums {
+		styleIDs = append(styleIDs, int(partial.ID))
+	}
+
+	stmt := "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
+	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.install > 0) installs, "
+	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
+
+	err = database.Conn.
+		Debug().
+		Select(stmt).Table("styles").Joins("join users u on u.id = styles.user_id").
+		Order(orderStatement).Find(&q, styleIDs).Error
 	if err != nil {
 		return nil, err
 	}
