@@ -34,23 +34,43 @@
     <section class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
         <div class="Pagination flex jc:c ai:c">
             {{ if not (eq .PageNow 1) }}
-                <a class="Pagination-button min" href="{{ paginate 1 .Sort }}">1 — First</a>
+                <a
+                    class="Pagination-button icon min"
+                    href="{{ paginate 1 .Sort }}"
+                >{{ template "icons/chevrons-left" 16 }}</a>
+                <div class="Pagination-divider"></div>
             {{ end }}
-            {{ if (gt (subtract .PageBack 1) "1") }}
-                <div class="Pagination-ellipsis">…</div>
-            {{ end }}
-            {{ if not (or (eq .PageNow 1) (eq .PageBack 1)) }}
-                <a class="Pagination-button back" href="{{ paginate .PageBack .Sort }}">{{ .PageBack }}</a>
+            {{ if not (eq .PageNow 1) }}
+                <a
+                    class="Pagination-button icon back"
+                    href="{{ paginate .PageBack .Sort }}"
+                >{{ template "icons/chevron-left" 16 }}</a>
+                <div class="Pagination-divider"></div>
+                <a
+                    class="Pagination-button back"
+                    href="{{ paginate .PageBack .Sort }}"
+                >{{ .PageBack }}</a>
+                <div class="Pagination-divider"></div>
             {{ end }}
             <div class="Pagination-active now">{{ .PageNow }}</div>
-            {{ if not (or (eq .PageNow .PageMax) (eq .PageNext .PageMax)) }}
-                <a class="Pagination-button next" href="{{ paginate .PageNext .Sort }}">{{ .PageNext }}</a>
-            {{ end }}
-            {{ if (gt (subtract .PageMax .PageNext) "1") }}
-                <div class="Pagination-ellipsis">…</div>
+            {{ if not (eq .PageNow .PageMax) }}
+                <div class="Pagination-divider"></div>
+                <a
+                    class="Pagination-button next"
+                    href="{{ paginate .PageNext .Sort }}"
+                >{{ .PageNext }}</a>
+                <div class="Pagination-divider"></div>
+                <a
+                    class="Pagination-button icon next"
+                    href="{{ paginate .PageNext .Sort }}"
+                >{{ template "icons/chevron-right" 16 }}</a>
             {{ end }}
             {{ if not (eq .PageNow .PageMax) }}
-                <a class="Pagination-button max" href="{{ paginate .PageMax .Sort }}">{{ .PageMax }} — Last</a>
+                <div class="Pagination-divider"></div>
+                <a
+                    class="Pagination-button icon max"
+                    href="{{ paginate .PageMax .Sort }}"
+                >{{ template "icons/chevrons-right" 16 }}</a>
             {{ end }}
         </div>
     </section>
