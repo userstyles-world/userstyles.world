@@ -2,16 +2,14 @@ import {checkRedirect} from './page/account';
 import {saveRedirect} from './page/login';
 import {changeEntriesBehavior} from './page/modlog';
 import {InitalizeColorScheme as initalizeColorScheme} from './color-scheme';
-import {ShareButton} from './share-button';
 import {BroadcastReady} from './third-party';
 import {SaveUserSettingsButton, SetValues} from './user-settings';
 import {doDomOperation} from './utils/dom';
 import type {UserSettings} from './utils/storage';
 import {getSettings} from './utils/storage';
-import {checkIfStyleInstalled} from 'page/view-style';
+import {initViewStyle} from './page/view-style';
 
 const WhenDOMReady = () => {
-    ShareButton();
     BroadcastReady();
     SaveUserSettingsButton(onSettingsUpdate);
     SetValues(getSettings());
@@ -48,7 +46,7 @@ function pageSpecificFunctions(settings: UserSettings) {
             break;
     }
     if (location.pathname.startsWith('/style/') && styleViewRegex.test(location.pathname)) {
-        checkIfStyleInstalled();
+        initViewStyle();
     }
 }
 
