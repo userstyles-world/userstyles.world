@@ -233,7 +233,8 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 	}
 
 	err := database.Conn.
-		Select(stmt).Table("styles").Order(orderStatement).Offset(offset).Limit(size).Find(&nums).Error
+		Select(stmt).Table("styles").Order(orderStatement).Offset(offset).
+		Limit(size).Find(&nums, "styles.deleted_at is null").Error
 	if err != nil {
 		return nil, err
 	}
