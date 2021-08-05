@@ -2,8 +2,8 @@
 <div class="sort flex ai:c">
     <select id="sort" name="sort">
         <option {{ if eq .Sort "" }}selected{{ end }} value="default">Default</option>
-        <option {{ if eq .Sort "newest" }}selected{{ end }} value="newest">Recently added</option>
-        <option {{ if eq .Sort "oldest" }}selected{{ end }} value="oldest">Least recently added</option>
+        <option {{ if eq .Sort "newest" }}selected{{ end }} value="newest">Newest</option>
+        <option {{ if eq .Sort "oldest" }}selected{{ end }} value="oldest">Oldest</option>
         <option {{ if eq .Sort "recentlyupdated" }}selected{{ end }} value="recentlyupdated">Recently updated</option>
         <option {{ if eq .Sort "leastupdated" }}selected{{ end }} value="leastupdated">Least recently updated</option>
         <option {{ if eq .Sort "mostinstalls" }}selected{{ end }} value="mostinstalls">Most installs</option>
