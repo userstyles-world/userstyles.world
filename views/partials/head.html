@@ -23,4 +23,4 @@
 <meta property="og:image" content="{{ printf `https://userstyles.world/api/style/preview/%d.webp` .ID }}">
 {{ with $.Url -}}<meta property="og:url" content="{{ printf `https://userstyles.world%s` $.Slug }}">{{ end -}}
 {{ end }}
-<script src="/js/main.js?v={{ $commit }}"></script>
+<script defer src="/js/main.js?v={{ $commit }}"></script>
