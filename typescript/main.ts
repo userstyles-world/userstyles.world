@@ -9,6 +9,13 @@ import type {UserSettings} from './utils/storage';
 import {getSettings} from './utils/storage';
 import {initViewStyle} from './page/view-style';
 
+// Once settings update we should reinstalize any functionallity.
+// That relies on this settings.
+const onSettingsUpdate = () => {
+    const settings = getSettings();
+    initalizeColorScheme(settings.colorScheme);
+};
+
 const WhenDOMReady = () => {
     BroadcastReady();
     SaveUserSettingsButton(onSettingsUpdate);
@@ -19,13 +26,6 @@ const WhenDOMReady = () => {
 // when the DOM is ready to go.
 // Any other code shouldn't depend on this setup function.
 doDomOperation(WhenDOMReady);
-
-// Once settings update we should reinstalize any functionallity.
-// That relies on this settings.
-const onSettingsUpdate = () => {
-    const settings = getSettings();
-    initalizeColorScheme(settings.colorScheme);
-};
 
 // Initalize functions that requires settings and don't depend on the DOM.
 // Note that we don't save getSettings() result, as this initalize is a 1 time thing
