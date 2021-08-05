@@ -1,11 +1,12 @@
 package search
 
 import (
-	"errors"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/index/upsidedown"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/log"
@@ -16,17 +17,34 @@ var (
 	batchSize  = 500
 )
 
+const indexFile = "data/styles.bleve"
+
+func openBleveIndexFile(path string) (bleve.Index, error) {
+	_, err := os.Stat(path)
+	if err != nil && os.IsNotExist(err) {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	index, err := bleve.Open(path)
+	if err != nil && err == upsidedown.IncompatibleVersion {
+		return nil, os.RemoveAll(path)
+	} else if err != nil {
+		return nil, err
+	}
+	return index, nil
+}
+
 func Initialize() {
-	stylesIndex, err := bleve.Open("data/styles.bleve")
-	if errors.Is(err, bleve.ErrorIndexPathDoesNotExist) {
+	stylesIndex, err := openBleveIndexFile(indexFile)
+	if err != nil {
 		log.Info.Println("Creating new index...")
 		indexMapping := buildIndexMapping()
-		stylesIndex, err = bleve.New("data/styles.bleve", indexMapping)
+		stylesIndex, err = bleve.New(indexFile, indexMapping)
 		if err != nil {
 			log.Warn.Fatal(err)
 		}
-	} else if err != nil {
-		log.Warn.Fatal(err)
 	}
 	log.Info.Println("Opening existing index...")
 
