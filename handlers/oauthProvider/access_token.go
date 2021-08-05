@@ -38,31 +38,31 @@ func TokenPost(c *fiber.Ctx) error {
 	unsealedText, err := utils.DecryptText(tCode, utils.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
-		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
 	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Println("Failed to unseal JWT token:", err.Error())
-		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		log.Warn.Println("Failed to parse JWT Token:", err.Error())
-		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
 	state, ok := claims["state"].(string)
 	if !ok {
 		log.Warn.Println("Invalid JWT state.")
-		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
 	floatUserID, ok := claims["userID"].(float64)
 	if !ok {
 		log.Warn.Println("Failed to get userID from parsed token.")
-		return errorMessage(c, 500, "JWT Token error, please notify the admins.")
+		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 	userID := uint(floatUserID)
 
@@ -77,7 +77,7 @@ func TokenPost(c *fiber.Ctx) error {
 
 	user, err := models.FindUserByID(fmt.Sprintf("%d", userID))
 	if err != nil || user.ID == 0 {
-		return errorMessage(c, 500, "Couldn't find the user that was specified, please notify the admins.")
+		return errorMessage(c, 500, "Couldn't find the user that was specified, Error: Please notify the UserStyles.world admins.")
 	}
 
 	var jwt string
@@ -95,7 +95,7 @@ func TokenPost(c *fiber.Ctx) error {
 	}
 
 	if err != nil {
-		return errorMessage(c, 500, "Couldn't create access_token please notify the admins.")
+		return errorMessage(c, 500, "Couldn't create access_token Error: Please notify the UserStyles.world admins.")
 	}
 
 	if c.Accepts("application/json", "text/plain ") == "application/json" {

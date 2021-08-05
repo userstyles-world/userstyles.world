@@ -154,7 +154,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
-				"data": "JWT Token error, please notify the admins.",
+				"data": "Error: Please notify the UserStyles.world admins.",
 			})
 	}
 
@@ -163,7 +163,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
-				"data": "JWT Token error, please notify the admins.",
+				"data": "Error: Please notify the UserStyles.world admins.",
 			})
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
@@ -171,7 +171,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		log.Warn.Println("Failed to parse JWT claims:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
-				"data": "JWT Token error, please notify the admins.",
+				"data": "Error: Please notify the UserStyles.world admins.",
 			})
 	}
 
@@ -180,7 +180,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		log.Warn.Println("Failed to get userID from parsed token.")
 		return c.Status(500).
 			JSON(fiber.Map{
-				"data": "JWT Token error, please notify the admins.",
+				"data": "Error: Please notify the UserStyles.world admins.",
 			})
 	}
 
@@ -189,7 +189,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		log.Warn.Println("Invalid JWT state.")
 		return c.Status(500).
 			JSON(fiber.Map{
-				"data": "JWT Token error, please notify the admins.",
+				"data": "Error: Please notify the UserStyles.world admins.",
 			})
 	}
 
@@ -197,7 +197,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		log.Warn.Println("Failed to match style author and userID.")
 		return c.Status(500).
 			JSON(fiber.Map{
-				"data": "JWT Token error, please notify the admins.",
+				"data": "Error: Please notify the UserStyles.world admins.",
 			})
 	}
 
@@ -211,7 +211,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return c.Status(500).
 			JSON(fiber.Map{
-				"data": "JWT Token error, please notify the admins.",
+				"data": "Error: Please notify the UserStyles.world admins.",
 			})
 	}
 
