@@ -47,8 +47,11 @@ func GetDocs(c *fiber.Ctx) error {
 		content = readFile("security")
 		title = "Security Policy"
 	case "crypto":
-		content = readFile("crypto.md")
+		content = readFile("crypto")
 		title = "Cryptography Usages"
+	case "content-guidelines":
+		content = readFile("content-guidelines")
+		title = "Content Guidelines"
 	}
 
 	if content == "" {
