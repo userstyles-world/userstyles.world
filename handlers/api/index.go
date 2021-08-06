@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -12,26 +11,6 @@ import (
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 )
-
-func convertToUSoFormat(s models.APIStyle) models.USoFormat {
-	id := fmt.Sprintf("%d", s.ID) // Convert uint to string.
-
-	var img string
-	if s.Preview != "" {
-		img = fmt.Sprintf("https://userstyles.world/api/style/preview/%d.webp", s.ID)
-	}
-
-	return models.USoFormat{
-		ID:             s.ID,
-		Name:           s.Name,
-		Category:       fixCategory(s.Category),
-		Username:       s.Username,
-		Screenshot:     img,
-		UpdatedAt:      s.UpdatedAt.Unix(),
-		TotalInstalls:  models.GetTotalInstallsForStyle(id),
-		WeeklyInstalls: models.GetWeeklyInstallsForStyle(id),
-	}
-}
 
 func fixCategory(cat string) string {
 	if cat == "unset" {
