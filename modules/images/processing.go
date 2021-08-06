@@ -37,7 +37,7 @@ func isVipsInstalled() VipsStatus {
 	return vipsStatus
 }
 
-func DecodeImage(original, newPath string, imageType ImageType) error {
+func decodeImage(original, newPath string, imageType ImageType) error {
 	// Ensure vips installed
 	if isVipsInstalled() == notInstalled {
 		return errors.ErrVipsNotFound

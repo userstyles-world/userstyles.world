@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"userstyles.world/models"
 	"userstyles.world/modules/log"
 )
 
@@ -34,21 +33,19 @@ func fileExist(path string) fs.FileInfo {
 	return stat
 }
 
-func GetImageFromStyle(id string) (ImageInfo, error) {
+func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 	template := CacheFolder + id
 	original := template + ".original"
 	jpeg := template + ".jpeg"
 	webp := template + ".webp"
-	if fileExist(original) == nil {
-		style, err := models.GetStyleByID(id)
-		if err != nil || style.Preview == "" {
-			return ImageInfo{}, err
-		}
 
-		req, err := http.Get(style.Preview)
+	// Is the preview image not a local file?
+	// Let's download it.
+	if !isOriginalLocal {
+		req, err := http.Get(preview)
 		if err != nil {
 			log.Warn.Println("Error fetching image URL:", err)
-			return ImageInfo{}, err
+			return err
 		}
 		defer req.Body.Close()
 
@@ -57,24 +54,21 @@ func GetImageFromStyle(id string) (ImageInfo, error) {
 		err = os.WriteFile(original, data, 0o600)
 		if err != nil {
 			log.Warn.Println("Error processing image:", err)
-			return ImageInfo{}, err
+			return err
 		}
-
-		err = DecodeImage(original, jpeg, ImageTypeJPEG)
-		if err != nil {
-			log.Warn.Println("Error processing image:", err)
-			return ImageInfo{}, err
-		}
-
-		return ImageInfo{
-			Original: fileExist(original),
-			Jpeg:     fileExist(jpeg),
-		}, nil
 	}
 
-	return ImageInfo{
-		Original: fileExist(original),
-		WebP:     fileExist(webp),
-		Jpeg:     fileExist(jpeg),
-	}, nil
+	err := decodeImage(original, jpeg, ImageTypeJPEG)
+	if err != nil {
+		log.Warn.Println("Error processing image:", err)
+		return err
+	}
+
+	err = decodeImage(original, webp, ImageTypeWEBP)
+	if err != nil {
+		log.Warn.Println("Error processing image:", err)
+		return err
+	}
+
+	return nil
 }

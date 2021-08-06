@@ -106,24 +106,38 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
-	if image != nil {
-		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
+
+	go func(image multipart.File, style *models.Style, styleID, preview string) {
+		isLocal := false
+		s.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
+
+		var err error
+		if image != nil {
+			isLocal = true
+			data, _ := io.ReadAll(image)
+			err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
+			if err != nil {
+				log.Warn.Println("Failed to write image:", err.Error())
+				return
+			}
+		}
+		err = images.GenerateImagesForStyle(styleID, preview, isLocal)
 		if err != nil {
-			log.Warn.Println("Failed to write image:", err.Error())
-			return c.Render("err", fiber.Map{
-				"Title": "Internal server error.",
-				"User":  u,
-			})
+			s.Preview = ""
+			log.Warn.Println("Failed to generate images:", err.Error())
+			return
 		}
-		if s.Preview == "" {
-			s.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
-			database.Conn.
-				Model(new(models.Style)).
-				Where("id", styleID).
-				Updates(s)
+
+		err = database.Conn.
+			Model(new(models.Style)).
+			Where("id", styleID).
+			Updates(style).
+			Error
+		if err != nil {
+			log.Warn.Println("Failed to update style:", err.Error())
 		}
-	}
+
+	}(image, s, styleID, s.Preview)
 
 	go func(style *models.Style) {
 		if err = search.IndexStyle(style.ID); err != nil {
