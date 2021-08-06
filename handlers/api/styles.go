@@ -10,6 +10,7 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/search"
 	"userstyles.world/utils"
@@ -115,6 +116,28 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
+	go func(style *models.Style, styleID, preview string) {
+		style.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
+
+		var err error
+		err = images.GenerateImagesForStyle(styleID, preview, false)
+		if err != nil {
+			style.Preview = ""
+			log.Warn.Println("Failed to generate images:", err.Error())
+			return
+		}
+
+		err = database.Conn.
+			Model(new(models.Style)).
+			Where("id", styleID).
+			Updates(style).
+			Error
+		if err != nil {
+			log.Warn.Println("Failed to update style:", err.Error())
+		}
+
+	}(&postStyle, sStyleID, postStyle.Preview)
+
 	if err = search.IndexStyle(postStyle.ID); err != nil {
 		log.Warn.Printf("Failed to re-index style %d: %s", postStyle.ID, err.Error())
 	}
@@ -204,7 +227,7 @@ func NewStyle(c *fiber.Ctx) error {
 	if postStyle.Name == "" || postStyle.Code == "" || postStyle.Description == "" || postStyle.Category == "" {
 		return c.Status(403).
 			JSON(fiber.Map{
-				"data": "Make sure to fill out fields.",
+				"data": "Error: Make sure to fill out fields.",
 			})
 	}
 	postStyle.Featured = false
@@ -227,7 +250,7 @@ func NewStyle(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(403).
 			JSON(fiber.Map{
-				"data": "A duplicate style was found.",
+				"data": "Error: A duplicate style was found.",
 			})
 	}
 
@@ -238,6 +261,30 @@ func NewStyle(c *fiber.Ctx) error {
 				"data": "Error: Couldn't save style",
 			})
 	}
+
+	styleID := strconv.FormatUint(uint64(newStyle.ID), 10)
+
+	go func(style *models.Style, styleID, preview string) {
+		style.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
+
+		var err error
+		err = images.GenerateImagesForStyle(styleID, preview, false)
+		if err != nil {
+			style.Preview = ""
+			log.Warn.Println("Failed to generate images:", err.Error())
+			return
+		}
+
+		err = database.Conn.
+			Model(new(models.Style)).
+			Where("id", styleID).
+			Updates(style).
+			Error
+		if err != nil {
+			log.Warn.Println("Failed to update style:", err.Error())
+		}
+
+	}(newStyle, styleID, newStyle.Preview)
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {
 		log.Warn.Printf("Failed to re-index style %d: %s", postStyle.ID, err.Error())
