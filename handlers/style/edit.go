@@ -2,6 +2,7 @@ package style
 
 import (
 	"io"
+	"mime/multipart"
 	"os"
 	"strings"
 
@@ -83,8 +84,9 @@ func EditPost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	if preview, _ := c.FormFile("preview"); preview != nil {
-		image, err := preview.Open()
+	var image multipart.File
+	if ff, _ := c.FormFile("preview"); ff != nil {
+		image, err = ff.Open()
 		if err != nil {
 			log.Warn.Println("Failed to open image:", err.Error())
 			return c.Render("err", fiber.Map{
@@ -92,27 +94,6 @@ func EditPost(c *fiber.Ctx) error {
 				"User":  u,
 			})
 		}
-		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
-		if err != nil {
-			log.Warn.Println("Failed to create style:", err.Error())
-			return c.Render("err", fiber.Map{
-				"Title": "Internal server error.",
-				"User":  u,
-			})
-		}
-		// Either it's removed or it didn't exist.
-		// So we don't care about the error.
-		_ = os.Remove(images.CacheFolder + styleID + ".jpeg")
-		_ = os.Remove(images.CacheFolder + styleID + ".webp")
-
-		q.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
-	}
-
-	if q.Preview != s.Preview {
-		_ = os.Remove(images.CacheFolder + styleID + ".original")
-		_ = os.Remove(images.CacheFolder + styleID + ".jpeg")
-		_ = os.Remove(images.CacheFolder + styleID + ".webp")
 	}
 
 	err = database.Conn.
@@ -131,6 +112,38 @@ func EditPost(c *fiber.Ctx) error {
 			"User":  u,
 		})
 	}
+
+	go func(image multipart.File, style *models.Style, styleID, preview string) {
+		isLocal := false
+		style.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
+
+		var err error
+		if image != nil {
+			isLocal = true
+			data, _ := io.ReadAll(image)
+			err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
+			if err != nil {
+				log.Warn.Println("Failed to write image:", err.Error())
+				return
+			}
+		}
+		err = images.GenerateImagesForStyle(styleID, preview, isLocal)
+		if err != nil {
+			s.Preview = ""
+			log.Warn.Println("Failed to generate images:", err.Error())
+			return
+		}
+
+		err = database.Conn.
+			Model(new(models.Style)).
+			Where("id", styleID).
+			Updates(style).
+			Error
+		if err != nil {
+			log.Warn.Println("Failed to update style:", err.Error())
+		}
+
+	}(image, &q, styleID, q.Preview)
 
 	return c.Redirect("/style/"+c.Params("id"), fiber.StatusSeeOther)
 }
