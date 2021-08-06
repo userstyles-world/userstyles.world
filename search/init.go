@@ -21,9 +21,7 @@ const indexFile = "data/styles.bleve"
 
 func openBleveIndexFile(path string) (bleve.Index, error) {
 	_, err := os.Stat(path)
-	if err != nil && os.IsNotExist(err) {
-		return nil, nil
-	} else if err != nil {
+	if err != nil {
 		return nil, err
 	}
 
