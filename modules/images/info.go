@@ -9,12 +9,6 @@ import (
 	"userstyles.world/modules/log"
 )
 
-type ImageInfo struct {
-	Original fs.FileInfo
-	Jpeg     fs.FileInfo
-	WebP     fs.FileInfo
-}
-
 var CacheFolder = "./data/images/"
 
 func Initialize() {
