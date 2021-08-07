@@ -117,3 +117,13 @@
 }
 .td\:d { text-decoration: underline }
 [hidden] { display: none !important }
+
+// TODO: Move to a more appropriate file once UI is rewritten.
+.u {
+    &-LayoutMaxWidth {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        width: 100%;
+        max-width: var(--layout-max-width);
+    }
+}

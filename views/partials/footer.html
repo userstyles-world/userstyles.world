@@ -1,20 +1,33 @@
-<footer>
-    <div class="wrapper ai:c py:m flex">
-        <span class="copyright mr:a">© {{ config "copyright" }}</span>
-        <ul class="links flex">
+<footer class="Footer">
+    <div class="Footer-wrapper u-LayoutMaxWidth py:l flex jc:b">
+        <ul class="Footer-list mr:a">
+            <li><b class="mb:m">Information</b></li>
+            <li><span class="copyright">© {{ config "copyright" }} {{ config "appName" }}</span></li>
             <li>
                 {{ if eq GitCommit "dev" }}
-                    <span class="env">DevEnv</span>
+                    <span class="version">DevEnv</span>
                 {{ else }}
-                    <a class="latest-commit" href="{{ config "appLatestCommit" }}">
+                    <a class="version" href="{{ config "appLatestCommit" }}">
                         {{- printf "%s (%.8s)" (config "appVersion") GitCommit -}}
                     </a>
                 {{ end }}
             </li>
-            <li><a class="source" href="{{ config "appSourceCode" }}">Source code</a></li>
-            <li><a class="docs" href="/docs">Documentation</a></li>
-            <li><a class="changelog" href="/docs/changelog">Changelog</a></li>
-            <li><a class="privacy" href="/docs/privacy">Privacy</a></li>
+        </ul>
+
+        <ul class="Footer-list">
+            <li><b class="mb:m">Resources</b></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/docs/faq">FAQs</a></li>
+            <li><a href="/docs/changelog">Changelog</a></li>
+            <li><a href="/docs/content-guidelines">Content guidelines</a></li>
+            <li><a href="/docs/privacy">Privacy</a></li>
+            <li><a href="/docs/security">Security</a></li>
+        </ul>
+
+        <ul class="Footer-list">
+            <li><b class="mb:m">Support</b></li>
+            <li><a href="{{ config "appSourceCode" }}">Source code</a></li>
+            <li><a href="{{ config "appSourceCode" }}/issues/new/choose">Open an issue</a></li>
         </ul>
     </div>
 </footer>

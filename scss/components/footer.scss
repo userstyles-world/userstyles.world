@@ -1,0 +1,28 @@
+.Footer {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--bg-4);
+    background-color: var(--bg-2);
+
+    &-list {
+        display: flex;
+        flex-direction: column;
+        padding-left: 0px;
+
+        @media screen and (min-width: 720px) {
+            &:not(:first-child) { padding-left: 4rem }
+        }
+    }
+
+    li {
+        list-style: none;
+        display: inline-flex;
+        padding-bottom: 0.5rem;
+    }
+
+    a {
+        color: var(--fg-1);
+        text-decoration: none;
+        &:hover { color: var(--ac-1) }
+    }
+}
