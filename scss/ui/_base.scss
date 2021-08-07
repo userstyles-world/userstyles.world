@@ -10,7 +10,10 @@ a {
         align-self: flex-start;
         color: var(--fg-3);
     }
-    &[href^='http']::after { content: '[\01F517]' }
+    &[href^='/link/'],
+    &[href^='http'] {
+        &::after { content: '[\01F517]' }
+    }
     &[href^='java']::after { content: '{JS}' }
     &[href^='mail']::after { content: '[📧]' }
 }

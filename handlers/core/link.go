@@ -9,8 +9,10 @@ import (
 
 func GetLinkedSite(c *fiber.Ctx) error {
 	switch c.Params("site") {
-	case "chat":
-		return c.Redirect(config.AppLinkChat, fiber.StatusSeeOther)
+	case "discord":
+		return c.Redirect(config.AppLinkChatDiscord, fiber.StatusSeeOther)
+	case "matrix":
+		return c.Redirect(config.AppLinkChatMatrix, fiber.StatusSeeOther)
 	case "source":
 		return c.Redirect(config.AppLinkSource, fiber.StatusSeeOther)
 	default:

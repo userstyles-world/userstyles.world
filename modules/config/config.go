@@ -53,8 +53,9 @@ var (
 	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
 	AppUptime       = time.Now()
 
-	AppLinkChat   = "https://matrix.to/#/!mewOpQBfQfwHLEvVbZ:matrix.org"
-	AppLinkSource = "https://github.com/userstyles-world/userstyles.world"
+	AppLinkChatDiscord = "https://discord.gg/P5zra4nFS2"
+	AppLinkChatMatrix  = "https://matrix.to/#/!mewOpQBfQfwHLEvVbZ:matrix.org"
+	AppLinkSource      = "https://github.com/userstyles-world/userstyles.world"
 )
 
 func getEnvInt(name string, defaultValue int) int {

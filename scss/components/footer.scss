@@ -25,4 +25,9 @@
         text-decoration: none;
         &:hover { color: var(--ac-1) }
     }
+
+    .icon {
+        margin-right: 0.5rem;
+        width: 20px;
+    }
 }
