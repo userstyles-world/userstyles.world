@@ -92,9 +92,3 @@ $mode: (
     --ac-f: #{ transparentize(map-get($scheme, "ac-3"), 0.7) };
     --st-f: #{ transparentize(map-get($scheme, "st-3"), 0.7) };
 }
-
-[data-darkreader-scheme="dark"], [data-color-scheme="dark"] {
-    .github svg {
-        filter: invert(1);
-    }
-}
