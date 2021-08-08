@@ -10,6 +10,7 @@ check_cmd() {
         case "$1" in
             air) log "Install it with 'go install github.com/cosmtrek/air'" ;;
             sassc) log "Install 'sassc' with your package manager" ;;
+            unzip) log "Install 'unzip' with your package manager" ;;
             inotify*) log "Install 'notify-tools' with your package manager" ;;
         esac
         return 1
@@ -25,6 +26,37 @@ export_secrets() {
     set -a 
     . data/.env
     set +a
+}
+
+fonts() {
+    log "fonts"
+
+    # Check if unzip is installed.
+    check_cmd unzip
+    [ $? = 1 ] && exit
+
+    check_dir
+
+    # Check if fonts already exist.
+    ls static/fonts >/dev/null
+    if [ $? = 2 ]; then
+        # Skip re-downloading archive.
+        if [ ! -e data/inter.zip ]; then
+            # Download latest release from GitHub.
+            src="https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip"
+            curl -L "$src" -o data/inter.zip
+        else
+            log "Font archive is available"
+        fi
+
+        # Extract specific variants that we use.
+        fonts="Regular Bold Italic BoldItalic"
+        for font in $fonts; do
+            unzip -j -d static/fonts data/inter.zip "Inter Web/Inter-${font}.*"
+        done
+    else
+        log "Fonts already exist"
+    fi
 }
 
 prod() {
@@ -86,6 +118,9 @@ build() {
     log "build"
     check_dir
 
+    log "setting up fonts"
+    fonts
+
     log "compiling sass"
     sass
 
@@ -108,6 +143,7 @@ ts() {
 
 case "$1" in
     build) build "$@" ;;
+    fonts) fonts "$@" ;;
     dev)  dev    "$@" ;;
     drop) drop   "$@" ;;
     prod) prod   "$@" ;;
