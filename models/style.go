@@ -84,6 +84,8 @@ type StyleSearch struct {
 	UserID      uint
 }
 
+var modelStyle = Style{}
+
 func (s StyleCard) Slug() string {
 	return strings.SlugifyURL(s.Name)
 }
@@ -171,9 +173,9 @@ where
 }
 
 func GetAllStyleIDs() ([]APIStyle, error) {
-	t, q := new(Style), new([]APIStyle)
+	q := new([]APIStyle)
 	err := getDBSession().
-		Model(t).
+		Model(modelStyle).
 		Select("styles.id").
 		Find(q).
 		Error
@@ -185,7 +187,7 @@ func GetAllStyleIDs() ([]APIStyle, error) {
 }
 
 func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
-	t, q := new(Style), new([]APIStyle)
+	q := new([]APIStyle)
 
 	s := "styles.id, styles.name, styles.created_at, styles.updated_at, "
 	s += "styles.description, styles.notes, styles.license, styles.homepage, "
@@ -193,7 +195,7 @@ func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
 	s += "styles.homepage, styles.mirror_url, u.username, u.display_name"
 
 	err := getDBSession().
-		Model(t).
+		Model(modelStyle).
 		Select(s).
 		Joins("join users u on u.id = styles.user_id").
 		Find(q).
@@ -206,7 +208,7 @@ func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
 }
 
 func GetStyleCount() (i int64, err error) {
-	if err := database.Conn.Select("count(id)").Model(Style{}).Count(&i).Error; err != nil {
+	if err := database.Conn.Select("count(id)").Model(modelStyle).Count(&i).Error; err != nil {
 		return 0, err
 	}
 
@@ -303,9 +305,9 @@ where
 }
 
 func GetImportedStyles() ([]Style, error) {
-	t, q := new(Style), new([]Style)
+	q := new([]Style)
 	err := getDBSession().
-		Model(t).
+		Model(modelStyle).
 		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
 		Error
 	if err != nil {
@@ -317,9 +319,9 @@ func GetImportedStyles() ([]Style, error) {
 
 // GetStyleByID note: Using ID as a string is fine in this case.
 func GetStyleByID(id string) (*APIStyle, error) {
-	t, q := new(Style), new(APIStyle)
+	q := new(APIStyle)
 	err := getDBSession().
-		Model(t).
+		Model(modelStyle).
 		Select("styles.*,  u.username").
 		Joins("join users u on u.id = styles.user_id").
 		Find(q, "styles.id = ?", id).
@@ -367,7 +369,7 @@ func CreateStyle(s *Style) (*Style, error) {
 
 func UpdateStyle(s *Style) error {
 	err := getDBSession().
-		Model(Style{}).
+		Model(modelStyle).
 		Where("id", s.ID).
 		Updates(s).
 		Error
@@ -379,9 +381,9 @@ func UpdateStyle(s *Style) error {
 }
 
 func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
-	t, q := new(Style), new(APIStyle)
+	q := new(APIStyle)
 	err := getDBSession().
-		Model(t).
+		Model(modelStyle).
 		Select("styles.*, u.username").
 		Joins("join users u on u.id = styles.user_id").
 		First(q, "styles.id = ?", id).
