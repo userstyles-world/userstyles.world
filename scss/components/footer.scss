@@ -4,14 +4,22 @@
     border-top: 1px solid var(--bg-4);
     background-color: var(--bg-2);
 
+    @media screen and (max-width: 960px) {
+        &-wrapper { flex-direction: column }
+        &-list:not(:last-child) { margin-bottom: 2rem }
+    }
+
     &-list {
         display: flex;
         flex-direction: column;
         padding-left: 0px;
 
-        @media screen and (min-width: 720px) {
-            &:not(:first-child) { padding-left: 4rem }
+        @media screen and (min-width: 960px) {
+            &:not(:first-child) { margin-left: 4rem }
         }
+
+        &.half { flex-basis: 50% }
+        &.quarter { flex-basis: 25% }
     }
 
     li {

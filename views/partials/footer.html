@@ -1,8 +1,11 @@
 <footer class="Footer">
     <div class="Footer-wrapper u-LayoutMaxWidth py:l flex jc:b">
-        <ul class="Footer-list mr:a">
-            <li><b class="mb:m">Information</b></li>
-            <li><span class="copyright">© {{ config "copyright" }} {{ config "appName" }}</span></li>
+        <ul class="Footer-list half mr:a">
+            <li><b class="mb:s">About</b></li>
+            <li class="about" style="max-width: 420px">
+                <span>A free and open-source, community-driven website for browsing and sharing UserCSS userstyles.</span>
+            </li>
+            <li><span class="copyright">© 2020–{{ config "copyright" }} {{ config "appName" }}</span></li>
             <li>
                 {{ if eq GitCommit "dev" }}
                     <span class="version">DevEnv</span>
@@ -14,8 +17,8 @@
             </li>
         </ul>
 
-        <ul class="Footer-list">
-            <li><b class="mb:m">Resources</b></li>
+        <ul class="Footer-list quarter">
+            <li><b class="mb:s">Resources</b></li>
             <li><a href="/docs">Documentation</a></li>
             <li><a href="/docs/faq">FAQs</a></li>
             <li><a href="/docs/changelog">Changelog</a></li>
@@ -24,10 +27,11 @@
             <li><a href="/docs/security">Security</a></li>
         </ul>
 
-        <ul class="Footer-list">
-            <li><b class="mb:m">Support</b></li>
+        <ul class="Footer-list quarter">
+            <li><b class="mb:s">Support and links</b></li>
             <li>{{ template "icons/github" }}<a href="{{ config "appSourceCode" }}">Source code</a></li>
             <li>{{ template "icons/github" }}<a href="{{ config "appSourceCode" }}/issues/new/choose">Open an issue</a></li>
+            <li>{{ template "icons/github" }}<a href="{{ config "appSourceCode" }}/projects/1">Project roadmap</a></li>
             <li>{{ template "icons/element" }} <a href="/link/matrix">Chat on Matrix</a></li>
             <li>{{ template "icons/discord" }} <a href="/link/discord">Chat on Discord</a></li>
         </ul>
