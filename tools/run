@@ -36,26 +36,41 @@ fonts() {
     [ $? = 1 ] && exit
 
     check_dir
+    
+    # Get latest release.
+    src=$(curl -s https://api.github.com/repos/rsms/inter/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)
+
+    # Get the release's version number.
+    # https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
+    #                                                 ^^^^^
+    version=$(echo "$src" | cut -d '/' -f 8 | cut -d '-' -f 1)
 
     # Check if fonts already exist.
-    ls static/fonts >/dev/null
+    ls static/fonts &>/dev/null
     if [ $? = 2 ]; then
         # Skip re-downloading archive.
-        if [ ! -e data/inter.zip ]; then
-            # Download latest release from GitHub.
-            src="https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip"
-            curl -L "$src" -o data/inter.zip
-        else
-            log "Font archive is available"
+        if [ ! -e data/inter-${version}.zip ]; then
+            log "Downloading Inter $version..."
+
+            # Download the archive with their respective version number.
+            curl -L "$src" -o data/inter-$version.zip
         fi
 
         # Extract specific variants that we use.
         fonts="Regular Bold Italic BoldItalic"
         for font in $fonts; do
-            unzip -j -d static/fonts data/inter.zip "Inter Web/Inter-${font}.*"
+            unzip -j -d static/fonts data/inter-$version.zip "Inter Web/Inter-${font}.*"
         done
     else
-        log "Fonts already exist"
+        if [ ! -e data/inter-${version}.zip ]; then
+            log "Fonts are out of date."
+            rm -f data/inter-*.zip
+            rm -rf static/fonts
+
+            fonts
+        else
+            log "Fonts are up to date."
+        fi
     fi
 }
 
