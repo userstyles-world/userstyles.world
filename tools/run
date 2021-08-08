@@ -36,36 +36,34 @@ fonts() {
     [ $? = 1 ] && exit
 
     check_dir
-    
-    # Get latest release.
-    src=$(curl -s https://api.github.com/repos/rsms/inter/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)
 
-    # Get the release's version number.
+    # Extract the latest release.
+    src="$(curl -s https://api.github.com/repos/rsms/inter/releases/latest | sed -n 's/.*browser_download_url.*"\(http.*\)"/\1/p')"
+
+    # Extract tag version from the following URL:
     # https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
-    #                                                 ^^^^^
-    version=$(echo "$src" | cut -d '/' -f 8)
+    version="$(echo "$src" | sed -n 's/.*\/\(v.*\)\/.*/\1/p')"
 
     # Check if the latest version is installed.
-    if [ ! -e data/inter-${version}.zip ]; then
-
-        # Does the fonts folder exist?
+    if [ ! -e "data/inter-${version}.zip" ]; then
+        # If fonts directory exists, remove it.
         if [ -e static/fonts ]; then
-            log "Removing old fonts"
+            log "Removing old fonts."
             rm -f data/inter-*.zip
             rm -rf static/fonts
         fi
-        
-        log "Downloading Inter $version..."
-                
-        # Download the archive with their respective version number.
-        curl -L "$src" -o data/inter-$version.zip
 
-        _fontsExtract $version
+        log "Downloading Inter $version..."
+
+        # Download the archive with their respective version number.
+        curl -L "$src" -o "data/inter-$version.zip"
+
+        _fontsExtract "$version"
     else
-        # Check if font directory does not exist.
+        # If fonts directory doesn't exist, extract fonts.
         if [ ! -e static/fonts ]; then
             log "Extracting fonts..."
-            _fontsExtract $version
+            _fontsExtract "$version"
         else
             log "Fonts are up to date."
         fi
@@ -76,7 +74,7 @@ _fontsExtract() {
     # Extract specific variants that we use.
     fonts="Regular Bold Italic BoldItalic"
     for font in $fonts; do
-        unzip -j -d static/fonts data/inter-$1.zip "Inter Web/Inter-${font}.*"
+        unzip -j -d static/fonts "data/inter-$1.zip" "Inter Web/Inter-${font}.*"
     done
 }
 
