@@ -39,8 +39,6 @@ type APIOAuth struct {
 // As gorm highly dislike slices, we have to implement, this ourself.
 type StringList []string
 
-var modelOAuth = OAuth{}
-
 func (s StringList) Value() (driver.Value, error) {
 	if len(s) == 0 {
 		return "[]", nil

@@ -18,8 +18,6 @@ type Review struct {
 	StyleID int
 }
 
-var modelReview = Review{}
-
 func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
 	err = database.Conn.
 		Debug().

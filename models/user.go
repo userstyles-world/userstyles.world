@@ -48,8 +48,6 @@ type APIUser struct {
 	Scopes      StringList
 }
 
-var modelUser = User{}
-
 // HasSocials checks if user set any social media.
 func (u User) HasSocials() bool {
 	return u.Socials.Codeberg != "" ||

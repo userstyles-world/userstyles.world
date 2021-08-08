@@ -18,8 +18,6 @@ type History struct {
 	TotalUpdates  int64
 }
 
-var modelHistory = History{}
-
 func (h History) GetStatsForStyle(id string) (q *[]History, err error) {
 	err = database.Conn.
 		Debug().

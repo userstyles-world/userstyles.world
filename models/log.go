@@ -44,8 +44,6 @@ type APILog struct {
 	TargetUserName string
 }
 
-var modelLog = Log{}
-
 // AddLog adds a new log to the database.
 func (l *Log) AddLog(logEntry *Log) (err error) {
 	err = database.Conn.

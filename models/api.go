@@ -31,7 +31,7 @@ func (s *USoStyles) Query() error {
 	stmt += "(select count(*) from stats where stats.style_id = styles.id and updated_at > ? and created_at < ?) as weekly_installs"
 
 	err := database.Conn.
-		Table("styles").
+		Model(modelStyle).
 		Select(stmt, lastWeek, lastWeek).
 		Joins("join users u on u.id = styles.user_id").
 		Find(&s, "styles.deleted_at is null").

@@ -84,8 +84,6 @@ type StyleSearch struct {
 	UserID      uint
 }
 
-var modelStyle = Style{}
-
 func (s StyleCard) Slug() string {
 	return strings.SlugifyURL(s.Name)
 }
@@ -235,7 +233,7 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 	}
 
 	err := database.Conn.
-		Select(stmt).Table("styles").Order(orderStatement).Offset(offset).
+		Select(stmt).Model(modelStyle).Order(orderStatement).Offset(offset).
 		Limit(size).Find(&nums, "styles.deleted_at is null").Error
 	if err != nil {
 		return nil, err
@@ -251,7 +249,7 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
 
 	err = database.Conn.
-		Select(stmt).Table("styles").Joins("join users u on u.id = styles.user_id").
+		Select(stmt).Model(modelStyle).Joins("join users u on u.id = styles.user_id").
 		Order(orderStatement).Find(&q, styleIDs).Error
 	if err != nil {
 		return nil, err
