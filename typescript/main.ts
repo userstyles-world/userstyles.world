@@ -42,6 +42,7 @@ function pageSpecificFunctions(settings: UserSettings) {
             saveRedirect();
             break;
         case '/account':
+        case '/api/oauth/style/link':
             checkRedirect(settings.redirect);
             break;
     }
