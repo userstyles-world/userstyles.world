@@ -12,3 +12,7 @@ data/
 .auth
 *.db
 tmp/
+
+# Overrides
+
+!static/fonts/
