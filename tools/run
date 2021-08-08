@@ -43,35 +43,41 @@ fonts() {
     # Get the release's version number.
     # https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
     #                                                 ^^^^^
-    version=$(echo "$src" | cut -d '/' -f 8 | cut -d '-' -f 1)
+    version=$(echo "$src" | cut -d '/' -f 8)
 
-    # Check if fonts already exist.
-    ls static/fonts &>/dev/null
-    if [ $? = 2 ]; then
-        # Skip re-downloading archive.
-        if [ ! -e data/inter-${version}.zip ]; then
-            log "Downloading Inter $version..."
+    # Check if the latest version is installed.
+    if [ ! -e data/inter-${version}.zip ]; then
 
-            # Download the archive with their respective version number.
-            curl -L "$src" -o data/inter-$version.zip
-        fi
-
-        # Extract specific variants that we use.
-        fonts="Regular Bold Italic BoldItalic"
-        for font in $fonts; do
-            unzip -j -d static/fonts data/inter-$version.zip "Inter Web/Inter-${font}.*"
-        done
-    else
-        if [ ! -e data/inter-${version}.zip ]; then
-            log "Fonts are out of date."
+        # Does the fonts folder exist?
+        if [ -e static/fonts ]; then
+            log "Removing old fonts"
             rm -f data/inter-*.zip
             rm -rf static/fonts
+        fi
+        
+        log "Downloading Inter $version..."
+                
+        # Download the archive with their respective version number.
+        curl -L "$src" -o data/inter-$version.zip
 
-            fonts
+        _fontsExtract $version
+    else
+        # Check if font directory does not exist.
+        if [ ! -e static/fonts ]; then
+            log "Extracting fonts..."
+            _fontsExtract $version
         else
             log "Fonts are up to date."
         fi
     fi
+}
+
+_fontsExtract() {
+    # Extract specific variants that we use.
+    fonts="Regular Bold Italic BoldItalic"
+    for font in $fonts; do
+        unzip -j -d static/fonts data/inter-$1.zip "Inter Web/Inter-${font}.*"
+    done
 }
 
 prod() {
