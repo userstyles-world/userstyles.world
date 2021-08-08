@@ -1,8 +1,8 @@
 @media screen and (min-width: 720px) {
     @font-face {
         font-family: 'Inter';
-        src: url('https://fonts.imma.link/src/inter/Inter-Regular.woff2') format('woff2'),
-             url('https://fonts.imma.link/src/inter/Inter-Regular.woff') format('woff');
+        src: url('/fonts/Inter-Regular.woff2') format('woff2'),
+             url('/fonts/Inter-Regular.woff') format('woff');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -10,8 +10,8 @@
 
     @font-face {
         font-family: 'Inter';
-        src: url('https://fonts.imma.link/src/inter/Inter-Italic.woff2') format('woff2'),
-             url('https://fonts.imma.link/src/inter/Inter-Italic.woff') format('woff');
+        src: url('/fonts/Inter-Italic.woff2') format('woff2'),
+             url('/fonts/Inter-Italic.woff') format('woff');
         font-weight: normal;
         font-style: italic;
         font-display: swap;
@@ -19,8 +19,8 @@
 
     @font-face {
         font-family: 'Inter';
-        src: url('https://fonts.imma.link/src/inter/Inter-Bold.woff2') format('woff2'),
-             url('https://fonts.imma.link/src/inter/Inter-Bold.woff') format('woff');
+        src: url('/fonts/Inter-Bold.woff2') format('woff2'),
+             url('/fonts/Inter-Bold.woff') format('woff');
         font-weight: bold;
         font-style: normal;
         font-display: swap;
@@ -28,8 +28,8 @@
 
     @font-face {
         font-family: 'Inter';
-        src: url('https://fonts.imma.link/src/inter/Inter-BoldItalic.woff2') format('woff2'),
-             url('https://fonts.imma.link/src/inter/Inter-BoldItalic.woff') format('woff');
+        src: url('/fonts/Inter-BoldItalic.woff2') format('woff2'),
+             url('/fonts/Inter-BoldItalic.woff') format('woff');
         font-weight: bold;
         font-style: italic;
         font-display: swap;
