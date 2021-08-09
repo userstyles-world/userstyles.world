@@ -33,9 +33,13 @@ func (h History) GetStatsForStyle(id string) (q *[]History, err error) {
 }
 
 func (h History) GetStatsForAllStyles() (q *[]History, err error) {
+	stmt := "sum(daily_installs) DailyInstalls, sum(daily_views) DailyViews, sum(daily_updates) DailyUpdates, "
+	stmt += "sum(total_installs) TotalInstalls, sum(total_views) TotalViews, created_at"
+
 	err = database.Conn.
 		Debug().
-		Model(modelHistory).
+		Select(stmt).
+		Group("date(histories.created_at)").
 		Find(&q).
 		Error
 	if err != nil {
