@@ -54,7 +54,7 @@ var (
 	AppUptime       = time.Now()
 
 	AppLinkChatDiscord = "https://discord.gg/P5zra4nFS2"
-	AppLinkChatMatrix  = "https://matrix.to/#/!mewOpQBfQfwHLEvVbZ:matrix.org"
+	AppLinkChatMatrix  = "https://matrix.to/#/#userstyles:matrix.org"
 	AppLinkSource      = "https://github.com/userstyles-world/userstyles.world"
 )
 
