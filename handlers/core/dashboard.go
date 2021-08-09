@@ -150,8 +150,8 @@ func Dashboard(c *fiber.Ctx) error {
 			})
 		}
 
-		sort.Slice(styles, func(i, j int) bool {
-			return styles[i].ID > styles[j].ID
+		sort.Slice(s, func(i, j int) bool {
+			return s[i].ID > s[j].ID
 		})
 
 		styles = s
@@ -168,8 +168,8 @@ func Dashboard(c *fiber.Ctx) error {
 			})
 		}
 
-		sort.Slice(users, func(i, j int) bool {
-			return users[i].ID > users[j].ID
+		sort.Slice(u, func(i, j int) bool {
+			return u[i].ID > u[j].ID
 		})
 
 		users = u
