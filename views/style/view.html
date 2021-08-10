@@ -98,7 +98,7 @@
         </div>
 
         <div class="details">
-            <h2 class="my:0 td:d">Details</h2>
+            <h2 class="td:d">Details</h2>
             <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
             <p><span class="minw">License</span>{{ .Style.License }}</p>
             <p><span class="minw">Created at</span>{{ .Style.CreatedAt | Date }}</p>
@@ -106,6 +106,7 @@
             <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
             <div class="stats mt:m">
                 <h2 class="td:d">Statistics</h2>
+                <p class="mb:s">Learn how we calculate statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
                 <p class="total-views"><span class="minw">Total views</span>{{ .TotalViews }}</p>
                 <p class="total-installs"><span class="minw">Total installs</span>{{ .TotalInstalls }}</p>
                 <p class="weekly-installs"><span class="minw">Weekly installs</span>{{ .WeeklyInstalls }}</p>
@@ -131,7 +132,7 @@
 
         <section class="history">
             <h2 class="td:d">History</h2>
-            <p>Learn more about style statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
+            <p>Daily snapshots of <a href="/docs/faq#how-do-view-install-update-statistics-work">style statistics</a>.</p>
             {{ if not (or .DailyHistory .TotalHistory) }}
                 <i>No style history. Come back in a couple of days.</i>
             {{ end }}

@@ -1,15 +1,17 @@
 # FAQ
 
+Last updated August 10, 2021
+
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
 
 - [General](#general)
     - [What is monetization strategy?](#what-is-monetization-strategy)
-    - [Why isn't [insert here] implemented?](#why-isnt-insert-here-implemented)
+    - [Why isn't \[insert here\] implemented?](#why-isn-t-insert-here-implemented)
     - [How can I contact the admins?](#how-can-i-contact-the-admins)
 - [Userstyles](#userstyles)
     - [Why are `@updateURL` fields overriden?](#why-are-updateurl-fields-overriden)
-    - [How do view/install/update statistics work?](#how-do-viewinstallupdate-statistics-work)
+    - [How do view/install/update statistics work?](#how-do-view-install-update-statistics-work)
     - [How do I remove the `Get Stylus` button?](#how-do-i-remove-the-get-stylus-button)
     - [Why is mirroring source code updates not working?](#why-is-mirroring-source-code-updates-not-working)
     - [Why is there no support for traditional userstyles?](#why-is-there-no-support-for-traditional-userstyles)
@@ -71,9 +73,9 @@ As of July 2021, statistics work like so:
 - Update counter is calculated based on install statistics and when it was
   created/updated in database.
 
-And because of that it can happen, a style have more installations than views,
-because you don't necessary need to visit a style to have it being installed,
-e.g. third-party applications directly installing the style.
+That's the reason why some styles have more installs than views. You don't
+necessary need to visit a style page to have it installed, e.g. third-party
+applications can directly install any style.
 
 
 ### How do I remove the `Get Stylus` button?
