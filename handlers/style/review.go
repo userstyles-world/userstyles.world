@@ -18,13 +18,10 @@ func ReviewGet(c *fiber.Ctx) error {
 
 	// Prevent spam.
 	reviewSpam := new(models.Review)
-	if err := reviewSpam.FindLastFromUser(id, u.ID); err != nil {
-		log.Info.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
-	}
-
-	if reviewSpam.ID > 0 {
-		now := time.Now().Add(-24 * 7 * time.Hour)
-		if now.Before(reviewSpam.CreatedAt) {
+	if reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
+		log.Info.Printf("User %d tried to review style %v more than once.\n", u.ID, id)
+		week := time.Now().Add(-7 * 24 * time.Hour)
+		if reviewSpam.CreatedAt.After(week) {
 			c.Status(fiber.StatusUnauthorized)
 			return c.Render("err", fiber.Map{
 				"Title": "You can post only one review per week",
@@ -64,13 +61,10 @@ func ReviewPost(c *fiber.Ctx) error {
 
 	// Prevent spam.
 	reviewSpam := new(models.Review)
-	if err := reviewSpam.FindLastFromUser(id, u.ID); err != nil {
-		log.Info.Printf("Failed to find last review for style %v and user %v\n", id, u.ID)
-	}
-
-	if reviewSpam.ID > 0 {
-		now := time.Now().Add(-7 * 24 * time.Hour)
-		if now.Before(reviewSpam.CreatedAt) {
+	if reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
+		log.Warn.Printf("User %d tried to review style %v more than once.\n", u.ID, id)
+		week := time.Now().Add(-7 * 24 * time.Hour)
+		if reviewSpam.CreatedAt.After(week) {
 			c.Status(fiber.StatusUnauthorized)
 			return c.Render("err", fiber.Map{
 				"Title": "You can post only one review per week",
@@ -129,7 +123,7 @@ func ReviewPost(c *fiber.Ctx) error {
 	}
 
 	if err = review.FindLastForStyle(id, u.ID); err != nil {
-		log.Warn.Printf("Failed to find review for style %v: %v\n", id, err)
+		log.Warn.Printf("Failed to get review for style %v from user %v: %v\n", id, u.ID, err)
 	} else {
 		// Create a notification.
 		notification := models.Notification{
@@ -143,7 +137,7 @@ func ReviewPost(c *fiber.Ctx) error {
 
 		go func(notification models.Notification) {
 			if err := notification.Create(); err != nil {
-				log.Warn.Printf("Failed to create a notification for %d: %v\n", id, err)
+				log.Warn.Printf("Failed to create a notification for review %d: %v\n", review.ID, err)
 			}
 		}(notification)
 	}
