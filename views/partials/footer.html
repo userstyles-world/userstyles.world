@@ -11,7 +11,7 @@
                     <span class="version">DevEnv</span>
                 {{ else }}
                     <a class="version" href="{{ config "appLatestCommit" }}">
-                        {{- printf "%s (%.8s)" (config "appVersion") GitCommit -}}
+                        {{- printf "%s (%s)" (config "appVersion") (config "appCodeName") -}}
                     </a>
                 {{ end }}
             </li>

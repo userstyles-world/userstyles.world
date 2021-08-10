@@ -49,6 +49,7 @@ var (
 	}
 
 	AppName         = "UserStyles.world"
+	AppCodeName     = "TBD"
 	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
 	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
 	AppUptime       = time.Now()
