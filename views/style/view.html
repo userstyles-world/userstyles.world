@@ -83,14 +83,17 @@
                     href="https://github.com/openstyles/stylus/#readme"
                     id="stylus" class="btn icon stylus ml:s"
                 >{{ template "icons/brush" 16 }} Get Stylus</a>
-            {{ if .User.ID }}
-                <a 
-                    target="_blank"
-                    rel="noopener"
-                    href="/styles/review/{{ $.Style.ID }}"
-                    style="display: none"
-                    id="write-review" class="btn icon write-review ml:s">Write a review</a>
-            {{ end }}
+                <a
+                    id="write-review" class="btn icon write-review ml:s"
+                    {{ if not .User.ID }}
+                        disabled
+                        tooltip-data="An account is required in order to review userstyles."
+                    {{ else }}
+                        target="_blank"
+                        rel="noopener"
+                        href="/styles/review/{{ $.Style.ID }}"
+                    {{ end }}
+                >Write a review</a>
             </span>
         </div>
 

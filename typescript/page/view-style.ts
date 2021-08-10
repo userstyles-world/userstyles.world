@@ -35,10 +35,6 @@ function checkIfStyleInstalled() {
         if ('usw-style-info-response' === type && 'installed' === data.requestType) {
             window.removeEventListener('message', onMessage);
             if (data.installed) {
-                const writeReviewButton: HTMLAnchorElement = document.querySelector('#write-review');
-                if (writeReviewButton) {
-                    writeReviewButton.style.display = '';
-                }
                 const installButton: HTMLAnchorElement = document.querySelector('#install');
                 if (installButton) {
                     // Need to user innerHTML to preserve the icon.
