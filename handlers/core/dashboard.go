@@ -23,16 +23,16 @@ var system struct {
 	MemAllocated string
 	MemTotal     string
 	MemSys       string
-	Lookups      uint64
-	MemMallocs   uint64
-	MemFrees     uint64
+	Lookups      string
+	MemMallocs   string
+	MemFrees     string
 
 	HeapAlloc    string
 	HeapSys      string
 	HeapInuse    string
 	HeapIdle     string
 	HeapReleased string
-	HeapObjects  uint64
+	HeapObjects  string
 
 	StackInuse  string
 	StackSys    string
@@ -48,7 +48,7 @@ var system struct {
 	LastGC       string
 	PauseTotalNs string
 	PauseNs      string
-	NumGC        uint32
+	NumGC        string
 }
 
 func getSystemStatus() {
@@ -61,16 +61,16 @@ func getSystemStatus() {
 	system.MemAllocated = humanize.Bytes(m.Alloc)
 	system.MemTotal = humanize.Bytes(m.TotalAlloc)
 	system.MemSys = humanize.Bytes(m.Sys)
-	system.Lookups = m.Lookups
-	system.MemMallocs = m.Mallocs
-	system.MemFrees = m.Frees
+	system.Lookups = humanize.Comma(int64(m.Lookups))
+	system.MemMallocs = humanize.Comma(int64(m.Mallocs))
+	system.MemFrees = humanize.Comma(int64(m.Frees))
 
 	system.HeapAlloc = humanize.Bytes(m.HeapAlloc)
 	system.HeapSys = humanize.Bytes(m.HeapSys)
 	system.HeapInuse = humanize.Bytes(m.HeapInuse)
 	system.HeapIdle = humanize.Bytes(m.HeapIdle)
 	system.HeapReleased = humanize.Bytes(m.HeapReleased)
-	system.HeapObjects = m.HeapObjects
+	system.HeapObjects = humanize.Comma(int64(m.HeapObjects))
 
 	system.StackInuse = humanize.Bytes(m.StackInuse)
 	system.StackSys = humanize.Bytes(m.StackSys)
@@ -87,7 +87,7 @@ func getSystemStatus() {
 	system.LastGC = fmt.Sprintf("%.1fs", float64(time.Now().UnixNano()-int64(m.LastGC))/1000/1000/1000)
 	system.PauseTotalNs = fmt.Sprintf("%.1fs", float64(m.PauseTotalNs)/1000/1000/1000)
 	system.PauseNs = fmt.Sprintf("%.3fs", float64(m.PauseNs[(m.NumGC+255)%256])/1000/1000/1000)
-	system.NumGC = m.NumGC
+	system.NumGC = humanize.Comma(int64(m.NumGC))
 }
 
 func Dashboard(c *fiber.Ctx) error {

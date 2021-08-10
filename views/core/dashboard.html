@@ -13,7 +13,7 @@
             text-align: left;
             background-color: var(--bg-2);
         }
-        table tr > * { padding: 0.5rem }
+        table tr > * { padding: 0.5rem; font-feature-settings: 'tnum' 1 }
         tbody tr:nth-child(2n-1) { background-color: var(--bg-3) }
         .overview > p { font-size: 1.5rem }
         .overview > p > span { font-size: 1rem }
@@ -28,10 +28,16 @@
     <section class="overview">
         <h2 class="td:d">Overview</h2>
         {{ with .LatestStyle }}
-            <p>{{ $.TotalStyles }} total styles <span>({{ .Count }} today)</span></p>
+            <p>
+                {{ $.TotalStyles }} total styles
+                <span><a href="/dashboard?data=users">({{ .Count }} today)</a></span>
+            </p>
         {{ end }}
         {{ with .LatestUser }}
-            <p>{{ $.TotalUsers }} total users <span>({{ .Count }} today)</span></p>
+            <p>
+                {{ $.TotalUsers }} total users
+                <span><a href="/dashboard?data=styles">({{ .Count }} today)</a></span>
+            </p>
         {{ end }}
         {{ with .System }}
             <table>
@@ -117,8 +123,8 @@
                     {{ range .Users }}
                         <tr>
                             <td>{{ .ID }}</td>
-                            <td>{{ .CreatedAt | Date }}</td>
-                            <td>{{ .UpdatedAt | Date }}</td>
+                            <td>{{ .CreatedAt | ymdhmsDate }}</td>
+                            <td>{{ .UpdatedAt | ymdhmsDate }}</td>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .DisplayName }}</td>
                             {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}
