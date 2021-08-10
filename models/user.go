@@ -5,7 +5,6 @@ import (
 
 	"gorm.io/gorm"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
 
@@ -88,7 +87,7 @@ func (u APIUser) IsModOrAdmin() bool {
 }
 
 func FindAllUsers() (u []User, err error) {
-	if err = database.Conn.Debug().Find(&u).Error; err != nil {
+	if err = db().Find(&u).Error; err != nil {
 		return nil, err
 	}
 
@@ -98,7 +97,7 @@ func FindAllUsers() (u []User, err error) {
 func FindUserByEmail(email string) (*User, error) {
 	user := new(User)
 
-	if res := database.Conn.Where("email = ?", email).First(&user); res.Error != nil {
+	if res := db().Where("email = ?", email).First(&user); res.Error != nil {
 		return nil, res.Error
 	}
 
@@ -112,7 +111,7 @@ func FindUserByEmail(email string) (*User, error) {
 func FindUserByName(name string) (*User, error) {
 	user := new(User)
 
-	err := getDBSession().
+	err := db().
 		Where("username = ?", strings.ToLower(name)).
 		First(&user).
 		Error
@@ -130,7 +129,7 @@ func FindUserByName(name string) (*User, error) {
 func FindUserByNameOrEmail(name, email string) (*User, error) {
 	user := new(User)
 
-	err := getDBSession().
+	err := db().
 		Where("username = ? or email = ?", strings.ToLower(name), email).
 		First(&user).
 		Error
@@ -148,7 +147,7 @@ func FindUserByNameOrEmail(name, email string) (*User, error) {
 func FindUserByID(id string) (*User, error) {
 	user := new(User)
 
-	err := getDBSession().
+	err := db().
 		Model(modelUser).
 		Where("id = ?", id).
 		First(&user).
@@ -165,7 +164,7 @@ func FindUserByID(id string) (*User, error) {
 }
 
 func UpdateUser(u *User) error {
-	err := getDBSession().
+	err := db().
 		Debug().
 		Model(modelUser).
 		Where("id", u.ID).
@@ -179,5 +178,5 @@ func UpdateUser(u *User) error {
 }
 
 func (u *User) DeleteWhereID(id interface{}) error {
-	return database.Conn.Delete(&User{}, "id = ?", id).Error
+	return db().Delete(&User{}, "id = ?", id).Error
 }

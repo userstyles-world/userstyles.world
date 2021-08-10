@@ -3,7 +3,6 @@ package models
 import (
 	"gorm.io/gorm"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
 
@@ -19,8 +18,7 @@ type History struct {
 }
 
 func (h History) GetStatsForStyle(id string) (q *[]History, err error) {
-	err = database.Conn.
-		Debug().
+	err = db().
 		Model(modelHistory).
 		Where("style_id = ?", id).
 		Find(&q).
@@ -36,8 +34,7 @@ func (h History) GetStatsForAllStyles() (q *[]History, err error) {
 	stmt := "sum(daily_installs) DailyInstalls, sum(daily_views) DailyViews, sum(daily_updates) DailyUpdates, "
 	stmt += "sum(total_installs) TotalInstalls, sum(total_views) TotalViews, created_at"
 
-	err = database.Conn.
-		Debug().
+	err = db().
 		Select(stmt).
 		Group("date(histories.created_at)").
 		Find(&q).

@@ -5,7 +5,6 @@ import (
 
 	"gorm.io/gorm"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
 
@@ -46,8 +45,7 @@ type APILog struct {
 
 // AddLog adds a new log to the database.
 func (l *Log) AddLog(logEntry *Log) (err error) {
-	err = database.Conn.
-		Debug().
+	err = db().
 		Model(modelLog).
 		Create(logEntry).
 		Error
@@ -60,8 +58,7 @@ func (l *Log) AddLog(logEntry *Log) (err error) {
 // GetLogOfKind returns all the logs of the specified kind and
 // select the correct user Author.
 func GetLogOfKind(kind LogKind) (q *[]APILog, err error) {
-	err = database.Conn.
-		Debug().
+	err = db().
 		Model(modelLog).
 		Select("logs.*, u.username").
 		Joins("join users u on u.id = logs.user_id").

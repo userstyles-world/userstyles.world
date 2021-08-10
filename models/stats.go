@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils/crypto"
 )
@@ -40,8 +39,9 @@ func (_ DashStats) GetCounts(t string) (q []DashStats, err error) {
 	stmt := "created_at, date(created_at) Date, count(distinct id) Count,"
 	stmt += "sum(count (distinct id)) over (order by date(created_at)) CountSum"
 
-	err = database.Conn.Debug().
-		Select(stmt).Table(t).Group("Date").Find(&q, "deleted_at is null").Error
+	err = db().
+		Select(stmt).Table(t).Group("Date").
+		Find(&q, "deleted_at is null").Error
 
 	if err != nil {
 		return nil, err
@@ -77,8 +77,7 @@ func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
 		assignment["view"] = t
 	}
 
-	err = database.Conn.
-		Debug().
+	err = db().
 		Model(modelStats).
 		Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "hash"}},
@@ -96,7 +95,7 @@ func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
 func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
 	q := "style_id = ? and install > 0 and created_at > ?"
-	database.Conn.
+	db().
 		Model(modelStats).
 		Where(q, id, lastWeek).
 		Count(&weekly)
@@ -105,7 +104,7 @@ func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 }
 
 func GetTotalInstallsForStyle(id string) (total int64) {
-	database.Conn.
+	db().
 		Model(modelStats).
 		Where("style_id = ? and install > 0", id).
 		Count(&total)
@@ -114,7 +113,7 @@ func GetTotalInstallsForStyle(id string) (total int64) {
 }
 
 func GetTotalViewsForStyle(id string) (total int64) {
-	database.Conn.
+	db().
 		Model(modelStats).
 		Where("style_id = ? and view > 0", id).
 		Count(&total)
@@ -125,7 +124,7 @@ func GetTotalViewsForStyle(id string) (total int64) {
 func GetWeeklyUpdatesForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
 	q := "style_id = ? and install > 0 and updated_at > ? and created_at < ?"
-	database.Conn.
+	db().
 		Model(modelStats).
 		Where(q, id, lastWeek, lastWeek).
 		Count(&weekly)
@@ -156,7 +155,7 @@ SELECT
 	// TODO: Replace last day with last week when we get enough data.
 	lastDay := time.Now().AddDate(0, 0, -1)
 
-	if err := database.Conn.Raw(q, sql.Named("d", lastDay)).Scan(&p).Error; err != nil {
+	if err := db().Raw(q, sql.Named("d", lastDay)).Scan(&p).Error; err != nil {
 		log.Warn.Println("Failed to get homepage stats:", err.Error())
 	}
 

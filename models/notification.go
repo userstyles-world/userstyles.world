@@ -2,8 +2,6 @@ package models
 
 import (
 	"gorm.io/gorm"
-
-	"userstyles.world/modules/database"
 )
 
 type Kind int
@@ -30,5 +28,5 @@ type Notification struct {
 }
 
 func (n Notification) Create() error {
-	return database.Conn.Debug().Create(&n).Error
+	return db().Create(&n).Error
 }

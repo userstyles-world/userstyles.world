@@ -3,7 +3,6 @@ package models
 import (
 	"time"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
 
@@ -30,7 +29,7 @@ func (s *USoStyles) Query() error {
 	stmt += "(select count(*) from stats where stats.style_id = styles.id) as total_installs, "
 	stmt += "(select count(*) from stats where stats.style_id = styles.id and updated_at > ? and created_at < ?) as weekly_installs"
 
-	err := database.Conn.
+	err := db().
 		Model(modelStyle).
 		Select(stmt, lastWeek, lastWeek).
 		Joins("join users u on u.id = styles.user_id").

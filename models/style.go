@@ -5,10 +5,7 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 
-	"userstyles.world/modules/config"
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 	"userstyles.world/utils/strings"
 )
@@ -105,24 +102,6 @@ func (s APIStyle) TruncateCode() bool {
 	return len(s.Code) > 100_000
 }
 
-func getDBSession() (tx *gorm.DB) {
-	var logLevel logger.LogLevel
-	switch config.DBDebug {
-	case "error":
-		logLevel = logger.Error
-	case "warn":
-		logLevel = logger.Warn
-	case "info":
-		logLevel = logger.Info
-	default:
-		logLevel = logger.Silent
-	}
-
-	return database.Conn.Session(&gorm.Session{
-		Logger: database.Conn.Logger.LogMode(logLevel),
-	})
-}
-
 func GetAllStyles() ([]StyleSearch, error) {
 	q := new([]StyleSearch)
 
@@ -140,7 +119,7 @@ where
 	styles.deleted_at is null
 `
 
-	if err := getDBSession().Raw(stmt).Find(q).Error; err != nil {
+	if err := db().Raw(stmt).Find(q).Error; err != nil {
 		return nil, err
 	}
 
@@ -163,7 +142,7 @@ join
 where
 	styles.deleted_at is null and styles.id = ?
 `
-	if err := getDBSession().Raw(stmt, id).First(q).Error; err != nil {
+	if err := db().Raw(stmt, id).First(q).Error; err != nil {
 		return *q, err
 	}
 
@@ -172,7 +151,7 @@ where
 
 func GetAllStyleIDs() ([]APIStyle, error) {
 	q := new([]APIStyle)
-	err := getDBSession().
+	err := db().
 		Model(modelStyle).
 		Select("styles.id").
 		Find(q).
@@ -192,7 +171,7 @@ func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
 	s += "styles.original, styles.category, styles.preview, styles.user_id, "
 	s += "styles.homepage, styles.mirror_url, u.username, u.display_name"
 
-	err := getDBSession().
+	err := db().
 		Model(modelStyle).
 		Select(s).
 		Joins("join users u on u.id = styles.user_id").
@@ -206,7 +185,7 @@ func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
 }
 
 func GetStyleCount() (i int64, err error) {
-	if err := database.Conn.Select("count(id)").Model(modelStyle).Count(&i).Error; err != nil {
+	if err := db().Select("count(id)").Model(modelStyle).Count(&i).Error; err != nil {
 		return 0, err
 	}
 
@@ -232,7 +211,7 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 		stmt += "styles.id, (select count(*) from stats s where s.install > 0 and s.style_id = styles.id) installs"
 	}
 
-	err := database.Conn.
+	err := db().
 		Select(stmt).Model(modelStyle).Order(orderStatement).Offset(offset).
 		Limit(size).Find(&nums, "styles.deleted_at is null").Error
 	if err != nil {
@@ -248,7 +227,7 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.install > 0) installs, "
 	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
 
-	err = database.Conn.
+	err = db().
 		Select(stmt).Model(modelStyle).Joins("join users u on u.id = styles.user_id").
 		Order(orderStatement).Find(&q, styleIDs).Error
 	if err != nil {
@@ -273,7 +252,7 @@ where
 	styles.deleted_at is null
 `
 
-	if err := getDBSession().Raw(stmt).Find(q).Error; err != nil {
+	if err := db().Raw(stmt).Find(q).Error; err != nil {
 		return nil, err
 	}
 
@@ -295,7 +274,7 @@ where
 	styles.deleted_at is null and styles.featured = 1
 `
 
-	if err := getDBSession().Raw(stmt).Find(q).Error; err != nil {
+	if err := db().Raw(stmt).Find(q).Error; err != nil {
 		return nil, err
 	}
 
@@ -304,7 +283,7 @@ where
 
 func GetImportedStyles() ([]Style, error) {
 	q := new([]Style)
-	err := getDBSession().
+	err := db().
 		Model(modelStyle).
 		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
 		Error
@@ -318,7 +297,7 @@ func GetImportedStyles() ([]Style, error) {
 // GetStyleByID note: Using ID as a string is fine in this case.
 func GetStyleByID(id string) (*APIStyle, error) {
 	q := new(APIStyle)
-	err := getDBSession().
+	err := db().
 		Model(modelStyle).
 		Select("styles.*,  u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -347,7 +326,7 @@ where
 	styles.deleted_at is null and u.username = ?
 `
 
-	if err := getDBSession().Raw(stmt, username).Find(q).Error; err != nil {
+	if err := db().Raw(stmt, username).Find(q).Error; err != nil {
 		return nil, err
 	}
 
@@ -355,10 +334,7 @@ where
 }
 
 func CreateStyle(s *Style) (*Style, error) {
-	err := getDBSession().
-		Create(&s).
-		Error
-	if err != nil {
+	if err := db().Create(&s).Error; err != nil {
 		return s, err
 	}
 
@@ -366,7 +342,7 @@ func CreateStyle(s *Style) (*Style, error) {
 }
 
 func UpdateStyle(s *Style) error {
-	err := getDBSession().
+	err := db().
 		Model(modelStyle).
 		Where("id", s.ID).
 		Updates(s).
@@ -380,7 +356,7 @@ func UpdateStyle(s *Style) error {
 
 func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
 	q := new(APIStyle)
-	err := getDBSession().
+	err := db().
 		Model(modelStyle).
 		Select("styles.*, u.username").
 		Joins("join users u on u.id = styles.user_id").
@@ -395,11 +371,8 @@ func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
 
 func CheckDuplicateStyle(s *Style) error {
 	q := "styles.name = ? and styles.user_id = ? and styles.code = ?"
-	err := getDBSession().
-		First(s, q, s.Name, s.UserID, s.Code).
-		Error
 
-	if err == nil {
+	if err := db().First(s, q, s.Name, s.UserID, s.Code).Error; err != nil {
 		return errors.ErrDuplicateStyle
 	}
 
@@ -407,5 +380,5 @@ func CheckDuplicateStyle(s *Style) error {
 }
 
 func (s *Style) BanWhereUserID(id interface{}) error {
-	return database.Conn.Delete(&Style{}, "user_id = ?", id).Error
+	return db().Delete(&Style{}, "user_id = ?", id).Error
 }

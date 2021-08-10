@@ -2,8 +2,6 @@ package models
 
 import (
 	"gorm.io/gorm"
-
-	"userstyles.world/modules/database"
 )
 
 type Review struct {
@@ -19,8 +17,7 @@ type Review struct {
 }
 
 func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
-	err = database.Conn.
-		Debug().
+	err = db().
 		// Preload(clause.Associations).
 		Preload("User").
 		Model(modelReview).
@@ -36,17 +33,15 @@ func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
 }
 
 func (r Review) CreateForStyle() error {
-	return database.Conn.Debug().Create(&r).Error
+	return db().Create(&r).Error
 }
 
 func (r *Review) FindLastForStyle(styleID, userID interface{}) error {
-	return database.Conn.Debug().
-		Last(&r, "style_id = ? and user_id = ?", styleID, userID).Error
+	return db().Last(&r, "style_id = ? and user_id = ?", styleID, userID).Error
 }
 
 func (r *Review) FindLastFromUser(styleID, userID interface{}) error {
-	return database.Conn.
-		Debug().
+	return db().
 		Preload("User").
 		Model(modelReview).
 		Order("id DESC").

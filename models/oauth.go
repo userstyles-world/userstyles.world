@@ -70,7 +70,7 @@ func (OAuth) TableName() string {
 
 func ListOAuthsOfUser(username string) (*[]APIOAuth, error) {
 	q := new([]APIOAuth)
-	err := getDBSession().
+	err := db().
 		Model(modelOAuth).
 		Select("oauths.id, oauths.name, u.username").
 		Joins("join users u on u.id = oauths.user_id").
@@ -86,8 +86,7 @@ func ListOAuthsOfUser(username string) (*[]APIOAuth, error) {
 // GetOAuthByID note: Using ID as a string is fine in this case.
 func GetOAuthByID(id string) (*APIOAuth, error) {
 	q := new(APIOAuth)
-	err := getDBSession().
-		Debug().
+	err := db().
 		Model(modelOAuth).
 		Select("oauths.*,  u.username").
 		Joins("join users u on u.id = oauths.user_id").
@@ -104,8 +103,7 @@ func GetOAuthByID(id string) (*APIOAuth, error) {
 // GetOAuthByClientID note: Using ID as a string is fine in this case.
 func GetOAuthByClientID(clientID string) (*APIOAuth, error) {
 	q := new(APIOAuth)
-	err := getDBSession().
-		Debug().
+	err := db().
 		Model(modelOAuth).
 		Select("oauths.*,  u.username").
 		Joins("join users u on u.id = oauths.user_id").
@@ -120,11 +118,7 @@ func GetOAuthByClientID(clientID string) (*APIOAuth, error) {
 }
 
 func CreateOAuth(o *OAuth) (*OAuth, error) {
-	err := getDBSession().
-		Debug().
-		Create(&o).
-		Error
-	if err != nil {
+	if err := db().Create(&o).Error; err != nil {
 		return o, err
 	}
 
@@ -132,8 +126,7 @@ func CreateOAuth(o *OAuth) (*OAuth, error) {
 }
 
 func UpdateOAuth(o *OAuth, id string) error {
-	err := getDBSession().
-		Debug().
+	err := db().
 		Model(modelOAuth).
 		Where("id = ?", id).
 		Updates(o).
