@@ -370,9 +370,9 @@ func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
 }
 
 func CheckDuplicateStyle(s *Style) error {
-	q := "styles.name = ? and styles.user_id = ? and styles.code = ?"
+	q := "styles.name = ? and styles.user_id = ?"
 
-	if err := db().First(s, q, s.Name, s.UserID, s.Code).Error; err != nil {
+	if err := db().First(s, q, s.Name, s.UserID).Error; err == nil {
 		return errors.ErrDuplicateStyle
 	}
 
