@@ -136,6 +136,19 @@ func BanPost(c *fiber.Ctx) error {
 	}
 
 	go func(baseURL string, style *models.APIStyle, modLogID uint) {
+		// Add notification to database.
+		notification := models.Notification{
+			Seen:     false,
+			Kind:     models.KindBannedStyle,
+			TargetID: int(modLogID),
+			UserID:   int(u.ID),
+			StyleID:  int(s.ID),
+		}
+
+		if err := notification.Create(); err != nil {
+			log.Warn.Printf("Failed to create a notification for ban removal %d: %v\n", style.ID, err)
+		}
+
 		// Delete from search index.
 		if err = search.DeleteStyle(style.ID); err != nil {
 			log.Warn.Printf("Failed to delete style %d: %s", style.ID, err.Error())
