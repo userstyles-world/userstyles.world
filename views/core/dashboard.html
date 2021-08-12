@@ -30,13 +30,13 @@
         {{ with .LatestStyle }}
             <p>
                 {{ $.TotalStyles }} total styles
-                <span><a href="/dashboard?data=users">({{ .Count }} today)</a></span>
+                <span><a href="/dashboard?data=styles">({{ .Count }} today)</a></span>
             </p>
         {{ end }}
         {{ with .LatestUser }}
             <p>
                 {{ $.TotalUsers }} total users
-                <span><a href="/dashboard?data=styles">({{ .Count }} today)</a></span>
+                <span><a href="/dashboard?data=users">({{ .Count }} today)</a></span>
             </p>
         {{ end }}
         {{ with .System }}
