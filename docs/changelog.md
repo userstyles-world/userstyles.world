@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. See [standa
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
 
+- [v1.6.1](#1-6-1-https-github-com-userstyles-world-userstyles-world-compare-v1-6-0-v1-6-1-2021-08-12)
 - [v1.6.0](#1-6-0-https-github-com-userstyles-world-userstyles-world-compare-v1-5-0-v1-6-0-2021-08-11)
 - [v1.5.0](#1-5-0-https-github-com-userstyles-world-userstyles-world-compare-v1-4-0-v1-5-0-2021-07-18)
 - [v1.4.0](#1-4-0-https-github-com-userstyles-world-userstyles-world-compare-v1-3-0-v1-4-0-2021-07-12)
@@ -15,6 +16,14 @@ All notable changes to this project will be documented in this file. See [standa
 - [v1.0.0](#1-0-0-https-github-com-userstyles-world-userstyles-world-compare-fef3eb9-v1-0-0-2021-05-16)
 
 <!-- markdown-toc end -->
+
+## [1.6.1](https://github.com/userstyles-world/userstyles.world/compare/v1.6.0...v1.6.1) (2021-08-12)
+
+
+### Bug Fixes
+
+
+* **db:** revert duplicate style conditional ([02a8101](https://github.com/userstyles-world/userstyles.world/commit/02a81019643a1d309c2e46be69baddc2b8c42a10))
 
 ## [1.6.0](https://github.com/userstyles-world/userstyles.world/compare/v1.5.0...v1.6.0) (2021-08-11)
 
