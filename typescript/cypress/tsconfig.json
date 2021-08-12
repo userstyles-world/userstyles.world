@@ -1,0 +1,14 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "isolatedModules": false,
+        "types": [
+            "cypress"
+        ]
+    },
+    // Override the behavior to exclude cypress.ts files
+    "exclude": [],
+    "include": [
+        "**/*.ts",
+    ]
+}

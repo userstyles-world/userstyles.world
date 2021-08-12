@@ -120,6 +120,20 @@ drop() {
         air -c tools/air.toml
 }
 
+seed_test_data() {
+    log "seed_test_data"
+    check_cmd air
+    build
+    export_secrets
+    env DB_DROP="1" \
+        DB_COLOR="true" \
+        DB_DEBUG="silent" \
+        DB_DROP="true" \
+        EXIT_AFTER_SEED="true" \
+        ./userstyles.world
+
+}
+
 dev() {
     log "dev"
     check_cmd air
@@ -161,6 +175,7 @@ ts() {
 }
 
 case "$1" in
+    testdata) seed_test_data ;;
     build) build "$@" ;;
     fonts) fonts "$@" ;;
     dev)  dev    "$@" ;;

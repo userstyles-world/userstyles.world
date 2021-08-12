@@ -13,9 +13,10 @@
         "downlevelIteration": true,
         "noEmit": true,
         "incremental": true,
-        "isolatedModules": true
+        "isolatedModules": true,
     },
     "exclude": [
-        "node_modules"
-    ]
+        "node_modules",
+        "cypress",
+    ],
 }

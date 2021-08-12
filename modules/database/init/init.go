@@ -83,6 +83,10 @@ func Initialize() {
 	if shouldSeed {
 		seed()
 	}
+
+	if config.ShouldExitAfterSeed {
+		os.Exit(0)
+	}
 }
 
 func generateData(amount int) ([]models.Style, []models.User) {

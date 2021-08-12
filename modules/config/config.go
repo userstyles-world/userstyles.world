@@ -39,6 +39,7 @@ var (
 	CodebergClientSecret = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
 	PerformanceMonitor   = getEnv("PERFORMANCE_MONITOR", "false") == "true"
 	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
+	ShouldExitAfterSeed  = getEnv("EXIT_AFTER_SEED", "false") == "true"
 
 	// Production is used for various "feature flags".
 	Production = DB != "dev.db"
