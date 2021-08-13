@@ -184,9 +184,13 @@ label[for="remember"] {
 .share {
     flex-flow: row wrap;
     #share {
-        min-width: 300px;
+        min-width: 100px;
+        max-width: 300px;
         border-color: var(--bg-3);
         box-shadow: none;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     @media screen and (max-width: 560px) {
         > span {
@@ -199,11 +203,14 @@ label[for="remember"] {
 @media screen and (max-width: 1250px) {
     .header {
         flex-flow: row wrap;
-        > .share { width: 100% }
+        > .share {
+            width: 100%;
+            #share { max-width: unset }
+        }
         > .actions {
             margin: 1rem 0 0;
             flex-flow: row wrap;
-            .btn {
+            > .btn {
                 margin-bottom: 0.5rem;
                 &:first-child { margin-left: 0 }
             }
