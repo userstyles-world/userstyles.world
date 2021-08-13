@@ -18,7 +18,7 @@
             <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
             <input
                 type="text" name="preview"
-                pattern="^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw)\.githubusercontent\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)$"
+                pattern="{{ config "allowedImagesRe" }}"
                 placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
             <label for="category">Category</label>

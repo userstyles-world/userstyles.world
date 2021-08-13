@@ -24,6 +24,7 @@ var appConfig = map[string]interface{}{
 	"appVersion":      config.GitVersion,
 	"appSourceCode":   config.AppSourceCode,
 	"appLatestCommit": config.AppLatestCommit,
+	"allowedImagesRe": `^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw)\.githubusercontent\.com|github\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)$`,
 }
 
 func New() *html.Engine {

@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
+	"strings"
 
 	"userstyles.world/modules/log"
 )
@@ -27,6 +28,15 @@ func fileExist(path string) fs.FileInfo {
 	return stat
 }
 
+func fixGitHubURL(url string) string {
+	if strings.Contains(url, "/blob/") {
+		parts := strings.Split(url, "/blob/")
+		url = parts[0] + "/raw/" + parts[1]
+	}
+
+	return url
+}
+
 func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 	template := CacheFolder + id
 	original := template + ".original"
@@ -36,6 +46,10 @@ func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 	// Is the preview image not a local file?
 	// Let's download it.
 	if !isOriginalLocal {
+		if strings.HasPrefix(preview, "https://github.com/") {
+			preview = fixGitHubURL(preview)
+		}
+
 		req, err := http.Get(preview)
 		if err != nil {
 			log.Warn.Println("Error fetching image URL:", err)
