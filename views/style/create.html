@@ -1,20 +1,25 @@
 {{- $btn := "" -}}
 {{- $method := "" -}}
+{{- $humanizedMethod := "" -}}
 {{- if eq .Method "add" -}}
     {{ $method = "add" }}
     {{ $btn = "Add userstyle" }}
+    {{ $humanizedMethod = "adding" }}
 {{ else if eq .Method "edit" }}
     {{ $method = printf "edit/%d" .Styles.ID }}
     {{ $btn = "Save changes" }}
+    {{ $humanizedMethod = "editing" }}
 {{ else }}
     {{ $method = printf "add?token=%s&oauthID=%s" .SecureToken .OAuthID}}
     {{ $btn = "Add userstyle" }}
+    {{ $humanizedMethod = "adding" }}
 {{ end }}
 
 <div class="wrapper py:l">
     <section class="mt:m ta:c">
         <h1>{{ .Title }}</h1>
         <p class="fg:3">If your UserCSS userstyle is hosted somewhere else, you can add it via <a href="/import">import page</a>.</p>
+        <p class="fg:2">Please, read and understand our <a href="/docs/content-guidelines">content guidelines</a> before {{ $humanizedMethod }} your userstyle.</p>
     </section>
 
     <section class="alert">
