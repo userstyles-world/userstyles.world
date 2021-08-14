@@ -4,11 +4,11 @@
 }
 
 html {
+    overflow-x: hidden;
     scrollbar-color: var(--bg-5) var(--bg-2);
 
     body {
         margin: 0;
-        overflow-x: hidden;
         color: var(--fg-1);
         background: var(--bg-1);
         line-height: 1.5;
