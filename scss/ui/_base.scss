@@ -14,8 +14,15 @@ a {
     &[href^='http'] {
         &::after { content: '[\01F517]' }
     }
-    &[href^='java']::after { content: '{JS}' }
+    &[href^='java'],
+    &[data-javascript] {
+        &::after { content: '{JS}' }
+    }
     &[href^='mail']::after { content: '[📧]' }
+
+    &[data-javascript] {
+        cursor: pointer;
+    }
 }
 
 h1 { font-size: 2.5em }

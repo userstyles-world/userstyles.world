@@ -8,6 +8,7 @@ import {doDomOperation} from './utils/dom';
 import type {UserSettings} from './utils/storage';
 import {getSettings} from './utils/storage';
 import {initViewStyle} from './page/view-style';
+import {page404} from './page/404';
 
 // Once settings update we should reinstalize any functionallity.
 // That relies on this settings.
@@ -45,6 +46,8 @@ function pageSpecificFunctions(settings: UserSettings) {
         case '/api/oauth/style/link':
             checkRedirect(settings.redirect);
             break;
+        default:
+            page404();
     }
     if (location.pathname.startsWith('/style/') && styleViewRegex.test(location.pathname)) {
         initViewStyle();
