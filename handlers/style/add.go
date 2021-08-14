@@ -74,6 +74,16 @@ func CreatePost(c *fiber.Ctx) error {
 		return c.Render("style/create", arguments)
 	}
 
+	// Prevent broken traditional userstyles.
+	// TODO: Remove a week or two after Stylus v1.5.20 is released.
+	if len(code.MozDocument) == 0 {
+		return c.Render("err", fiber.Map{
+			"Title":  "Bad style format",
+			"Stylus": "Your style is affected by a bug in Stylus integration.",
+			"User":   u,
+		})
+	}
+
 	// Prevent adding multiples of the same style.
 	err := models.CheckDuplicateStyle(s)
 	if err != nil {

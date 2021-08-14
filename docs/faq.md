@@ -1,6 +1,6 @@
 # FAQ
 
-Last updated August 10, 2021
+Last updated August 14, 2021
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
@@ -15,6 +15,7 @@ Last updated August 10, 2021
     - [How do I remove the `Get Stylus` button?](#how-do-i-remove-the-get-stylus-button)
     - [Why is mirroring source code updates not working?](#why-is-mirroring-source-code-updates-not-working)
     - [Why is there no support for traditional userstyles?](#why-is-there-no-support-for-traditional-userstyles)
+    - ["Bad style format" error](#bad-style-format-error)
 
 <!-- markdown-toc end -->
 
@@ -112,3 +113,53 @@ format and using the mandatory UserStyle metadata header that's provided for you
 on the "Add userstyle" page. Documentation is on Stylus' [Writing UserCSS page].
 
 [Writing UserCSS page]: https://github.com/openstyles/stylus/wiki/Writing-UserCSS
+
+
+### "Bad style format" error
+
+Currently, there is an issue with Stylus integration that allows users to add
+broken userstyles because `@-moz-document` fields are not included in the
+process of adding styles written in "traditional" format. The issue causes
+incorrectly formatted styles to apply globally (in other words, on all styles).
+
+In order to prevent addition of more broken userstyles (roughly 25% of them uses
+incorrect format), we have decided to not add them unless they pass a specific
+criteria: all newly created userstyles need to have `@-moz-document` fields.
+
+To fix your userstyle, do the following:
+
+1. Open it in the editor
+1. Click on "Export" button to get code in Mozilla format
+1. Copy the source code to your clipboard (we'll create a new style)
+1. Click on "Back to manage" button in order to enable "Usercss" format
+1. Toggle on "as Usercss" checkbox (☑), then click on "Write new style" button
+1. Paste your code below Stylus' default Usercss template
+1. Remove the default `@-moz-document domain("example.com") { ... }` block
+1. Edit UserStyle header with your info, links, etc.
+1. Finally, click on "Publish style" button
+
+The resulting style should look along the lines of:
+
+```css
+/* ==UserStyle==
+@name           Test style name
+@namespace      userstyles.world
+@version        1.0.0
+==/UserStyle== */
+
+@-moz-document domain("userstyles.world") {
+    * {
+        color: crimson;
+    }
+}
+
+@-moz-document url-prefix("https://userstyles.world/docs/") {
+    h1, h2, h3 {
+        color: tan;
+    }
+}
+```
+
+Please test your style to see whether it works after you publish it to USw. All
+broken styles will be removed. If you have issues, feel free to contact us via
+any of the links in the page footer or via our feedback email address.

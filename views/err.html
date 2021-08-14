@@ -1,6 +1,10 @@
 <div class="wrapper py:l">
     <section class="hero md flex f-col ta:c">
         <h1>{{ .Title }}</h1>
+        {{ with .Stylus }}
+            <p>{{ . }} Please visit <a href="/docs/faq#bad-style-format-error">FAQ page</a> to see how to work around it.</p>
+            <hr>
+        {{ end }}
         <p>Go to <a class="prev-page" data-javascript>previous page</a> or go to <a href="/">home page</a>.</p>
     </section>
 </div>

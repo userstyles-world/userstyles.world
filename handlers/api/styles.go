@@ -108,6 +108,16 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
+
+	// Prevent broken traditional userstyles.
+	// TODO: Remove a week or two after Stylus v1.5.20 is released.
+	if len(code.MozDocument) == 0 {
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)",
+			})
+	}
+
 	err = models.UpdateStyle(&postStyle)
 	if err != nil {
 		return c.Status(500).
@@ -242,6 +252,15 @@ func NewStyle(c *fiber.Ctx) error {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error:" + errors,
+			})
+	}
+
+	// Prevent broken traditional userstyles.
+	// TODO: Remove a week or two after Stylus v1.5.20 is released.
+	if len(code.MozDocument) == 0 {
+		return c.Status(403).
+			JSON(fiber.Map{
+				"data": "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)",
 			})
 	}
 
