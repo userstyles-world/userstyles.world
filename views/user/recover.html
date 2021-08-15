@@ -9,7 +9,7 @@
         <form method="post" action="/recover">
             <label for="email">E-mail</label>
             <input
-                required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
+                required pattern="{{ config "allowedEmailsRe" }}"
                 type="text" name="email"
                 placeholder="Your e-mail">
 

@@ -13,7 +13,7 @@
             <div class="Form-section Form-full">
                 <label for="email">Mail address</label>
                 <input
-                    required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$"
+                    required pattern="{{ config "allowedEmailsRe" }}"
                     type="text" name="email"
                     placeholder="name@example.com">
             </div>
