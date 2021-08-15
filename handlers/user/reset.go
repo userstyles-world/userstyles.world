@@ -21,8 +21,9 @@ func RecoverGet(c *fiber.Ctx) error {
 		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
+
 	return c.Render("user/recover", fiber.Map{
-		"Title":     "Reset",
+		"Title":     "Reset password",
 		"Canonical": "recover",
 	})
 }

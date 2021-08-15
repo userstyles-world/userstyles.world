@@ -5,18 +5,23 @@
 
     {{ template "partials/alert" . }}
 
-    <section class="ta:c">
-        <form method="post" action="/recover">
-            <label for="email">E-mail</label>
-            <input
-                required pattern="{{ config "allowedEmailsRe" }}"
-                type="text" name="email"
-                placeholder="Your e-mail">
+    <section class="limit mx:a">
+        <form class="Form Form-box" method="post" action="/recover">
+            <div class="Form-section Form-full">
+                <label for="email">E-mail</label>
+                <input
+                    required pattern="{{ config "allowedEmailsRe" }}"
+                    type="text" name="email"
+                    placeholder="e.g. username@example.org">
+            </div>
 
-                <button class="btn primary" type="submit">Send email</button>
+            <div class="Form-control">
+                <button class="btn primary" type="submit">Send mail</button>
+            </div>
         </form>
-        <i class="fg:3">Don't have an account?
-            Continue to <a href="/register">register page</a>.
-        </i>
+
+        <p class="form-tip ta:c">
+            Don't have an account? Continue to <a href="/register">register page</a>.
+        </p>
     </section>
 </div>
