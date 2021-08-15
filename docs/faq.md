@@ -120,7 +120,7 @@ on the "Add userstyle" page. Documentation is on Stylus' [Writing UserCSS page].
 Currently, there is an issue with Stylus integration that allows users to add
 broken userstyles because `@-moz-document` fields are not included in the
 process of adding styles written in "traditional" format. The issue causes
-incorrectly formatted styles to apply globally (in other words, on all styles).
+incorrectly formatted styles to apply globally (in other words, on all sites).
 
 In order to prevent addition of more broken userstyles (roughly 25% of them uses
 incorrect format), we have decided to not add them unless they pass a specific
@@ -163,3 +163,17 @@ The resulting style should look along the lines of:
 Please test your style to see whether it works after you publish it to USw. All
 broken styles will be removed. If you have issues, feel free to contact us via
 any of the links in the page footer or via our feedback email address.
+
+P.S. If your style does apply globally, for the time being you'll have to wrap
+it in the following:
+
+```css
+@-moz-document regexp(".*") {
+    /* Your code goes here. */
+}
+
+/* You can also use the following. */
+@-moz-document url-prefix("http") {
+    /* Your code goes here. */
+}
+```
