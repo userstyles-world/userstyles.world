@@ -1,4 +1,4 @@
-[tooltip-data] {
+[data-tooltip] {
     cursor: pointer;
     position: relative;
   
@@ -22,7 +22,7 @@
         background-color: var(--bg-4);
         border-radius: var(--br-3);
         bottom: 120%;
-        content: attr(tooltip-data);
+        content: attr(data-tooltip);
         color: var(--fg-1);
         font-size: 0.875rem;
         font-weight: normal;

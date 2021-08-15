@@ -37,7 +37,7 @@
                 <a
                     class="Pagination-button icon min"
                     href="{{ paginate 1 .Sort }}"
-                    tooltip-data="Go to the first page"
+                    data-tooltip="Go to the first page"
                 >{{ template "icons/chevrons-left" 16 }}</a>
             {{ else }}
                 <div class="Pagination-disabled">{{ template "icons/chevrons-left" 16 }}</div>
@@ -48,7 +48,7 @@
                 <a
                     class="Pagination-button icon back"
                     href="{{ paginate .PageBack .Sort }}"
-                    tooltip-data="Go to the previous page"
+                    data-tooltip="Go to the previous page"
                 >{{ template "icons/chevron-left" 16 }}</a>
                 <div class="Pagination-divider"></div>
                 <a
@@ -72,7 +72,7 @@
                 <a
                     class="Pagination-button icon next"
                     href="{{ paginate .PageNext .Sort }}"
-                    tooltip-data="Go to the next page"
+                    data-tooltip="Go to the next page"
                 >{{ template "icons/chevron-right" 16 }}</a>
             {{ else }}
                 <div class="Pagination-disabled">{{ template "icons/chevron-right" 16 }}</div>
@@ -83,7 +83,7 @@
                 <a
                     class="Pagination-button icon max"
                     href="{{ paginate .PageMax .Sort }}"
-                    tooltip-data="Go to the last page"
+                    data-tooltip="Go to the last page"
                 >{{ template "icons/chevrons-right" 16 }}</a>
             {{ else }}
                 <div class="Pagination-disabled">{{ template "icons/chevrons-right" 16 }}</div>

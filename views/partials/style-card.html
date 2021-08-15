@@ -18,23 +18,21 @@
             {{ $date := .UpdatedAt.Format "2006-01-02 15:04:05" }}
             <time
                 datetime="{{ $date }}" class="ml:s"
-                tooltip-data="Last time updated {{ $date }}"
-            >
-                {{- .UpdatedAt.Format "Jan 2" -}}
-            </time>
+                data-tooltip="Last updated {{ $date }}"
+            >{{- .UpdatedAt.Format "Jan 2" -}}</time>
         </small>
         <small class="fg:3 flex ai:c ml:s">
             {{ template "icons/view" "16" }}
             <span
                 class="ml:s"
-                tooltip-data="{{ .Views }}x viewed in total"
+                data-tooltip="{{ .Views }} total views"
             >{{ .Views }} views</span>
         </small>
         <small class="fg:3 flex ai:c ml:s">
             {{ template "icons/download" "16" }}
             <span
                 class="ml:s"
-                tooltip-data="{{ .Installs }}x installed in total"
+                data-tooltip="{{ .Installs }} total installs"
             >{{ .Installs }} installs</span>
         </small>
     </div>

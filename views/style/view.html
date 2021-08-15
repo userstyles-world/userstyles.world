@@ -31,7 +31,7 @@
                     <button
                         aria-label="Copy Style URL to clipboard"
                         type="submit"
-                        tooltip-data="Style URL has been copied to your clipboard."
+                        data-tooltip="Style URL has been copied to your clipboard."
                         id="btn-share" class="btn iflex ml:s ai:c">
                         {{- template "icons/copy" -}}
                     </button>
@@ -58,7 +58,7 @@
                 {{ if .User.IsModOrAdmin }}
                     <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
                         <button class="btn ml:s" type="submit"
-                        tooltip-data='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
+                        data-tooltip='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
                         >
                         🌟</button>
                     </form>
@@ -87,7 +87,7 @@
                     id="write-review" class="btn icon write-review ml:s"
                     {{ if not .User.ID }}
                         disabled
-                        tooltip-data="An account is required in order to review userstyles."
+                        data-tooltip="An account is required in order to review userstyles."
                     {{ else }}
                         target="_blank"
                         rel="noopener"
