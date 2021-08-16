@@ -52,6 +52,43 @@
         </form>
     </section>
 
+    <section id="password">
+        <h2 class="sub-title td:d mt:l">Password</h2>
+        <p>Change your password for manual login.</p>
+        <form class="Form Form-box mt:m" method="post" action="/account/password">
+            <div class="Form-section Form-full">
+                <label for="password">Current password</label>
+                <input
+                    required pattern="^[\S]{8,32}$"
+                    type="password" name="current"
+                    placeholder="(8–32 characters)">
+            </div>
+
+            <div class="Form-section Form-full">
+                <label for="password">New password</label>
+                <input
+                    required pattern="^[\S]{8,32}$"
+                    type="password" name="new"
+                    placeholder="(8–32 characters)">
+            </div>
+
+            <div class="Form-section Form-full">
+                <label for="confirm">Confirm new password</label>
+                <input
+                    required pattern="^[\S]{8,32}$"
+                    type="password" name="confirm"
+                    placeholder="Repeat password">
+            </div>
+
+            <div class="Form-control">
+                <button
+                    type="submit"
+                    class="btn icon primary"
+                >{{ template "icons/save" 16 }} Save</button>
+            </div>
+        </form>
+    </section>
+
     <section id="bio">
         <h2 class="sub-title td:d mt:l">About</h2>
         <div class="md">{{- .Params.Biography | MarkdownUnsafe -}}</div>

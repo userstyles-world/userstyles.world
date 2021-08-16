@@ -95,6 +95,38 @@ func EditAccount(c *fiber.Ctx) error {
 
 		record["display_name"] = name
 
+	case "password":
+		current := c.FormValue("current")
+		if err := utils.CompareHashedPassword(user.Password, current); err != nil {
+			return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
+				"Title": "Failed to match current password",
+				"User":  u,
+			})
+		}
+
+		new, confirm := c.FormValue("new"), c.FormValue("confirm")
+		if confirm != new {
+			return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
+				"Title": "Failed to match new passwords",
+				"User":  u,
+			})
+		}
+
+		user.Password = new
+		if err := utils.Validate().StructPartial(u, "Password"); err != nil {
+			var validationError validator.ValidationErrors
+			if ok := errors.As(err, &validationError); ok {
+				log.Info.Println("Password change error:", validationError)
+			}
+			return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
+				"Title": "Register failed",
+				"User":  u,
+			})
+		}
+
+		user.Password = utils.GenerateHashedPassword(new)
+		record["password"] = user.Password
+
 	case "bio":
 		bio := strings.TrimSpace(c.FormValue("bio"))
 		prev := user.Biography
