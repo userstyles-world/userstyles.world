@@ -56,7 +56,8 @@ func EditAccount(c *fiber.Ctx) error {
 
 	var record = map[string]interface{}{"id": user.ID}
 
-	switch c.Params("form") {
+	form := c.Params("form")
+	switch form {
 	case "name":
 		name := strings.TrimSpace(c.FormValue("name"))
 		prev := user.DisplayName
@@ -136,5 +137,5 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusSeeOther).Redirect("/account")
+	return c.Status(fiber.StatusSeeOther).Redirect("/account#" + form)
 }
