@@ -80,7 +80,7 @@ func Initialize() {
 
 	app.Get("/logout", jwtware.Protected, user.Logout)
 	app.Get("/account", jwtware.Protected, user.Account)
-	app.Post("/account", jwtware.Protected, user.EditAccount)
+	app.Post("/account/:form", jwtware.Protected, user.EditAccount)
 	app.Get("/add", jwtware.Protected, style.CreateGet)
 	app.Post("/add", jwtware.Protected, style.CreatePost)
 	app.Get("/delete/:id", jwtware.Protected, style.DeleteGet)

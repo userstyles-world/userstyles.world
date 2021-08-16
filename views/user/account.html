@@ -1,4 +1,8 @@
 <div class="wrapper py:l">
+    <style type="text/css" media="screen">
+        .err.limit { max-width: unset }
+    </style>
+
     {{ template "partials/alert" . }}
     <section id="welcome">
         <h1 class="title mb:m">Hi, {{ .Params.Name }}!</h1>
@@ -31,7 +35,7 @@
     <section id="name">
         <h2 class="sub-title td:d mt:l">Display name</h2>
         <p>If set, display name will be used instead of username.</p>
-        <form class="Form Form-box mt:m" method="post" action="/account">
+        <form class="Form Form-box mt:m" method="post" action="/account/name">
             <div class="Form-section Form-max">
                 <label for="name">Set your display name</label>
                 <input
@@ -51,7 +55,7 @@
     <section id="about">
         <h2 class="sub-title td:d mt:l">About</h2>
         <div class="md">{{- .Params.Biography | MarkdownUnsafe -}}</div>
-        <form class="Form Form-box mt:m" method="post" action="/account">
+        <form class="Form Form-box mt:m" method="post" action="/account/bio">
             <label for="name">Set your about info</label>
             <i class="fg:3">Supports Markdown syntax.</i>
             <textarea
@@ -72,7 +76,7 @@
     <section id="socials">
         <h2 class="sub-title td:d mt:l">Socials</h2>
         <p>You can login via OAuth if you have an account on platforms listed below.</p>
-        <form class="Form Form-box mt:m" method="post" action="/account">
+        <form class="Form Form-box mt:m" method="post" action="/account/socials">
             <div class="Form-section">
                 <label class="icon github" for="github">
                     {{- template "icons/github" . -}}

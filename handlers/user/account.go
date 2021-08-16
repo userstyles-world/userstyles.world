@@ -14,23 +14,6 @@ import (
 	"userstyles.world/utils"
 )
 
-func setSocials(u *models.User, k, v string) {
-	switch k {
-	case "github":
-		if v != "" {
-			u.Socials.Github = v
-		}
-	case "gitlab":
-		if v != "" {
-			u.Socials.Gitlab = v
-		}
-	case "codeberg":
-		if v != "" {
-			u.Socials.Codeberg = v
-		}
-	}
-}
-
 func Account(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
@@ -63,14 +46,6 @@ func Account(c *fiber.Ctx) error {
 func EditAccount(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	styles, err := models.GetStylesByUser(u.Username)
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Server error",
-		})
-	}
-
 	user, err := models.FindUserByName(u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
@@ -79,15 +54,18 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	name := strings.TrimSpace(c.FormValue("name"))
-	if name != "" {
+	var record = map[string]interface{}{"id": user.ID}
+
+	switch c.Params("form") {
+	case "name":
+		name := strings.TrimSpace(c.FormValue("name"))
 		prev := user.DisplayName
 		user.DisplayName = name
 
 		if err := utils.Validate().StructPartial(user, "DisplayName"); err != nil {
 			var validationError validator.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
-				log.Info.Println("Validation errors:", validationError)
+				log.Info.Printf("Validation errors for user %d: %v\n", u.ID, validationError)
 			}
 			user.DisplayName = prev
 
@@ -104,14 +82,14 @@ func EditAccount(c *fiber.Ctx) error {
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
-				"Styles": styles,
 				"Error":  e,
 			})
 		}
-	}
 
-	bio := strings.TrimSpace(c.FormValue("bio"))
-	if bio != "" {
+		record["display_name"] = name
+
+	case "bio":
+		bio := strings.TrimSpace(c.FormValue("bio"))
 		prev := user.Biography
 		user.Biography = bio
 
@@ -126,20 +104,28 @@ func EditAccount(c *fiber.Ctx) error {
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
-				"Styles": styles,
 				"Error":  "Biography must be shorter than 512 characters.",
 			})
 		}
-	}
 
-	setSocials(user, "github", c.FormValue("github"))
-	setSocials(user, "gitlab", c.FormValue("gitlab"))
-	setSocials(user, "codeberg", c.FormValue("codeberg"))
+		record["biography"] = bio
+
+	case "socials":
+		record["github"] = strings.TrimSpace(c.FormValue("github"))
+		record["gitlab"] = strings.TrimSpace(c.FormValue("gitlab"))
+		record["codeberg"] = strings.TrimSpace(c.FormValue("codeberg"))
+
+	default:
+		return c.Render("err", fiber.Map{
+			"Title": "Invalid form",
+			"User":  u,
+		})
+	}
 
 	dbErr := database.Conn.
 		Model(models.User{}).
-		Where("id", user.ID).
-		Updates(user).
+		Where("id", record["id"]).
+		Updates(record).
 		Error
 
 	if dbErr != nil {
@@ -150,10 +136,5 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("user/account", fiber.Map{
-		"Title":  "Account",
-		"User":   u,
-		"Params": user,
-		"Styles": styles,
-	})
+	return c.Status(fiber.StatusSeeOther).Redirect("/account")
 }
