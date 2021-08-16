@@ -63,6 +63,12 @@ func EditAccount(c *fiber.Ctx) error {
 		prev := user.DisplayName
 		user.DisplayName = name
 
+		if name == "" {
+			log.Info.Printf("User %v cleared their name\n", u.ID)
+			record["display_name"] = name
+			break
+		}
+
 		if err := utils.Validate().StructPartial(user, "DisplayName"); err != nil {
 			var validationError validator.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
