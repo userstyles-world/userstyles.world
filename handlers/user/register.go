@@ -28,9 +28,18 @@ func RegisterGet(c *fiber.Ctx) error {
 }
 
 func RegisterPost(c *fiber.Ctx) error {
+	password, confirm := c.FormValue("password"), c.FormValue("confirm")
+	if confirm != password {
+		return c.Status(fiber.StatusForbidden).
+			Render("user/register", fiber.Map{
+				"Title": "Register failed",
+				"Error": "Your passwords don't match.",
+			})
+	}
+
 	u := models.User{
 		Username: c.FormValue("username"),
-		Password: c.FormValue("password"),
+		Password: password,
 		Email:    c.FormValue("email"),
 	}
 
