@@ -127,14 +127,14 @@ func CreatePost(c *fiber.Ctx) error {
 			data, _ := io.ReadAll(image)
 			err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
 			if err != nil {
-				log.Warn.Println("Failed to write image:", err.Error())
+				log.Warn.Printf("Failed to write image for %v: %v\n", styleID, err.Error())
 				return
 			}
 		}
 		err = images.GenerateImagesForStyle(styleID, preview, isLocal)
 		if err != nil {
 			s.Preview = ""
-			log.Warn.Println("Failed to generate images:", err.Error())
+			log.Warn.Printf("Failed to generate images for %v: %v\n", styleID, err.Error())
 			return
 		}
 
@@ -144,7 +144,7 @@ func CreatePost(c *fiber.Ctx) error {
 			Updates(style).
 			Error
 		if err != nil {
-			log.Warn.Println("Failed to update style:", err.Error())
+			log.Warn.Printf("Failed to update style %v: %v\n", styleID, err.Error())
 		}
 
 	}(image, s, styleID, s.Preview)

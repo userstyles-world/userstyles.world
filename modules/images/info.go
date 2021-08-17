@@ -52,7 +52,7 @@ func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 
 		req, err := http.Get(preview)
 		if err != nil {
-			log.Warn.Println("Error fetching image URL:", err)
+			log.Warn.Printf("Failed to fetch image URL for %v: %v\n", id, err)
 			return err
 		}
 		defer req.Body.Close()
@@ -61,20 +61,18 @@ func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 		data, _ := io.ReadAll(req.Body)
 		err = os.WriteFile(original, data, 0o600)
 		if err != nil {
-			log.Warn.Println("Error processing image:", err)
+			log.Warn.Printf("Failed to process image for %v: %v\n", id, err)
 			return err
 		}
 	}
 
-	err := decodeImage(original, jpeg, ImageTypeJPEG)
-	if err != nil {
-		log.Warn.Println("Error processing image:", err)
+	if err := decodeImage(original, jpeg, ImageTypeJPEG); err != nil {
+		log.Warn.Printf("Failed to process image for %v: %v\n", id, err)
 		return err
 	}
 
-	err = decodeImage(original, webp, ImageTypeWEBP)
-	if err != nil {
-		log.Warn.Println("Error processing image:", err)
+	if err := decodeImage(original, webp, ImageTypeWEBP); err != nil {
+		log.Warn.Printf("Failed to process image for %v: %v\n", id, err)
 		return err
 	}
 

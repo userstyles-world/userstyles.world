@@ -4,6 +4,7 @@ import (
 	"os/exec"
 
 	"userstyles.world/modules/errors"
+	"userstyles.world/modules/log"
 )
 
 type ImageType int
@@ -57,6 +58,7 @@ func decodeImage(original, newPath string, imageType ImageType) error {
 
 	err := vipsCommand.Run()
 	if err != nil || vipsCommand.ProcessState.ExitCode() == 1 {
+		log.Warn.Printf("Failed to run vips: %v\n", err)
 		return errors.ErrNoImageProcessing
 	}
 
