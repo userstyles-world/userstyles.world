@@ -201,7 +201,7 @@ func Dashboard(c *fiber.Ctx) error {
 
 	// Render stats history.
 	var dailyHistory, totalHistory string
-	if len(*history) > 0 {
+	if len(*history) > 2 {
 		dailyHistory, totalHistory, err = charts.GetStatsHistory(*history)
 		if err != nil {
 			log.Info.Println("Failed to render style history:", err.Error())
