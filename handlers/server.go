@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
-	"github.com/markbates/pkger"
 
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"
@@ -131,9 +131,9 @@ func Initialize() {
 		app.Static("/", "/static")
 	}
 
-	app.Use("/", filesystem.New(filesystem.Config{
+	app.Use(filesystem.New(filesystem.Config{
 		MaxAge: int(time.Hour) * 2,
-		Root:   pkger.Dir("/static"),
+		Root:   http.Dir("./static"),
 	}))
 	app.Use(core.NotFound)
 

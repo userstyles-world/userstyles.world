@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gofiber/template/html"
-	"github.com/markbates/pkger"
 	"github.com/microcosm-cc/bluemonday"
 	md "github.com/russross/blackfriday/v2"
 
@@ -29,7 +28,7 @@ var appConfig = map[string]interface{}{
 }
 
 func New() *html.Engine {
-	engine := html.NewFileSystem(pkger.Dir("/views"), ".html")
+	engine := html.New("./views", ".html")
 
 	engine.AddFunc("config", func(key string) template.HTML {
 		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
