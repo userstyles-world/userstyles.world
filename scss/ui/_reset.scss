@@ -4,7 +4,6 @@
 }
 
 html {
-    overflow-x: hidden;
     scrollbar-color: var(--bg-5) var(--bg-2);
 
     body {
@@ -25,6 +24,7 @@ html {
         > main {
             display: flex;
             min-height: calc(100vh - 130px);
+            > .wrapper { overflow-x: hidden }
         }
 
         > footer > div { min-height: 64px }
