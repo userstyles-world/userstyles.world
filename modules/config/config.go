@@ -57,6 +57,9 @@ var (
 	AppLinkChatDiscord = "https://discord.gg/P5zra4nFS2"
 	AppLinkChatMatrix  = "https://matrix.to/#/#userstyles:matrix.org"
 	AppLinkSource      = "https://github.com/userstyles-world/userstyles.world"
+
+	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
+	AllowedImagesRe = `^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw)\.githubusercontent\.com|github\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)$`
 )
 
 func getEnvInt(name string, defaultValue int) int {
