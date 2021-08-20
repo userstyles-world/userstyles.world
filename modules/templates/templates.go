@@ -3,6 +3,7 @@ package templates
 import (
 	"fmt"
 	"html/template"
+	"runtime"
 	"strconv"
 	"time"
 
@@ -27,11 +28,34 @@ var appConfig = map[string]interface{}{
 	"allowedImagesRe": config.AllowedImagesRe,
 }
 
+type sys struct {
+	Uptime     string
+	GoRoutines int
+	LastGC     string
+	NumGC      int
+}
+
+func status() sys {
+	m := new(runtime.MemStats)
+	runtime.ReadMemStats(m)
+
+	return sys{
+		Uptime:     time.Since(config.AppUptime).Round(time.Second).String(),
+		GoRoutines: runtime.NumGoroutine(),
+		LastGC:     fmt.Sprintf("%.1fs", float64(time.Now().UnixNano()-int64(m.LastGC))/1000/1000/1000),
+		NumGC:      int(m.NumGC),
+	}
+}
+
 func New() *html.Engine {
 	engine := html.New("./views", ".html")
 
 	engine.AddFunc("config", func(key string) template.HTML {
 		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
+	})
+
+	engine.AddFunc("sys", func() sys {
+		return status()
 	})
 
 	engine.AddFunc("MarkdownSafe", func(s string) template.HTML {

@@ -1,0 +1,11 @@
+.List {
+    &-unstyled {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    &-row {
+        display: flex;
+        li:not(:last-child) { margin-right: 1rem }
+    }
+}
