@@ -71,7 +71,7 @@
             {{ end }}
 
             <label for="previewUrl">Preview URL</label>
-            <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.com.</i>
+            <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
             <input
                 pattern="{{ config "allowedImagesRe" }}"
                 type="text" name="previewUrl" value="{{ .Styles.Preview }}"
