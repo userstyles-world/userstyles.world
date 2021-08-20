@@ -142,7 +142,14 @@ form:not(.Form),
 
     &.ml\:0 { margin-left: 0 !important }
 
-    label { display: flex }
+    label {
+        display: flex;
+        align-items: center;
+        a {
+            display: flex;
+            margin-left: 0.25rem;
+        }
+    }
 
     input:not([type='checkbox']),
     textarea,

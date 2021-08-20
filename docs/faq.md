@@ -16,6 +16,7 @@ Last updated August 14, 2021
     - [Why is mirroring source code updates not working?](#why-is-mirroring-source-code-updates-not-working)
     - [Why is there no support for traditional userstyles?](#why-is-there-no-support-for-traditional-userstyles)
     - ["Bad style format" error](#bad-style-format-error)
+    - [How does mirroring source code work?](#how-does-mirroring-source-code-work)
 
 <!-- markdown-toc end -->
 
@@ -98,8 +99,8 @@ originally imported from, make sure that the new URL location is correct. It's
 correct if Stylus' install/reinstall page shows up when you visit it.
 
 Last but certainly not least, make sure that you increase `@version` field in
-the UserStyle metadata header. New userstyle will be mirrored if the new version
-doesn't match the one in the database.
+the UserStyle metadata header. Userstyle will be mirrored if the new version
+doesn't match the one stored in our database.
 
 
 ### Why is there no support for traditional userstyles?
@@ -177,3 +178,14 @@ it in the following:
     /* Your code goes here. */
 }
 ```
+
+
+### How does mirroring source code work?
+
+Every 30 minutes (00:30, 01:00, and so on) we check for style updates. Styles
+are checked in batches of 20 (as of August 20, 2021) and not all at once, so it
+can take up to a few minutes for your userstyle to be processed. The style will
+be updated if the `@version` field doesn't match the one in our database.
+
+If your userstyle isn't being updated, read through [troubleshooting
+steps](#why-is-mirroring-source-code-updates-not-working) first.

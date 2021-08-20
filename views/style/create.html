@@ -128,7 +128,14 @@
                     <div class="checkbox iflex mb:m">
                         <input type="checkbox" name="mirrorCode" id="mirrorCode" {{ $mirrorCode }}>
                         {{ template "partials/checkboxes" }}
-                        <label for="mirrorCode">Mirror source code updates</label>
+                        <label for="mirrorCode">
+                            Mirror source code updates
+                            <a
+                                data-tooltip="Read how mirroring source code works"
+                                href="/docs/faq#how-does-mirroring-source-code-work">
+                                {{ template "icons/info" 18 }}
+                            </a>
+                        </label>
                     </div>
                 </div>
             {{ end }}

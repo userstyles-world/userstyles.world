@@ -40,7 +40,14 @@
                 <div class="checkbox flex mb:m">
                     <input type="checkbox" name="mirrorCode" id="mirrorCode">
                     {{ template "partials/checkboxes" }}
-                    <label for="mirrorCode">Mirror source code</label>
+                    <label for="mirrorCode">
+                        Mirror source code
+                        <a
+                            data-tooltip="Read how mirroring source code works"
+                            href="/docs/faq#how-does-mirroring-source-code-work">
+                            {{ template "icons/info" 18 }}
+                        </a>
+                    </label>
                 </div>
             </div>
 
