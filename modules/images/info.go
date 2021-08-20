@@ -5,7 +5,7 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
-	"strings"
+	"regexp"
 
 	"userstyles.world/modules/log"
 )
@@ -28,13 +28,9 @@ func fileExist(path string) fs.FileInfo {
 	return stat
 }
 
-func fixGitHubURL(url string) string {
-	if strings.Contains(url, "/blob/") {
-		parts := strings.Split(url, "/blob/")
-		url = parts[0] + "/raw/" + parts[1]
-	}
-
-	return url
+func fixRawURL(url string) string {
+	re := regexp.MustCompile(`(?mi)^(http.*)(raw|src|blob)(.*.(png|jpe?g|avif|webp))(\?.*)*$`)
+	return re.ReplaceAllString(url, "${1}raw${3}")
 }
 
 func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
@@ -46,9 +42,7 @@ func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 	// Is the preview image not a local file?
 	// Let's download it.
 	if !isOriginalLocal {
-		if strings.HasPrefix(preview, "https://github.com/") {
-			preview = fixGitHubURL(preview)
-		}
+		preview = fixRawURL(preview)
 
 		req, err := http.Get(preview)
 		if err != nil {
