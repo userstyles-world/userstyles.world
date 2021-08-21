@@ -105,7 +105,7 @@ func Initialize() {
 	v1.Get("/style/:id.user.css", api.GetStyleSource)
 	v1.Get("/style/:id", api.GetStyleDetails)
 	v1.Get("/style/preview/:id", api.GetPreviewScreenshot)
-	v1.Get("/style/stats/:id", api.GetStyleStats)
+	v1.Get("/style/stats/:id/:type?", api.GetStyleStats)
 	v1.Get("/index/:format?", api.GetStyleIndex)
 	v1.Get("/search/:query", api.GetSearchResult)
 	v1.Get("/callback/:rcode", api.CallbackGet)

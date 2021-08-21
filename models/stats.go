@@ -103,6 +103,14 @@ func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 	return weekly
 }
 
+func GetWeeklyViewsForStyle(id string) (weekly int64) {
+	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
+	q := "style_id = ? and view > 0 and created_at > ?"
+	db().Model(modelStats).Where(q, id, lastWeek).Count(&weekly)
+
+	return weekly
+}
+
 func GetTotalInstallsForStyle(id string) (total int64) {
 	db().
 		Model(modelStats).
