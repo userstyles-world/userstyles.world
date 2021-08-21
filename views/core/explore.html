@@ -7,7 +7,7 @@
     <section class="mt:l">
         <form class="Form Form-inline jc:c" method="get" action="/explore">
             <input type="text" name="page"
-                value="{{ with .PageNow }}{{ . }}{{ else }}1{{ end }}" hidden>
+                value="{{ with .P.Now }}{{ . }}{{ else }}1{{ end }}" hidden>
             <div class="Form-section Form-row">
                 {{ template "partials/form-sort" . }}
             </div>
@@ -33,7 +33,7 @@
 
     <section class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
         <div class="Pagination flex jc:c ai:c">
-            {{ if not (eq .PageNow 1) }}
+            {{ if not (eq .P.Now .P.Min) }}
                 <a
                     class="Pagination-button icon min"
                     href="{{ paginate 1 .Sort }}"
@@ -45,35 +45,35 @@
             {{ end }}
 
             <div class="Pagination-divider"></div>
-            {{ if not (eq .PageNow 1) }}
+            {{ if not (eq .P.Now .P.Min) }}
                 <a
                     class="Pagination-button icon back"
-                    href="{{ paginate .PageBack .Sort }}"
+                    href="{{ paginate .P.Prev .Sort }}"
                     data-tooltip="Go to the previous page"
                     aria-label="Go to the previous page"
                 >{{ template "icons/chevron-left" 16 }}</a>
                 <div class="Pagination-divider"></div>
                 <a
                     class="Pagination-button back"
-                    href="{{ paginate .PageBack .Sort }}"
-                >{{ .PageBack }}</a>
+                    href="{{ paginate .P.Prev .Sort }}"
+                >{{ .P.Prev }}</a>
             {{ else }}
                 <div class="Pagination-disabled">{{ template "icons/chevron-left" 16 }}</div>
             {{ end }}
 
             <div class="Pagination-divider"></div>
-            <div class="Pagination-active now"><b>{{ .PageNow }}</b></div>
+            <div class="Pagination-active now"><b>{{ .P.Now }}</b></div>
             <div class="Pagination-divider"></div>
 
-            {{ if not (eq .PageNow .PageMax) }}
+            {{ if not (eq .P.Now .P.Max) }}
                 <a
                     class="Pagination-button next"
-                    href="{{ paginate .PageNext .Sort }}"
-                >{{ .PageNext }}</a>
+                    href="{{ paginate .P.Next .Sort }}"
+                >{{ .P.Next }}</a>
                 <div class="Pagination-divider"></div>
                 <a
                     class="Pagination-button icon next"
-                    href="{{ paginate .PageNext .Sort }}"
+                    href="{{ paginate .P.Next .Sort }}"
                     data-tooltip="Go to the next page"
                     aria-label="Go to the next page"
                 >{{ template "icons/chevron-right" 16 }}</a>
@@ -82,10 +82,10 @@
             {{ end }}
 
             <div class="Pagination-divider"></div>
-            {{ if not (eq .PageNow .PageMax) }}
+            {{ if not (eq .P.Now .P.Max) }}
                 <a
                     class="Pagination-button icon max"
-                    href="{{ paginate .PageMax .Sort }}"
+                    href="{{ paginate .P.Max .Sort }}"
                     data-tooltip="Go to the last page"
                     aria-label="Go to the last page"
                 >{{ template "icons/chevrons-right" 16 }}</a>

@@ -1,8 +1,6 @@
 package style
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -12,20 +10,13 @@ import (
 
 func GetExplore(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	page := c.Query("page")
 
-	var pageNow int
-	if page != "" {
-		i, err := strconv.Atoi(page)
-		if err != nil {
-			return c.Render("err", fiber.Map{
-				"Title": "Invalid page size",
-				"User":  u,
-			})
-		}
-		pageNow = i
-	} else {
-		pageNow = 1
+	var p models.Pagination
+	if err := p.ConvPage(c.Query("page")); err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Invalid page size",
+			"User":  u,
+		})
 	}
 
 	styleCount, err := models.GetStyleCount()
@@ -36,20 +27,9 @@ func GetExplore(c *fiber.Ctx) error {
 		})
 	}
 
-	// Adjust max pages.
-	maxPages, remainder := int(styleCount)/40, styleCount%40
-	if remainder > 0 {
-		maxPages++
-	}
+	// Adjust pagination numbers.
+	p.CalcItems(int(styleCount), 40)
 
-	// If the page is greater than the max pages, display the last page.
-	// Or if the page is less than 1, display the first page.
-	if pageNow > maxPages {
-		pageNow = maxPages
-	}
-	if pageNow < 1 {
-		pageNow = 1
-	}
 	fv := c.Query("sort")
 	var orderFunction string
 	switch fv {
@@ -73,7 +53,7 @@ func GetExplore(c *fiber.Ctx) error {
 		orderFunction = "styles.id ASC"
 	}
 
-	s, err := models.GetAllAvailableStylesPaginated(pageNow, orderFunction)
+	s, err := models.GetAllAvailableStylesPaginated(p.Now, orderFunction)
 	if err != nil {
 		log.Warn.Println("Failed to get paginated styles:", err.Error())
 		return c.Render("err", fiber.Map{
@@ -87,10 +67,7 @@ func GetExplore(c *fiber.Ctx) error {
 		"User":      u,
 		"Styles":    s,
 		"Sort":      fv,
-		"PageMax":   maxPages,
-		"PageNow":   pageNow,
-		"PageBack":  pageNow - 1,
-		"PageNext":  pageNow + 1,
+		"P":         p,
 		"Canonical": "explore",
 	})
 }
