@@ -53,6 +53,7 @@ var (
 	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
 	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
 	AppUptime       = time.Now()
+	AppPageMaxItems = 40
 
 	AppLinkChatDiscord = "https://discord.gg/P5zra4nFS2"
 	AppLinkChatMatrix  = "https://matrix.to/#/#userstyles:matrix.org"

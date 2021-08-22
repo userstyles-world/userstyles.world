@@ -5,6 +5,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
 
@@ -28,7 +29,7 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	// Adjust pagination numbers.
-	p.CalcItems(int(styleCount), 40)
+	p.CalcItems(int(styleCount), config.AppPageMaxItems)
 
 	// Set sort query in pagination.
 	fv := c.Query("sort")

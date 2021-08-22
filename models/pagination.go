@@ -33,7 +33,7 @@ func (p *Pagination) CalcItems(c, i int) {
 
 	// Calculate max page and remainder.
 	p.Max = c / i
-	p.Rem = c % 40
+	p.Rem = c % i
 	if p.Rem > 0 {
 		p.Max++
 	}
