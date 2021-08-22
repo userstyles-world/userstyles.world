@@ -9,6 +9,7 @@
                 <li>GoRoutines: {{ sys.GoRoutines }}</li>
                 <li>NumGC: {{ sys.NumGC }}</li>
                 <li>LastGC: {{ sys.LastGC }}</li>
+                <li class="ml:a"><a href="/dashboard">Dashboard</a></li>
             </ul>
         </div>
     </nav>
@@ -44,9 +45,6 @@
             <li><a href="/explore">Explore</a></li>
             <li><a href="/modlog">Mod Log</a></li>
             {{ if .User.Username }}
-                {{ if .User.IsModOrAdmin }}
-                    <li><a href="/dashboard">Dashboard</a></li>
-                {{ end }}
                 {{ if .User.IsAdmin }}
                     <li><a href="/monitor">Monitor</a></li>
                 {{ end }}

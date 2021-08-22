@@ -130,7 +130,7 @@
     &-Truncate {
         overflow: hidden;
         white-space: pre;
-        max-width: 240px
+        max-width: 240px;
         text-overflow: ellipsis;
         &.M { max-width: 480px }
     }

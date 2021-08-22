@@ -28,7 +28,6 @@ nav {
     ul {
         padding: 0;
         list-style: none;
-        overflow: hidden;
 
         li a {
             display: flex;
@@ -38,9 +37,7 @@ nav {
 
     // Menu.
     .menu {
-        clear: both;
         max-height: 0;
-        // margin: 0 -1rem;
         transition: max-height 0.425s linear;
 
         // Icon wrapper.
@@ -52,7 +49,6 @@ nav {
             position: absolute;
             display: inline-flex;
             cursor: pointer;
-            float: right;
 
             // Icon.
             .i {
@@ -98,32 +94,28 @@ nav {
     }
 }
 
-@media screen and (max-width: 820px) {
+@media screen and (max-width: 959px) {
     .menu {
         padding: 0;
-        form {
-            margin: 1rem;
-            max-width: calc(100% - 2rem);
+        form:not(#z) {
+            margin: 1rem 0;
+            max-width: 100%;
         }
     }
-    nav ul li {
-        a {
+    .navbar {
+        overflow-y: hidden;
+        ul li a {
             padding: 1rem;
             &:hover { background-color: var(--bg-3) }
         }
     }
 }
 
-@media screen and (min-width: 821px) {
-    nav {
+@media screen and (min-width: 960px) {
+    .navbar {
         > div { flex-direction: row }
-        li {
-            float: left;
-            a { margin-left: 1rem }
-        }
+        li a { margin-left: 1rem }
         .menu {
-            clear: none;
-            float: right;
             display: flex;
             align-items: center;
             max-height: none;
