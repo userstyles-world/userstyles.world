@@ -14,7 +14,7 @@
             background-color: var(--bg-2);
         }
         table tr > * { padding: 0.5rem }
-        tbody tr:nth-child(2n-1) { background-color: var(--bg-3) }
+        table tr { box-shadow: 0 1px var(--bg-3) }
     </style>
 
     <section class="mt:m ta:c">
@@ -40,8 +40,8 @@
                         <tr id="entry_{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .CreatedAt | Date }}</td>
-                            <td>{{ .TargetUserName }}</td>
-                            <td>{{ .Reason }}</td>
+                            <td class="u-Truncate">{{ .TargetUserName }}</td>
+                            <td class="u-Truncate M">{{ .Reason }}</td>
                         </tr>
                     {{ end }}
                 </tbody>
@@ -67,9 +67,9 @@
                         <tr id="entry_{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .CreatedAt | Date }}</td>
-                            <td>{{ .TargetData }}</td>
+                            <td class="u-Truncate">{{ .TargetData }}</td>
                             <td><a href="/user/{{ .TargetUserName }}">{{ .TargetUserName }}</a></td>
-                            <td>{{ .Reason }}</td>
+                            <td class="u-Truncate M">{{ .Reason }}</td>
                         </tr>
                     {{ end }}
                 </tbody>

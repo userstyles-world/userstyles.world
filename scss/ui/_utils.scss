@@ -126,4 +126,12 @@
         width: 100%;
         max-width: var(--layout-max-width);
     }
+
+    &-Truncate {
+        overflow: hidden;
+        white-space: pre;
+        max-width: 240px
+        text-overflow: ellipsis;
+        &.M { max-width: 480px }
+    }
 }
