@@ -30,7 +30,11 @@ func GetExplore(c *fiber.Ctx) error {
 	// Adjust pagination numbers.
 	p.CalcItems(int(styleCount), 40)
 
+	// Set sort query in pagination.
 	fv := c.Query("sort")
+	p.Sort = fv
+
+	// Set sorting method.
 	var orderFunction string
 	switch fv {
 	case "newest":

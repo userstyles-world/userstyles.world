@@ -11,6 +11,7 @@ type Pagination struct {
 	Next int
 	Max  int
 	Rem  int
+	Sort string
 }
 
 func (p *Pagination) ConvPage(s string) error {
