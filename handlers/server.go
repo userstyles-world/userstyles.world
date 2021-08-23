@@ -44,12 +44,12 @@ func Initialize() {
 		app.Use(logger.New())
 	}
 
-	app.Use(core.HSTSMiddleware)
-	app.Use(core.CSPMiddleware)
-	app.Use(compress.New())
 	if config.Production {
+		app.Use(core.HSTSMiddleware)
+		app.Use(core.CSPMiddleware)
 		app.Use(limiter.New(limiter.Config{Max: 600}))
 	}
+	app.Use(compress.New())
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
 	if config.PerformanceMonitor {
