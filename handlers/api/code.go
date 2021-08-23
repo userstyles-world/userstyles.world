@@ -25,10 +25,14 @@ func GetStyleSource(c *fiber.Ctx) error {
 	url := "https://userstyles.world/api/style/" + id + ".user.css"
 	uc.OverrideUpdateURL(url)
 
+	// Upsert style installs.
 	go func(id, ip string) {
-		// Count installs.
-		if _, err := models.AddStatsToStyle(id, ip, true); err != nil {
-			log.Warn.Printf("Failed to add stats to style %s: %s\n", id, err.Error())
+		s := new(models.Stats)
+		if err := s.CreateRecord(id, ip); err != nil {
+			log.Warn.Printf("Failed to create record for %s: %s\n", id, err.Error())
+		}
+		if err := s.UpsertInstall(); err != nil {
+			log.Warn.Printf("Failed to upsert install for %v: %s\n", s.StyleID, err.Error())
 		}
 	}(id, c.IP())
 

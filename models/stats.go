@@ -50,46 +50,65 @@ func (_ DashStats) GetCounts(t string) (q []DashStats, err error) {
 	return q, nil
 }
 
-func AddStatsToStyle(id, ip string, install bool) (Stats, error) {
-	s := new(Stats)
+// CreateRecord prepares style stats for upsert queries.
+func (s *Stats) CreateRecord(id, ip string) error {
+	hash, err := crypto.CreateHashedRecord(id, ip)
+	if err != nil {
+		return err
+	}
 
 	styleID, err := strconv.Atoi(id)
 	if err != nil {
-		return *s, err
+		return err
 	}
 
-	// Set values.
 	s.StyleID = styleID
-	s.Hash, err = crypto.CreateHashedRecord(id, ip)
-	if err != nil {
-		return *s, err
-	}
+	s.Hash = hash
 
+	return nil
+}
+
+// UpsertInstall updates or inserts style install date.
+func (s *Stats) UpsertInstall() error {
 	t := time.Now()
-	assignment := map[string]interface{}{
-		"updated_at": t,
-	}
-	if install {
-		s.Install = t
-		assignment["install"] = t
-	} else {
-		s.View = t
-		assignment["view"] = t
-	}
+	s.Install = t
 
-	err = db().
+	if err := db().
+		Debug().
 		Model(modelStats).
 		Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "hash"}},
-			DoUpdates: clause.Assignments(assignment),
+			Columns: []clause.Column{{Name: "hash"}},
+			DoUpdates: clause.Assignments(map[string]interface{}{
+				"updated_at": t,
+				"install":    t,
+			}),
 		}).
-		Create(s).
-		Error
-	if err != nil {
-		return *s, err
+		Create(s).Error; err != nil {
+		return err
 	}
 
-	return *s, nil
+	return nil
+}
+
+// UpsertView updates or inserts style view date.
+func (s *Stats) UpsertView() error {
+	t := time.Now()
+	s.View = t
+
+	if err := db().
+		Model(modelStats).
+		Clauses(clause.OnConflict{
+			Columns: []clause.Column{{Name: "hash"}},
+			DoUpdates: clause.Assignments(map[string]interface{}{
+				"updated_at": t,
+				"view":       t,
+			}),
+		}).
+		Create(s).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetWeeklyInstallsForStyle(id string) (weekly int64) {

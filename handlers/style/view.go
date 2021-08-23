@@ -35,10 +35,14 @@ func GetStylePage(c *fiber.Ctx) error {
 		return c.Redirect(url, fiber.StatusSeeOther)
 	}
 
+	// Upsert style views.
 	go func(id, ip string) {
-		// Count views.
-		if _, err := models.AddStatsToStyle(id, ip, false); err != nil {
-			log.Warn.Printf("Failed to add stats to style %s: %s\n", id, err.Error())
+		s := new(models.Stats)
+		if err := s.CreateRecord(id, ip); err != nil {
+			log.Warn.Printf("Failed to create record for %s: %s\n", id, err.Error())
+		}
+		if err := s.UpsertView(); err != nil {
+			log.Warn.Printf("Failed to upsert views for %v: %s\n", s.StyleID, err.Error())
 		}
 	}(id, c.IP())
 
