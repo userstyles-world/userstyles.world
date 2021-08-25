@@ -2,6 +2,7 @@ package charts
 
 import (
 	"bytes"
+	"errors"
 	"time"
 
 	"github.com/userstyles-world/go-chart/v2"
@@ -100,6 +101,10 @@ func GetModelHistory(vals []models.DashStats, t time.Time, title string) (string
 				Value: float64(val.Count),
 			})
 		}
+	}
+
+	if len(bars) < 1 {
+		return "", errors.New("please provide at least one bar")
 	}
 
 	usersGraph := chart.BarChart{
