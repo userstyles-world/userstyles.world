@@ -11,10 +11,8 @@ import (
 	"userstyles.world/utils"
 )
 
-const archiveURL = "https://raw.githubusercontent.com/33kk/uso-archive/"
-
 func isUSo(url string) bool {
-	return strings.HasPrefix(url, archiveURL)
+	return strings.HasPrefix(url, utils.ArchiveURL)
 }
 
 func updateMeta(a, b *models.Style) bool {
