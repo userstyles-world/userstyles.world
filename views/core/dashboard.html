@@ -27,16 +27,16 @@
 
     <section class="overview">
         <h2 class="td:d">Overview</h2>
-        {{ with .LatestStyle }}
-            <p>
-                {{ $.TotalStyles }} total styles
-                <span><a href="/dashboard?data=styles">({{ .Count }} today)</a></span>
-            </p>
-        {{ end }}
         {{ with .LatestUser }}
             <p>
                 {{ $.TotalUsers }} total users
                 <span><a href="/dashboard?data=users">({{ .Count }} today)</a></span>
+            </p>
+        {{ end }}
+        {{ with .LatestStyle }}
+            <p>
+                {{ $.TotalStyles }} total styles
+                <span><a href="/dashboard?data=styles">({{ .Count }} today)</a></span>
             </p>
         {{ end }}
         {{ with .System }}
@@ -102,7 +102,7 @@
         {{ end }}
     </section>
 
-    <section class="users mt:l">
+    <section class="users u-TableScrollX">
         <h2 class="td:d">Users</h2>
         <p class="fg:3 mb:m">{{ with .Users }}{{ len . }} users in total.{{ end }}</p>
 
@@ -122,7 +122,7 @@
                     {{ range .Users }}
                         <tr>
                             <td>{{ .ID }}</td>
-                            <td>{{ .CreatedAt | shortDate }}</td>
+                            <td class="u-TableMin">{{ .CreatedAt | shortDate }}</td>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .DisplayName }}</td>
                             {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}

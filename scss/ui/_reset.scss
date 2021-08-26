@@ -26,7 +26,7 @@ html {
             min-height: calc(100vh - 130px);
 
             @media screen and (max-width: 1400px) {
-                @at-root html { overflow-x: hidden }
+                @at-root main > .wrapper { overflow-x: hidden }
             }
         }
 

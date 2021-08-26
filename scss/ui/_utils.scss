@@ -135,7 +135,11 @@
         &.M { max-width: 480px }
     }
 
-    &-TableNum {
-        font-feature-settings: 'tnum' 1;
+    &-Table {
+        &Num { font-feature-settings: 'tnum' 1 }
+        @media screen and (max-width: 1400px) {
+            &ScrollX { overflow-x: scroll }
+            &Min { min-width: 170px }
+        }
     }
 }
