@@ -7,7 +7,7 @@ import (
 	"userstyles.world/modules/log"
 )
 
-var size = 20
+var size = 25
 
 func ImportedStyles() {
 	styles, err := models.GetImportedStyles()
@@ -26,11 +26,13 @@ func ImportedStyles() {
 		}
 
 		for _, style := range styles[i:j] {
-			time.Sleep(500 * time.Millisecond)
-			go Batch(style)
+			if !style.Archived {
+				time.Sleep(200 * time.Millisecond)
+				go Batch(style)
+			}
 		}
 
-		time.Sleep(time.Second * 15)
+		time.Sleep(time.Second * 5)
 	}
 
 	log.Info.Println("Mirrored styles have been updated.")

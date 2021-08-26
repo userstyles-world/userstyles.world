@@ -35,10 +35,6 @@ func getSourceCode(style models.Style) string {
 }
 
 func Batch(batch models.Style) {
-	if batch.Archived {
-		return
-	}
-
 	s := new(models.Style)
 	s.ID = batch.ID
 
