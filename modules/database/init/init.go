@@ -3,7 +3,6 @@ package init
 import (
 	l "log"
 	"os"
-	"strconv"
 	"time"
 
 	"gorm.io/driver/sqlite"
@@ -37,7 +36,7 @@ func connect() (*gorm.DB, error) {
 		logger.Config{
 			SlowThreshold: time.Second,
 			LogLevel:      logLevel(),
-			Colorful:      colorful(),
+			Colorful:      config.DBColor,
 		},
 	)
 
@@ -63,7 +62,7 @@ func Initialize() {
 
 	shouldSeed := false
 	// Generate data for development.
-	if dropTables() && !config.Production {
+	if config.DBDrop && !config.Production {
 		for _, table := range tables {
 			if err := drop(table.model); err != nil {
 				log.Warn.Fatalf("Failed to drop %s, err: %s\n", table.name, err.Error())
@@ -224,9 +223,8 @@ func seed() {
 		},
 	}
 
-	if config.DBRandomData != "false" {
-		amount, _ := strconv.Atoi(config.DBRandomData)
-		s, u := generateData(amount)
+	if config.DBRandomData {
+		s, u := generateData(config.DBRandomDataAmount)
 		styles = append(styles, s...)
 		users = append(users, u...)
 	}

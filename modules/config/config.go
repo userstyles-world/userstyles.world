@@ -1,9 +1,6 @@
 package config
 
 import (
-	"fmt"
-	"os"
-	"strconv"
 	"time"
 )
 
@@ -16,9 +13,10 @@ var (
 	Port                 = getEnv("PORT", ":3000")
 	DB                   = getEnv("DB", "dev.db")
 	DBDebug              = getEnv("DB_DEBUG", "silent")
-	DBColor              = getEnv("DB_COLOR", "false")
-	DBDrop               = getEnv("DB_DROP", "false")
-	DBRandomData         = getEnv("DB_RANDOM_DATA", "false")
+	DBColor              = getEnvBool("DB_COLOR", false)
+	DBDrop               = getEnvBool("DB_DROP", false)
+	DBRandomData         = getEnvBool("DB_RANDOM_DATA", false)
+	DBRandomDataAmount   = getEnvInt("DB_RANDOM_DATA_AMOUNT", 100)
 	Salt                 = getEnvInt("SALT", 10)
 	JWTSigningKey        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
 	VerifyJWTSigningKey  = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")
@@ -37,7 +35,7 @@ var (
 	GitlabClientSecret   = getEnv("GITLAB_CLIENT_SECRET", "www.youtube.com/watch?v=dQw4w9WgXcQ")
 	CodebergClientID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	CodebergClientSecret = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
-	PerformanceMonitor   = getEnv("PERFORMANCE_MONITOR", "false") == "true"
+	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false) == true
 	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
 
 	// Production is used for various "feature flags".
@@ -62,31 +60,6 @@ var (
 	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
 	AllowedImagesRe = `^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw)\.githubusercontent\.com|github\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)(\?inline=(true|false))?$`
 )
-
-func getEnvInt(name string, defaultValue int) int {
-	envValue := getEnv(name, "__NOT_FOUND__")
-	if envValue == "__NOT_FOUND__" {
-		return defaultValue
-	}
-
-	envInt, err := strconv.Atoi(envValue)
-	if err != nil {
-		return defaultValue
-	}
-	return envInt
-}
-
-func getEnv(name, fallback string) string {
-	if val, set := os.LookupEnv(name); set {
-		return val
-	}
-
-	if fallback != "" {
-		return fallback
-	}
-
-	panic(fmt.Sprintf(`Env variable not found: %v`, name))
-}
 
 // OAuthURL returns the proper callback URL depending on the environment.
 func OAuthURL() string {

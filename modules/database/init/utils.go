@@ -20,24 +20,6 @@ func logLevel() logger.LogLevel {
 	}
 }
 
-func colorful() bool {
-	switch config.DBColor {
-	case "true", "yes", "1":
-		return true
-	default:
-		return false
-	}
-}
-
-func dropTables() bool {
-	switch config.DBDrop {
-	case "true", "yes", "1":
-		return true
-	default:
-		return false
-	}
-}
-
 func migrate(t ...interface{}) error {
 	return database.Conn.AutoMigrate(t...)
 }
