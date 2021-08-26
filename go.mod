@@ -18,7 +18,8 @@ require (
 	github.com/ohler55/ojg v1.12.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/russross/blackfriday/v2 v2.1.0
-	github.com/userstyles-world/go-chart/v2 v2.5.2-0.20210826022259-573edcedef01
+	github.com/userstyles-world/go-chart/v2 v2.5.2
+	github.com/valyala/bytebufferpool v1.0.0
 	github.com/vednoc/go-usercss-parser v0.9.2
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	gorm.io/driver/sqlite v1.1.4
@@ -57,7 +58,6 @@ require (
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/steveyen/gtreap v0.1.0 // indirect
-	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.26.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
