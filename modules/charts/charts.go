@@ -1,11 +1,11 @@
 package charts
 
 import (
-	"bytes"
 	"errors"
 	"time"
 
 	"github.com/userstyles-world/go-chart/v2"
+	"github.com/valyala/bytebufferpool"
 
 	"userstyles.world/models"
 )
@@ -55,7 +55,8 @@ func GetStatsHistory(history []models.History) (string, string, error) {
 	}
 	dailyGraph.Elements = []chart.Renderable{chart.Legend(&dailyGraph)}
 
-	daily := bytes.NewBuffer([]byte{})
+	daily := bytebufferpool.Get()
+	defer bytebufferpool.Put(daily)
 	dailyFailed := daily.Len() != 220
 	if err := dailyGraph.Render(chart.SVG, daily); err != nil && dailyFailed {
 		return "", "", err
@@ -83,7 +84,8 @@ func GetStatsHistory(history []models.History) (string, string, error) {
 	}
 	totalGraph.Elements = []chart.Renderable{chart.Legend(&totalGraph)}
 
-	total := bytes.NewBuffer([]byte{})
+	total := bytebufferpool.Get()
+	defer bytebufferpool.Put(total)
 	totalFailed := total.Len() != 220
 	if err := totalGraph.Render(chart.SVG, total); err != nil && totalFailed {
 		return "", "", err
@@ -119,7 +121,8 @@ func GetModelHistory(vals []models.DashStats, t time.Time, title string) (string
 		},
 	}
 
-	b := bytes.NewBuffer([]byte{})
+	b := bytebufferpool.Get()
+	defer bytebufferpool.Put(b)
 	notEnoughData := b.Len() != 220
 	if err := usersGraph.Render(chart.SVG, b); err != nil && notEnoughData {
 		return "", err
