@@ -99,8 +99,8 @@ func New(viewDir ...string) *html.Engine {
 		return template.HTML(time.Format("January 02, 2006 15:04"))
 	})
 
-	engine.AddFunc("ymdhmsDate", func(time time.Time) template.HTML {
-		return template.HTML(time.Format("2006-02-01 15:04:03"))
+	engine.AddFunc("shortDate", func(time time.Time) template.HTML {
+		return template.HTML(time.Format("2006-02-01 15:04"))
 	})
 
 	engine.AddFunc("subtract", func(a, b int) template.HTML {

@@ -112,7 +112,6 @@
                 <thead>
                     <th>ID</th>
                     <th>Created at</th>
-                    <th>Updated at</th>
                     <th>Username</th>
                     <th>Display name</th>
                     {{ if $.User.IsAdmin }}<th>Email</th>{{ end }}
@@ -123,8 +122,7 @@
                     {{ range .Users }}
                         <tr>
                             <td>{{ .ID }}</td>
-                            <td>{{ .CreatedAt | ymdhmsDate }}</td>
-                            <td>{{ .UpdatedAt | ymdhmsDate }}</td>
+                            <td>{{ .CreatedAt | shortDate }}</td>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .DisplayName }}</td>
                             {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}

@@ -134,4 +134,8 @@
         text-overflow: ellipsis;
         &.M { max-width: 480px }
     }
+
+    &-TableNum {
+        font-feature-settings: 'tnum' 1;
+    }
 }

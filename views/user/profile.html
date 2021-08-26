@@ -8,6 +8,9 @@
             <p class="displayname"><span class="minw">Display name</span>{{ . }}</p>
         {{ end }}
         <p class="joined"><span class="minw">Joined</span>{{ .Profile.CreatedAt | Date }}</p>
+        {{ if .User.IsModOrAdmin }}
+            <p class="updated"><span class="minw">Updated</span>{{ .Profile.UpdatedAt | Date }}</p>
+        {{ end }}
         <h2 class="sub-title td:d mt:l">Biography</h2>
         <div class="md">
             {{- with .Profile.Biography -}}
