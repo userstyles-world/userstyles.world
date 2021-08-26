@@ -6,8 +6,8 @@ import (
 	"github.com/go-co-op/gocron"
 
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/update"
 	"userstyles.world/services/snapshot"
-	"userstyles.world/services/update"
 )
 
 func Initialize() {

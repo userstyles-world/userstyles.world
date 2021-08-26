@@ -60,7 +60,7 @@ func Batch(batch models.Style) {
 				log.Warn.Printf("Failed to mirror meta for %d: %s\n", batch.ID, err.Error())
 			}
 			if err = search.IndexStyle(s.ID); err != nil {
-				log.Warn.Printf("Failedto re-index style %d: %s\n", s.ID, err.Error())
+				log.Warn.Printf("Failed to re-index style %d: %s\n", s.ID, err.Error())
 			}
 		}
 	}
@@ -68,7 +68,7 @@ func Batch(batch models.Style) {
 	// Get new style source code.
 	style, err := usercss.ParseFromURL(getSourceCode(batch))
 	if err != nil {
-		log.Warn.Printf("Failed to parse a style %d from URL: %s\n", batch.ID, err.Error())
+		log.Warn.Printf("Failed to parse style %d from URL: %s\n", batch.ID, err.Error())
 		return
 	}
 
@@ -80,10 +80,11 @@ func Batch(batch models.Style) {
 
 	// Mirror source code if versions don't match.
 	if style.Version != usercss.ParseFromString(batch.Code).Version {
-		log.Warn.Printf("Version for style %d was changed.\n", batch.ID)
 		s.Code = style.SourceCode
 		if err := models.UpdateStyle(s); err != nil {
 			log.Warn.Printf("Failed to mirror code for %d: %s\n", batch.ID, err)
+			return
 		}
+		log.Info.Printf("Mirrored code for style %d.\n", batch.ID)
 	}
 }
