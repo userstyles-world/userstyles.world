@@ -54,7 +54,7 @@ func Test404Pages(t *testing.T) {
 	t.Parallel()
 
 	app := fiber.New(fiber.Config{
-		Views: templates.New(),
+		Views: templates.New("../../views"),
 	})
 	app.Get("/", func(c *fiber.Ctx) error {
 		c.Response().Header.SetContentType(fiber.MIMETextHTMLCharsetUTF8)
@@ -96,6 +96,7 @@ func Test404Pages(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	body = make([]byte, 4096)
 	if res.StatusCode != fiber.StatusNotFound {
 		t.Error("Expected 404, got ", res.StatusCode)
 	}

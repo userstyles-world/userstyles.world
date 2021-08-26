@@ -47,9 +47,13 @@ func status() sys {
 	}
 }
 
-func New() *html.Engine {
-	engine := html.New("./views", ".html")
-
+func New(viewDir ...string) *html.Engine {
+	var engine *html.Engine
+	if len(viewDir) > 0 {
+		engine = html.New(viewDir[0], ".html")
+	} else {
+		engine = html.New("./views", ".html")
+	}
 	engine.AddFunc("config", func(key string) template.HTML {
 		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
 	})
