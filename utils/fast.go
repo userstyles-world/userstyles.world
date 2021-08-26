@@ -20,12 +20,7 @@ func UnsafeString(b []byte) string {
 
 // UnsafeBytes returns a byte pointer without allocation.
 func UnsafeBytes(s string) (bs []byte) {
-	sh := (*reflect.StringHeader)(unsafe.Pointer(&s))
-	bh := (*reflect.SliceHeader)(unsafe.Pointer(&bs))
-	bh.Data = sh.Data
-	bh.Len = sh.Len
-	bh.Cap = sh.Len
-	return bs
+	return unsafe.Slice((*byte)(unsafe.Pointer((*reflect.StringHeader)(unsafe.Pointer(&s)).Data)), len(s))
 }
 
 func EncodeToString(src []byte) string {
