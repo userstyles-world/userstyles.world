@@ -13,7 +13,7 @@ func Search(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
 	q := c.Query("q")
-	s, _ := search.FindStylesByText(q)
+	s, metrics, _ := search.FindStylesByText(q)
 
 	fv := c.Query("sort")
 
@@ -48,5 +48,6 @@ func Search(c *fiber.Ctx) error {
 		"Root":      c.OriginalURL() == "/search",
 		"Sort":      fv,
 		"Canonical": "search",
+		"Metrics":   metrics,
 	})
 }

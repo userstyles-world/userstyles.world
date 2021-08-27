@@ -1,3 +1,4 @@
+
 <div class="wrapper py:l">
     <section class="header flex f-col ta:c">
         <h1>Search</h1>
@@ -32,6 +33,12 @@
 
     <section class="mt:l">
         {{ if gt (len .Styles) 0 }}
+            <h3>Metrics of search engine:</h3>
+            <div>
+                <p>Hits: {{ .Metrics.Hits }}</p>
+                <p>TIme Spent: {{ Elapsed .Metrics.TimeSpent }}</p>
+            </div>
+
             {{/* template "partials/debug-styles" . */}}
             <div class="grid flex rwrap mx:r mt:m">
                 {{ range .Styles }}

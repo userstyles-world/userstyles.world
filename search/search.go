@@ -27,6 +27,11 @@ type MinimalStyle struct {
 	Installs    int       `json:"installs"`
 }
 
+type SearchPerformanceMetrics struct {
+	Hits      int
+	TimeSpent time.Duration
+}
+
 func (s MinimalStyle) Slug() string {
 	return strings.SlugifyURL(s.Name)
 }
@@ -43,11 +48,13 @@ func (s MinimalStyle) Author() string {
 	return s.Username
 }
 
-func FindStylesByText(text string) ([]MinimalStyle, error) {
+func FindStylesByText(text string) ([]MinimalStyle, SearchPerformanceMetrics, error) {
+	performanceMetrics := SearchPerformanceMetrics{}
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
 	// This way it will be more "loslly" and actually uses the tokenizers.
 	// That we provide within the mappings.go and provide better results.
+	timeStart := time.Now()
 	sanitzedQuery := bleve.NewMatchQuery(text)
 
 	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, 99, 0, false)
@@ -55,23 +62,26 @@ func FindStylesByText(text string) ([]MinimalStyle, error) {
 
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
-		return nil, err
+		return nil, SearchPerformanceMetrics{}, err
 	}
 
 	returnResult := make([]MinimalStyle, 0, len(sr.Hits))
+
+	performanceMetrics.Hits = len(sr.Hits)
+
 	for _, hit := range sr.Hits {
 		if err != nil {
-			return nil, err
+			return nil, SearchPerformanceMetrics{}, err
 		}
 
 		created, err := time.Parse(timeFormat, hit.Fields["created_at"].(string))
 		if err != nil {
-			return nil, err
+			return nil, SearchPerformanceMetrics{}, err
 		}
 
 		updated, err := time.Parse(timeFormat, hit.Fields["updated_at"].(string))
 		if err != nil {
-			return nil, err
+			return nil, SearchPerformanceMetrics{}, err
 		}
 
 		styleInfo := MinimalStyle{
@@ -90,6 +100,6 @@ func FindStylesByText(text string) ([]MinimalStyle, error) {
 
 		returnResult = append(returnResult, styleInfo)
 	}
-
-	return returnResult, nil
+	performanceMetrics.TimeSpent = time.Since(timeStart)
+	return returnResult, performanceMetrics, nil
 }

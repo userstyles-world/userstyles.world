@@ -145,6 +145,12 @@ func New(viewDir ...string) *html.Engine {
 		return template.HTML(config.BaseURL() + "/" + url.(string))
 	})
 
+	engine.AddFunc("Elapsed", func(dur time.Duration) template.HTML {
+		// Normalize duration.
+		dur = dur.Round(time.Microsecond)
+		return template.HTML(dur.String())
+	})
+
 	if !config.Production {
 		engine.Reload(true)
 	}
