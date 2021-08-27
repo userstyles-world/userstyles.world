@@ -73,7 +73,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 
-* **db:** revert duplicate style conditional ([02a8101](https://github.com/userstyles-world/userstyles.world/commit/02a81019643a1d309c2e46be69baddc2b8c42a10))
+* **db:** revert duplicate style conditional ([02a8101](https://github.com/userstyles-world/userstyles.world/commit/02a81019643a1d309c2e46be69baddc2b8c42a10)), closes [#79](https://github.com/userstyles-world/userstyles.world/issues/79)
 
 ## [1.6.0](https://github.com/userstyles-world/userstyles.world/compare/v1.5.0...v1.6.0) (2021-08-11)
 
