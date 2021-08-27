@@ -14,7 +14,7 @@
                 required pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
                 placeholder="Path to external userstyle's install URL">
 
-            <label for="preview">Preview image</label>
+            <label for="preview">Preview image URL</label>
             <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
             <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
             <input
@@ -30,18 +30,18 @@
                 placeholder="e.g userstyles">
 
             <div class="ta:l">
-                <p class="mb:s fg:3"><i>Only available to styles imported from USo-archive.</i></p>
+                <p class="mb:s fg:3">Will mirror style metadata (name, description, and notes in case of USo-archive).</p>
                 <div class="checkbox flex mb:m">
                     <input type="checkbox" name="mirrorMeta" id="mirrorMeta">
                     {{ template "partials/checkboxes" }}
-                    <label for="mirrorMeta">Mirror style metadata (name, description, notes, and screenshot)</label>
+                    <label for="mirrorMeta">Mirror style metadata</label>
                 </div>
-                <p class="mb:s fg:3"><i>Available to all imported styles. You can set a custom mirror URL later. <a href="/docs/faq#why-is-mirroring-source-code-updates-not-working">Need help?</a></i></p>
+                <p class="mb:s fg:3">Available to all imported styles. You can set a custom mirror URL later. <a href="/docs/faq#why-is-mirroring-source-code-updates-not-working">Need help?</a></p>
                 <div class="checkbox flex mb:m">
                     <input type="checkbox" name="mirrorCode" id="mirrorCode">
                     {{ template "partials/checkboxes" }}
                     <label for="mirrorCode">
-                        Mirror source code
+                        Mirror source code updates
                         <a
                             data-tooltip="Read how mirroring source code works"
                             href="/docs/faq#how-does-mirroring-source-code-work">

@@ -42,7 +42,7 @@
                 placeholder="e.g. UserStyles.world tweaks">
 
             <label for="description">Description</label>
-            <i class="fg:3">Supports Markdown syntax.</i>
+            <i class="fg:3">Brief description of what your userstyle does. Will be used for SEO. Supports Markdown syntax.</i>
             <textarea
                 required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
                 type="text" name="description"
@@ -50,17 +50,18 @@
             >{{ .Styles.Description }}</textarea>
 
             <label for="notes">Notes</label>
-            <i class="fg:3">Supports Markdown syntax.</i>
+            <i class="fg:3">In-depth guides, changelog, extra requirements, etc. Supports Markdown syntax.</i>
             <textarea
                 type="text" name="notes"
                 placeholder="Userstyle's instructions, release notes, etc."
             >{{ .Styles.Notes }}</textarea>
 
             <label for="homepage">Homepage</label>
+            <i class="fg:3">Link to userstyle's homepage, bug tracker, etc.</i>
             <input
                 pattern="^https?:\/\/.*$"
                 type="text" name="homepage" value="{{ .Styles.Homepage }}"
-                placeholder="Link to userstyle's project home, bug tracker, etc.">
+                placeholder="https://github.com/userstyles-world/userstyles.world">
 
             {{- if eq .Method "edit" }}
                 <p>Current image</p>
@@ -70,14 +71,14 @@
                 </div>
             {{ end }}
 
-            <label for="previewUrl">Preview URL</label>
+            <label for="previewUrl">Preview iamge URL</label>
             <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
             <input
                 pattern="{{ config "allowedImagesRe" }}"
                 type="text" name="previewUrl" value="{{ .Styles.Preview }}"
                 placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
-            <label for="preview">Preview image</label>
+            <label for="preview">Upload preview image</label>
             <i class="fg:3">Only jpg, jpeg, png, avif, and webp formats are allowed.</i>
             <input type="file"
                 name="preview"
@@ -114,10 +115,11 @@
                 <div class="ta:l">
                     {{- $mirrorMeta := "" -}}
                     {{- if .Styles.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
+                    <p class="mb:s fg:3">Will mirror style metadata (name, description, and notes in case of USo-archive).</p>
                     <div class="checkbox iflex mb:m">
                         <input type="checkbox" name="mirrorMeta" id="mirrorMeta" {{ $mirrorMeta }}>
                         {{ template "partials/checkboxes" }}
-                        <label for="mirrorMeta">Mirror style metadata (only for styles from USo-archive)</label>
+                        <label for="mirrorMeta">Mirror style metadata</label>
                     </div>
                 </div>
 

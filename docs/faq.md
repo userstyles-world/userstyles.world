@@ -183,7 +183,7 @@ it in the following:
 ### How does mirroring source code work?
 
 Every 30 minutes (00:30, 01:00, and so on) we check for style updates. Styles
-are checked in batches of 20 (as of August 20, 2021) and not all at once, so it
+are checked in batches of 25 (as of August 27, 2021) and not all at once, so it
 can take up to a few minutes for your userstyle to be processed. The style will
 be updated if the `@version` field doesn't match the one in our database.
 
