@@ -270,8 +270,9 @@ label[for="remember"] {
     > :nth-child(2) {
         padding-left: 0.25rem;
         &::after {
-            content: '|';
-            padding: 0 0.5rem;
+            content: '·';
+            padding-left: 0.5rem;
+            color: var(--fg-4);
         }
     }
 }

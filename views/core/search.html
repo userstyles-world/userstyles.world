@@ -33,10 +33,10 @@
 
     <section class="mt:l">
         {{ if gt (len .Styles) 0 }}
-            <div class="flex search-perf-metrics">
+            <div class="search-perf-metrics">
                 <span class="f:b">Metrics of search engine:</span>
-                <p>Hits: {{ .Metrics.Hits }}</p>
-                <p>Time Spent: {{ Elapsed .Metrics.TimeSpent }}</p>
+                <span>Hits: {{ .Metrics.Hits }}</span>
+                <span>Time Spent: {{ Elapsed .Metrics.TimeSpent }}</span>
             </div>
 
             {{/* template "partials/debug-styles" . */}}
