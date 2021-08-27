@@ -124,10 +124,20 @@ func BanPost(c *fiber.Ctx) error {
 		})
 	}
 
-	// Delete from database.
+	// Delete style from database.
 	q := new(models.Style)
-	if err = database.Conn.Delete(q, "styles.id = ?", id).Error; err != nil {
+	if err = database.Conn.Delete(q, "styles.id = ?", s.ID).Error; err != nil {
 		log.Warn.Printf("Failed to delete style %d: %s\n", s.ID, err.Error())
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"User":  u,
+		})
+	}
+
+	// Delete stats from database.
+	if err = new(models.Stats).Delete(s.ID); err != nil {
+		log.Warn.Printf("Failed to delete stats for style %d: %s\n", s.ID, err.Error())
 		c.Status(fiber.StatusInternalServerError)
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",

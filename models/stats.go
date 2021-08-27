@@ -111,6 +111,11 @@ func (s *Stats) UpsertView() error {
 	return nil
 }
 
+// Delete will remove stats for a given style ID.
+func (s *Stats) Delete(id interface{}) error {
+	return db().Debug().Delete(&modelStats, "style_id = ?", id).Error
+}
+
 func GetWeeklyInstallsForStyle(id string) (weekly int64) {
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
 	q := "style_id = ? and install > 0 and created_at > ?"
@@ -168,15 +173,15 @@ SELECT
 	(SELECT count(*) FROM styles
 	 WHERE styles.deleted_at IS NULL) total_styles,
 	(SELECT count(*) FROM stats s
-	 WHERE s.view > 0) total_views,
+	 WHERE s.deleted_at IS NULL AND s.view > 0) total_views,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install > 0) total_installs,
+	 WHERE s.deleted_at IS NULL AND s.install > 0) total_installs,
 	(SELECT count(*) FROM stats s
-	 WHERE s.view > 0 and s.created_at > @d) weekly_views,
+	 WHERE s.deleted_at IS NULL AND s.view > 0 AND s.created_at > @d) weekly_views,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install > 0 and s.created_at > @d) weekly_installs,
+	 WHERE s.deleted_at IS NULL AND s.install > 0 AND s.created_at > @d) weekly_installs,
 	(SELECT count(*) FROM stats s
-	 WHERE s.install > 0 and s.updated_at > @d and s.created_at < @d) weekly_updates
+	 WHERE s.deleted_at IS NULL AND s.install > 0 AND s.updated_at > @d AND s.created_at < @d) weekly_updates
 `
 
 	// TODO: Replace last day with last week when we get enough data.

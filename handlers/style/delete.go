@@ -57,6 +57,7 @@ func DeletePost(c *fiber.Ctx) error {
 		})
 	}
 
+	// Delete style from database.
 	q := new(models.Style)
 	if err = database.Conn.Delete(q, "styles.id = ?", p).Error; err != nil {
 		log.Warn.Printf("Failed to delete style %d: %s\n", s.ID, err.Error())
@@ -66,8 +67,18 @@ func DeletePost(c *fiber.Ctx) error {
 		})
 	}
 
+	// Delete stats from database.
+	if err = new(models.Stats).Delete(s.ID); err != nil {
+		log.Warn.Printf("Failed to delete stats for style %d: %s\n", s.ID, err.Error())
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"User":  u,
+		})
+	}
+
 	if err = search.DeleteStyle(s.ID); err != nil {
-		log.Warn.Printf("Failed to delte style %d: %s", s.ID, err.Error())
+		log.Warn.Printf("Failed to delete style %d: %s", s.ID, err.Error())
 	}
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
