@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. See [standa
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
 
+- [v1.7.0](#1-7-0-https-github-com-userstyles-world-userstyles-world-compare-v1-6-1-v1-7-0-2021-08-27)
 - [v1.6.1](#1-6-1-https-github-com-userstyles-world-userstyles-world-compare-v1-6-0-v1-6-1-2021-08-12)
 - [v1.6.0](#1-6-0-https-github-com-userstyles-world-userstyles-world-compare-v1-5-0-v1-6-0-2021-08-11)
 - [v1.5.0](#1-5-0-https-github-com-userstyles-world-userstyles-world-compare-v1-4-0-v1-5-0-2021-07-18)
@@ -16,6 +17,55 @@ All notable changes to this project will be documented in this file. See [standa
 - [v1.0.0](#1-0-0-https-github-com-userstyles-world-userstyles-world-compare-fef3eb9-v1-0-0-2021-05-16)
 
 <!-- markdown-toc end -->
+
+## [1.7.0](https://github.com/userstyles-world/userstyles.world/compare/v1.6.1...v1.7.0) (2021-08-27)
+
+
+### Features
+
+* **account:** implement 'change password' form ([8d393e4](https://github.com/userstyles-world/userstyles.world/commit/8d393e492d5f32b85674db31be5ad4ae7cdf21e2)), closes [#82](https://github.com/userstyles-world/userstyles.world/issues/82)
+* **account:** restructure and improve HTML forms ([72436f6](https://github.com/userstyles-world/userstyles.world/commit/72436f633d76005923899e5462031003b281edf0))
+* **api:** add basic style stats endpoint ([327e720](https://github.com/userstyles-world/userstyles.world/commit/327e720e03869c07d39d4098119f0f751b475305))
+* **api:** add simpler endpoint for style stats ([812f1d9](https://github.com/userstyles-world/userstyles.world/commit/812f1d965f1033746d1c1e9f2e125aacc9af6f3d))
+* **cron:** speed up mirroring userstyles ([555b5fa](https://github.com/userstyles-world/userstyles.world/commit/555b5fab80610c1200ddf3ac60ea1107c3a3db82))
+* **notifcations:** add notification when style is removed ([9490916](https://github.com/userstyles-world/userstyles.world/commit/9490916584592b9882a4e48bbec2ccd6c36f94c4))
+* **register:** add 'confirm password' field ([b839244](https://github.com/userstyles-world/userstyles.world/commit/b8392444c95e82e8426f1b2580a50bcd0139dd77)), closes [#82](https://github.com/userstyles-world/userstyles.world/issues/82)
+* **search:** add perf metrics ([b7d7184](https://github.com/userstyles-world/userstyles.world/commit/b7d71847681ddcbb7fd78a8b8828bcc202ade92c))
+* **search:** style perf metrics ([9a089cf](https://github.com/userstyles-world/userstyles.world/commit/9a089cf27c429d453122f0830e5ca70c9aff3ac3))
+* **styles:** add content guidelines notice ([299acf4](https://github.com/userstyles-world/userstyles.world/commit/299acf4db7bbea32bb1d1a2b7a9944f03ad12290))
+* **styles:** improve mirroring of code/metadata ([d7d6fda](https://github.com/userstyles-world/userstyles.world/commit/d7d6fdafd404f951ce44694beb6910d600100644)), closes [#83](https://github.com/userstyles-world/userstyles.world/issues/83)
+* take advantage of unsafe.Slice() since go v1.17+ ([5f44ea0](https://github.com/userstyles-world/userstyles.world/commit/5f44ea0b2a76ccbc7e94cb677f99a452b35176bf))
+* **ui:** add basic system stats in a new bar ([2404e92](https://github.com/userstyles-world/userstyles.world/commit/2404e922e10c7f1ebcc0aa88b2785d7ba9b87a64))
+* **ui:** improve overflow for tables ([add6f4d](https://github.com/userstyles-world/userstyles.world/commit/add6f4d9d4fecced4740df11b9326a1049526167))
+* **ui:** improve table styles on Mod Log page ([f75cecb](https://github.com/userstyles-world/userstyles.world/commit/f75cecb92ac049e309fa92a82e004fd5bcb11b2a))
+* **ui:** redirect to edited form on account page ([9b0027e](https://github.com/userstyles-world/userstyles.world/commit/9b0027ebc8c2d1370c9685693fdb3dffebac51fa))
+* **ui:** simplify short dates in tables ([a654bd8](https://github.com/userstyles-world/userstyles.world/commit/a654bd823775dbd37955997e5da452c107ae6d93))
+
+
+### Bug Fixes
+
+* **account:** allow clearing display names ([71f8bef](https://github.com/userstyles-world/userstyles.world/commit/71f8bef222e44f6741b4ed6b94b4349c740732c5))
+* **archive:** update base archive URL ([d6157e5](https://github.com/userstyles-world/userstyles.world/commit/d6157e59faf13e717c0e99f09b0a327b114d0a15)), closes [#86](https://github.com/userstyles-world/userstyles.world/issues/86)
+* **charts:** skip rendering history for new styles ([3e55cb4](https://github.com/userstyles-world/userstyles.world/commit/3e55cb4f04129ea4ed2eefecb7d6e346cb71614f))
+* correct golang version for CodeQL ([3350705](https://github.com/userstyles-world/userstyles.world/commit/3350705fc5a999da9945a4fde9b8681ed5b55499))
+* **css:** prevent overflow in 'Share style' area ([a1018f6](https://github.com/userstyles-world/userstyles.world/commit/a1018f663b91482199395cae9a5b45eb7bdf9d30))
+* **css:** prevent overflow on the actual element ([397e615](https://github.com/userstyles-world/userstyles.world/commit/397e615ec8867ab53a4413467bc9e3dd6a4fdcb8))
+* **dashboard:** link to correct data ([2fb0b55](https://github.com/userstyles-world/userstyles.world/commit/2fb0b554e3265343c67aa9ed2422f19565421329))
+* **dashboard:** skip generating bad bar charts ([25138ff](https://github.com/userstyles-world/userstyles.world/commit/25138ff806ff7fef5de94f7a5fa57b185f9c02ef))
+* **db:** remove stats for deleted/banned styles ([857ff6a](https://github.com/userstyles-world/userstyles.world/commit/857ff6a7f5d84bb953d02cc9218951757196baca))
+* **handlers:** move HSTS/CSP middlewares to prod ([8d0b692](https://github.com/userstyles-world/userstyles.world/commit/8d0b6920d5257e96f71c75a1a7489aca603213d9))
+* **html:** improve a11y for pagination component ([2fb0042](https://github.com/userstyles-world/userstyles.world/commit/2fb0042f9a40b1aa729c26f3276d73f31e33503b))
+* **html:** update references to Codeberg.org ([42d1de4](https://github.com/userstyles-world/userstyles.world/commit/42d1de481d6f12d4d007906fe5d9586d63e3ac65)), closes [#84](https://github.com/userstyles-world/userstyles.world/issues/84)
+* **images:** add more data to error logs ([585acae](https://github.com/userstyles-world/userstyles.world/commit/585acaef6fa2c9503e8d77c42d9696eb290c6a2c))
+* **images:** allow images from GitHub blob pages ([c0de89b](https://github.com/userstyles-world/userstyles.world/commit/c0de89bd48e04576f7a0bd109308ec2d44e7d968)), closes [#81](https://github.com/userstyles-world/userstyles.world/issues/81)
+* **images:** extend and improve raw image URL fix ([c6cdc9d](https://github.com/userstyles-world/userstyles.world/commit/c6cdc9d3d869a042c1673101d1b7db34740a69e4))
+* specify correct view directory ([2937dd4](https://github.com/userstyles-world/userstyles.world/commit/2937dd4e85457d6226fde9da8286f3d8591836b9))
+* **styles:** fix an edge-case for mirror options ([76ff117](https://github.com/userstyles-world/userstyles.world/commit/76ff1174134c364b89f5a08ee33228b3cd04d95b))
+* **styles:** prevent creation of broken userstyles ([67827be](https://github.com/userstyles-world/userstyles.world/commit/67827be25a6fdab8f29eb1e0e48d8146298c25bd))
+* **ts:** make previous page work with CSP ([cffcafe](https://github.com/userstyles-world/userstyles.world/commit/cffcafe36016e4beae29e71febb4b62752f57cde))
+* **ui:** hide overflow on touch-based devices ([86a6ec5](https://github.com/userstyles-world/userstyles.world/commit/86a6ec5aad9f1779c81476747e5c23f3d33006aa))
+* **ui:** make style card overflow pixel-perfect ([e63ea09](https://github.com/userstyles-world/userstyles.world/commit/e63ea093b3797872fdae390f25c1bcb9c577fbfe))
+* **ui:** switch to accent color for footer links ([a5ef219](https://github.com/userstyles-world/userstyles.world/commit/a5ef21927dee9d4ec35de2f7b0ff485e572715c0))
 
 ## [1.6.1](https://github.com/userstyles-world/userstyles.world/compare/v1.6.0...v1.6.1) (2021-08-12)
 
