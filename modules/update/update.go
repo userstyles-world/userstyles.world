@@ -17,7 +17,7 @@ func ImportedStyles() {
 	}
 
 	length := len(styles)
-	log.Info.Printf("Updating %d mirrored styles.\n", size)
+	log.Info.Printf("Updating %d mirrored styles.\n", length)
 
 	for i := 0; i < length; i += size {
 		j := i + size
