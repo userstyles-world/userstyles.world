@@ -52,9 +52,9 @@ func getSourceCode(style models.Style) string {
 }
 
 func Batch(batch models.Style) {
-	// Create new model.
-	style := new(models.Style)
-	style.ID = batch.ID
+	// Select which fields to update.
+	fields := make(map[string]interface{})
+	fields["id"] = batch.ID
 
 	// Don't update database record if nothing changed.
 	var updateReady bool
@@ -67,7 +67,7 @@ func Batch(batch models.Style) {
 	}
 
 	// Exit if source code doesn't pass validation.
-	if errs := usercss.BasicMetadataValidation(uc); errs != nil {
+	if err := usercss.BasicMetadataValidation(uc); err != nil {
 		log.Warn.Printf("Failed to validate style %d.\n", batch.ID)
 		return
 	}
@@ -75,7 +75,7 @@ func Batch(batch models.Style) {
 	// Set new source code.
 	if batch.MirrorCode {
 		if uc.Version != usercss.ParseFromString(batch.Code).Version {
-			style.Code = uc.SourceCode
+			fields["code"] = uc.SourceCode
 			updateReady = true
 		}
 	}
@@ -91,17 +91,16 @@ func Batch(batch models.Style) {
 			}
 
 			if updateArchiveMeta(&batch, s) {
-				style.Name = s.Name
-				style.Notes = s.Notes
-				style.Preview = s.Preview
-				style.Description = s.Description
+				fields["name"] = s.Name
+				fields["notes"] = s.Notes
+				fields["description"] = s.Description
 				updateReady = true
 			}
 		} else {
 			if updateMeta(&batch, uc) {
-				style.Name = uc.Name
-				style.Description = uc.Description
-				style.Homepage = uc.HomepageURL
+				fields["name"] = uc.Name
+				fields["description"] = uc.Description
+				fields["homepage"] = uc.HomepageURL
 				updateReady = true
 			}
 		}
@@ -109,15 +108,15 @@ func Batch(batch models.Style) {
 
 	if updateReady {
 		// Update database record.
-		if err = models.UpdateStyle(style); err != nil {
+		if err = batch.MirrorStyle(fields); err != nil {
 			log.Warn.Printf("Failed to mirror style %d: %s\n", batch.ID, err.Error())
 		} else {
 			log.Info.Printf("Successfully mirrored style %d\n", batch.ID)
 		}
 
 		// Update search index.
-		if err = search.IndexStyle(style.ID); err != nil {
-			log.Warn.Printf("Failed to re-index style %d: %s\n", style.ID, err.Error())
+		if err = search.IndexStyle(batch.ID); err != nil {
+			log.Warn.Printf("Failed to re-index style %d: %s\n", batch.ID, err.Error())
 		}
 	}
 }
