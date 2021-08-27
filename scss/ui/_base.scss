@@ -263,3 +263,15 @@ label[for="remember"] {
     border: 1px solid var(--bg-4);
     > pre { border: none } // TODO: Remove when refactoring.
 }
+
+.search-perf-metrics {
+    line-height: 1.5;
+    color: var(--fg-2);
+    > :nth-child(2) {
+        padding-left: 0.25rem;
+        &::after {
+            content: '|';
+            padding: 0 0.5rem;
+        }
+    }
+}
