@@ -2,8 +2,11 @@ package utils
 
 import (
 	"bytes"
+	"reflect"
+	"strings"
 	"testing"
 	"time"
+	"unsafe"
 
 	"github.com/ohler55/ojg/oj"
 	"userstyles.world/search"
@@ -138,5 +141,34 @@ func TestBase64Encoding(t *testing.T) {
 			t.Fatalf("expected: %s got: %s",
 				c.expected, actual)
 		}
+	}
+}
+
+func TestClone(t *testing.T) {
+	t.Parallel()
+
+	var cloneTests = []string{
+		"",
+		"short",
+		strings.Repeat("a", 42),
+	}
+	for _, input := range cloneTests {
+		clone := UnsafeClone(input)
+		if clone != input {
+			t.Errorf("Clone(%q) = %q; want %q", input, clone, input)
+		}
+		inputHeader := (*reflect.StringHeader)(unsafe.Pointer(&input))
+		cloneHeader := (*reflect.StringHeader)(unsafe.Pointer(&clone))
+		if inputHeader.Data == cloneHeader.Data {
+			t.Errorf("Clone(%q) return value should not reference inputs backing memory.", input)
+		}
+	}
+}
+
+func BenchmarkClone(b *testing.B) {
+	var str = strings.Repeat("a", 42)
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		_ = UnsafeClone(str)
 	}
 }

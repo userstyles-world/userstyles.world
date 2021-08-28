@@ -9,10 +9,11 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/log"
+	"userstyles.world/utils"
 )
 
 func GetStyleSource(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id := utils.UnsafeClone(c.Params("id"))
 
 	style, err := models.GetStyleSourceCodeAPI(id)
 	if err != nil {

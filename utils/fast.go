@@ -8,13 +8,20 @@ import (
 	"github.com/ohler55/ojg/oj"
 )
 
-// This file is pure for functions.
-// That mimick originial behaviour, just faster.
+// This file is functions that mimic original behaviour, just faster.
 
 var jsonEncoderOptions = &oj.Options{OmitNil: true, UseTags: true}
 
 // UnsafeString returns a string pointer without allocation.
 func UnsafeString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
+// UnsafeClone copies the current string to a new string with 1 allocation.
+// https://go-review.googlesource.com/c/go/+/345849/1/src/strings/clone.go
+func UnsafeClone(s string) string {
+	b := make([]byte, len(s))
+	copy(b, s)
 	return *(*string)(unsafe.Pointer(&b))
 }
 
