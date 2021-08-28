@@ -29,6 +29,11 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 
 	var fileName string
 
+	// Redirect to prevent panic.
+	if format == "" {
+		return c.Redirect("/api/style/preview/"+styleID+".jpeg", fiber.StatusSeeOther)
+	}
+
 	// Only allow jpeg and webp as formats.
 	switch format[1:] {
 	case "jpeg":
