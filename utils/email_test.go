@@ -109,7 +109,10 @@ func TestSendMail(t *testing.T) {
 	}
 
 	<-done
-	bcmdbuf.Flush()
+	err = bcmdbuf.Flush()
+	if err != nil {
+		t.Errorf("Flush error: %v", err)
+	}
 	actualcmds := cmdbuf.String()
 	if client != actualcmds {
 		t.Errorf("Got:\n%s\nExpected:\n%s", actualcmds, client)
