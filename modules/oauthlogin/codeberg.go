@@ -31,11 +31,11 @@ func (codeberg) enableState() bool {
 	return false
 }
 
-func (codeberg) appendToRedirect(_ interface{}) string {
+func (codeberg) appendToRedirect(interface{}) string {
 	return codebergStr + "/"
 }
 
-func (codeberg) getAuthTokenURL(_ interface{}) string {
+func (codeberg) getAuthTokenURL(interface{}) string {
 	return "https://codeberg.org/login/oauth/access_token"
 }
 

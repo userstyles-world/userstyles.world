@@ -35,7 +35,7 @@ type DashStats struct {
 	CountSum  int
 }
 
-func (_ DashStats) GetCounts(t string) (q []DashStats, err error) {
+func (DashStats) GetCounts(t string) (q []DashStats, err error) {
 	stmt := "created_at, date(created_at) Date, count(distinct id) Count,"
 	stmt += "sum(count (distinct id)) over (order by date(created_at)) CountSum"
 

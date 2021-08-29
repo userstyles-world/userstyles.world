@@ -49,11 +49,11 @@ func (github) isAuthTokenPost() bool {
 	return false
 }
 
-func (github) getAuthTokenPostBody(_ interface{}) authURLPostBody {
+func (github) getAuthTokenPostBody(interface{}) authURLPostBody {
 	return authURLPostBody{}
 }
 
-func (github) beforeRequest(_ authURLPostBody, _ *http.Request) error {
+func (github) beforeRequest(authURLPostBody, *http.Request) error {
 	return nil
 }
 
