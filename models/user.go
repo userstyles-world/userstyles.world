@@ -177,6 +177,6 @@ func UpdateUser(u *User) error {
 	return nil
 }
 
-func (u *User) DeleteWhereID(id interface{}) error {
+func (*User) DeleteWhereID(id interface{}) error {
 	return db().Delete(&User{}, "id = ?", id).Error
 }

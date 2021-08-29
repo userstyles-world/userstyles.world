@@ -104,7 +104,7 @@ func (s *Stats) UpsertView() error {
 }
 
 // Delete will remove stats for a given style ID.
-func (s *Stats) Delete(id interface{}) error {
+func (*Stats) Delete(id interface{}) error {
 	return db().Debug().Delete(&modelStats, "style_id = ?", id).Error
 }
 

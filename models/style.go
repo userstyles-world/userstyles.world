@@ -379,12 +379,12 @@ func CheckDuplicateStyle(s *Style) error {
 	return nil
 }
 
-func (s *Style) BanWhereUserID(id interface{}) error {
+func (*Style) BanWhereUserID(id interface{}) error {
 	return db().Delete(&Style{}, "user_id = ?", id).Error
 }
 
 // MirrorStyle will update fields depending on which mirror option is used.
-func (s *Style) MirrorStyle(f map[string]interface{}) error {
+func (*Style) MirrorStyle(f map[string]interface{}) error {
 	err := db().Model(modelStyle).Where("id", f["id"]).Updates(f).Error
 	if err != nil {
 		return err

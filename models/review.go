@@ -16,7 +16,7 @@ type Review struct {
 	StyleID int
 }
 
-func (r Review) FindAllForStyle(id interface{}) (q []Review, err error) {
+func (Review) FindAllForStyle(id interface{}) (q []Review, err error) {
 	err = db().
 		// Preload(clause.Associations).
 		Preload("User").

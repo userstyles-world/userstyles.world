@@ -44,7 +44,7 @@ type APILog struct {
 }
 
 // AddLog adds a new log to the database.
-func (l *Log) AddLog(logEntry *Log) (err error) {
+func (*Log) AddLog(logEntry *Log) (err error) {
 	err = db().
 		Model(modelLog).
 		Create(logEntry).
