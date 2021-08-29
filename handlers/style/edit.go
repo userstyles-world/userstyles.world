@@ -142,7 +142,6 @@ func EditPost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Println("Failed to update style:", err.Error())
 		}
-
 	}(image, &q, styleID, q.Preview)
 
 	return c.Redirect("/style/"+c.Params("id"), fiber.StatusSeeOther)

@@ -147,7 +147,7 @@ func TestBase64Encoding(t *testing.T) {
 func TestClone(t *testing.T) {
 	t.Parallel()
 
-	var cloneTests = []string{
+	cloneTests := []string{
 		"",
 		"short",
 		strings.Repeat("a", 42),
@@ -166,7 +166,7 @@ func TestClone(t *testing.T) {
 }
 
 func BenchmarkClone(b *testing.B) {
-	var str = strings.Repeat("a", 42)
+	str := strings.Repeat("a", 42)
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		_ = UnsafeClone(str)

@@ -146,7 +146,6 @@ func CreatePost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Printf("Failed to update style %v: %v\n", styleID, err.Error())
 		}
-
 	}(image, s, styleID, s.Preview)
 
 	go func(style *models.Style) {

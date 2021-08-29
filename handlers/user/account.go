@@ -54,7 +54,7 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	var record = map[string]interface{}{"id": user.ID}
+	record := map[string]interface{}{"id": user.ID}
 
 	form := c.Params("form")
 	switch form {

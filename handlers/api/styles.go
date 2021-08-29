@@ -144,7 +144,6 @@ func StylePost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Println("Failed to update style:", err.Error())
 		}
-
 	}(&postStyle, sStyleID, postStyle.Preview)
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {
@@ -301,7 +300,6 @@ func NewStyle(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Println("Failed to update style:", err.Error())
 		}
-
 	}(newStyle, styleID, newStyle.Preview)
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {
