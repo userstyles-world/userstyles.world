@@ -9,12 +9,13 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/charts"
 	"userstyles.world/modules/log"
+	"userstyles.world/utils"
 	"userstyles.world/utils/strings"
 )
 
 func GetStylePage(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id, name := c.Params("id"), c.Params("name")
+	id, name := utils.UnsafeClone(c.Params("id")), c.Params("name")
 
 	// Check if style exists.
 	data, err := models.GetStyleByID(id)
