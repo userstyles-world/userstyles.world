@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"runtime"
 	"sort"
+	"sync"
 	"time"
 
 	"github.com/dustin/go-humanize"
@@ -49,6 +50,8 @@ var system struct {
 	PauseTotalNs string
 	PauseNs      string
 	NumGC        string
+
+	mux sync.Mutex
 }
 
 func updateSystemStatus() {
@@ -102,6 +105,10 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
+	system.mux.Lock()
+	// Mux should be unlocked after it's used in c.Render.
+	// As otherwise a next request can/will override the data.
+	defer system.mux.Unlock()
 	updateSystemStatus()
 
 	// Get User statistics.
