@@ -10,7 +10,7 @@ import (
 	"userstyles.world/models"
 )
 
-func GetStatsHistory(history []models.History) (string, string, error) {
+func GetStatsHistory(history []models.History) (dailyStats string, totalStats string, err error) {
 	historyLen := len(history)
 	dates := make([]time.Time, 0, historyLen)
 	dailyViews := make([]float64, 0, historyLen)
