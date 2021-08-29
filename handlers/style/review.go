@@ -18,7 +18,9 @@ func ReviewGet(c *fiber.Ctx) error {
 
 	// Prevent spam.
 	reviewSpam := new(models.Review)
-	if reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
+	// Collecting of the error is not needed.
+	// As we simply check "valid" data by checking if ID is a positive integer.
+	if _ = reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
 		log.Info.Printf("User %d tried to review style %v more than once.\n", u.ID, id)
 		week := time.Now().Add(-7 * 24 * time.Hour)
 		if reviewSpam.CreatedAt.After(week) {
@@ -61,7 +63,9 @@ func ReviewPost(c *fiber.Ctx) error {
 
 	// Prevent spam.
 	reviewSpam := new(models.Review)
-	if reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
+	// Collecting of the error is not needed.
+	// As we simply check "valid" data by checking if ID is a positive integer.
+	if _ = reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
 		log.Warn.Printf("User %d tried to review style %v more than once.\n", u.ID, id)
 		week := time.Now().Add(-7 * 24 * time.Hour)
 		if reviewSpam.CreatedAt.After(week) {
