@@ -73,7 +73,7 @@ func (s *Stats) UpsertInstall() error {
 	t := time.Now()
 	s.Install = t
 
-	if err := db().
+	return db().
 		Debug().
 		Model(modelStats).
 		Clauses(clause.OnConflict{
@@ -83,11 +83,7 @@ func (s *Stats) UpsertInstall() error {
 				"install":    t,
 			}),
 		}).
-		Create(s).Error; err != nil {
-		return err
-	}
-
-	return nil
+		Create(s).Error
 }
 
 // UpsertView updates or inserts style view date.
@@ -95,7 +91,7 @@ func (s *Stats) UpsertView() error {
 	t := time.Now()
 	s.View = t
 
-	if err := db().
+	return db().
 		Model(modelStats).
 		Clauses(clause.OnConflict{
 			Columns: []clause.Column{{Name: "hash"}},
@@ -104,11 +100,7 @@ func (s *Stats) UpsertView() error {
 				"view":       t,
 			}),
 		}).
-		Create(s).Error; err != nil {
-		return err
-	}
-
-	return nil
+		Create(s).Error
 }
 
 // Delete will remove stats for a given style ID.
