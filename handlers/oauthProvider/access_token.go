@@ -80,15 +80,15 @@ func TokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Couldn't find the user that was specified, Error: Please notify the UserStyles.world admins.")
 	}
 
-	var jwt string
+	var jwtToken string
 
 	if styleID := uint(fStyleID); styleID != 0 {
-		jwt, err = utils.NewJWTToken().
+		jwtToken, err = utils.NewJWTToken().
 			SetClaim("styleID", styleID).
 			SetClaim("userID", user.ID).
 			GetSignedString(utils.OAuthPSigningKey)
 	} else {
-		jwt, err = utils.NewJWTToken().
+		jwtToken, err = utils.NewJWTToken().
 			SetClaim("scopes", strings.Join(oauth.Scopes, ",")).
 			SetClaim("userID", user.ID).
 			GetSignedString(utils.OAuthPSigningKey)
@@ -100,10 +100,10 @@ func TokenPost(c *fiber.Ctx) error {
 
 	if c.Accepts("application/json", "text/plain ") == "application/json" {
 		return c.JSON(fiber.Map{
-			"access_token": jwt,
+			"access_token": jwtToken,
 			"token_type":   "Bearer",
 		})
 	}
 
-	return c.SendString(jwt + "&token_type=Bearer")
+	return c.SendString(jwtToken + "&token_type=Bearer")
 }

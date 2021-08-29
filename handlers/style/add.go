@@ -224,7 +224,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	jwt, err := utils.NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetClaim("styleID", style.ID).
@@ -238,7 +238,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	returnCode := "?code=" + utils.EncryptText(jwt, utils.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig)
 	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state

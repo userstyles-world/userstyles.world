@@ -25,7 +25,7 @@ func errorMessage(c *fiber.Ctx, status int, errorMessage string) error {
 func redirectFunction(c *fiber.Ctx, state, redirectURI string) error {
 	u, _ := jwtware.User(c)
 
-	jwt, err := utils.NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Minute * 10)).
@@ -35,7 +35,7 @@ func redirectFunction(c *fiber.Ctx, state, redirectURI string) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	returnCode := "?code=" + utils.EncryptText(jwt, utils.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig)
 	if state != "" {
 		returnCode += "&state=" + state
 	}
@@ -85,7 +85,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	// Such that this key cannot be replaced by some other user.
 	// And to follow our weird state-less design we include the state.
 	// Thus not storing the state.
-	jwt, err := utils.NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
@@ -98,7 +98,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	arguments := fiber.Map{
 		"User":        u,
 		"OAuth":       oauth,
-		"SecureToken": utils.EncryptText(jwt, utils.AEADOAuthp, config.ScrambleConfig),
+		"SecureToken": utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig),
 	}
 	for _, v := range oauth.Scopes {
 		arguments["Scope_"+v] = true

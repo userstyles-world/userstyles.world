@@ -36,7 +36,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	// Such that this key cannot be replaced by some other user.
 	// And to follow our weird state-less design we include the state.
 	// Thus not storing the state.
-	jwt, err := utils.NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
@@ -45,7 +45,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, Error: Please notify the UserStyles.world admins.")
 	}
-	secureToken := utils.EncryptText(jwt, utils.AEADOAuthp, config.ScrambleConfig)
+	secureToken := utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig)
 
 	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
@@ -123,7 +123,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	jwt, err := utils.NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetClaim("styleID", style.ID).
@@ -134,7 +134,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	returnCode := "?code=" + utils.EncryptText(jwt, utils.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig)
 	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state

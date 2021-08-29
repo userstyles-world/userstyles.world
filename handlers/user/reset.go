@@ -185,7 +185,7 @@ func RecoverPost(c *fiber.Ctx) error {
 		})
 	}
 
-	jwt, err := utils.NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("email", u.Email).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
 		GetSignedString(utils.VerifySigningKey)
@@ -196,7 +196,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/reset/" + utils.EncryptText(jwt, utils.AEADCrypto, config.ScrambleConfig)
+	link := c.BaseURL() + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
 
 	partPlain := utils.NewPart().
 		SetBody("We have received a request to reset the password for your UserStyles.world account.\n\n" +
