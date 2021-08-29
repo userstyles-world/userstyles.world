@@ -58,9 +58,7 @@ func New(viewDir ...string) *html.Engine {
 		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
 	})
 
-	engine.AddFunc("sys", func() sys {
-		return status()
-	})
+	engine.AddFunc("sys", status)
 
 	engine.AddFunc("MarkdownSafe", func(s string) template.HTML {
 		gen := md.Run([]byte(s), md.WithExtensions(ext))
