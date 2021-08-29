@@ -96,13 +96,11 @@ func Batch(batch models.Style) {
 				fields["description"] = s.Description
 				updateReady = true
 			}
-		} else {
-			if updateMeta(&batch, uc) {
-				fields["name"] = uc.Name
-				fields["description"] = uc.Description
-				fields["homepage"] = uc.HomepageURL
-				updateReady = true
-			}
+		} else if updateMeta(&batch, uc) {
+			fields["name"] = uc.Name
+			fields["description"] = uc.Description
+			fields["homepage"] = uc.HomepageURL
+			updateReady = true
 		}
 	}
 
