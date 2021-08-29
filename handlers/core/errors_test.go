@@ -96,7 +96,6 @@ func Test404Pages(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	body = make([]byte, 4096)
 	if res.StatusCode != fiber.StatusNotFound {
 		t.Error("Expected 404, got ", res.StatusCode)
 	}
