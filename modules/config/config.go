@@ -35,7 +35,7 @@ var (
 	GitlabClientSecret   = getEnv("GITLAB_CLIENT_SECRET", "www.youtube.com/watch?v=dQw4w9WgXcQ")
 	CodebergClientID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	CodebergClientSecret = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
-	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false) == true
+	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
 	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
 
 	// Production is used for various "feature flags".
