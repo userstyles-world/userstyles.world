@@ -218,7 +218,7 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 		return nil, err
 	}
 
-	styleIDs := make([]int, len(nums))
+	styleIDs := make([]int, 0, len(nums))
 	for _, partial := range nums {
 		styleIDs = append(styleIDs, partial.ID)
 	}
