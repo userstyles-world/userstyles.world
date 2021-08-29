@@ -27,7 +27,7 @@ type MinimalStyle struct {
 	Installs    int       `json:"installs"`
 }
 
-type SearchPerformanceMetrics struct {
+type PerformanceMetrics struct {
 	Hits      int
 	TimeSpent time.Duration
 }
@@ -48,8 +48,8 @@ func (s MinimalStyle) Author() string {
 	return s.Username
 }
 
-func FindStylesByText(text string) ([]MinimalStyle, SearchPerformanceMetrics, error) {
-	performanceMetrics := SearchPerformanceMetrics{}
+func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
+	performanceMetrics := PerformanceMetrics{}
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
 	// This way it will be more "loslly" and actually uses the tokenizers.
@@ -62,7 +62,7 @@ func FindStylesByText(text string) ([]MinimalStyle, SearchPerformanceMetrics, er
 
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
-		return nil, SearchPerformanceMetrics{}, err
+		return nil, PerformanceMetrics{}, err
 	}
 
 	returnResult := make([]MinimalStyle, 0, len(sr.Hits))
@@ -71,17 +71,17 @@ func FindStylesByText(text string) ([]MinimalStyle, SearchPerformanceMetrics, er
 
 	for _, hit := range sr.Hits {
 		if err != nil {
-			return nil, SearchPerformanceMetrics{}, err
+			return nil, PerformanceMetrics{}, err
 		}
 
 		created, err := time.Parse(timeFormat, hit.Fields["created_at"].(string))
 		if err != nil {
-			return nil, SearchPerformanceMetrics{}, err
+			return nil, PerformanceMetrics{}, err
 		}
 
 		updated, err := time.Parse(timeFormat, hit.Fields["updated_at"].(string))
 		if err != nil {
-			return nil, SearchPerformanceMetrics{}, err
+			return nil, PerformanceMetrics{}, err
 		}
 
 		styleInfo := MinimalStyle{
