@@ -5,7 +5,7 @@ import "testing"
 // Ensure that Initialization of Validator doesn't panic.
 func TestValidatorInit(t *testing.T) {
 	t.Parallel()
-	go func() {
+	defer func() {
 		if err := recover(); err != nil {
 			t.Errorf("Panic: %v", err)
 		}
