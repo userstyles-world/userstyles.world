@@ -17,7 +17,7 @@ require (
 	github.com/ohler55/ojg v1.12.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/russross/blackfriday/v2 v2.1.0
-	github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829015035-cdffcf134dd6
+	github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829135701-7b1c5d2cf12e
 	github.com/userstyles-world/go-chart/v2 v2.5.2
 	github.com/valyala/bytebufferpool v1.0.0
 	github.com/vednoc/go-usercss-parser v0.9.2

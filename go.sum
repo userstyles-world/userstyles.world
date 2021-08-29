@@ -411,6 +411,8 @@ github.com/ultraware/funlen v0.0.2/go.mod h1:Dp4UiAus7Wdb9KUZsYWZEWiRzGuM2kXM1lP
 github.com/ultraware/whitespace v0.0.4/go.mod h1:aVMh/gQve5Maj9hQ/hg+F75lr/X5A89uZnzAmWSineA=
 github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829015035-cdffcf134dd6 h1:QIaGAtHRDKNjCUYJQEvD4UBUF3H2OLF87d/ZgkfpCMs=
 github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829015035-cdffcf134dd6/go.mod h1:qBfOxUnZ/HCPQCCbYm2LQR3ITDLS75bR9CeWLTyXsM4=
+github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829135701-7b1c5d2cf12e h1:0LiBrR5LzP7GE5V7fdxGzNLBFH/YehJDwSFsKbMXFfk=
+github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829135701-7b1c5d2cf12e/go.mod h1:qBfOxUnZ/HCPQCCbYm2LQR3ITDLS75bR9CeWLTyXsM4=
 github.com/userstyles-world/go-chart/v2 v2.5.2 h1:muuydpvdDY3Cnkrny0c9Q84fkSwoEwFGj9IV4dm/wL0=
 github.com/userstyles-world/go-chart/v2 v2.5.2/go.mod h1:VMDXsAKl+TBbp66QDHfqPDwcTaIBupqN82F0FyujeJY=
 github.com/uudashr/gocognit v1.0.1/go.mod h1:j44Ayx2KW4+oB6SWMv8KsmHzZrOInQav7D3cQMJ5JUM=
