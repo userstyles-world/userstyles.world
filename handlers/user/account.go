@@ -104,15 +104,15 @@ func EditAccount(c *fiber.Ctx) error {
 			})
 		}
 
-		new, confirm := c.FormValue("new"), c.FormValue("confirm")
-		if confirm != new {
+		newPassword, confirmPassword := c.FormValue("new_password"), c.FormValue("confirm_password")
+		if confirmPassword != newPassword {
 			return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
 				"Title": "Failed to match new passwords",
 				"User":  u,
 			})
 		}
 
-		user.Password = new
+		user.Password = newPassword
 		if err := utils.Validate().StructPartial(u, "Password"); err != nil {
 			var validationError validator.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
@@ -124,7 +124,7 @@ func EditAccount(c *fiber.Ctx) error {
 			})
 		}
 
-		user.Password = utils.GenerateHashedPassword(new)
+		user.Password = utils.GenerateHashedPassword(newPassword)
 		record["password"] = user.Password
 
 	case "bio":
