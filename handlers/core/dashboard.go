@@ -50,9 +50,9 @@ var system struct {
 	PauseTotalNs string
 	PauseNs      string
 	NumGC        string
-
-	mux sync.Mutex
 }
+
+var systemMutex = &sync.Mutex{}
 
 func updateSystemStatus() {
 	system.Uptime = time.Since(config.AppUptime).Round(time.Second).String()
@@ -105,10 +105,10 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
-	system.mux.Lock()
+	systemMutex.Lock()
 	// Mux should be unlocked after it's used in c.Render.
 	// As otherwise a next request can/will override the data.
-	defer system.mux.Unlock()
+	defer systemMutex.Unlock()
 	updateSystemStatus()
 
 	// Get User statistics.
