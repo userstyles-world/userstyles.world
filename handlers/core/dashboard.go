@@ -51,7 +51,7 @@ var system struct {
 	NumGC        string
 }
 
-func getSystemStatus() {
+func updateSystemStatus() {
 	system.Uptime = time.Since(config.AppUptime).Round(time.Second).String()
 	system.GoRoutines = runtime.NumGoroutine()
 
@@ -102,7 +102,7 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
-	getSystemStatus()
+	updateSystemStatus()
 
 	// Get User statistics.
 	userCount, err := new(models.DashStats).GetCounts("users")
