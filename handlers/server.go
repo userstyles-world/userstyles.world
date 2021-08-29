@@ -49,8 +49,8 @@ func Initialize() {
 		app.Use(core.CSPMiddleware)
 	}
 	app.Use(limiter.New(limiter.Config{
-		Max:        600,
-		Expiration: time.Second * 10,
+		Max:        350,
+		Expiration: time.Second * 60,
 	}))
 	app.Use(compress.New())
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
