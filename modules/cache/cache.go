@@ -32,5 +32,5 @@ func SaveToDisk(f string, data interface{}) error {
 		return err
 	}
 
-	return os.WriteFile(f, b, 0o666)
+	return os.WriteFile(f, b, 0o600)
 }
