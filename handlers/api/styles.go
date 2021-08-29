@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/ohler55/ojg/oj"
+	"github.com/userstyles-world/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
@@ -107,7 +107,6 @@ func StylePost(c *fiber.Ctx) error {
 				"data": "Error: " + errors,
 			})
 	}
-
 
 	// Prevent broken traditional userstyles.
 	// TODO: Remove a week or two after Stylus v1.5.20 is released.

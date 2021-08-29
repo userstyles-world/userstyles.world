@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/userstyles-world/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/handlers/jwt"

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
+	"github.com/userstyles-world/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"

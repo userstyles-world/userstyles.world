@@ -3,8 +3,8 @@ package jwt
 import (
 	"net/url"
 
-	"github.com/gofiber/fiber/v2"
 	lib "github.com/golang-jwt/jwt"
+	"github.com/userstyles-world/fiber/v2"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/errors"

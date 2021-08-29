@@ -1,6 +1,6 @@
 package core
 
-import "github.com/gofiber/fiber/v2"
+import "github.com/userstyles-world/fiber/v2"
 
 var (
 	headerHSTS = []byte("Strict-Transport-Security")

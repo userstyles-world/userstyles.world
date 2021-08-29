@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/userstyles-world/fiber/v2"
 	"userstyles.world/modules/templates"
 )
 

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
+	"github.com/userstyles-world/fiber/v2"
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
