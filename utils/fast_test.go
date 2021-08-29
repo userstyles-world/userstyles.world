@@ -152,7 +152,8 @@ func TestClone(t *testing.T) {
 		"short",
 		strings.Repeat("a", 42),
 	}
-	for _, input := range cloneTests {
+	for i := range cloneTests {
+		input := cloneTests[i]
 		clone := UnsafeClone(input)
 		if clone != input {
 			t.Errorf("Clone(%q) = %q; want %q", input, clone, input)
