@@ -1,6 +1,7 @@
 package search
 
 import (
+	"errors"
 	"os"
 	"strconv"
 	"time"
@@ -26,7 +27,7 @@ func openBleveIndexFile(path string) (bleve.Index, error) {
 	}
 
 	index, err := bleve.Open(path)
-	if err != nil && err == upsidedown.IncompatibleVersion {
+	if err != nil && errors.Is(err, upsidedown.IncompatibleVersion) {
 		return nil, os.RemoveAll(path)
 	} else if err != nil {
 		return nil, err
