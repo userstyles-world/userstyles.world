@@ -12,9 +12,10 @@ nav {
         border-color: var(--bg-4);
     }
 
-    .mascot {
+    .left {
         margin-right: auto;
         display: inline-flex;
+        svg { margin-right: 0.5rem }
         &:hover span { text-decoration: underline }
     }
 
