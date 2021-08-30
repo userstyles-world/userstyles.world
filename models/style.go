@@ -2,12 +2,13 @@ package models
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
 
 	"userstyles.world/modules/errors"
-	"userstyles.world/utils/strings"
+	"userstyles.world/utils/strutils"
 )
 
 type Style struct {
@@ -82,7 +83,7 @@ type StyleSearch struct {
 }
 
 func (s StyleCard) Slug() string {
-	return strings.SlugifyURL(s.Name)
+	return strutils.SlugifyURL(s.Name)
 }
 
 func (s StyleCard) StyleURL() string {

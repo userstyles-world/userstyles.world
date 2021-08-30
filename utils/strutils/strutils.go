@@ -1,4 +1,4 @@
-package strings
+package strutils
 
 import (
 	"net/url"
@@ -26,8 +26,4 @@ func QueryUnescape(s string) string {
 	}
 
 	return s
-}
-
-func HasPrefix(s, prefix string) bool {
-	return len(s) >= len(prefix) && s[0:len(prefix)] == prefix
 }

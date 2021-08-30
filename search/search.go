@@ -6,7 +6,7 @@ import (
 
 	"github.com/blevesearch/bleve/v2"
 
-	"userstyles.world/utils/strings"
+	"userstyles.world/utils/strutils"
 )
 
 const (
@@ -33,7 +33,7 @@ type PerformanceMetrics struct {
 }
 
 func (s MinimalStyle) Slug() string {
-	return strings.SlugifyURL(s.Name)
+	return strutils.SlugifyURL(s.Name)
 }
 
 func (s MinimalStyle) StyleURL() string {

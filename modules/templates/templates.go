@@ -12,7 +12,7 @@ import (
 	md "github.com/russross/blackfriday/v2"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/utils/strings"
+	"userstyles.world/utils/strutils"
 )
 
 var ext = md.CommonExtensions | md.AutoHeadingIDs
@@ -111,7 +111,7 @@ func New(viewDir ...string) *html.Engine {
 			s += fmt.Sprintf("&sort=%v", sort)
 		}
 
-		return template.HTML(strings.QueryUnescape(s))
+		return template.HTML(strutils.QueryUnescape(s))
 	})
 
 	engine.AddFunc("unescape", func(s string) template.HTML {
