@@ -13,6 +13,11 @@ import (
 func Proxy(c *fiber.Ctx) error {
 	link, id, t := c.Query("link"), c.Query("id"), c.Query("type")
 
+	// Don't render this page.
+	if link == "" || id == "" || t == "" {
+		return c.Redirect("/", fiber.StatusSeeOther)
+	}
+
 	// Set resource location and name.
 	dir := fmt.Sprintf("./data/proxy/%s/%s", t, id)
 	name := dir + "/" + url.PathEscape(link)
