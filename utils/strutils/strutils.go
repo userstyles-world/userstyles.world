@@ -32,6 +32,6 @@ func QueryUnescape(s string) string {
 	return s
 }
 func ProxyResources(s, t string, id uint) string {
-	sub := fmt.Sprintf(`src="/proxy?link=$1&type=%s&id=%d"`, t, id)
+	sub := fmt.Sprintf(`src="/proxy?link=$1&type=%s&id=%d" loading="lazy"`, t, id)
 	return linkRe.ReplaceAllString(s, sub)
 }
