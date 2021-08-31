@@ -11,17 +11,17 @@ import (
 )
 
 func Proxy(c *fiber.Ctx) error {
-	path, id, t := c.Query("url"), c.Query("id"), c.Query("type")
+	link, id, t := c.Query("link"), c.Query("id"), c.Query("type")
 
 	// Set resource location and name.
-	loc := fmt.Sprintf("./data/proxy/%s/%s", t, id)
-	name := loc + "/" + url.PathEscape(path)
+	dir := fmt.Sprintf("./data/proxy/%s/%s", t, id)
+	name := dir + "/" + url.PathEscape(link)
 
 	stat, err := os.Stat(name)
 	if os.IsNotExist(err) {
 		a := fiber.AcquireAgent()
 		req := a.Request()
-		req.SetRequestURI(path)
+		req.SetRequestURI(link)
 		if err := a.Parse(); err != nil {
 			panic(err) // TODO: Handle this error properly.
 		}
@@ -30,9 +30,9 @@ func Proxy(c *fiber.Ctx) error {
 		_, data, _ := a.Bytes()
 
 		// Create directory.
-		stat, err := os.Stat(loc)
+		stat, err := os.Stat(dir)
 		if os.IsNotExist(err) {
-			if err := os.Mkdir(loc, 0o755); err != nil {
+			if err := os.Mkdir(dir, 0o755); err != nil {
 				log.Warn.Fatal(err)
 			}
 		}
