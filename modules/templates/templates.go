@@ -60,6 +60,10 @@ func New(viewDir ...string) *html.Engine {
 
 	engine.AddFunc("sys", status)
 
+	engine.AddFunc("proxy", func(s template.HTML, t string, id uint) template.HTML {
+		return template.HTML(strutils.ProxyResources(string(s), t, id))
+	})
+
 	engine.AddFunc("MarkdownSafe", func(s string) template.HTML {
 		gen := md.Run([]byte(s), md.WithExtensions(ext))
 		return template.HTML(gen)

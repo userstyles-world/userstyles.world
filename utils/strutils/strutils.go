@@ -1,12 +1,16 @@
 package strutils
 
 import (
+	"fmt"
 	"net/url"
 	"regexp"
 	"strings"
 )
 
-var slugRe = regexp.MustCompile(`[a-zA-Z0-9]+`)
+var (
+	slugRe = regexp.MustCompile(`[a-zA-Z0-9]+`)
+	linkRe = regexp.MustCompile(`(?mU)src="(http.*)"`)
+)
 
 func SlugifyURL(s string) string {
 	// Extract valid characters.
@@ -26,4 +30,8 @@ func QueryUnescape(s string) string {
 	}
 
 	return s
+}
+func ProxyResources(s, t string, id uint) string {
+	sub := fmt.Sprintf(`src="/proxy?url=$1&type=%s&id=%d"`, t, id)
+	return linkRe.ReplaceAllString(s, sub)
 }

@@ -61,6 +61,7 @@ func Initialize() {
 	}
 
 	app.Get("/", core.Home)
+	app.Get("/proxy", core.Proxy)
 	app.Get("/search", core.Search)
 	app.Get("/login", user.LoginGet)
 	app.Post("/login", user.LoginPost)
