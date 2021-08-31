@@ -117,7 +117,7 @@ func OauthMakeURL(serviceType string) string {
 	oauthURL := service.oauthMakeURL()
 	var state string
 	if service.enableState() {
-		state = utils.UnsafeString(utils.RandStringBytesMaskImprSrcUnsafe(16))
+		state = utils.UnsafeString(utils.RandomString(16))
 		oauthURL += "&state=" + state
 	}
 	if oauthURL == "" {

@@ -43,7 +43,7 @@ func InitalizeCrypto() {
 }
 
 func sealText(text string, aead cipher.AEAD, nonceScrambling *config.ScrambleSettings) []byte {
-	nonce := RandStringBytesMaskImprSrcUnsafe(aead.NonceSize())
+	nonce := RandomString(aead.NonceSize())
 
 	dest := aead.Seal(nil, nonce, UnsafeBytes(text), nil)
 	return scrambleNonce(nonce, dest, nonceScrambling.StepSize, nonceScrambling.BytesPerInsert)

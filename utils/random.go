@@ -1,33 +1,13 @@
 package utils
 
 import (
-	"math/rand"
-	"time"
+	"crypto/rand"
 )
 
-const (
-	letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	letterIdxBits = 6
-	letterIdxMask = 1<<letterIdxBits - 1
-	letterIdxMax  = 63 / letterIdxBits
-)
-
-var src = rand.NewSource(time.Now().UnixNano())
-
-func RandStringBytesMaskImprSrcUnsafe(n int) []byte {
-	b := make([]byte, n)
-	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
-	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
-		if remain == 0 {
-			cache, remain = src.Int63(), letterIdxMax
-		}
-		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
-			b[i] = letterBytes[idx]
-			i--
-		}
-		cache >>= letterIdxBits
-		remain--
-	}
-
-	return b
+// GenerateRandomBytes returns securely generated random bytes.
+// It's a helper function for crypto/rand.
+func RandomString(n int) []byte {
+	buffer := make([]byte, n)
+	_, _ = rand.Read(buffer)
+	return buffer
 }

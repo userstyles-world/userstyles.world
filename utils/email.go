@@ -127,7 +127,7 @@ func correctLineBreak(message string) string {
 }
 
 func (eb *EmailBuilder) SendEmail(imapServer string) error {
-	eb.boundary = UnsafeString(RandStringBytesMaskImprSrcUnsafe(30))
+	eb.boundary = UnsafeString(RandomString(30))
 
 	if eb.from == "" {
 		eb.from = config.EmailAddress

@@ -6,12 +6,18 @@ import (
 
 func BenchmarkRandomNonce(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		RandStringBytesMaskImprSrcUnsafe(24)
+		RandomString(24)
 	}
 }
 
 func BenchmarkRandomBoundary(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		RandStringBytesMaskImprSrcUnsafe(30)
+		RandomString(30)
+	}
+}
+
+func BenchmarkRandomOauth(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		RandomString(128)
 	}
 }
