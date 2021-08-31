@@ -17,39 +17,47 @@ func Proxy(c *fiber.Ctx) error {
 	dir := fmt.Sprintf("./data/proxy/%s/%s", t, id)
 	name := dir + "/" + url.PathEscape(link)
 
+	// Check if image exists.
 	stat, err := os.Stat(name)
 	if os.IsNotExist(err) {
+		// Create directory.
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			log.Warn.Printf("Failed to create %v: %s\n", dir, err.Error())
+			return nil
+		}
+
+		// Download image.
 		a := fiber.AcquireAgent()
 		req := a.Request()
 		req.SetRequestURI(link)
 		if err := a.Parse(); err != nil {
-			panic(err) // TODO: Handle this error properly.
+			log.Info.Println("Agent err:", err.Error())
+			return nil
 		}
 
-		// TODO: Add a "not found" image.
-		_, data, _ := a.Bytes()
-
-		// Create directory.
-		stat, err := os.Stat(dir)
-		if os.IsNotExist(err) {
-			if err := os.Mkdir(dir, 0o755); err != nil {
-				log.Warn.Fatal(err)
-			}
+		// TODO: Show a fallback image.
+		_, data, errs := a.Bytes()
+		if len(errs) > 0 {
+			log.Info.Printf("Failed to get image: %v\n", errs)
+			return nil
 		}
+
 		if err := os.WriteFile(name, data, 0o600); err != nil {
-			log.Warn.Println("Failed to write image:", err.Error())
-			return fmt.Errorf("failed to write image: %v", err)
+			log.Info.Println("Failed to write image:", err.Error())
+			return nil
 		}
 	}
 
 	// Serve image.
 	f, err := os.Open(name)
 	if err != nil {
-		log.Warn.Fatal(err)
+		log.Info.Println("Failed to open image:", err.Error())
+		return nil
 	}
 
 	if stat, err = f.Stat(); err != nil {
-		return c.JSON(err)
+		log.Info.Println("Failed to get stat:", err.Error())
+		return nil
 	}
 
 	c.Response().SetBodyStream(f, int(stat.Size()))
