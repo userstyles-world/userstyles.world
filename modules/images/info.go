@@ -10,12 +10,19 @@ import (
 	"userstyles.world/modules/log"
 )
 
-var CacheFolder = "./data/images/"
+var (
+	CacheFolder = "./data/images/"
+	ProxyFolder = "./data/proxy/"
+)
 
 func Initialize() {
-	if fileInfo := fileExist(CacheFolder); fileInfo == nil {
-		if err := os.Mkdir(CacheFolder, 0o755); err != nil {
-			log.Warn.Fatalln(err)
+	dirs := [...]string{CacheFolder, ProxyFolder}
+
+	for _, dir := range dirs {
+		if fileInfo := fileExist(dir); fileInfo == nil {
+			if err := os.Mkdir(dir, 0o755); err != nil {
+				log.Warn.Fatalln(err)
+			}
 		}
 	}
 }
