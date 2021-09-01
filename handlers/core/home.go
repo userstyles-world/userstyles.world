@@ -1,10 +1,13 @@
 package core
 
 import (
+	"time"
+
 	"github.com/userstyles-world/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 )
 
 func Home(c *fiber.Ctx) error {
@@ -14,22 +17,38 @@ func Home(c *fiber.Ctx) error {
 	// TODO: Combine this with a new dashboard.
 	var stats *models.SiteStats
 	if u.ID == 0 {
-		stats = models.GetHomepageStatistics()
+	Stats:
+		cached, found := cache.Store.Get("siteStatistics")
+		if !found {
+			stats = models.GetHomepageStatistics()
+			cache.Store.Set("siteStatistics", stats, 5*time.Minute)
+
+			goto Stats
+		}
+
+		stats = cached.(*models.SiteStats)
 	}
 
-	styles, err := models.GetAllFeaturedStyles()
-	if err != nil {
-		return c.Render("core/home", fiber.Map{
-			"Title":  "Home",
-			"User":   u,
-			"Styles": nil,
-		})
+Styles:
+	featured, found := cache.Store.Get("featuredStyles")
+	if !found {
+		styles, err := models.GetAllFeaturedStyles()
+		if err != nil {
+			return c.Render("core/home", fiber.Map{
+				"Title":  "Home",
+				"User":   u,
+				"Styles": nil,
+			})
+		}
+		cache.Store.Set("featuredStyles", styles, 5*time.Minute)
+
+		goto Styles
 	}
 
 	return c.Render("core/home", fiber.Map{
 		"Title":  "Home",
 		"User":   u,
-		"Styles": styles,
+		"Styles": featured,
 		"Stats":  stats,
 	})
 }
