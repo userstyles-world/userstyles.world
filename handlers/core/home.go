@@ -12,24 +12,24 @@ func Home(c *fiber.Ctx) error {
 
 	// Skip stats if user is logged in.
 	// TODO: Combine this with a new dashboard.
-	var p *models.SiteStats
+	var stats *models.SiteStats
 	if u.ID == 0 {
-		p = models.GetHomepageStatistics()
+		stats = models.GetHomepageStatistics()
 	}
 
 	styles, err := models.GetAllFeaturedStyles()
 	if err != nil {
-		return c.Render("core/index", fiber.Map{
+		return c.Render("core/home", fiber.Map{
 			"Title":  "Home",
 			"User":   u,
 			"Styles": nil,
 		})
 	}
 
-	return c.Render("core/index", fiber.Map{
+	return c.Render("core/home", fiber.Map{
 		"Title":  "Home",
 		"User":   u,
 		"Styles": styles,
-		"Params": p,
+		"Stats":  stats,
 	})
 }
