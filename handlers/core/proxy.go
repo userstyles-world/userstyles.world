@@ -33,6 +33,7 @@ func Proxy(c *fiber.Ctx) error {
 
 		// Download image.
 		a := fiber.AcquireAgent()
+		defer fiber.ReleaseAgent(a)
 		req := a.Request()
 		req.SetRequestURI(link)
 		if err := a.Parse(); err != nil {
