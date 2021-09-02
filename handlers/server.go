@@ -47,11 +47,11 @@ func Initialize() {
 	if config.Production {
 		app.Use(core.HSTSMiddleware)
 		app.Use(core.CSPMiddleware)
+		app.Use(limiter.New(limiter.Config{
+			Max:        350,
+			Expiration: time.Second * 60,
+		}))
 	}
-	app.Use(limiter.New(limiter.Config{
-		Max:        350,
-		Expiration: time.Second * 60,
-	}))
 	app.Use(compress.New())
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
