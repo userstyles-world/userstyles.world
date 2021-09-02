@@ -6,21 +6,60 @@
             </div>
             <h1>{{ config "appName" }}</h1>
             <p>A free and open-source, community-driven, modern alternative to <code>userstyles.org</code>. For the community, by the community.</p>
-            <p class="stats">
-                {{ config "appName" }} is home to {{ printf "%d " .Stats.TotalUsers -}}
-                users and {{ .Stats.TotalStyles }} userstyles.
-
-                Styles have been viewed {{ printf "%d " .Stats.WeeklyViews -}}
-                times, installed {{ printf "%d " .Stats.WeeklyInstalls -}}
-                times, and updated {{ printf "%d " .Stats.WeeklyUpdates -}}
-                times in the last 24 hours, for a total of
-                {{- printf " %d " .Stats.TotalViews -}} views and
-                {{- printf " %d " .Stats.TotalInstalls }} installs.
-            </p>
             <span class="flex mt:m">
                 <a class="btn primary mx:s" href="/explore">Explore userstyles</a>
                 <a class="btn mx:s" href="/register">Create an account</a>
             </span>
+        </section>
+
+        <section class="mb:l">
+            <div class="ta:c">
+                <h2>Statistics</h2>
+                <p class="fg:3 mb:l mx:a mb:m">Combined statistics for UserStyles.world platform.</p>
+            </div>
+
+            <div class="Table Half ml:a mr:a">
+                <div class="TableHead">
+                    <div class="TableRow">
+                        <div class="TableCell"></div>
+                        <div class="TableCell">Today</div>
+                        <div class="TableCell">This week</div>
+                        <div class="TableCell">In total</div>
+                    </div>
+                </div>
+                <div class="TableBody">
+                    <div class="TableRow">
+                        <div class="TableCell">Users</div>
+                        <div class="TableCell">{{ .Stats.DailyUsers }}</div>
+                        <div class="TableCell">{{ .Stats.WeeklyUsers }}</div>
+                        <div class="TableCell">{{ .Stats.TotalUsers }}</div>
+                    </div>
+                    <div class="TableRow">
+                        <div class="TableCell">Styles</div>
+                        <div class="TableCell">{{ .Stats.DailyStyles }}</div>
+                        <div class="TableCell">{{ .Stats.WeeklyStyles }}</div>
+                        <div class="TableCell">{{ .Stats.TotalStyles }}</div>
+                    </div>
+                    <div class="TableRow">
+                        <div class="TableCell">Views</div>
+                        <div class="TableCell">{{ .Stats.DailyViews }}</div>
+                        <div class="TableCell">{{ .Stats.WeeklyViews }}</div>
+                        <div class="TableCell">{{ .Stats.TotalViews }}</div>
+                    </div>
+                    <div class="TableRow">
+                        <div class="TableCell">Installs</div>
+                        <div class="TableCell">{{ .Stats.DailyInstalls }}</div>
+                        <div class="TableCell">{{ .Stats.WeeklyInstalls }}</div>
+                        <div class="TableCell">{{ .Stats.TotalInstalls }}</div>
+                    </div>
+                    <div class="TableRow">
+                        <div class="TableCell">Updates</div>
+                        <div class="TableCell">{{ .Stats.DailyUpdates }}</div>
+                        <div class="TableCell">{{ .Stats.WeeklyUpdates }}</div>
+                        <div class="TableCell">∞</div>
+                    </div>
+                </div>
+            </div>
         </section>
     {{ end }}
 

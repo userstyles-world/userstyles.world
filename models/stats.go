@@ -22,10 +22,11 @@ type Stats struct {
 }
 
 type SiteStats struct {
-	TotalUsers, TotalStyles       int64
-	WeeklyViews, TotalViews       int64
-	WeeklyInstalls, TotalInstalls int64
-	WeeklyUpdates                 int64
+	DailyUsers, WeeklyUsers, TotalUsers          int64
+	DailyStyles, WeeklyStyles, TotalStyles       int64
+	DailyViews, WeeklyViews, TotalViews          int64
+	DailyInstalls, WeeklyInstalls, TotalInstalls int64
+	DailyUpdates, WeeklyUpdates                  int64
 }
 
 type DashStats struct {
@@ -160,26 +161,55 @@ func GetHomepageStatistics() *SiteStats {
 	p := SiteStats{}
 	q := `
 SELECT
-	(SELECT count(*) FROM users
-	 WHERE users.deleted_at IS NULL) total_users,
-	(SELECT count(*) FROM styles
-	 WHERE styles.deleted_at IS NULL) total_styles,
+	(SELECT count(*) FROM users u
+	 WHERE u.deleted_at IS NULL AND u.created_at > @d) DailyUsers,
+	(SELECT count(*) FROM users u
+	 WHERE u.deleted_at IS NULL AND u.created_at > @w) WeeklyUsers,
+	(SELECT count(*) FROM users u
+	 WHERE u.deleted_at IS NULL) TotalUsers,
+
+	(SELECT count(*) FROM styles s
+	 WHERE s.deleted_at IS NULL AND s.created_at > @d) DailyStyles,
+	(SELECT count(*) FROM styles s
+	 WHERE s.deleted_at IS NULL AND s.created_at > @w) WeeklyStyles,
+	(SELECT count(*) FROM styles s
+	 WHERE s.deleted_at IS NULL) TotalStyles,
+
 	(SELECT count(*) FROM stats s
-	 WHERE s.deleted_at IS NULL AND s.view > 0) total_views,
+	 WHERE s.deleted_at IS NULL AND s.install > 0 AND
+	       s.created_at > @d) DailyInstalls,
 	(SELECT count(*) FROM stats s
-	 WHERE s.deleted_at IS NULL AND s.install > 0) total_installs,
+	 WHERE s.deleted_at IS NULL AND s.install > 0 AND
+	       s.created_at > @w) WeeklyInstalls,
 	(SELECT count(*) FROM stats s
-	 WHERE s.deleted_at IS NULL AND s.view > 0 AND s.created_at > @d) weekly_views,
+	 WHERE s.deleted_at IS NULL AND s.install > 0) TotalInstalls,
+
 	(SELECT count(*) FROM stats s
-	 WHERE s.deleted_at IS NULL AND s.install > 0 AND s.created_at > @d) weekly_installs,
+	 WHERE s.deleted_at IS NULL AND s.view > 0 AND
+	       s.created_at > @d) DailyViews,
 	(SELECT count(*) FROM stats s
-	 WHERE s.deleted_at IS NULL AND s.install > 0 AND s.updated_at > @d AND s.created_at < @d) weekly_updates
+	 WHERE s.deleted_at IS NULL AND s.view > 0 AND
+	       s.created_at > @w) WeeklyViews,
+	(SELECT count(*) FROM stats s
+	 WHERE s.deleted_at IS NULL AND s.view > 0) TotalViews,
+
+	(SELECT count(*) FROM stats s
+	 WHERE s.deleted_at IS NULL AND s.install > 0 AND
+	       s.created_at > @w) WeeklyInstalls,
+
+	(SELECT count(*) FROM stats s
+	 WHERE s.deleted_at IS NULL AND s.install > 0 AND
+	       s.updated_at > @d AND
+	       s.created_at < @d) DailyUpdates,
+	(SELECT count(*) FROM stats s
+	 WHERE s.deleted_at IS NULL AND s.install > 0 AND
+	       s.updated_at > @w AND
+	       s.created_at < @w) WeeklyUpdates
 `
 
-	// TODO: Replace last day with last week when we get enough data.
-	lastDay := time.Now().AddDate(0, 0, -1)
-
-	if err := db().Raw(q, sql.Named("d", lastDay)).Scan(&p).Error; err != nil {
+	day := sql.Named("d", time.Now().AddDate(0, 0, -1))
+	week := sql.Named("w", time.Now().AddDate(0, 0, -7))
+	if err := db().Debug().Raw(q, day, week).Scan(&p).Error; err != nil {
 		log.Warn.Println("Failed to get homepage stats:", err.Error())
 	}
 
