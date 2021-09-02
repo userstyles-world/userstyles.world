@@ -2,6 +2,7 @@ package oauthlogin
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 
@@ -117,7 +118,8 @@ func OauthMakeURL(serviceType string) string {
 	oauthURL := service.oauthMakeURL()
 	var state string
 	if service.enableState() {
-		state = utils.UnsafeString(utils.RandomString(16))
+		state = utils.RandomString(16)
+		log.Println(state)
 		oauthURL += "&state=" + state
 	}
 	if oauthURL == "" {

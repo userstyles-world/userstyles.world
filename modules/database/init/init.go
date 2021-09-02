@@ -85,7 +85,7 @@ func Initialize() {
 }
 
 func generateData(amount int) ([]models.Style, []models.User) {
-	randomData := utils.UnsafeString(utils.RandomString(amount * 7 * 4))
+	randomData := utils.RandomString(amount * 7 * 4)
 	var styleStructs []models.Style
 	for i := 0; i < amount; i++ {
 		startData := randomData[(i * 7 * 4):]
@@ -103,7 +103,7 @@ func generateData(amount int) ([]models.Style, []models.User) {
 	}
 
 	var userStructs []models.User
-	randomData = utils.UnsafeString(utils.RandomString(amount * 4 * 4))
+	randomData = utils.RandomString(amount * 4 * 4)
 	for i := 0; i < amount; i++ {
 		startData := randomData[(i * 4 * 4):]
 		userStructs = append(userStructs, models.User{

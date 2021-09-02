@@ -6,7 +6,7 @@ import (
 
 func BenchmarkRandomNonce(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		RandomString(24)
+		RandomBytes(24)
 	}
 }
 
