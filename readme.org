@@ -1,5 +1,7 @@
 * [[https://userstyles.world][UserStyles.world]]
-A modern replacement for =UserStyles.org=.
+Free and open-source, community-driven platform for sharing and browsing
+userstyles, and a replacement for =UserStyles.org=, made by the userstyles
+community.
 
 ** Features
 Features are implemented as they are needed. Visit our [[https://github.com/userstyles-world/userstyles.world/projects/1][public roadmap]] to see
