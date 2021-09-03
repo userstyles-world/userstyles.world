@@ -2,7 +2,8 @@ package utils
 
 import (
 	"crypto/rand"
-	"encoding/hex"
+
+	"github.com/valyala/bytebufferpool"
 )
 
 // GenerateRandomBytes returns securely generated random bytes.
@@ -15,7 +16,17 @@ func RandomBytes(n int) []byte {
 
 func RandomString(n int) string {
 	src := RandomBytes(n)
-	dst := make([]byte, hex.EncodedLen(len(src)))
-	hex.Encode(dst, src)
-	return UnsafeString(dst)
+	return encodeToHex(src)
+}
+
+const hextable = "0123456789abcdef"
+
+func encodeToHex(src []byte) string {
+	dst := bytebufferpool.Get()
+	defer bytebufferpool.Put(dst)
+	for _, v := range src {
+		_ = dst.WriteByte(hextable[v>>4])
+		_ = dst.WriteByte(hextable[v&0x0f])
+	}
+	return UnsafeString(dst.B)
 }
