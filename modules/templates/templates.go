@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/dustin/go-humanize"
 	"github.com/gofiber/template/html"
 	"github.com/microcosm-cc/bluemonday"
 	md "github.com/russross/blackfriday/v2"
@@ -59,6 +60,10 @@ func New(viewDir ...string) *html.Engine {
 	})
 
 	engine.AddFunc("sys", status)
+
+	engine.AddFunc("comma", func(i int64) string {
+		return humanize.Comma(i)
+	})
 
 	engine.AddFunc("proxy", func(s template.HTML, t string, id uint) template.HTML {
 		return template.HTML(strutils.ProxyResources(string(s), t, id))

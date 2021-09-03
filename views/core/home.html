@@ -30,32 +30,32 @@
                 <div class="TableBody">
                     <div class="TableRow">
                         <div class="TableCell">Users</div>
-                        <div class="TableCell">{{ .Stats.DailyUsers }}</div>
-                        <div class="TableCell">{{ .Stats.WeeklyUsers }}</div>
-                        <div class="TableCell">{{ .Stats.TotalUsers }}</div>
+                        <div class="TableCell">{{ comma .Stats.DailyUsers }}</div>
+                        <div class="TableCell">{{ comma .Stats.WeeklyUsers }}</div>
+                        <div class="TableCell">{{ comma .Stats.TotalUsers }}</div>
                     </div>
                     <div class="TableRow">
                         <div class="TableCell">Styles</div>
-                        <div class="TableCell">{{ .Stats.DailyStyles }}</div>
-                        <div class="TableCell">{{ .Stats.WeeklyStyles }}</div>
-                        <div class="TableCell">{{ .Stats.TotalStyles }}</div>
+                        <div class="TableCell">{{ comma .Stats.DailyStyles }}</div>
+                        <div class="TableCell">{{ comma .Stats.WeeklyStyles }}</div>
+                        <div class="TableCell">{{ comma .Stats.TotalStyles }}</div>
                     </div>
                     <div class="TableRow">
                         <div class="TableCell">Views</div>
-                        <div class="TableCell">{{ .Stats.DailyViews }}</div>
-                        <div class="TableCell">{{ .Stats.WeeklyViews }}</div>
-                        <div class="TableCell">{{ .Stats.TotalViews }}</div>
+                        <div class="TableCell">{{ comma .Stats.DailyViews }}</div>
+                        <div class="TableCell">{{ comma .Stats.WeeklyViews }}</div>
+                        <div class="TableCell">{{ comma .Stats.TotalViews }}</div>
                     </div>
                     <div class="TableRow">
                         <div class="TableCell">Installs</div>
-                        <div class="TableCell">{{ .Stats.DailyInstalls }}</div>
-                        <div class="TableCell">{{ .Stats.WeeklyInstalls }}</div>
-                        <div class="TableCell">{{ .Stats.TotalInstalls }}</div>
+                        <div class="TableCell">{{ comma .Stats.DailyInstalls }}</div>
+                        <div class="TableCell">{{ comma .Stats.WeeklyInstalls }}</div>
+                        <div class="TableCell">{{ comma .Stats.TotalInstalls }}</div>
                     </div>
                     <div class="TableRow">
                         <div class="TableCell">Updates</div>
-                        <div class="TableCell">{{ .Stats.DailyUpdates }}</div>
-                        <div class="TableCell">{{ .Stats.WeeklyUpdates }}</div>
+                        <div class="TableCell">{{ comma .Stats.DailyUpdates }}</div>
+                        <div class="TableCell">{{ comma .Stats.WeeklyUpdates }}</div>
                         <div class="TableCell">∞</div>
                     </div>
                 </div>
