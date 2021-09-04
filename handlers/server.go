@@ -81,6 +81,7 @@ func Initialize() {
 	app.Get("/modlog", core.GetModLog)
 	app.Get("/link/:site", core.GetLinkedSite)
 	app.Get("/security-policy", core.Redirect("/docs/security"))
+	app.Get("/sitemap.xml", core.GetSiteMap)
 
 	app.Get("/logout", jwtware.Protected, user.Logout)
 	app.Get("/account", jwtware.Protected, user.Account)

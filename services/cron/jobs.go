@@ -8,6 +8,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/sitemap"
 	"userstyles.world/modules/update"
 	"userstyles.world/services/snapshot"
 )
@@ -37,5 +38,15 @@ func Initialize() {
 	_, err = s.Cron("*/30 * * * *").Do(func() { update.ImportedStyles() })
 	if err != nil {
 		log.Warn.Println("Failed to update imported styles:", err.Error())
+	}
+
+	_, err = s.Cron("*/30 * * * *").Do(func() {
+		err := sitemap.UpdateSitemapCache()
+		if err != nil {
+			log.Warn.Println("Failed to update sitemap:", err.Error())
+		}
+	})
+	if err != nil {
+		log.Warn.Println("Failed to update sitemap:", err.Error())
 	}
 }

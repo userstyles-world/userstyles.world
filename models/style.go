@@ -82,6 +82,10 @@ type StyleSearch struct {
 	UserID      uint
 }
 
+type StyleSiteMap struct {
+	ID int
+}
+
 func (s StyleCard) Slug() string {
 	return strutils.SlugifyURL(s.Name)
 }
@@ -121,6 +125,21 @@ where
 `
 
 	if err := db().Raw(stmt).Find(q).Error; err != nil {
+		return nil, err
+	}
+
+	return *q, nil
+}
+
+func GetAllSitesSiteMap() ([]StyleSiteMap, error) {
+	q := new([]StyleSiteMap)
+
+	err := db().
+		Table("styles").
+		Select("id").
+		Where("deleted_at is null").
+		Scan(q).Error
+	if err != nil {
 		return nil, err
 	}
 
