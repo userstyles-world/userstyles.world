@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"regexp"
 
 	"github.com/userstyles-world/fiber/v2"
 
@@ -35,6 +36,7 @@ func Proxy(c *fiber.Ctx) error {
 		a := fiber.AcquireAgent()
 		defer fiber.ReleaseAgent(a)
 		req := a.Request()
+	getImage:
 		req.SetRequestURI(link)
 		if err := a.Parse(); err != nil {
 			log.Info.Println("Agent err:", err.Error())
@@ -42,10 +44,16 @@ func Proxy(c *fiber.Ctx) error {
 		}
 
 		// TODO: Show a fallback image.
-		_, data, errs := a.Bytes()
+		status, data, errs := a.Bytes()
 		if len(errs) > 0 {
 			log.Info.Printf("Failed to get image: %v\n", errs)
 			return nil
+		}
+
+		// NOTE: Hack around redirects. (=
+		if status >= 300 && status <= 400 {
+			link = extractImage(string(data))
+			goto getImage
 		}
 
 		if err := os.WriteFile(name, data, 0o600); err != nil {
@@ -69,4 +77,10 @@ func Proxy(c *fiber.Ctx) error {
 	c.Response().SetBodyStream(f, int(stat.Size()))
 
 	return nil
+}
+
+func extractImage(s string) string {
+	fmt.Printf("%#v\n", s)
+	re := regexp.MustCompile(`(?m).*"(https://.*)".*`)
+	return re.ReplaceAllString(s, "$1")
 }
