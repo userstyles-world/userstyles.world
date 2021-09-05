@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/gorm"
 
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
 	"userstyles.world/utils/strutils"
 )
@@ -214,7 +215,7 @@ func GetStyleCount() (i int64, err error) {
 
 func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCard, error) {
 	q := new([]StyleCard)
-	size := 40
+	size := config.AppPageMaxItems
 	offset := (page - 1) * size
 
 	// Reflection go brrrr.
