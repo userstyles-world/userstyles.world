@@ -75,7 +75,6 @@ func (s *Stats) UpsertInstall() error {
 	s.Install = t
 
 	return db().
-		Debug().
 		Model(modelStats).
 		Clauses(clause.OnConflict{
 			Columns: []clause.Column{{Name: "hash"}},
@@ -106,7 +105,7 @@ func (s *Stats) UpsertView() error {
 
 // Delete will remove stats for a given style ID.
 func (*Stats) Delete(id interface{}) error {
-	return db().Debug().Delete(&modelStats, "style_id = ?", id).Error
+	return db().Delete(&modelStats, "style_id = ?", id).Error
 }
 
 func GetWeeklyInstallsForStyle(id string) (weekly int64) {
@@ -209,7 +208,7 @@ SELECT
 
 	day := sql.Named("d", time.Now().AddDate(0, 0, -1))
 	week := sql.Named("w", time.Now().AddDate(0, 0, -7))
-	if err := db().Debug().Raw(q, day, week).Scan(&p).Error; err != nil {
+	if err := db().Raw(q, day, week).Scan(&p).Error; err != nil {
 		log.Warn.Println("Failed to get homepage stats:", err.Error())
 	}
 
