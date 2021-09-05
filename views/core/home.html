@@ -1,6 +1,6 @@
 <div class="wrapper py:l">
     {{ if not .User.ID }}
-        <section class="hero md flex f-col ta:c">
+        <section class="Hero md flex f-col ta:c">
             <div class="mascot">
                 {{- template "partials/mascot" . -}}
             </div>
@@ -12,10 +12,10 @@
             </span>
         </section>
 
-        <section class="mb:l">
+        <section class="Hero Hero-half">
             <div class="ta:c">
                 <h2>Statistics</h2>
-                <p class="fg:3 mb:l mx:a mb:m">Combined statistics for UserStyles.world platform.</p>
+                <p class="fg:2 mb:l mx:a mb:m">Combined statistics for UserStyles.world platform.</p>
             </div>
 
             <div class="Table Half ml:a mr:a">
@@ -64,9 +64,9 @@
     {{ end }}
 
     {{ if ge (len .Styles) 1 }}
-        <section class="mt:l">
+        <section class="Hero mt:l">
             <h2 class="ta:c">Featured userstyles</h2>
-            <p class="ta:c mb:l fg:3">See more styles on <a href="/explore">Explore</a> page.</p>
+            <p class="ta:c mb:l fg:2">See more styles on <a href="/explore">Explore</a> page.</p>
             {{/* template "partials/debug-styles" . */}}
             <div class="grid flex rwrap mx:r mt:m">
                 {{ range .Styles }}

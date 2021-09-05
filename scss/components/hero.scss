@@ -1,0 +1,26 @@
+.Hero {
+    min-height: 75vh;
+    align-items: center;
+    justify-content: center;
+
+    &-half { min-height: 50vh }
+
+    h1 {
+        margin-bottom: 1rem;
+        font-size: 3.5em;
+
+        + p {
+            max-width: 54ex;
+            font-size: 1.2em;
+        }
+    }
+
+    .mascot { width: 128px }
+
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 2.4em;
+            + p { font-size: 1em }
+        }
+    }
+}
