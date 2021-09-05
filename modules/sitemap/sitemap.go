@@ -3,7 +3,6 @@ package sitemap
 import (
 	"strconv"
 
-	"github.com/valyala/bytebufferpool"
 	"userstyles.world/models"
 )
 
@@ -23,6 +22,8 @@ var (
 	siteMapHCEEnd   = []byte(`</loc></url>`)
 
 	siteMapURLEnd = []byte(`</urlset>`)
+
+	siteURL = []byte(`https://userstyles.world/style/`)
 )
 
 var hardCodedEntries = []string{
@@ -41,27 +42,27 @@ var hardCodedEntries = []string{
 var SiteMapCache []byte
 
 func CreateSitemap(styles []models.StyleSiteMap) ([]byte, error) {
-	buffer := bytebufferpool.Get()
-	defer bytebufferpool.Put(buffer)
-
-	_, _ = buffer.Write(siteMapXMLHeader)
-	_, _ = buffer.Write(siteMapURLSet)
+	// Make a educated guess of the size of the sitemap.xml
+	// Allocate 0.1MB
+	buffer := make([]byte, 0, 1048576)
+	buffer = append(buffer, siteMapXMLHeader...)
+	buffer = append(buffer, siteMapURLSet...)
 
 	for _, hardCodedEntry := range hardCodedEntries {
-		_, _ = buffer.Write(siteMapHCEStart)
-		_, _ = buffer.WriteString(hardCodedEntry)
-		_, _ = buffer.Write(siteMapHCEEnd)
+		buffer = append(buffer, siteMapHCEStart...)
+		buffer = append(buffer, hardCodedEntry...)
+		buffer = append(buffer, siteMapHCEEnd...)
 	}
 
 	for _, style := range styles {
-		_, _ = buffer.Write(siteMapHCEStart)
-		_, _ = buffer.WriteString("https://userstyles.world/style/")
-		_, _ = buffer.WriteString(strconv.Itoa(style.ID))
-		_, _ = buffer.Write(siteMapHCEEnd)
+		buffer = append(buffer, siteMapHCEStart...)
+		buffer = append(buffer, siteURL...)
+		buffer = append(buffer, strconv.Itoa(style.ID)...)
+		buffer = append(buffer, siteMapHCEEnd...)
 	}
-	_, _ = buffer.Write(siteMapURLEnd)
-	// Return the buffer copy
-	return buffer.Bytes()[:], nil
+	buffer = append(buffer, siteMapURLEnd...)
+	// Return the filled buffer
+	return buffer, nil
 }
 
 func UpdateSitemapCache() error {
