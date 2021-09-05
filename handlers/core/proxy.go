@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/userstyles-world/fiber/v2"
 
@@ -35,25 +36,45 @@ func Proxy(c *fiber.Ctx) error {
 		// Download image.
 		a := fiber.AcquireAgent()
 		defer fiber.ReleaseAgent(a)
-		req := a.Request()
-	getImage:
-		req.SetRequestURI(link)
-		if err := a.Parse(); err != nil {
-			log.Info.Println("Agent err:", err.Error())
-			return nil
-		}
 
-		// TODO: Show a fallback image.
-		status, data, errs := a.Bytes()
-		if len(errs) > 0 {
-			log.Info.Printf("Failed to get image: %v\n", errs)
-			return nil
-		}
+		var status int
+		var data []byte
+		var errs []error
 
-		// NOTE: Hack around redirects. (=
-		if status >= 300 && status <= 400 {
-			link = extractImage(string(data))
-			goto getImage
+		// HACK: GitHub doesn't set "Location" response header.
+		if strings.Contains(link, "https://github.com/") {
+		getImage:
+			a.Request().SetRequestURI(link)
+			if err := a.Parse(); err != nil {
+				log.Info.Println("Agent err:", err.Error())
+				return nil
+			}
+
+			status, data, errs = a.Bytes()
+			if len(errs) > 0 {
+				log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
+				return nil
+			}
+
+			if status >= 300 && status <= 400 {
+				link = extractImage(string(data))
+				goto getImage
+			}
+		} else {
+			a.Request().SetRequestURI(link)
+			a.MaxRedirectsCount(3)
+
+			if err := a.Parse(); err != nil {
+				log.Info.Println("Agent err:", err.Error())
+				return nil
+			}
+
+			// TODO: Show a fallback image.
+			status, data, errs = a.Bytes()
+			if len(errs) > 0 {
+				log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
+				return nil
+			}
 		}
 
 		if err := os.WriteFile(name, data, 0o600); err != nil {
