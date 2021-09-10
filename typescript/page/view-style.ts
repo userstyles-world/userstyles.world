@@ -1,11 +1,9 @@
 import {doDomOperationProxy} from 'utils/dom';
 
-export const initViewStyle = () => {
-    doDomOperationProxy(() => {
-        shareButton();
-        checkIfStyleInstalled();
-    });
-};
+export const initViewStyle = doDomOperationProxy(() => {
+    shareButton();
+    checkIfStyleInstalled();
+});
 
 function shareButton() {
     const parentElement = document.getElementById('share') as HTMLSpanElement;
