@@ -25,8 +25,7 @@ func Proxy(c *fiber.Ctx) error {
 	name := dir + "/" + url.PathEscape(link)
 
 	// Check if image exists.
-	stat, err := os.Stat(name)
-	if os.IsNotExist(err) {
+	if _, err := os.Stat(name); os.IsNotExist(err) {
 		// Create directory.
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			log.Warn.Printf("Failed to create %v: %s\n", dir, err.Error())
@@ -90,7 +89,8 @@ func Proxy(c *fiber.Ctx) error {
 		return nil
 	}
 
-	if stat, err = f.Stat(); err != nil {
+	stat, err := f.Stat()
+	if err != nil {
 		log.Info.Println("Failed to get stat:", err.Error())
 		return nil
 	}
