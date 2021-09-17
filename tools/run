@@ -147,8 +147,13 @@ build() {
     go run typescript/run.go
 
     log "compiling executable"
+    c="$(git rev-list -1 HEAD)"
+    v="$(git describe --tags)"
+
     GOOS=linux go build \
-        -ldflags '-s -w -extldflags "-fno-PIC -static"' \
+        -ldflags "-s -w -extldflags '-fno-PIC -static'
+                  -X userstyles.world/modules/config.GitCommit=${c}
+                  -X userstyles.world/modules/config.GitVersion=${v}" \
         -buildmode pie -tags 'osusergo netgo static_build'
 }
 

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -10,6 +11,9 @@ type ScrambleSettings struct {
 }
 
 var (
+	GitCommit  string
+	GitVersion string
+
 	Port                 = getEnv("PORT", ":3000")
 	DB                   = getEnv("DB", "dev.db")
 	DBDebug              = getEnv("DB_DEBUG", "silent")
@@ -27,8 +31,6 @@ var (
 	OAuthpKey            = getEnv("OAUTHP_KEY", "(✿◠‿◠＾◡＾)っ✂❤")
 	EmailAddress         = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
 	EmailPassword        = getEnv("EMAIL_PWD", "hahah_not_your_password")
-	GitCommit            = getEnv("GIT_COMMIT", "unset")
-	GitVersion           = getEnv("GIT_VERSION", "unset")
 	GitHubClientID       = getEnv("GITHUB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
 	GitHubClientSecret   = getEnv("GITHUB_CLIENT_SECRET", "OurSecretHere?_www.youtube.com/watch?v=dQw4w9WgXcQ")
 	GitlabClientID       = getEnv("GITLAB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
@@ -50,6 +52,7 @@ var (
 	AppCodeName     = "Fennec Fox"
 	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
 	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
+	AppCommitSHA    = fmt.Sprintf("%.7s", GitCommit)
 	AppUptime       = time.Now()
 	AppPageMaxItems = 36
 

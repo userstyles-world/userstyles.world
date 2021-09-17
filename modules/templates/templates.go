@@ -25,6 +25,7 @@ var appConfig = map[string]interface{}{
 	"appVersion":      config.GitVersion,
 	"appSourceCode":   config.AppSourceCode,
 	"appLatestCommit": config.AppLatestCommit,
+	"appCommitSHA":    config.AppCommitSHA,
 	"allowedEmailsRe": config.AllowedEmailsRe,
 	"allowedImagesRe": config.AllowedImagesRe,
 }
@@ -92,14 +93,6 @@ func New(viewDir ...string) *html.Engine {
 		}
 
 		return template.HTML(s)
-	})
-
-	engine.AddFunc("GitCommit", func() template.HTML {
-		if !config.Production {
-			return template.HTML("dev")
-		}
-
-		return template.HTML(config.GitCommit)
 	})
 
 	engine.AddFunc("Date", func(time time.Time) template.HTML {

@@ -1,4 +1,3 @@
-{{ $commit := printf "%.8s" GitCommit }}
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="title" content="{{ config "appName" }}">
@@ -6,7 +5,7 @@
 <meta name="description" content="A new free and open-source, community-driven, modern alternative to userstyles.org.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="{{ canonical .Canonical }}">
-<link rel="stylesheet" href="/css/main.css?v={{ $commit }}" type="text/css" media="screen">
+<link rel="stylesheet" href="/css/main.css?v={{ config "appCommitSHA" }}" type="text/css" media="screen">
 <link rel="mask-icon" href="/mascot.svg" color="blue">
 <link rel="icon" href="/favicon.ico">
 <title>{{ .Title }} — {{ config "appName" }}</title>
@@ -23,4 +22,4 @@
 <meta property="og:image" content="{{ printf `https://userstyles.world/api/style/preview/%d.webp` .ID }}">
 {{ with $.Url -}}<meta property="og:url" content="{{ printf `https://userstyles.world%s` $.Slug }}">{{ end -}}
 {{ end }}
-<script defer src="/js/main.js?v={{ $commit }}"></script>
+<script defer src="/js/main.js?v={{ config "appCommitSHA" }}"></script>
