@@ -123,7 +123,7 @@ func CreatePost(c *fiber.Ctx) error {
 			log.Warn.Printf("Failed to write image for %s: %s\n", styleID, err.Error())
 		}
 
-		s.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
+		s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
 		err := images.GenerateImagesForStyle(styleID, s.Preview, true)
 		if err != nil {
 			s.Preview = ""

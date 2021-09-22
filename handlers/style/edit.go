@@ -115,7 +115,7 @@ func EditPost(c *fiber.Ctx) error {
 
 	go func(image multipart.File, style *models.Style, styleID, preview string) {
 		isLocal := false
-		style.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
+		style.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
 
 		var err error
 		if image != nil {

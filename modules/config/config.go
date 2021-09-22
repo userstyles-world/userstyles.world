@@ -11,6 +11,7 @@ type ScrambleSettings struct {
 }
 
 var (
+	BaseURL    string
 	GitCommit  string
 	GitVersion string
 
@@ -66,13 +67,16 @@ var (
 
 // OAuthURL returns the proper callback URL depending on the environment.
 func OAuthURL() string {
-	return BaseURL() + "/api/callback/"
+	return BaseURL + "/api/callback/"
 }
 
-// BaseURL returns the proper BaseURL.
-func BaseURL() string {
+func setBaseURL() {
 	if Production {
-		return "https://userstyles.world"
+		BaseURL = "https://userstyles.world"
 	}
-	return "http://localhost" + Port
+	BaseURL = "http://localhost" + Port
+}
+
+func init() {
+	setBaseURL()
 }
