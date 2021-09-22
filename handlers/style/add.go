@@ -16,7 +16,6 @@ import (
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/search"
@@ -93,19 +92,6 @@ func CreatePost(c *fiber.Ctx) error {
 		})
 	}
 
-	var image multipart.File
-	if s.Preview == "" {
-		if ff, _ := c.FormFile("preview"); ff != nil {
-			image, err = ff.Open()
-			if err != nil {
-				log.Warn.Println("Failed to open image:", err.Error())
-				return c.Render("err", fiber.Map{
-					"Title": "Internal server error.",
-					"User":  u,
-				})
-			}
-		}
-	}
 	s, err = models.CreateStyle(s)
 	if err != nil {
 		log.Warn.Println("Failed to create style:", err.Error())
@@ -115,38 +101,47 @@ func CreatePost(c *fiber.Ctx) error {
 		})
 	}
 
-	styleID := strconv.FormatUint(uint64(s.ID), 10)
-
-	go func(image multipart.File, style *models.Style, styleID, preview string) {
-		isLocal := false
-		s.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
-
-		var err error
-		if image != nil {
-			isLocal = true
-			data, _ := io.ReadAll(image)
-			err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
-			if err != nil {
-				log.Warn.Printf("Failed to write image for %v: %v\n", styleID, err.Error())
-				return
-			}
+	var image multipart.File
+	if ff, _ := c.FormFile("preview"); ff != nil {
+		image, err = ff.Open()
+		if err != nil {
+			log.Warn.Println("Failed to open image:", err.Error())
+			return c.Render("err", fiber.Map{
+				"Title": "Internal server error.",
+				"User":  u,
+			})
 		}
-		err = images.GenerateImagesForStyle(styleID, preview, isLocal)
+	}
+
+
+	styleID := strconv.FormatUint(uint64(s.ID), 10)
+	// Local files take precedence over external images.
+	if image != nil {
+		data, _ := io.ReadAll(image)
+		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
+		if err != nil {
+			log.Warn.Printf("Failed to write image for %s: %s\n", styleID, err.Error())
+		}
+
+		s.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
+		err := images.GenerateImagesForStyle(styleID, s.Preview, true)
 		if err != nil {
 			s.Preview = ""
-			log.Warn.Printf("Failed to generate images for %v: %v\n", styleID, err.Error())
-			return
+			log.Warn.Printf("Failed to generate images for %s: %s\n", styleID, err.Error())
 		}
-
-		err = database.Conn.
-			Model(new(models.Style)).
-			Where("id", styleID).
-			Updates(style).
-			Error
+	} else if s.Preview != "" {
+		err = images.GenerateImagesForStyle(styleID, s.Preview, false)
 		if err != nil {
-			log.Warn.Printf("Failed to update style %v: %v\n", styleID, err.Error())
+			s.Preview = ""
+			log.Warn.Printf("Failed to generate images for %s: %s\n", styleID, err.Error())
 		}
-	}(image, s, styleID, s.Preview)
+	}
+
+	// TODO: Remove during rewrite of images module. The name-schema shouldn't
+	// require a style id; hashing username+time.Now() should be sufficient. #77
+	if err = models.UpdateStyle(s); err != nil {
+		log.Warn.Printf("Failed to update style %s: %s\n", styleID, err.Error())
+	}
 
 	go func(style *models.Style) {
 		if err = search.IndexStyle(style.ID); err != nil {

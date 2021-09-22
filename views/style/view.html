@@ -8,13 +8,15 @@
         {{- end }}
         <div class="card">
             <div class="screenshot">
-                <picture class="blurred" aria-hidden="true">
-                    {{ $img := printf "/api/style/preview/" }}
-                    <source srcset="{{ $img }}{{ .Style.ID }}.webp" type="image/webp">
-                    <img
-                        src="{{ $img }}{{ .Style.ID }}.jpeg"
-                        loading="lazy">
-                </picture>
+                {{ if .Style.Preview }}
+                    <picture class="blurred" aria-hidden="true">
+                        {{ $img := printf "/api/style/preview/" }}
+                        <source srcset="{{ $img }}{{ .Style.ID }}.webp" type="image/webp">
+                        <img
+                            src="{{ $img }}{{ .Style.ID }}.jpeg"
+                            loading="lazy">
+                    </picture>
+                {{ end }}
                 {{ template "partials/preview-image" .Style }}
             </div>
         </div>
