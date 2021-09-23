@@ -1,15 +1,14 @@
 package style
 
 import (
-	"io"
 	"mime/multipart"
-	"os"
 	"strings"
 
 	"github.com/userstyles-world/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
@@ -84,18 +83,6 @@ func EditPost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	var image multipart.File
-	if ff, _ := c.FormFile("preview"); ff != nil {
-		image, err = ff.Open()
-		if err != nil {
-			log.Warn.Println("Failed to open image:", err.Error())
-			return c.Render("err", fiber.Map{
-				"Title": "Internal server error.",
-				"User":  u,
-			})
-		}
-	}
-
 	err = database.Conn.
 		Model(t).
 		Where("id", styleID).
@@ -113,36 +100,38 @@ func EditPost(c *fiber.Ctx) error {
 		})
 	}
 
-	go func(image multipart.File, style *models.Style, styleID, preview string) {
-		isLocal := false
-		style.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
-
-		var err error
-		if image != nil {
-			isLocal = true
-			data, _ := io.ReadAll(image)
-			err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
-			if err != nil {
-				log.Warn.Println("Failed to write image:", err.Error())
-				return
-			}
-		}
-		err = images.GenerateImagesForStyle(styleID, preview, isLocal)
+	// Check for new image.
+	var image multipart.File
+	if ff, _ := c.FormFile("preview"); ff != nil {
+		image, err = ff.Open()
 		if err != nil {
-			s.Preview = ""
-			log.Warn.Println("Failed to generate images:", err.Error())
-			return
+			log.Warn.Println("Failed to open image:", err.Error())
+			return c.Render("err", fiber.Map{
+				"Title": "Internal server error.",
+				"User":  u,
+			})
+		}
+	}
+
+	// Check for new preview image.
+	if image != nil || s.Preview != q.Preview {
+		err = images.Generate(image, styleID, q.Preview)
+		if err != nil {
+			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
+			q.Preview = ""
 		}
 
-		err = database.Conn.
-			Model(new(models.Style)).
-			Where("id", styleID).
-			Updates(style).
-			Error
-		if err != nil {
-			log.Warn.Println("Failed to update style:", err.Error())
-		}
-	}(image, &q, styleID, q.Preview)
+		q.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+	}
+
+	err = database.Conn.Model(q).Where("id", styleID).Updates(q).Error
+	if err != nil {
+		log.Warn.Printf("Failed to update preview image for %s: %s\n", styleID, err.Error())
+		return c.Render("err", fiber.Map{
+			"Title": "Failed to update preview image",
+			"User":  u,
+		})
+	}
 
 	return c.Redirect("/style/"+c.Params("id"), fiber.StatusSeeOther)
 }

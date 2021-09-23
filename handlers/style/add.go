@@ -2,9 +2,7 @@ package style
 
 import (
 	"fmt"
-	"io"
 	"mime/multipart"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -113,28 +111,15 @@ func CreatePost(c *fiber.Ctx) error {
 		}
 	}
 
-
+	// Check preview image.
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
-	// Local files take precedence over external images.
-	if image != nil {
-		data, _ := io.ReadAll(image)
-		err = os.WriteFile(images.CacheFolder+styleID+".original", data, 0o600)
+	if image != nil || s.Preview != "" {
+		err = images.Generate(image, styleID, s.Preview)
 		if err != nil {
-			log.Warn.Printf("Failed to write image for %s: %s\n", styleID, err.Error())
+			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
+			s.Preview = ""
 		}
-
 		s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
-		err := images.GenerateImagesForStyle(styleID, s.Preview, true)
-		if err != nil {
-			s.Preview = ""
-			log.Warn.Printf("Failed to generate images for %s: %s\n", styleID, err.Error())
-		}
-	} else if s.Preview != "" {
-		err = images.GenerateImagesForStyle(styleID, s.Preview, false)
-		if err != nil {
-			s.Preview = ""
-			log.Warn.Printf("Failed to generate images for %s: %s\n", styleID, err.Error())
-		}
 	}
 
 	// TODO: Remove during rewrite of images module. The name-schema shouldn't

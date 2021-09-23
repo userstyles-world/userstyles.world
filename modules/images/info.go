@@ -3,6 +3,7 @@ package images
 import (
 	"io"
 	"io/fs"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"regexp"
@@ -75,6 +76,26 @@ func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 	if err := decodeImage(original, webp, ImageTypeWEBP); err != nil {
 		log.Warn.Printf("Failed to process image for %v: %v\n", id, err)
 		return err
+	}
+
+	return nil
+}
+
+func Generate(img multipart.File, id, preview string) error {
+	if img != nil {
+		data, _ := io.ReadAll(img)
+		original := CacheFolder + id + ".original"
+		if err := os.WriteFile(original, data, 0o600); err != nil {
+			return err
+		}
+
+		if err := GenerateImagesForStyle(id, preview, true); err != nil {
+			return err
+		}
+	} else if preview != "" {
+		if err := GenerateImagesForStyle(id, preview, false); err != nil {
+			return err
+		}
 	}
 
 	return nil
