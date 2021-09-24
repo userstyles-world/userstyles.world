@@ -101,22 +101,21 @@ func LoginPost(c *fiber.Ctx) error {
 			})
 	}
 
-	// Fix issues with Vim Vixen in dev environment.
-	var site string
-	if config.Production {
-		site = "strict"
-	}
-
-	// Create cookie.
-	c.Cookie(&fiber.Cookie{
+	// Create and set cookie.
+	cookie := &fiber.Cookie{
 		Name:     fiber.HeaderAuthorization,
 		Value:    t,
 		Path:     "/",
 		Expires:  expiration,
 		Secure:   config.Production,
-		HTTPOnly: true,
-		SameSite: site,
-	})
+		HTTPOnly: config.Production,
+		SameSite: fiber.CookieSameSiteStrictMode,
+	}
+	// Fix issues with Vim Vixen in dev environment.
+	if !config.Production {
+		cookie.SameSite = fiber.CookieSameSiteDisabled
+	}
+	c.Cookie(cookie)
 
 	if r := c.Query("r"); r != "" {
 		path, err := url.QueryUnescape(r)
