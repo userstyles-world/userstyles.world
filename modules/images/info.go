@@ -37,8 +37,8 @@ func fileExist(path string) fs.FileInfo {
 }
 
 func fixRawURL(url string) string {
-	re := regexp.MustCompile(`(?mi)^(http.*)(raw|src|blob)(.*.(png|jpe?g|avif|webp))(\?.*)*$`)
-	return re.ReplaceAllString(url, "${1}raw${3}")
+	re := regexp.MustCompile(`(?mi)^(http.*)/(raw|src|blob)/(.*.(png|jpe?g|avif|webp))(\?.*)*$`)
+	return re.ReplaceAllString(url, "${1}/raw/${3}")
 }
 
 func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
