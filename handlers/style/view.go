@@ -2,6 +2,7 @@ package style
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/userstyles-world/fiber/v2"
 
@@ -37,7 +38,13 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 
 	// Upsert style views.
-	go func(id, ip string) {
+	go func(id, ip, ua string) {
+		// Ignore bots from fediverse.
+		if strings.Contains(ua, "Mastodon") || strings.Contains(ua, "Pleroma") {
+			log.Info.Printf("Ignored fediverse bot on style %s: %s\n", id, ua)
+			return
+		}
+
 		s := new(models.Stats)
 		if err := s.CreateRecord(id, ip); err != nil {
 			log.Warn.Printf("Failed to create record for %s: %s\n", id, err.Error())
@@ -45,7 +52,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		if err := s.UpsertView(); err != nil {
 			log.Warn.Printf("Failed to upsert views for %v: %s\n", s.StyleID, err.Error())
 		}
-	}(id, c.IP())
+	}(id, c.IP(), string(c.Context().UserAgent()))
 
 	// Get history data.
 	history, err := new(models.History).GetStatsForStyle(id)
