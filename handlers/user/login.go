@@ -128,5 +128,10 @@ func LoginPost(c *fiber.Ctx) error {
 		return c.Redirect(path, fiber.StatusSeeOther)
 	}
 
+	// Update last login date.
+	if err = user.UpdateLastLogin(); err != nil {
+		log.Warn.Println("Failed to update last login date for id:", user.ID)
+	}
+
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }

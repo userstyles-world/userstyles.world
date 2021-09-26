@@ -30,6 +30,9 @@
         {{ end }}
         <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt | Date }}</p>
         <p class="updated"><span class="minw">Updated</span>{{ .Params.UpdatedAt | Date }}</p>
+        {{ if not (eq .Params.LastLogin.String "0001-01-01 00:00:00 +0000 UTC") }}
+            <p class="lastlogin"><span class="minw">Last login</span>{{ .Params.LastLogin | Date }}</p>
+        {{ end }}
     </section>
 
     <section id="name">

@@ -2,6 +2,7 @@ package models
 
 import (
 	"strings"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -35,6 +36,7 @@ type User struct {
 	Biography       string     `validate:"min=0,max=512"`
 	DisplayName     string     `validate:"displayName,min=3,max=32"`
 	Role            Role       `gorm:"default=0"`
+	LastLogin       time.Time
 }
 
 type APIUser struct {
@@ -179,4 +181,9 @@ func UpdateUser(u *User) error {
 
 func (*User) DeleteWhereID(id interface{}) error {
 	return db().Delete(&User{}, "id = ?", id).Error
+}
+
+func (u *User) UpdateLastLogin() error {
+	return db().Model(&u).Where("id", u.ID).
+		UpdateColumn("last_login", time.Now()).Error
 }
