@@ -35,3 +35,12 @@ func Filter(arr interface{}, cond func(interface{}) bool) interface{} {
 	}
 	return newContent.Interface()
 }
+
+func ContainsError(arr []error, entry error) bool {
+	for _, possibleEntry := range arr {
+		if possibleEntry == entry {
+			return true
+		}
+	}
+	return false
+}

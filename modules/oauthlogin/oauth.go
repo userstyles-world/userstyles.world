@@ -131,7 +131,7 @@ func OauthMakeURL(serviceType string) string {
 func CallbackOAuth(tempCode, state, serviceType string) (OAuthResponse, error) {
 	service, err := GetInterfaceForService(serviceType)
 	if err != nil {
-		return OAuthResponse{}, errors.ErrNoServiceDetected
+		return OAuthResponse{}, err
 	}
 	// Now the hard part D:
 	// With our temp code and orignial state, we need to request the auth code.

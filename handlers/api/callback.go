@@ -9,6 +9,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/errors"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/oauthlogin"
 	"userstyles.world/utils"
@@ -25,6 +26,11 @@ func getSocialMediaValue(user *models.User, social string) string {
 	default:
 		return ""
 	}
+}
+
+var allowedErrosList []error = []error{
+	errors.ErrPrimaryEmailNotVerified,
+	errors.ErrNoServiceDetected,
 }
 
 func CallbackGet(c *fiber.Ctx) error {
@@ -58,6 +64,14 @@ func CallbackGet(c *fiber.Ctx) error {
 	response, err := oauthlogin.CallbackOAuth(tempCode, rState, service)
 	if err != nil {
 		log.Warn.Println("Ouch, the response failed:", err.Error())
+		// We only allow a certain amount of errors to be displayed to the
+		// user. So we will now check if the error is in the "allowed" list
+		// and if it is, we will display it to the user.
+		if utils.ContainsError(allowedErrosList, err) {
+			return c.Render("err", fiber.Map{
+				"Title": err.Error(),
+			})
+		}
 		return c.Next()
 	}
 
