@@ -17,6 +17,7 @@ func TestSluggifyURLs(t *testing.T) {
 		{"TestExtraCharacters", "(Dark) Something [v1.2.3]", "dark-something-v1-2-3"},
 		{"TextExtraOfEverything", " Please---Get___Some   HELP!!! ", "please-get-some-help"},
 		{"TestTypographicSymbols", "暗い空 Dark Mode", "dark-mode"},
+		{"TestTypographicSymbolsOnly", "暗い空", "default-slug"},
 	}
 
 	for _, c := range cases {

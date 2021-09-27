@@ -16,6 +16,11 @@ func SlugifyURL(s string) string {
 	// Extract valid characters.
 	parts := slugRe.FindAllString(s, -1)
 
+	// Add default slug for unsupported characters.
+	if len(parts) == 0 {
+		return "default-slug"
+	}
+
 	// Join parts and make them lowercase.
 	s = strings.Join(parts, "-")
 	s = strings.ToLower(s)
