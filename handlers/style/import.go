@@ -2,6 +2,8 @@ package style
 
 import (
 	"fmt"
+	"mime/multipart"
+	"strconv"
 	"strings"
 
 	"github.com/userstyles-world/fiber/v2"
@@ -9,6 +11,8 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
+	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -96,6 +100,24 @@ func ImportPost(c *fiber.Ctx) error {
 			"Title": "Internal server error.",
 			"User":  u,
 		})
+	}
+
+	// Check preview image.
+	styleID := strconv.FormatUint(uint64(s.ID), 10)
+	if s.Preview != "" {
+		var image multipart.File // dummy
+		err = images.Generate(image, styleID, s.Preview)
+		if err != nil {
+			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
+			s.Preview = ""
+		}
+		s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+	}
+
+	// TODO: Remove during rewrite of images module. The name-schema shouldn't
+	// require a style id; hashing username+time.Now() should be sufficient. #77
+	if err = models.UpdateStyle(s); err != nil {
+		log.Warn.Printf("Failed to update style %s: %s\n", styleID, err.Error())
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
