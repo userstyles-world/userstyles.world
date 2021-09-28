@@ -3,9 +3,12 @@
         <h1 class="mb:m">{{ .Style.Name -}}
             <span class="fg:4"> by {{ .Style.Username }}</span>
         </h1>
-        {{ if .Style.Original -}}
-            <p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
-        {{- end }}
+        {{ with .Style.Original }}
+            <p class="mb:m md">Imported from <code>{{ . }}</code></p>
+        {{ end }}
+        {{ with .Style.MirrorURL }}
+            <p class="mb:m md">Mirrored from <code>{{ . }}</code></p>
+        {{ end }}
         <div class="card">
             <div class="screenshot">
                 {{ if .Style.Preview }}
