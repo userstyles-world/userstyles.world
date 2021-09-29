@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/userstyles-world/fiber/v2"
+	"gorm.io/gorm"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -71,6 +72,7 @@ func EditPost(c *fiber.Ctx) error {
 	}
 
 	q := models.Style{
+		Model:       gorm.Model{ID: s.ID},
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		Notes:       c.FormValue("notes"),
@@ -119,13 +121,12 @@ func EditPost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
 			q.Preview = ""
+		} else {
+			q.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
 		}
-
-		q.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
 	}
 
-	err = database.Conn.Model(q).Where("id", styleID).Updates(q).Error
-	if err != nil {
+	if err = q.UpdateColumn("preview", q.Preview); err != nil {
 		log.Warn.Printf("Failed to update preview image for %s: %s\n", styleID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to update preview image",

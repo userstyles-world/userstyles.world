@@ -110,13 +110,14 @@ func ImportPost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
 			s.Preview = ""
+		} else {
+			s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
 		}
-		s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
 	}
 
 	// TODO: Remove during rewrite of images module. The name-schema shouldn't
 	// require a style id; hashing username+time.Now() should be sufficient. #77
-	if err = models.UpdateStyle(s); err != nil {
+	if err = s.UpdateColumn("preview", s.Preview); err != nil {
 		log.Warn.Printf("Failed to update style %s: %s\n", styleID, err.Error())
 	}
 

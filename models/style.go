@@ -413,3 +413,7 @@ func (*Style) MirrorStyle(f map[string]interface{}) error {
 
 	return nil
 }
+
+func (s *Style) UpdateColumn(col string, val interface{}) error {
+	return db().Model(modelStyle).Where("id", s.ID).UpdateColumn(col, val).Error
+}
