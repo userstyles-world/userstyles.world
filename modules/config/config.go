@@ -73,8 +73,9 @@ func OAuthURL() string {
 func setBaseURL() {
 	if Production {
 		BaseURL = "https://userstyles.world"
+	} else {
+		BaseURL = "http://localhost" + Port
 	}
-	BaseURL = "http://localhost" + Port
 }
 
 func init() {
