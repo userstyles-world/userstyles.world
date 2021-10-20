@@ -3,6 +3,7 @@ module userstyles.world
 go 1.17
 
 require (
+	codeberg.org/Gusted/algorithms-go v0.0.0-20211020110243-6c6a052045dc
 	github.com/blevesearch/bleve/v2 v2.1.0
 	github.com/dustin/go-humanize v1.0.0
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21

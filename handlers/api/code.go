@@ -4,16 +4,26 @@ import (
 	"fmt"
 	"hash/crc32"
 
+	"codeberg.org/Gusted/algorithms-go/caching"
 	"github.com/userstyles-world/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
 
+var lru = caching.CreateLRUCache(config.CachedCodeItems)
+
 func GetStyleSource(c *fiber.Ctx) error {
 	id := utils.UnsafeClone(c.Params("id"))
+
+	code, found := lru.Get(id)
+	if found {
+		c.Set("Content-Type", "text/css")
+		return c.SendString(code.(string))
+	}
 
 	style, err := models.GetStyleSourceCodeAPI(id)
 	if err != nil {
@@ -25,6 +35,9 @@ func GetStyleSource(c *fiber.Ctx) error {
 	uc := usercss.ParseFromString(style.Code)
 	url := "https://userstyles.world/api/style/" + id + ".user.css"
 	uc.OverrideUpdateURL(url)
+
+	// Cache the userstyle.
+	lru.Add(id, uc.SourceCode)
 
 	// Upsert style installs.
 	go func(id, ip string) {
