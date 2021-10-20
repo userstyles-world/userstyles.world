@@ -23,21 +23,22 @@ func GetStyleSource(c *fiber.Ctx) error {
 	if found {
 		c.Set("Content-Type", "text/css")
 		return c.SendString(code.(string))
+	} else {
+		style, err := models.GetStyleSourceCodeAPI(id)
+		if err != nil {
+			return c.JSON(fiber.Map{"data": "style not found"})
+		}
+
+		// Override updateURL field to prevent abuse.
+		uc := usercss.ParseFromString(style.Code)
+		uc.OverrideUpdateURL(config.BaseURL + "/api/style/" + id + ".user.css")
+
+		// Cache the userstyle.
+		lru.Add(id, uc.SourceCode)
+
+		// Reassign code var.
+		code = uc.SourceCode
 	}
-
-	style, err := models.GetStyleSourceCodeAPI(id)
-	if err != nil {
-		return c.JSON(fiber.Map{"data": "style not found"})
-	}
-
-	// Override updateURL field for Stylus integration.
-	// TODO: Also override it in the database on demand?
-	uc := usercss.ParseFromString(style.Code)
-	url := "https://userstyles.world/api/style/" + id + ".user.css"
-	uc.OverrideUpdateURL(url)
-
-	// Cache the userstyle.
-	lru.Add(id, uc.SourceCode)
 
 	// Upsert style installs.
 	go func(id, ip string) {
@@ -51,7 +52,7 @@ func GetStyleSource(c *fiber.Ctx) error {
 	}(id, c.IP())
 
 	c.Set("Content-Type", "text/css")
-	return c.SendString(uc.SourceCode)
+	return c.SendString(code.(string))
 }
 
 var normalizedHeaderETag = []byte("Etag")
