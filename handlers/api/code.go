@@ -20,10 +20,7 @@ func GetStyleSource(c *fiber.Ctx) error {
 	id := utils.UnsafeClone(c.Params("id"))
 
 	code, found := lru.Get(id)
-	if found {
-		c.Set("Content-Type", "text/css")
-		return c.SendString(code.(string))
-	} else {
+	if !found {
 		style, err := models.GetStyleSourceCodeAPI(id)
 		if err != nil {
 			return c.JSON(fiber.Map{"data": "style not found"})
