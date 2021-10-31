@@ -60,21 +60,26 @@ func Batch(batch models.Style) {
 	var updateReady bool
 
 	// Get new source code.
-	uc, err := usercss.ParseFromURL(getSourceCode(batch))
-	if err != nil {
+	uc := new(usercss.UserCSS)
+	if err := uc.ParseURL(getSourceCode(batch)); err != nil {
 		log.Warn.Printf("Failed to parse style %d from URL: %s\n", batch.ID, err.Error())
 		return
 	}
 
 	// Exit if source code doesn't pass validation.
-	if err := usercss.BasicMetadataValidation(uc); err != nil {
+	if err := uc.Validate(); err != nil {
 		log.Warn.Printf("Failed to validate style %d.\n", batch.ID)
 		return
 	}
 
 	// Set new source code.
 	if batch.MirrorCode {
-		if uc.Version != usercss.ParseFromString(batch.Code).Version {
+		old := new(usercss.UserCSS)
+		if err := old.Parse(batch.Code); err != nil {
+			log.Warn.Printf("Failed to parse style %d.\n", batch.ID)
+			return
+		}
+		if uc.Version != old.Version {
 			fields["code"] = uc.SourceCode
 			updateReady = true
 		}
@@ -106,14 +111,14 @@ func Batch(batch models.Style) {
 
 	if updateReady {
 		// Update database record.
-		if err = batch.MirrorStyle(fields); err != nil {
+		if err := batch.MirrorStyle(fields); err != nil {
 			log.Warn.Printf("Failed to mirror style %d: %s\n", batch.ID, err.Error())
 		} else {
 			log.Info.Printf("Successfully mirrored style %d\n", batch.ID)
 		}
 
 		// Update search index.
-		if err = search.IndexStyle(batch.ID); err != nil {
+		if err := search.IndexStyle(batch.ID); err != nil {
 			log.Warn.Printf("Failed to re-index style %d: %s\n", batch.ID, err.Error())
 		}
 	}

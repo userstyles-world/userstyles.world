@@ -21,7 +21,7 @@ require (
 	github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829135701-7b1c5d2cf12e
 	github.com/userstyles-world/go-chart/v2 v2.5.2
 	github.com/valyala/bytebufferpool v1.0.0
-	github.com/vednoc/go-usercss-parser v0.9.2
+	github.com/vednoc/go-usercss-parser v0.10.0
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.21.9

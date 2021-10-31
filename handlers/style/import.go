@@ -53,15 +53,15 @@ func ImportPost(c *fiber.Ctx) error {
 		s = style
 	} else {
 		// Get userstyle.
-		uc, err := usercss.ParseFromURL(r)
-		if err != nil {
+		uc := new(usercss.UserCSS)
+		if err := uc.ParseURL(r); err != nil {
 			log.Warn.Println("Failed to parse userstyle from URL:", err.Error())
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to fetch external userstyle",
 				"User":  u,
 			})
 		}
-		if errs := usercss.BasicMetadataValidation(uc); errs != nil {
+		if errs := uc.Validate(); errs != nil {
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to validate external userstyle",
 				"User":  u,

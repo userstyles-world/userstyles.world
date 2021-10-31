@@ -54,9 +54,9 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	}
 
 	// Fetch generated UserCSS format.
+	uc := new(usercss.UserCSS)
 	source := StyleURL + id + ".user.css"
-	uc, err := usercss.ParseFromURL(source)
-	if err != nil {
+	if err = uc.ParseURL(source); err != nil {
 		log.Info.Printf("Failed to parse style from URL %v: %v\n", source, err)
 		return nil, errors.ErrFailedFetch
 	}

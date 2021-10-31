@@ -27,14 +27,14 @@ func GetStyleSource(c *fiber.Ctx) error {
 		}
 
 		// Override updateURL field to prevent abuse.
-		uc := usercss.ParseFromString(style.Code)
-		uc.OverrideUpdateURL(config.BaseURL + "/api/style/" + id + ".user.css")
+		url := config.BaseURL + "/api/style/" + id + ".user.css"
+		src := usercss.OverrideUpdateURL(style.Code, url)
 
 		// Cache the userstyle.
-		lru.Add(id, uc.SourceCode)
+		lru.Add(id, src)
 
 		// Reassign code var.
-		code = uc.SourceCode
+		code = src
 	}
 
 	// Upsert style installs.

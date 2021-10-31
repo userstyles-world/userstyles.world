@@ -54,8 +54,23 @@ func CreatePost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	code := usercss.ParseFromString(c.FormValue("code"))
-	if errs := usercss.BasicMetadataValidation(code); errs != nil {
+	uc := new(usercss.UserCSS)
+	if err := uc.Parse(c.FormValue("code")); err != nil {
+		arguments := fiber.Map{
+			"Title":  "Add userstyle",
+			"User":   u,
+			"Styles": s,
+			"Method": "add",
+			"Error":  err,
+		}
+		if oauthID != "" {
+			arguments["Method"] = "add_api"
+			arguments["OAuthID"] = oauthID
+			arguments["SecureToken"] = secureToken
+		}
+		return c.Render("style/create", arguments)
+	}
+	if errs := uc.Validate(); errs != nil {
 		arguments := fiber.Map{
 			"Title":  "Add userstyle",
 			"User":   u,
@@ -73,7 +88,7 @@ func CreatePost(c *fiber.Ctx) error {
 
 	// Prevent broken traditional userstyles.
 	// TODO: Remove a week or two after Stylus v1.5.20 is released.
-	if len(code.MozDocument) == 0 {
+	if len(uc.MozDocument) == 0 {
 		return c.Render("err", fiber.Map{
 			"Title":  "Bad style format",
 			"Stylus": "Your style is affected by a bug in Stylus integration.",

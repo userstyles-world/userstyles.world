@@ -96,8 +96,11 @@ func StylePost(c *fiber.Ctx) error {
 	postStyle.UserID = u.ID
 	postStyle.Featured = style.Featured
 
-	code := usercss.ParseFromString(postStyle.Code)
-	if errs := usercss.BasicMetadataValidation(code); errs != nil {
+	uc := new(usercss.UserCSS)
+	if err := uc.Parse(postStyle.Code); err != nil {
+		return c.Status(403).JSON(fiber.Map{"data": "Error: " + err.Error()})
+	}
+	if errs := uc.Validate(); errs != nil {
 		var errors string
 		for i := 0; i < len(errs); i++ {
 			errors += errs[i].Code.Error() + ";"
@@ -110,7 +113,7 @@ func StylePost(c *fiber.Ctx) error {
 
 	// Prevent broken traditional userstyles.
 	// TODO: Remove a week or two after Stylus v1.5.20 is released.
-	if len(code.MozDocument) == 0 {
+	if len(uc.MozDocument) == 0 {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)",
@@ -241,8 +244,11 @@ func NewStyle(c *fiber.Ctx) error {
 	postStyle.Featured = false
 	postStyle.UserID = u.ID
 
-	code := usercss.ParseFromString(postStyle.Code)
-	if errs := usercss.BasicMetadataValidation(code); errs != nil {
+	uc := new(usercss.UserCSS)
+	if err := uc.Parse(postStyle.Code); err != nil {
+		return c.Status(403).JSON(fiber.Map{"data": "Error: " + err.Error()})
+	}
+	if errs := uc.Validate(); errs != nil {
 		var errors string
 		for i := 0; i < len(errs); i++ {
 			errors += errs[i].Code.Error() + ";"
@@ -255,7 +261,7 @@ func NewStyle(c *fiber.Ctx) error {
 
 	// Prevent broken traditional userstyles.
 	// TODO: Remove a week or two after Stylus v1.5.20 is released.
-	if len(code.MozDocument) == 0 {
+	if len(uc.MozDocument) == 0 {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)",
