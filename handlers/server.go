@@ -57,7 +57,6 @@ func Initialize() {
 
 	if config.PerformanceMonitor {
 		app.Use(pprof.New())
-		app.Get("/monitor", jwtware.Protected, core.Monitor)
 	}
 
 	app.Get("/", core.Home)
@@ -83,6 +82,7 @@ func Initialize() {
 	app.Get("/security-policy", core.Redirect("/docs/security"))
 	app.Get("/sitemap.xml", core.GetSiteMap)
 
+	app.Get("/monitor/*", jwtware.Protected, core.Monitor)
 	app.Get("/logout", jwtware.Protected, user.Logout)
 	app.Get("/account", jwtware.Protected, user.Account)
 	app.Post("/account/:form", jwtware.Protected, user.EditAccount)
