@@ -25,12 +25,18 @@ func CSPMiddleware(c *fiber.Ctx) error {
 		return nil
 	}
 
-	// Special case for Chromium, which doesn't allow redirects after form submissions.
-	// So we disable form-action CSP for this special case.
-	// /api/oauth/style/link & /api/oauth/style/add
-	if strings.HasPrefix(c.Path(), "/api/oauth/style/") {
+	switch {
+	// Disable CSP for our Monitor service.
+	case strings.HasPrefix(c.Path(), "/monitor"):
+		return nil
+
+	// Chromium doesn't allow redirects after form submissions, so we disable
+	// form-action rule on /api/oauth/style/* endpoints.
+	case strings.HasPrefix(c.Path(), "/api/oauth/style/"):
 		c.Response().Header.SetCanonical(headerCSP, valueCSP)
-	} else {
+
+	// Apply strict CSP to all other endpoints.
+	default:
 		c.Response().Header.SetCanonical(headerCSP, valueCSPStrictForm)
 	}
 
