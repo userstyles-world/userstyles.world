@@ -69,7 +69,7 @@ func Proxy(c *fiber.Ctx) error {
 			}
 
 			// TODO: Show a fallback image.
-			status, data, errs = a.Bytes()
+			_, data, errs = a.Bytes()
 			if len(errs) > 0 {
 				log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
 				return nil

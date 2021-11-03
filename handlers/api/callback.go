@@ -28,7 +28,7 @@ func getSocialMediaValue(user *models.User, social string) string {
 	}
 }
 
-var allowedErrosList []error = []error{
+var allowedErrosList = []error{
 	errors.ErrPrimaryEmailNotVerified,
 	errors.ErrNoServiceDetected,
 }
