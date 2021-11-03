@@ -11,6 +11,7 @@ require (
 	github.com/evanw/esbuild v0.12.22
 	github.com/go-co-op/gocron v1.6.2
 	github.com/go-playground/validator/v10 v10.8.0
+	github.com/gofiber/fiber/v2 v2.17.0
 	github.com/gofiber/template v1.6.15
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jarcoal/httpmock v1.0.8
@@ -18,7 +19,6 @@ require (
 	github.com/ohler55/ojg v1.12.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/russross/blackfriday/v2 v2.1.0
-	github.com/userstyles-world/fiber/v2 v2.18.1-0.20210829135701-7b1c5d2cf12e
 	github.com/userstyles-world/go-chart/v2 v2.5.2
 	github.com/valyala/bytebufferpool v1.0.0
 	github.com/vednoc/go-usercss-parser v0.10.0
@@ -47,7 +47,6 @@ require (
 	github.com/blevesearch/zapx/v15 v15.2.2 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/gofiber/fiber/v2 v2.17.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect

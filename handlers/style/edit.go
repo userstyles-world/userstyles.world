@@ -4,7 +4,7 @@ import (
 	"mime/multipart"
 	"strings"
 
-	"github.com/userstyles-world/fiber/v2"
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
 	"userstyles.world/handlers/jwt"

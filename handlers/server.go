@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/userstyles-world/fiber/v2"
-	"github.com/userstyles-world/fiber/v2/middleware/compress"
-	"github.com/userstyles-world/fiber/v2/middleware/filesystem"
-	"github.com/userstyles-world/fiber/v2/middleware/limiter"
-	"github.com/userstyles-world/fiber/v2/middleware/logger"
-	"github.com/userstyles-world/fiber/v2/middleware/pprof"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/pprof"
 
 	"userstyles.world/handlers/api"
 	"userstyles.world/handlers/core"

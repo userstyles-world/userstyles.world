@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ohler55/ojg/oj"
-	"github.com/userstyles-world/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"

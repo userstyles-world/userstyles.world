@@ -5,7 +5,7 @@ import (
 	"hash/crc32"
 
 	"codeberg.org/Gusted/algorithms-go/caching"
-	"github.com/userstyles-world/fiber/v2"
+	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
