@@ -224,11 +224,12 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 	}{}
 
 	var stmt string
-	if strings.HasPrefix(orderStatement, "styles") {
+	switch {
+	case strings.HasPrefix(orderStatement, "styles"):
 		stmt += "styles.id, styles.created_at, styles.updated_at"
-	} else if strings.HasPrefix(orderStatement, "views") {
+	case strings.HasPrefix(orderStatement, "views"):
 		stmt += "styles.id, (select count(*) from stats s where s.view > 0 and s.style_id = styles.id) views"
-	} else {
+	default:
 		stmt += "styles.id, (select count(*) from stats s where s.install > 0 and s.style_id = styles.id) installs"
 	}
 
