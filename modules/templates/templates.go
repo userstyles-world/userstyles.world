@@ -62,9 +62,7 @@ func New(viewDir ...string) *html.Engine {
 
 	engine.AddFunc("sys", status)
 
-	engine.AddFunc("comma", func(i int64) string {
-		return humanize.Comma(i)
-	})
+	engine.AddFunc("comma", humanize.Comma)
 
 	engine.AddFunc("proxy", func(s template.HTML, t string, id uint) template.HTML {
 		return template.HTML(strutils.ProxyResources(string(s), t, id))
