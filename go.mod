@@ -3,26 +3,26 @@ module userstyles.world
 go 1.17
 
 require (
-	codeberg.org/Gusted/algorithms-go v0.0.0-20211020110243-6c6a052045dc
+	codeberg.org/Gusted/algorithms-go v0.0.0-20211029165937-3af0b414c1fe
 	github.com/blevesearch/bleve/v2 v2.1.0
 	github.com/dustin/go-humanize v1.0.0
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
 	github.com/evanw/esbuild v0.12.22
-	github.com/go-co-op/gocron v1.6.2
+	github.com/go-co-op/gocron v1.9.0
 	github.com/go-playground/validator/v10 v10.8.0
 	github.com/gofiber/fiber/v2 v2.21.0
 	github.com/gofiber/template v1.6.18
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jarcoal/httpmock v1.0.8
 	github.com/microcosm-cc/bluemonday v1.0.16
-	github.com/ohler55/ojg v1.12.5
+	github.com/ohler55/ojg v1.12.9
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/userstyles-world/go-chart/v2 v2.5.2
 	github.com/valyala/bytebufferpool v1.0.0
 	github.com/vednoc/go-usercss-parser v0.10.0
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.21.9
 )
