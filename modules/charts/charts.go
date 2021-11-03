@@ -1,13 +1,13 @@
 package charts
 
 import (
-	"errors"
 	"time"
 
 	"github.com/userstyles-world/go-chart/v2"
 	"github.com/valyala/bytebufferpool"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/errors"
 )
 
 func GetStatsHistory(history []models.History) (dailyStats string, totalStats string, err error) {
@@ -106,7 +106,7 @@ func GetModelHistory(vals []models.DashStats, t time.Time, title string) (string
 	}
 
 	if len(bars) < 1 {
-		return "", errors.New("please provide at least one bar")
+		return "", errors.ErrNoBarSpecified
 	}
 
 	usersGraph := chart.BarChart{

@@ -88,6 +88,9 @@ var (
 	ErrOnlyRemovedStyle = errors.New("only remove style kind is allowed")
 
 	errTextTooShort = errors.New("text is too short")
+
+	// ErrNoBarSpecified errors that at least 1 bar has to be specified
+	ErrNoBarSpecified = errors.New("please provide at least one bar")
 )
 
 // UnexpectedSigningMethod errors that a unexpected jwt signing method was used.
