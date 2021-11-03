@@ -23,6 +23,7 @@ func BenchmarkRandomOauth(b *testing.B) {
 }
 
 func TestRandomString(t *testing.T) {
+	t.Parallel()
 	for i := 0; i < 100; i++ {
 		s := RandomString(20)
 		if len(s) != 40 {
