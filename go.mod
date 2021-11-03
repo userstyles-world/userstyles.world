@@ -11,8 +11,8 @@ require (
 	github.com/evanw/esbuild v0.12.22
 	github.com/go-co-op/gocron v1.6.2
 	github.com/go-playground/validator/v10 v10.8.0
-	github.com/gofiber/fiber/v2 v2.17.0
-	github.com/gofiber/template v1.6.15
+	github.com/gofiber/fiber/v2 v2.21.0
+	github.com/gofiber/template v1.6.18
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jarcoal/httpmock v1.0.8
 	github.com/microcosm-cc/bluemonday v1.0.16
@@ -48,7 +48,7 @@ require (
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
-	github.com/golang/protobuf v1.3.2 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -59,7 +59,7 @@ require (
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/steveyen/gtreap v0.1.0 // indirect
-	github.com/valyala/fasthttp v1.29.0 // indirect
+	github.com/valyala/fasthttp v1.31.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d // indirect
@@ -67,4 +67,5 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	golang.org/x/text v0.3.6 // indirect
+	google.golang.org/protobuf v1.26.0 // indirect
 )
