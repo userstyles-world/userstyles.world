@@ -17,8 +17,6 @@ import (
 func Account(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	log.Info.Println("User", u.ID, "visited account page.")
-
 	styles, err := models.GetStylesByUser(u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
