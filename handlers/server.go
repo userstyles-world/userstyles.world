@@ -48,8 +48,9 @@ func Initialize() {
 		app.Use(core.HSTSMiddleware)
 		app.Use(core.CSPMiddleware)
 		app.Use(limiter.New(limiter.Config{
-			Max:        350,
-			Expiration: time.Second * 60,
+			Max:               350,
+			Expiration:        time.Second * 60,
+			LimiterMiddleware: limiter.SlidingWindow{},
 		}))
 	}
 	app.Use(compress.New())
