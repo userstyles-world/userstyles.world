@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"hash/crc32"
+	"strconv"
 
 	"codeberg.org/Gusted/algorithms-go/caching"
 	"github.com/gofiber/fiber/v2"
@@ -11,13 +12,22 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
 )
 
-var lru = caching.CreateLRUCache(config.CachedCodeItems)
+var (
+	etag = []byte("Etag")
+	lru  = caching.CreateLRUCache(config.CachedCodeItems)
+)
 
 func GetStyleSource(c *fiber.Ctx) error {
-	id := utils.UnsafeClone(c.Params("id"))
+	i, err := c.ParamsInt("id")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "invalid userstyle ID",
+		})
+	}
+	id := strconv.Itoa(i)
+
 
 	code, found := lru.Get(id)
 	if !found {
@@ -52,20 +62,26 @@ func GetStyleSource(c *fiber.Ctx) error {
 	return c.SendString(code.(string))
 }
 
-var normalizedHeaderETag = []byte("Etag")
-
 func GetStyleEtag(c *fiber.Ctx) error {
-	id := c.Params("id")
+	i, err := c.ParamsInt("id")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "invalid userstyle ID",
+		})
+	}
+	id := strconv.Itoa(i)
 
 	style, err := models.GetStyleSourceCodeAPI(id)
 	if err != nil {
-		return c.JSON(fiber.Map{"data": "style not found"})
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "style not found",
+		})
 	}
 
 	// Follows the format "source code length - MD5 Checksum of source code"
 	etagValue := fmt.Sprintf("\"%v-%v\"", len(style.Code), crc32.ChecksumIEEE([]byte(style.Code)))
 
 	// Set the value for "Etag" header
-	c.Response().Header.SetCanonical(normalizedHeaderETag, []byte(etagValue))
+	c.Set("etag", etagValue)
 	return nil
 }
