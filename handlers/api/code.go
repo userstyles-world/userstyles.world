@@ -50,11 +50,8 @@ func GetStyleSource(c *fiber.Ctx) error {
 	// Upsert style installs.
 	go func(id, ip string) {
 		s := new(models.Stats)
-		if err := s.CreateRecord(id, ip); err != nil {
-			log.Warn.Printf("Failed to create record for %s: %s\n", id, err.Error())
-		}
-		if err := s.UpsertInstall(); err != nil {
-			log.Warn.Printf("Failed to upsert install for %v: %s\n", s.StyleID, err.Error())
+		if err := s.UpsertInstall(id, ip); err != nil {
+			log.Warn.Printf("Failed to upsert install for %s, %s\n", id, err)
 		}
 	}(id, c.IP())
 

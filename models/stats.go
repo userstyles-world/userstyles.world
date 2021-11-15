@@ -52,7 +52,7 @@ func (DashStats) GetCounts(t string) (q []DashStats, err error) {
 }
 
 // CreateRecord prepares style stats for upsert queries.
-func (s *Stats) CreateRecord(id, ip string) error {
+func (s *Stats) CreateRecord(field, id, ip string) error {
 	hash, err := crypto.CreateHashedRecord(id, ip)
 	if err != nil {
 		return err
@@ -66,11 +66,22 @@ func (s *Stats) CreateRecord(id, ip string) error {
 	s.StyleID = styleID
 	s.Hash = hash
 
+	switch field {
+	case "install":
+		s.Install = time.Now()
+	case "view":
+		s.View = time.Now()
+	}
+
 	return nil
 }
 
-// UpsertInstall updates or inserts style install date.
-func (s *Stats) UpsertInstall() error {
+// UpsertInstall updates or inserts new install date.
+func (s *Stats) UpsertInstall(id, ip string) error {
+	if err := s.CreateRecord("install", id, ip); err != nil {
+		return err
+	}
+
 	t := time.Now()
 	s.Install = t
 
@@ -86,8 +97,12 @@ func (s *Stats) UpsertInstall() error {
 		Create(s).Error
 }
 
-// UpsertView updates or inserts style view date.
-func (s *Stats) UpsertView() error {
+// UpsertView updates or inserts new viewed date.
+func (s *Stats) UpsertView(id, ip string) error {
+	if err := s.CreateRecord("view", id, ip); err != nil {
+		return err
+	}
+
 	t := time.Now()
 	s.View = t
 

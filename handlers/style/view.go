@@ -46,11 +46,8 @@ func GetStylePage(c *fiber.Ctx) error {
 		}
 
 		s := new(models.Stats)
-		if err := s.CreateRecord(id, ip); err != nil {
-			log.Warn.Printf("Failed to create record for %s: %s\n", id, err.Error())
-		}
-		if err := s.UpsertView(); err != nil {
-			log.Warn.Printf("Failed to upsert views for %v: %s\n", s.StyleID, err.Error())
+		if err := s.UpsertView(id, ip); err != nil {
+			log.Warn.Printf("Failed to upsert views for %v: %s\n", s.StyleID, err)
 		}
 	}(id, c.IP(), string(c.Context().UserAgent()))
 
