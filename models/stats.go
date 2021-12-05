@@ -16,9 +16,9 @@ type Stats struct {
 	gorm.Model
 	Hash    string `gorm:"unique"`
 	Style   Style
-	StyleID int       `gorm:"index"`
-	Install time.Time `gorm:"default:null"`
-	View    time.Time `gorm:"default:null"`
+	StyleID int       `gorm:"index:idx_stats"`
+	Install time.Time `gorm:"default:null; index:idx_stats"`
+	View    time.Time `gorm:"default:null; index:idx_stats"`
 }
 
 type SiteStats struct {
