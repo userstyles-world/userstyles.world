@@ -71,20 +71,20 @@ func GetStylePage(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to get reviews for style %s: %v\n", id, err.Error())
 	}
 
+	// Get stats.
+	stats := models.GetStyleStatistics(id)
+
 	return c.Render("style/view", fiber.Map{
-		"Title":          data.Name,
-		"User":           u,
-		"Style":          data,
-		"TotalViews":     models.GetTotalViewsForStyle(id),
-		"TotalInstalls":  models.GetTotalInstallsForStyle(id),
-		"WeeklyInstalls": models.GetWeeklyInstallsForStyle(id),
-		"WeeklyUpdates":  models.GetWeeklyUpdatesForStyle(id),
-		"Url":            fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
-		"Slug":           c.Path(),
-		"BaseURL":        c.BaseURL(),
-		"DailyHistory":   dailyHistory,
-		"TotalHistory":   totalHistory,
-		"Reviews":        reviews,
-		"Canonical":      "style/" + id + "/" + slug,
+		"Title":        data.Name,
+		"User":         u,
+		"Style":        data,
+		"Stats":        stats,
+		"Url":          fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
+		"Slug":         c.Path(),
+		"BaseURL":      c.BaseURL(),
+		"DailyHistory": dailyHistory,
+		"TotalHistory": totalHistory,
+		"Reviews":      reviews,
+		"Canonical":    "style/" + id + "/" + slug,
 	})
 }
