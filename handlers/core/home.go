@@ -15,6 +15,7 @@ func Home(c *fiber.Ctx) error {
 
 	// Skip stats if user is logged in.
 	// TODO: Combine this with a new dashboard.
+	/*
 	var stats *models.SiteStats
 	if u.ID == 0 {
 	Stats:
@@ -28,6 +29,7 @@ func Home(c *fiber.Ctx) error {
 
 		stats = cached.(*models.SiteStats)
 	}
+	*/
 
 Styles:
 	featured, found := cache.Store.Get("featuredStyles")
@@ -49,6 +51,6 @@ Styles:
 		"Title":  "Home",
 		"User":   u,
 		"Styles": featured,
-		"Stats":  stats,
+		// "Stats":  stats,
 	})
 }

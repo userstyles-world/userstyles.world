@@ -182,11 +182,10 @@ func GetStyleStatistics(id string) StyleStats {
 SELECT id,
 	(SELECT count(*) FROM stats s WHERE style_id = @id AND view > 0) TotalViews,
 	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0) TotalInstalls,
-	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0 AND created_at > @week) WeeklyInstalls,
-	(SELECT count(*) FROM stats s WHERE style_id = @id AND view > 0 AND updated_at > @week AND created_at < @week) WeeklyUpdates
+	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0 AND created_at > @week) WeeklyInstalls
 FROM stats
 WHERE id = @id
-`
+	`
 
 	i := sql.Named("id", id)
 	now := sql.Named("now", time.Now().AddDate(0, 0, -1))
