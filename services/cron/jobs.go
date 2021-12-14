@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-co-op/gocron"
 
-	"userstyles.world/models"
-	"userstyles.world/modules/cache"
+	// "userstyles.world/models"
+	// "userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/sitemap"
 	"userstyles.world/modules/update"
@@ -23,7 +23,8 @@ func Initialize() {
 		log.Warn.Println("Failed to snapshot style statistics:", err.Error())
 	}
 
-	_, err = s.Cron("*/5 * * * *").Do(func() {
+    /*
+	_, err = s.Every("1h").Do(func() {
 		cache.Store.Add("siteStatistics", models.GetHomepageStatistics(), 5*time.Minute)
 		styles, err := models.GetAllFeaturedStyles()
 		if err != nil {
@@ -34,6 +35,7 @@ func Initialize() {
 	if err != nil {
 		log.Warn.Println("Failed to cache home page queries:", err.Error())
 	}
+    */
 
 	_, err = s.Cron("*/30 * * * *").Do(func() { update.ImportedStyles() })
 	if err != nil {
