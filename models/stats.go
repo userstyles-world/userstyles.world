@@ -13,12 +13,15 @@ import (
 )
 
 type Stats struct {
-	gorm.Model
-	Hash    string `gorm:"unique"`
-	Style   Style
-	StyleID int       `gorm:"index:idx_stats"`
-	Install time.Time `gorm:"default:null; index:idx_stats"`
-	View    time.Time `gorm:"default:null; index:idx_stats"`
+	ID        uint      `gorm:"primarykey"`
+	CreatedAt time.Time `gorm:"index:idx_stats_weekly_installs,priority:20"`
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Hash      string         `gorm:"unique"`
+	Style     Style
+	StyleID   int       `gorm:"index:idx_stats_installed; index:idx_stats_viewed; index:idx_stats_weekly_installs"`
+	Install   time.Time `gorm:"default:null; index:idx_stats_installed; index:idx_stats_weekly_installs"`
+	View      time.Time `gorm:"default:null; index:idx_stats_viewed"`
 }
 
 type SiteStats struct {
