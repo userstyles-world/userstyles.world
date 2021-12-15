@@ -25,7 +25,7 @@ type Style struct {
 	License     string
 	Preview     string
 	User        User `gorm:"foreignKey:ID"`
-	UserID      uint
+	UserID      uint `gorm:"index"`
 	Archived    bool `gorm:"default:false"`
 	Featured    bool `gorm:"default:false"`
 	MirrorCode  bool `gorm:"default:false"`

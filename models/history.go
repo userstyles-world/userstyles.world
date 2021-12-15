@@ -8,7 +8,7 @@ import (
 
 type History struct {
 	gorm.Model
-	StyleID       uint
+	StyleID       uint `gorm:"index"`
 	DailyViews    int64
 	DailyInstalls int64
 	DailyUpdates  int64
