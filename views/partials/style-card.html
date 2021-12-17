@@ -26,14 +26,14 @@
             <span
                 class="ml:s"
                 data-tooltip="{{ .Views }} total views"
-            >{{ .Views }} views</span>
+            >{{ num .Views }} views</span>
         </small>
         <small class="fg:3 flex ai:c ml:s">
             {{ template "icons/download" "16" }}
             <span
                 class="ml:s"
                 data-tooltip="{{ .Installs }} total installs"
-            >{{ .Installs }} installs</span>
+            >{{ num .Installs }} installs</span>
         </small>
     </div>
 </div>

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -39,4 +40,30 @@ func QueryUnescape(s string) string {
 func ProxyResources(s, t string, id uint) string {
 	sub := fmt.Sprintf(`src="/proxy?link=$1&type=%s&id=%d" loading="lazy"`, t, id)
 	return linkRe.ReplaceAllString(s, sub)
+}
+
+func HumanizeNumber(i int) string {
+	switch {
+	case i >= 100_000:
+		return format(i, 3)
+
+	case i >= 10_000:
+		return format(i, 2)
+
+	case i >= 1_000:
+		return format(i, 1)
+
+	default:
+		return strconv.Itoa(i)
+	}
+}
+
+func format(i, pos int) string {
+	s := fmt.Sprintf("%d", i)
+
+	if s[pos] == '0' {
+		return fmt.Sprintf("%sk", s[:pos])
+	}
+
+	return fmt.Sprintf("%s.%ck", s[:pos], s[pos])
 }

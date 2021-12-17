@@ -64,6 +64,10 @@ func New(viewDir ...string) *html.Engine {
 
 	engine.AddFunc("comma", humanize.Comma)
 
+	engine.AddFunc("num", func(i int64) string {
+		return strutils.HumanizeNumber(int(i))
+	})
+
 	engine.AddFunc("proxy", func(s template.HTML, t string, id uint) template.HTML {
 		return template.HTML(strutils.ProxyResources(string(s), t, id))
 	})
