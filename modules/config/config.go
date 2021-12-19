@@ -19,6 +19,7 @@ var (
 	DB                   = getEnv("DB", "dev.db")
 	DBDebug              = getEnv("DB_DEBUG", "silent")
 	DBColor              = getEnvBool("DB_COLOR", false)
+	DBMigrate            = getEnvBool("DB_MIGRATE", false)
 	DBDrop               = getEnvBool("DB_DROP", false)
 	DBRandomData         = getEnvBool("DB_RANDOM_DATA", false)
 	DBRandomDataAmount   = getEnvInt("DB_RANDOM_DATA_AMOUNT", 100)

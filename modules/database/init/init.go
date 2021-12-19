@@ -73,19 +73,14 @@ func Initialize() {
 	}
 
 	// Migrate tables.
-	for _, table := range tables {
-		if err := migrate(table.model); err != nil {
-			log.Warn.Fatalf("Failed to migrate %s, err: %s\n", table.name, err.Error())
-		}
-
-		// Drop old index.
-		if table.name == "stats" {
-			if conn.Migrator().HasIndex(table, "idx_stats") {
-				conn.Migrator().DropIndex(table, "idx_stats")
+	if config.DBMigrate {
+		for _, table := range tables {
+			if err := migrate(table.model); err != nil {
+				log.Warn.Fatalf("Failed to migrate %s, err: %s\n", table.name, err.Error())
 			}
-		}
 
-		log.Info.Println("Migrated database table", table.name)
+			log.Info.Println("Migrated database table", table.name)
+		}
 	}
 
 	if shouldSeed {
