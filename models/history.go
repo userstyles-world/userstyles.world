@@ -17,31 +17,31 @@ type History struct {
 	TotalUpdates  int64
 }
 
-func (History) GetStatsForStyle(id string) (q *[]History, err error) {
+func GetStyleHistory(id string) (h []History, err error) {
 	err = db().
 		Model(modelHistory).
 		Where("style_id = ?", id).
-		Find(&q).
+		Find(&h).
 		Error
 	if err != nil {
 		return nil, errors.ErrNoStyleStats
 	}
 
-	return q, nil
+	return h, nil
 }
 
-func (History) GetStatsForAllStyles() (q *[]History, err error) {
+func GetAllStyleHistories() (h []History, err error) {
 	stmt := "sum(daily_installs) DailyInstalls, sum(daily_views) DailyViews, sum(daily_updates) DailyUpdates, "
 	stmt += "sum(total_installs) TotalInstalls, sum(total_views) TotalViews, created_at"
 
 	err = db().
 		Select(stmt).
 		Group("date(histories.created_at)").
-		Find(&q).
+		Find(&h).
 		Error
 	if err != nil {
 		return nil, errors.ErrFailedHistoriesSearch
 	}
 
-	return q, nil
+	return h, nil
 }

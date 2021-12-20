@@ -201,15 +201,15 @@ func Dashboard(c *fiber.Ctx) error {
 	}
 
 	// Get history data.
-	history, err := new(models.History).GetStatsForAllStyles()
+	history, err := models.GetAllStyleHistories()
 	if err != nil {
 		log.Info.Println("Couldn't find style histories:", err.Error())
 	}
 
 	// Render stats history.
 	var dailyHistory, totalHistory string
-	if len(*history) > 2 {
-		dailyHistory, totalHistory, err = charts.GetStatsHistory(*history)
+	if len(history) > 2 {
+		dailyHistory, totalHistory, err = charts.GetStatsHistory(history)
 		if err != nil {
 			log.Info.Println("Failed to render style history:", err.Error())
 		}

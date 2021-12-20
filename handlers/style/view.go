@@ -52,15 +52,15 @@ func GetStylePage(c *fiber.Ctx) error {
 	}(id, c.IP(), string(c.Context().UserAgent()))
 
 	// Get history data.
-	history, err := new(models.History).GetStatsForStyle(id)
+	history, err := models.GetStyleHistory(id)
 	if err != nil {
 		log.Warn.Printf("Failed to get stats for style %s: %s", id, err.Error())
 	}
 
 	// Render graphs.
 	var dailyHistory, totalHistory string
-	if len(*history) > 2 {
-		dailyHistory, totalHistory, err = charts.GetStatsHistory(*history)
+	if len(history) > 2 {
+		dailyHistory, totalHistory, err = charts.GetStatsHistory(history)
 		if err != nil {
 			log.Warn.Printf("Failed to render history for style %s: %s\n", id, err.Error())
 		}
