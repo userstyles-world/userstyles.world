@@ -23,8 +23,8 @@ type MinimalStyle struct {
 	Description string    `json:"description"`
 	Preview     string    `json:"preview"`
 	Notes       string    `json:"notes"`
-	Views       int       `json:"views"`
-	Installs    int       `json:"installs"`
+	Views       int64     `json:"views"`
+	Installs    int64     `json:"installs"`
 }
 
 type PerformanceMetrics struct {
@@ -94,8 +94,8 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 			Description: hit.Fields["description"].(string),
 			Preview:     hit.Fields["preview"].(string),
 			Notes:       hit.Fields["notes"].(string),
-			Views:       int(hit.Fields["views"].(float64)),
-			Installs:    int(hit.Fields["installs"].(float64)),
+			Views:       int64(hit.Fields["views"].(float64)),
+			Installs:    int64(hit.Fields["installs"].(float64)),
 		}
 
 		returnResult = append(returnResult, styleInfo)

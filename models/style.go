@@ -77,8 +77,8 @@ type StyleSearch struct {
 	Preview     string
 	DisplayName string
 	Username    string
-	Views       int
-	Installs    int
+	Views       int64
+	Installs    int64
 	User        User `gorm:"foreignKey:ID"`
 	UserID      uint
 }
