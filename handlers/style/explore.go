@@ -68,7 +68,7 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	return c.Render("core/explore", fiber.Map{
-		"Title":     "Explore",
+		"Title":     "Explore website themes",
 		"User":      u,
 		"Styles":    s,
 		"Sort":      fv,

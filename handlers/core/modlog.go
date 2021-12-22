@@ -32,7 +32,7 @@ func GetModLog(c *fiber.Ctx) error {
 		"BannedUsers":   bannedUsers,
 		"RemovedStyles": removedStyles,
 		"User":          u,
-		"Title":         "Mod Log",
+		"Title":         "Moderation Log",
 		"Canonical":     "modlog",
 	})
 }

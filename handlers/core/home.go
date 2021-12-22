@@ -50,7 +50,7 @@ Styles:
 	}
 
 	return c.Render("core/home", fiber.Map{
-		"Title":  "Home",
+		"Title":  "Website themes and skins",
 		"User":   u,
 		"Styles": featured,
 		// "Stats":  stats,
