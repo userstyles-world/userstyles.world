@@ -15,9 +15,9 @@
     <div class="card-footer flex jc:b py:m px:m">
         <small class="fg:3 flex ai:c">
             {{ template "icons/calendar" "16" }}
-            {{ $date := .UpdatedAt.Format "2006-01-02 15:04:05" }}
+            {{ $date := .UpdatedAt | shortDate }}
             <time
-                datetime="{{ $date }}" class="ml:s"
+                datetime="{{ .UpdatedAt | DateISO8601 }}" class="ml:s"
                 data-tooltip="Last updated {{ $date }}"
             >{{- .UpdatedAt.Format "Jan 2" -}}</time>
         </small>

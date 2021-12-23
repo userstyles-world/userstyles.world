@@ -97,12 +97,16 @@ func New(viewDir ...string) *html.Engine {
 		return template.HTML(s)
 	})
 
-	engine.AddFunc("Date", func(time time.Time) template.HTML {
-		return template.HTML(time.Format("January 02, 2006 15:04"))
+	engine.AddFunc("Date", func(time time.Time) string {
+		return time.Format("January 2, 2006 15:04")
 	})
 
-	engine.AddFunc("shortDate", func(time time.Time) template.HTML {
-		return template.HTML(time.Format("2006-02-01 15:04"))
+	engine.AddFunc("shortDate", func(time time.Time) string {
+		return time.Format("2006-02-01 15:04")
+	})
+
+	engine.AddFunc("DateISO8601", func(time time.Time) string {
+		return time.Format("2006-01-02T15:04:05-0700")
 	})
 
 	engine.AddFunc("subtract", func(a, b int) template.HTML {
