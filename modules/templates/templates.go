@@ -106,7 +106,7 @@ func New(viewDir ...string) *html.Engine {
 	})
 
 	engine.AddFunc("DateISO8601", func(time time.Time) string {
-		return time.Format("2006-01-02T15:04:05-0700")
+		return time.Format("2006-02-01T15:04:05-0700")
 	})
 
 	engine.AddFunc("subtract", func(a, b int) template.HTML {

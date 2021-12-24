@@ -37,10 +37,12 @@
                 </thead>
                 <tbody>
                     {{ range .BannedUsers }}
-                        <tr id="entry_{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
+                        <tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td datetime="{{ .CreatedAt | DateISO8601 }}"
-                                class="u-TableMin">{{ .CreatedAt | shortDate }}</td>
+                                class="u-TableMin">
+                                <a href="#id-{{ .ID }}">{{ .CreatedAt | shortDate }}</a>
+                            </td>
                             <td class="u-Truncate">{{ .TargetUserName }}</td>
                             <td class="u-Truncate M">{{ .Reason }}</td>
                         </tr>
@@ -65,10 +67,12 @@
                 </thead>
                 <tbody>
                     {{ range .RemovedStyles }}
-                        <tr id="entry_{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
+                        <tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td datetime="{{ .CreatedAt | DateISO8601 }}"
-                                class="u-TableMin">{{ .CreatedAt | shortDate }}</td>
+                                class="u-TableMin">
+                                <a href="#id-{{ .ID }}">{{ .CreatedAt | shortDate }}</a>
+                            </td>
                             <td class="u-Truncate">{{ .TargetData }}</td>
                             <td><a href="/user/{{ .TargetUserName }}">{{ .TargetUserName }}</a></td>
                             <td class="u-Truncate M">{{ .Reason }}</td>
