@@ -88,10 +88,9 @@ func New(viewDir ...string) *html.Engine {
 		return template.HTML(out)
 	})
 
-	engine.AddFunc("RemoveLastNewLine", func(s template.HTML) template.HTML {
-		sLen := len(s)
-		if sLen > 0 && s[sLen-1] == '\n' {
-			s = s[:sLen-1]
+	engine.AddFunc("descMax", func(s template.HTML) template.HTML {
+		if len(s) > 160 {
+			return s[:160] + "…"
 		}
 
 		return template.HTML(s)
