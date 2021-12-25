@@ -14,10 +14,7 @@ import (
 	"userstyles.world/modules/log"
 )
 
-var (
-	etag = []byte("Etag")
-	lru  = caching.CreateLRUCache(config.CachedCodeItems)
-)
+var lru = caching.CreateLRUCache(config.CachedCodeItems)
 
 func GetStyleSource(c *fiber.Ctx) error {
 	i, err := c.ParamsInt("id")
