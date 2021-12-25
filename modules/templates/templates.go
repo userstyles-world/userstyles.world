@@ -68,8 +68,8 @@ func New(viewDir ...string) *html.Engine {
 		return strutils.HumanizeNumber(int(i))
 	})
 
-	engine.AddFunc("proxy", func(s template.HTML, t string, id uint) template.HTML {
-		return template.HTML(strutils.ProxyResources(string(s), t, id))
+	engine.AddFunc("proxy", func(s, t string, id uint) template.HTML {
+		return template.HTML(strutils.ProxyResources(s, t, id))
 	})
 
 	engine.AddFunc("MarkdownSafe", func(s string) template.HTML {
@@ -77,7 +77,7 @@ func New(viewDir ...string) *html.Engine {
 		return template.HTML(gen)
 	})
 
-	engine.AddFunc("MarkdownUnsafe", func(s string) template.HTML {
+	engine.AddFunc("MarkdownUnsafe", func(s string) string {
 		// Generate Markdown then sanitize it before returning HTML.
 		gen := md.Run(
 			[]byte(s),
@@ -85,15 +85,15 @@ func New(viewDir ...string) *html.Engine {
 		)
 		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
 
-		return template.HTML(out)
+		return string(out)
 	})
 
-	engine.AddFunc("descMax", func(s template.HTML) template.HTML {
+	engine.AddFunc("descMax", func(s string) string {
 		if len(s) > 160 {
 			return s[:160] + "…"
 		}
 
-		return template.HTML(s)
+		return s
 	})
 
 	engine.AddFunc("Date", func(time time.Time) string {
