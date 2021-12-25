@@ -5,7 +5,7 @@ import (
 	"hash/crc32"
 	"strconv"
 
-	"codeberg.org/Gusted/algorithms-go/caching"
+	caching "codeberg.org/Gusted/algorithms-go/caching/lru"
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
@@ -27,7 +27,6 @@ func GetStyleSource(c *fiber.Ctx) error {
 		})
 	}
 	id := strconv.Itoa(i)
-
 
 	code, found := lru.Get(id)
 	if !found {
