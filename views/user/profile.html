@@ -13,11 +13,11 @@
         {{ end }}
         <h2 class="sub-title td:d mt:l">Biography</h2>
         <div class="md">
-            {{- with .Profile.Biography -}}
-                {{- . | MarkdownUnsafe -}}
-            {{- else -}}
+            {{ if .Profile.Biography }}
+                {{ proxy (.Profile.Biography | MarkdownUnsafe) "profile" .Profile.ID }}
+            {{ else }}
                 <p class="fg:3"><i>Biography isn't set.</i></p>
-            {{- end -}}
+            {{ end }}
         </div>
     </section>
 
