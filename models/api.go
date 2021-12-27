@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"userstyles.world/modules/errors"
 )
 
@@ -20,21 +18,14 @@ type USoFormat struct {
 type USoStyles []USoFormat
 
 func (s *USoStyles) Query() error {
-	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
+	stmt := "styles.id, styles.name, styles.user_id, styles.category, "
+	stmt += "STRFTIME('%s', styles.updated_at) AS updated_at, "
+	stmt += "PRINTF('https://userstyles.world/api/style/preview/%d.webp', styles.id) AS screenshot, "
+	stmt += "(SELECT username FROM users u WHERE u.id = styles.user_id) AS username, "
+	stmt += "(SELECT count(*) FROM stats s WHERE s.style_id = styles.id AND s.install > DATETIME('now', '-7 days')) AS TotalInstalls, "
+	stmt += "(SELECT count(*) FROM stats s WHERE s.style_id = styles.id AND s.install > DATETIME('now', '-7 days') AND s.created_at > DATETIME('now', '-7 days')) AS WeeklyInstalls"
 
-	stmt := "styles.id, styles.name, styles.user_id, u.username, "
-	stmt += "styles.category, strftime('%s', styles.created_at) as created_at, "
-	stmt += "strftime('%s', styles.updated_at) as updated_at, "
-	stmt += "printf('https://userstyles.world/api/style/preview/%d.webp', styles.id) as screenshot, "
-	stmt += "(select count(*) from stats where stats.style_id = styles.id) as total_installs, "
-	stmt += "(select count(*) from stats where stats.style_id = styles.id and updated_at > ? and created_at < ?) as weekly_installs"
-
-	err := db().
-		Model(modelStyle).
-		Select(stmt, lastWeek, lastWeek).
-		Joins("join users u on u.id = styles.user_id").
-		Find(&s, "styles.deleted_at is null").
-		Error
+	err := db().Model(modelStyle).Select(stmt).Find(&s).Error
 	if err != nil {
 		return errors.ErrStylesNotFound
 	}

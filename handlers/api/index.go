@@ -3,7 +3,6 @@ package api
 import (
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -64,7 +63,7 @@ Convert:
 		}
 
 		// Set cache for index endpoint.
-		cache.Store.Set("index", b, 10*time.Minute)
+		cache.Store.Set("index", b, 0)
 
 		goto Convert
 	}

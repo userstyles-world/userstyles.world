@@ -12,7 +12,7 @@ import (
 
 var (
 	CachedIndex = "./data/cache/uso-format.json"
-	Store       = cache.New(5*time.Minute, 10*time.Minute)
+	Store       = cache.New(10*time.Minute, time.Minute)
 )
 
 func Initialize() {
@@ -22,7 +22,7 @@ func Initialize() {
 		return
 	}
 
-	Store.Set("index", b, 10*time.Minute)
+	Store.Set("index", b, 0)
 }
 
 func SaveToDisk(f string, data interface{}) error {
