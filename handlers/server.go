@@ -24,12 +24,12 @@ import (
 )
 
 // Get proper IP depending on the environment.
-func proxyHeader() (s string) {
+func proxyHeader() string {
 	if config.Production {
-		s = "X-Real-IP"
+		return "X-Real-IP"
 	}
 
-	return s
+	return ""
 }
 
 func Initialize() {
