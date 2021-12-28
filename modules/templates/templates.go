@@ -35,17 +35,20 @@ type sys struct {
 	GoRoutines int
 	LastGC     string
 	NumGC      int
+	AverageGC  string
 }
 
 func status() sys {
 	m := new(runtime.MemStats)
 	runtime.ReadMemStats(m)
+	uptime := time.Since(config.AppUptime).Round(time.Second)
 
 	return sys{
-		Uptime:     time.Since(config.AppUptime).Round(time.Second).String(),
+		Uptime:     uptime.String(),
 		GoRoutines: runtime.NumGoroutine(),
 		LastGC:     fmt.Sprintf("%.1fs", float64(time.Now().UnixNano()-int64(m.LastGC))/1000/1000/1000),
 		NumGC:      int(m.NumGC),
+		AverageGC:  fmt.Sprintf("%.1fs", float64(uptime.Seconds())/float64(m.NumGC)),
 	}
 }
 
