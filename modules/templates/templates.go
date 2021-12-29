@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"runtime"
-	"strconv"
 	"time"
 
 	"github.com/dustin/go-humanize"
@@ -111,8 +110,8 @@ func New(viewDir ...string) *html.Engine {
 		return time.Format("2006-02-01T15:04:05-0700")
 	})
 
-	engine.AddFunc("subtract", func(a, b int) template.HTML {
-		return template.HTML(strconv.FormatInt(int64(a-b), 10))
+	engine.AddFunc("sub", func(a, b int) int {
+		return a - b
 	})
 
 	engine.AddFunc("paginate", func(page int, sort string) template.HTML {

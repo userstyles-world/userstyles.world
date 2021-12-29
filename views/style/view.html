@@ -171,7 +171,7 @@
         {{ end }}
         {{ with .Reviews }}
             {{ range $k, $v := . }}
-                {{ $id := subtract (len $.Reviews) $k }}
+                {{ $id := sub (len $.Reviews) $k }}
                 <div class="Box mt:m" id="id-{{ $id }}">
                     <div class="Box-header">
                         <a class="username" href="/user/{{ $v.User.Username }}"><b>{{ $v.User.Username }}</b></a>
