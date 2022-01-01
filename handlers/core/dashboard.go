@@ -112,37 +112,48 @@ func Dashboard(c *fiber.Ctx) error {
 	updateSystemStatus()
 
 	// Get User statistics.
-	userCount, err := new(models.DashStats).GetCounts("users")
+	dashUsers := new(models.DashStats)
+	userCount, err := dashUsers.GetCounts("users")
 	if err != nil {
 		log.Info.Println("Failed to get user statistics:", err.Error())
 	}
 
 	t := time.Now().Format("2006-01-02")
-	latestUser := userCount[len(userCount)-1]
-	totalUsers := latestUser.CountSum
-	if t != latestUser.Date {
-		latestUser = models.DashStats{
-			CreatedAt: time.Now(),
-			Date:      t,
-			Count:     0,
-			CountSum:  0,
+	// userCount = []models.DashStats{}
+	var latestUser models.DashStats
+	var totalUsers int
+	if len(userCount) > 0 {
+		latestUser = userCount[len(userCount)-1]
+		totalUsers = latestUser.CountSum
+		if t != latestUser.Date {
+			latestUser = models.DashStats{
+				CreatedAt: time.Now(),
+				Date:      t,
+				Count:     0,
+				CountSum:  0,
+			}
 		}
 	}
 
 	// Get Style statistics.
-	styleCount, err := new(models.DashStats).GetCounts("styles")
+	dashStyles := new(models.DashStats)
+	styleCount, err := dashStyles.GetCounts("styles")
 	if err != nil {
 		log.Info.Println("Failed to get style statistics:", err.Error())
 	}
 
-	latestStyle := styleCount[len(styleCount)-1]
-	totalStyles := latestStyle.CountSum
-	if t != latestStyle.Date {
-		latestStyle = models.DashStats{
-			CreatedAt: time.Now(),
-			Date:      t,
-			Count:     0,
-			CountSum:  0,
+	var latestStyle models.DashStats
+	var totalStyles int
+	if len(styleCount) > 0 {
+		latestStyle = styleCount[len(styleCount)-1]
+		totalStyles = latestStyle.CountSum
+		if t != latestStyle.Date {
+			latestStyle = models.DashStats{
+				CreatedAt: time.Now(),
+				Date:      t,
+				Count:     0,
+				CountSum:  0,
+			}
 		}
 	}
 
@@ -184,7 +195,7 @@ func Dashboard(c *fiber.Ctx) error {
 
 	// Render user history.
 	var userHistory string
-	if len(userCount) > 0 {
+	if len(userCount) > 1 {
 		userHistory, err = charts.GetModelHistory(userCount, week, "User history")
 		if err != nil {
 			log.Info.Println("Failed to render style history:", err.Error())
@@ -193,7 +204,7 @@ func Dashboard(c *fiber.Ctx) error {
 
 	// Render style history.
 	var styleHistory string
-	if len(styleCount) > 0 {
+	if len(styleCount) > 1 {
 		styleHistory, err = charts.GetModelHistory(styleCount, week, "Style history")
 		if err != nil {
 			log.Info.Println("Failed to render user history:", err.Error())
