@@ -93,6 +93,7 @@ func Batch(batch models.Style) {
 			s, err := utils.ImportFromArchive(url, models.APIUser{})
 			if err != nil {
 				log.Warn.Printf("Failed to import %s from archive: %s\n", url, err.Error())
+				return
 			}
 
 			if updateArchiveMeta(&batch, s) {
