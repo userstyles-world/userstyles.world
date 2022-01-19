@@ -1,6 +1,8 @@
 package style
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -28,16 +30,21 @@ func GetExplore(c *fiber.Ctx) error {
 		})
 	}
 
-	// Adjust pagination numbers.
+	// Set pagination.
 	p.CalcItems(int(styleCount), config.AppPageMaxItems)
+	p.Sort = c.Query("sort")
+	if p.OutOfBounds() {
+		r := fmt.Sprintf("/explore?page=%d", p.Now)
+		if p.Sort != "" {
+			r += "&sort=" + p.Sort
+		}
 
-	// Set sort query in pagination.
-	fv := c.Query("sort")
-	p.Sort = fv
+		return c.Redirect(r, 302)
+	}
 
 	// Set sorting method.
 	var orderFunction string
-	switch fv {
+	switch p.Sort {
 	case "newest":
 		orderFunction = "styles.created_at DESC"
 	case "oldest":
@@ -71,7 +78,7 @@ func GetExplore(c *fiber.Ctx) error {
 		"Title":     "Explore website themes",
 		"User":      u,
 		"Styles":    s,
-		"Sort":      fv,
+		"Sort":      p.Sort,
 		"P":         p,
 		"Canonical": "explore",
 	})

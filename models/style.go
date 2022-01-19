@@ -205,12 +205,13 @@ func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
 	return q, nil
 }
 
-func GetStyleCount() (i int64, err error) {
-	if err := db().Select("count(id)").Model(modelStyle).Count(&i).Error; err != nil {
+func GetStyleCount() (int, error) {
+	var c int64
+	if err := db().Select("count(id)").Model(modelStyle).Count(&c).Error; err != nil {
 		return 0, err
 	}
 
-	return i, nil
+	return int(c), nil
 }
 
 func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCard, error) {

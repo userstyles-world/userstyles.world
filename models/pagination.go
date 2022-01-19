@@ -38,17 +38,23 @@ func (p *Pagination) CalcItems(c, i int) {
 		p.Max++
 	}
 
+	// Set prev/next.
+	p.Prev = p.Now - 1
+	p.Next = p.Now + 1
+}
+
+func (p *Pagination) OutOfBounds() bool {
 	// Display last page if requested page is greater than max page.
 	if p.Now > p.Max {
 		p.Now = p.Max
+		return true
 	}
 
 	// Display first page if requested page is less than 1.
 	if p.Now < 1 {
 		p.Now = 1
+		return true
 	}
 
-	// Set prev/next.
-	p.Prev = p.Now - 1
-	p.Next = p.Now + 1
+	return false
 }

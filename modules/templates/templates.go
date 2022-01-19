@@ -110,6 +110,10 @@ func New(viewDir ...string) *html.Engine {
 		return time.Format("2006-02-01T15:04:05-0700")
 	})
 
+	engine.AddFunc("add", func(a, b int) int {
+		return a + b
+	})
+
 	engine.AddFunc("sub", func(a, b int) int {
 		return a - b
 	})

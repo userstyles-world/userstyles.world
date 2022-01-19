@@ -19,13 +19,32 @@
                 data-tooltip="Go to the previous page"
                 aria-label="Go to the previous page"
             >{{ template "icons/chevron-left" 16 }}</a>
+        {{ else }}
+            <div class="Pagination-disabled">{{ template "icons/chevron-left" 16 }}</div>
+        {{ end }}
+
+        {{ $prev3 := sub .Now 3 }}
+        {{ if not (lt $prev3 .Min) }}
+            <div class="Pagination-divider"></div>
+            <a class="Pagination-button page"
+                href="{{ paginate $prev3 .Sort }}"
+            >{{ $prev3 }}</a>
+        {{ end }}
+
+        {{ $prev2 := sub .Now 2 }}
+        {{ if not (lt $prev2 .Min) }}
+            <div class="Pagination-divider"></div>
+            <a class="Pagination-button page"
+                href="{{ paginate $prev2 .Sort }}"
+            >{{ $prev2 }}</a>
+        {{ end }}
+
+        {{ if not (eq .Now .Min) }}
             <div class="Pagination-divider"></div>
             <a
                 class="Pagination-button back"
                 href="{{ paginate .Prev .Sort }}"
             >{{ .Prev }}</a>
-        {{ else }}
-            <div class="Pagination-disabled">{{ template "icons/chevron-left" 16 }}</div>
         {{ end }}
 
         <div class="Pagination-divider"></div>
@@ -38,6 +57,25 @@
                 href="{{ paginate .Next .Sort }}"
             >{{ .Next }}</a>
             <div class="Pagination-divider"></div>
+        {{ end }}
+
+        {{ $next2 := add .Now 2 }}
+        {{ if not (gt $next2 .Max) }}
+            <a class="Pagination-button page"
+                href="{{ paginate $next2 .Sort }}"
+            >{{ $next2 }}</a>
+            <div class="Pagination-divider"></div>
+        {{ end }}
+
+        {{ $next3 := add .Now 3 }}
+        {{ if not (gt $next3 .Max) }}
+            <a class="Pagination-button page"
+                href="{{ paginate $next3 .Sort }}"
+            >{{ $next3 }}</a>
+            <div class="Pagination-divider"></div>
+        {{ end }}
+
+        {{ if not (eq .Now .Max) }}
             <a
                 class="Pagination-button icon next"
                 href="{{ paginate .Next .Sort }}"
