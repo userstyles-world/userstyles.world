@@ -1,8 +1,10 @@
 package templates
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
+	"net/http"
 	"runtime"
 	"time"
 
@@ -51,13 +53,16 @@ func status() sys {
 	}
 }
 
-func New(viewDir ...string) *html.Engine {
-	var engine *html.Engine
-	if len(viewDir) > 0 {
-		engine = html.New(viewDir[0], ".html")
+func New(views embed.FS) *html.Engine {
+	// Embed templates.
+	var fsys http.FileSystem
+	if config.Production {
+		fsys = http.FS(views)
 	} else {
-		engine = html.New("./views", ".html")
+		fsys = http.Dir("views")
 	}
+	engine := html.NewFileSystem(fsys, ".html")
+
 	engine.AddFunc("config", func(key string) template.HTML {
 		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
 	})

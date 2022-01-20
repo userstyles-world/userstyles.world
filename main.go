@@ -1,6 +1,8 @@
 package main
 
 import (
+	"embed"
+
 	"userstyles.world/handlers"
 	"userstyles.world/modules/cache"
 	database "userstyles.world/modules/database/init"
@@ -9,6 +11,14 @@ import (
 	"userstyles.world/search"
 	"userstyles.world/services/cron"
 	"userstyles.world/utils"
+)
+
+var (
+	//go:embed views/*
+	views embed.FS
+
+	//go:embed static/*
+	static embed.FS
 )
 
 func main() {
@@ -20,5 +30,5 @@ func main() {
 	cron.Initialize()
 	search.Initialize()
 	images.Initialize()
-	handlers.Initialize()
+	handlers.Initialize(views, static)
 }

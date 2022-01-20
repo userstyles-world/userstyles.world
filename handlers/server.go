@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"embed"
 	"net/http"
 	"time"
 
@@ -32,9 +33,9 @@ func proxyHeader() string {
 	return ""
 }
 
-func Initialize() {
+func Initialize(views, static embed.FS) {
 	app := fiber.New(fiber.Config{
-		Views:       templates.New(),
+		Views:       templates.New(views),
 		ViewsLayout: "layouts/main",
 		ProxyHeader: proxyHeader(),
 		JSONEncoder: utils.JSONEncoder,
@@ -132,16 +133,19 @@ func Initialize() {
 	oauthV1.Post("/auth/:id/:token", jwtware.Protected, oauthprovider.AuthPost)
 	oauthV1.Post("/token", oauthprovider.TokenPost)
 
-	// Allows assets to be reloaded in dev mode.
-	// That means, they're not embedded into executable file.
-	if !config.Production {
-		app.Static("/", "/static")
+	// Embed static files.
+	var fsys http.FileSystem
+	if config.Production {
+		fsys = http.FS(static)
+	} else {
+		fsys = http.Dir("static")
 	}
-
 	app.Use(filesystem.New(filesystem.Config{
 		MaxAge: int(time.Hour) * 2,
-		Root:   http.Dir("./static"),
+		Root:   fsys,
 	}))
+
+	// Fallback route.
 	app.Use(core.NotFound)
 
 	log.Warn.Fatal(app.Listen(config.Port))
