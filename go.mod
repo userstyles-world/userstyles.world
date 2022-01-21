@@ -3,26 +3,26 @@ module userstyles.world
 go 1.17
 
 require (
-	codeberg.org/Gusted/algorithms-go v0.0.0-20211224200629-a2c718de9e92
+	codeberg.org/Gusted/algorithms-go v0.0.0-20211226184526-c2d46ae83025
 	github.com/blevesearch/bleve/v2 v2.2.2
 	github.com/dustin/go-humanize v1.0.0
 	github.com/emersion/go-sasl v0.0.0-20211008083017-0b9dcfb154ac
 	github.com/emersion/go-smtp v0.15.0
-	github.com/evanw/esbuild v0.13.12
+	github.com/evanw/esbuild v0.14.12
 	github.com/go-co-op/gocron v1.9.0
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/gofiber/fiber/v2 v2.21.0
 	github.com/gofiber/template v1.6.18
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/jarcoal/httpmock v1.0.8
-	github.com/microcosm-cc/bluemonday v1.0.16
-	github.com/ohler55/ojg v1.12.9
+	github.com/jarcoal/httpmock v1.1.0
+	github.com/microcosm-cc/bluemonday v1.0.17
+	github.com/ohler55/ojg v1.12.12
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/userstyles-world/go-chart/v2 v2.5.2
 	github.com/valyala/bytebufferpool v1.0.0
 	github.com/vednoc/go-usercss-parser v0.10.0
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.21.9
 )
@@ -63,7 +63,7 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d // indirect
-	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20210908233432-aa78b53d3365 // indirect
 	golang.org/x/text v0.3.6 // indirect
