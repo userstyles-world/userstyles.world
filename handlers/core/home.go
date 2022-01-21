@@ -17,19 +17,19 @@ func Home(c *fiber.Ctx) error {
 	// Skip stats if user is logged in.
 	// TODO: Combine this with a new dashboard.
 	/*
-	var stats *models.SiteStats
-	if u.ID == 0 {
-	Stats:
-		cached, found := cache.Store.Get("siteStatistics")
-		if !found {
-			stats = models.GetHomepageStatistics()
-			cache.Store.Set("siteStatistics", stats, 5*time.Minute)
+			var stats *models.SiteStats
+			if u.ID == 0 {
+			Stats:
+				cached, found := cache.Store.Get("siteStatistics")
+				if !found {
+					stats = models.GetHomepageStatistics()
+					cache.Store.Set("siteStatistics", stats, 5*time.Minute)
 
-			goto Stats
+				goto Stats
+			}
+
+			stats = cached.(*models.SiteStats)
 		}
-
-		stats = cached.(*models.SiteStats)
-	}
 	*/
 
 Styles:
