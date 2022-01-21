@@ -8,6 +8,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/log"
 )
 
 func Home(c *fiber.Ctx) error {
@@ -36,6 +37,7 @@ Styles:
 	if !found {
 		styles, err := models.GetAllFeaturedStyles()
 		if err != nil {
+			log.Warn.Println("Couldn't get featured styles, due", err)
 			return c.Render("core/home", fiber.Map{
 				"Title":  "Home",
 				"User":   u,
