@@ -101,7 +101,6 @@ func Proxy(c *fiber.Ctx) error {
 }
 
 func extractImage(s string) string {
-	fmt.Printf("%#v\n", s)
 	re := regexp.MustCompile(`(?m).*"(https://.*)".*`)
 	return re.ReplaceAllString(s, "$1")
 }
