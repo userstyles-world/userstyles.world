@@ -45,7 +45,7 @@ func BanGet(c *fiber.Ctx) error {
 }
 
 func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, modLogID uint) error {
-	modLogEntry := baseURL + "/modlog#entry_" + strconv.Itoa(int(modLogID))
+	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
 
 	partPlain := utils.NewPart().
 		SetBody("Hi " + user.Username + ",\n" +
