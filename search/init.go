@@ -36,6 +36,10 @@ func openBleveIndexFile(path string) (bleve.Index, error) {
 }
 
 func Initialize() {
+	// We don't have any ms a new style, so we don't need 4 analysis workers
+	// for that, we're good by only having 1.
+	bleve.Config.SetAnalysisQueueSize(1)
+
 	stylesIndex, err := openBleveIndexFile(indexFile)
 	if err != nil {
 		log.Info.Println("Creating new index...")
