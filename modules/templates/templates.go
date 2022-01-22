@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"net/http"
 	"runtime"
 	"time"
@@ -14,6 +15,7 @@ import (
 	md "github.com/russross/blackfriday/v2"
 
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/utils/strutils"
 )
 
@@ -57,7 +59,12 @@ func New(views embed.FS) *html.Engine {
 	// Embed templates.
 	var fsys http.FileSystem
 	if config.Production {
-		fsys = http.FS(views)
+		// Strip prefix.
+		newFS, err := fs.Sub(views, "views")
+		if err != nil {
+			log.Warn.Fatal(err)
+		}
+		fsys = http.FS(newFS)
 	} else {
 		fsys = http.Dir("views")
 	}

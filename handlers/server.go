@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"embed"
+	"io/fs"
 	"net/http"
 	"time"
 
@@ -136,7 +137,12 @@ func Initialize(views, static embed.FS) {
 	// Embed static files.
 	var fsys http.FileSystem
 	if config.Production {
-		fsys = http.FS(static)
+		// Strip prefix.
+		newFS, err := fs.Sub(static, "static")
+		if err != nil {
+			log.Warn.Fatal(err)
+		}
+		fsys = http.FS(newFS)
 	} else {
 		fsys = http.Dir("static")
 	}
