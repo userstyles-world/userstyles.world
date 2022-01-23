@@ -58,3 +58,26 @@ func (p *Pagination) OutOfBounds() bool {
 
 	return false
 }
+
+func (p *Pagination) SortStyles() string {
+	switch p.Sort {
+	case "newest":
+		return "styles.created_at DESC"
+	case "oldest":
+		return "styles.created_at ASC"
+	case "recentlyupdated":
+		return "styles.updated_at DESC"
+	case "leastupdated":
+		return "styles.updated_at ASC"
+	case "mostinstalls":
+		return "installs DESC"
+	case "leastinstalls":
+		return "installs ASC"
+	case "mostviews":
+		return "views DESC"
+	case "leastviews":
+		return "views ASC"
+	default:
+		return "styles.id ASC"
+	}
+}

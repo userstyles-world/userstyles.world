@@ -42,30 +42,8 @@ func GetExplore(c *fiber.Ctx) error {
 		return c.Redirect(r, 302)
 	}
 
-	// Set sorting method.
-	var orderFunction string
-	switch p.Sort {
-	case "newest":
-		orderFunction = "styles.created_at DESC"
-	case "oldest":
-		orderFunction = "styles.created_at ASC"
-	case "recentlyupdated":
-		orderFunction = "styles.updated_at DESC"
-	case "leastupdated":
-		orderFunction = "styles.updated_at ASC"
-	case "mostinstalls":
-		orderFunction = "installs DESC"
-	case "leastinstalls":
-		orderFunction = "installs ASC"
-	case "mostviews":
-		orderFunction = "views DESC"
-	case "leastviews":
-		orderFunction = "views ASC"
-	default:
-		orderFunction = "styles.id ASC"
-	}
-
-	s, err := models.GetAllAvailableStylesPaginated(p.Now, orderFunction)
+	// Query for [sorted] styles.
+	s, err := models.GetAllAvailableStylesPaginated(p.Now, p.SortStyles())
 	if err != nil {
 		log.Warn.Println("Failed to get paginated styles:", err.Error())
 		return c.Render("err", fiber.Map{
