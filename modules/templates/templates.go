@@ -115,11 +115,11 @@ func New(views embed.FS) *html.Engine {
 	})
 
 	engine.AddFunc("shortDate", func(time time.Time) string {
-		return time.Format("2006-02-01 15:04")
+		return time.Format("2006-01-02 15:04")
 	})
 
 	engine.AddFunc("DateISO8601", func(time time.Time) string {
-		return time.Format("2006-02-01T15:04:05-0700")
+		return time.Format("2006-01-02T15:04:05-0700")
 	})
 
 	engine.AddFunc("add", func(a, b int) int {
