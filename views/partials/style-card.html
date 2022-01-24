@@ -6,6 +6,13 @@
     </a>
 
     <div class="card-body f:col p:m">
+        <small class="fg:3" style="margin-bottom: 0.125rem">
+            {{ $date := .UpdatedAt | shortDate }}
+            <span>Updated </span>
+            <time datetime="{{ .UpdatedAt | DateISO8601 }}">
+                {{- .UpdatedAt | Date -}}
+            </time>
+        </small>
         <a class="name fg:1 f:h3 f:b" href="{{ .StyleURL }}">{{ .Name }}</a>
         <span class="author fg:4">
             by <a class="fg:2" href="/user/{{ .Username }}">{{ .Username }}</a>
@@ -14,14 +21,6 @@
 
     <div class="card-footer flex jc:b py:m px:m">
         <small class="fg:3 flex ai:c">
-            {{ template "icons/calendar" "16" }}
-            {{ $date := .UpdatedAt | shortDate }}
-            <time
-                datetime="{{ .UpdatedAt | DateISO8601 }}" class="ml:s"
-                data-tooltip="Last updated {{ $date }}"
-            >{{- .UpdatedAt.Format "Jan 2" -}}</time>
-        </small>
-        <small class="fg:3 flex ai:c ml:s">
             {{ template "icons/view" "16" }}
             <span
                 class="ml:s"
@@ -34,6 +33,14 @@
                 class="ml:s"
                 data-tooltip="{{ .Installs }} total installs"
             >{{ num .Installs }} installs</span>
+        </small>
+        <small class="fg:3 flex ai:c ml:s rating score-{{ .Rating }}">
+            {{ template "icons/star" 16 }}
+            {{ with .Rating }}
+                <span class="ml:s">{{ . }}/5</span>
+            {{ else }}
+                <span class="ml:s">-/5</span>
+            {{ end }}
         </small>
     </div>
 </div>

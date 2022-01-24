@@ -85,6 +85,7 @@ func indexStyles(index bleve.Index, data []models.StyleSearch) error {
 			Notes:       styleEntry.Notes,
 			Installs:    styleEntry.Installs,
 			Views:       styleEntry.Views,
+			Rating:      styleEntry.Rating,
 		})
 		if err != nil {
 			return err

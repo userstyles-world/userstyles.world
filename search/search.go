@@ -25,6 +25,7 @@ type MinimalStyle struct {
 	Notes       string    `json:"notes"`
 	Views       int64     `json:"views"`
 	Installs    int64     `json:"installs"`
+	Rating      float64   `json:"rating"`
 }
 
 type PerformanceMetrics struct {
@@ -96,6 +97,7 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 			Notes:       hit.Fields["notes"].(string),
 			Views:       int64(hit.Fields["views"].(float64)),
 			Installs:    int64(hit.Fields["installs"].(float64)),
+			Rating:      hit.Fields["rating"].(float64),
 		}
 
 		returnResult = append(returnResult, styleInfo)

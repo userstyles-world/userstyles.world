@@ -17,3 +17,12 @@
 @import 'components/pagination';
 @import 'components/list';
 @import 'components/table';
+
+// TODO: Move elsewhere.
+.rating {
+    &.score-5 svg { stroke: lighten(green, 15%) }
+    &.score-4 svg { stroke: lighten(green, 5%) }
+    &.score-3 svg { stroke: yellow }
+    &.score-2 svg { stroke: orange }
+    &.score-1 svg { stroke: red }
+}
