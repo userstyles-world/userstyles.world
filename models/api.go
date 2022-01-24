@@ -5,14 +5,15 @@ import (
 )
 
 type USoFormat struct {
-	Username       string `json:"an"`
-	Name           string `json:"n"`
-	Category       string `json:"c"`
-	Screenshot     string `json:"sn"`
-	UpdatedAt      int64  `json:"u"`
-	TotalInstalls  int64  `json:"t"`
-	WeeklyInstalls int64  `json:"w"`
-	ID             uint   `json:"i"`
+	Username       string  `json:"an"`
+	Name           string  `json:"n"`
+	Category       string  `json:"c"`
+	Screenshot     string  `json:"sn"`
+	UpdatedAt      int64   `json:"u"`
+	TotalInstalls  int64   `json:"t"`
+	WeeklyInstalls int64   `json:"w"`
+	Rating         float64 `json:"r"`
+	ID             uint    `json:"i"`
 }
 
 type USoStyles []USoFormat
@@ -22,6 +23,7 @@ func (s *USoStyles) Query() error {
 	stmt += "STRFTIME('%s', styles.updated_at) AS updated_at, "
 	stmt += "PRINTF('https://userstyles.world/api/style/preview/%d.webp', styles.id) AS screenshot, "
 	stmt += "(SELECT username FROM users u WHERE u.id = styles.user_id) AS username, "
+	stmt += "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating, "
 	stmt += "(SELECT count(*) FROM stats s WHERE s.style_id = styles.id AND s.install > DATETIME('now', '-7 days')) AS TotalInstalls, "
 	stmt += "(SELECT count(*) FROM stats s WHERE s.style_id = styles.id AND s.install > DATETIME('now', '-7 days') AND s.created_at > DATETIME('now', '-7 days')) AS WeeklyInstalls"
 
