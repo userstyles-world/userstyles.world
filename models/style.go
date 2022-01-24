@@ -214,7 +214,7 @@ func GetStyleCount() (int, error) {
 	return int(c), nil
 }
 
-func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCard, error) {
+func GetAllAvailableStylesPaginated(page int, order string) ([]StyleCard, error) {
 	q := new([]StyleCard)
 	size := config.AppPageMaxItems
 	offset := (page - 1) * size
@@ -226,17 +226,17 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 
 	var stmt string
 	switch {
-	case strings.HasPrefix(orderStatement, "styles"):
+	case strings.HasPrefix(order, "styles"):
 		stmt += "styles.id, styles.created_at, styles.updated_at"
-	case strings.HasPrefix(orderStatement, "views"):
-		stmt += "styles.id, (select count(*) from stats s where s.view > 0 and s.style_id = styles.id) views"
+	case strings.HasPrefix(order, "views"):
+		stmt += "styles.id, (SELECT total_views FROM histories h WHERE h.style_id = styles.id) as views"
 	default:
-		stmt += "styles.id, (select count(*) from stats s where s.install > 0 and s.style_id = styles.id) installs"
+		stmt += "styles.id, (SELECT total_installs FROM histories h WHERE h.style_id = styles.id) as installs"
 	}
 
 	err := db().
-		Select(stmt).Model(modelStyle).Order(orderStatement).Offset(offset).
-		Limit(size).Find(&nums, "styles.deleted_at is null").Error
+		Select(stmt).Model(modelStyle).Order(order).Offset(offset).
+		Limit(size).Find(&nums).Error
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func GetAllAvailableStylesPaginated(page int, orderStatement string) ([]StyleCar
 
 	err = db().
 		Select(stmt).Model(modelStyle).Joins("join users u on u.id = styles.user_id").
-		Order(orderStatement).Find(&q, styleIDs).Error
+		Order(order).Find(&q, styleIDs).Error
 	if err != nil {
 		return nil, err
 	}
