@@ -117,7 +117,7 @@ func GetAllStyles() ([]StyleSearch, error) {
 select
 	styles.id, styles.created_at, styles.updated_at, styles.name, styles.description, styles.notes,
 	styles.preview, u.username, u.display_name,
-	(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating,
+	(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating,
 	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
 	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
@@ -250,7 +250,7 @@ func GetAllAvailableStylesPaginated(page int, order string) ([]StyleCard, error)
 	}
 
 	stmt = "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
-	stmt += "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating, "
+	stmt += "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating, "
 	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.install > 0) installs, "
 	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
 
@@ -343,7 +343,7 @@ func GetStylesByUser(username string) ([]StyleCard, error) {
 	stmt := `
 select
 	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
-	(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating,
+	(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating,
 	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
 	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
