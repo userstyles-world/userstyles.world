@@ -5,16 +5,14 @@ import (
 	"hash/crc32"
 	"strconv"
 
-	caching "codeberg.org/Gusted/algorithms-go/caching/lru"
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
-
-var lru = caching.CreateLRUCache(config.CachedCodeItems)
 
 func GetStyleSource(c *fiber.Ctx) error {
 	i, err := c.ParamsInt("id")
@@ -25,7 +23,7 @@ func GetStyleSource(c *fiber.Ctx) error {
 	}
 	id := strconv.Itoa(i)
 
-	code, found := lru.Get(id)
+	code, found := cache.LRU.Get(id)
 	if !found {
 		style, err := models.GetStyleSourceCodeAPI(id)
 		if err != nil {
@@ -37,7 +35,7 @@ func GetStyleSource(c *fiber.Ctx) error {
 		src := usercss.OverrideUpdateURL(style.Code, url)
 
 		// Cache the userstyle.
-		lru.Add(id, src)
+		cache.LRU.Add(id, src)
 
 		// Reassign code var.
 		code = src

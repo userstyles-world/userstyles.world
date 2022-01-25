@@ -5,14 +5,17 @@ import (
 	"os"
 	"time"
 
+	caching "codeberg.org/Gusted/algorithms-go/caching/lru"
 	"github.com/patrickmn/go-cache"
 
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
 
 var (
 	CachedIndex = "./data/cache/uso-format.json"
 	Store       = cache.New(10*time.Minute, time.Minute)
+	LRU         = caching.CreateLRUCache(config.CachedCodeItems)
 )
 
 func Initialize() {

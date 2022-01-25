@@ -9,6 +9,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
@@ -101,6 +102,9 @@ func EditPost(c *fiber.Ctx) error {
 			"User":  u,
 		})
 	}
+
+	// TODO: Move to code section once we refactor this messy logic.
+	cache.LRU.Remove(styleID)
 
 	// Check for new image.
 	var image multipart.File

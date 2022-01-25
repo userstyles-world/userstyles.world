@@ -1,11 +1,13 @@
 package update
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 	"userstyles.world/search"
 	"userstyles.world/utils"
@@ -80,6 +82,7 @@ func Batch(batch models.Style) {
 			return
 		}
 		if uc.Version != old.Version {
+			cache.LRU.Remove(strconv.Itoa(int(batch.ID)))
 			fields["code"] = uc.SourceCode
 			updateReady = true
 		}
