@@ -18,6 +18,8 @@ import (
 )
 
 var system struct {
+	mu sync.Mutex
+
 	Uptime     string
 	GoRoutines int
 
@@ -52,9 +54,10 @@ var system struct {
 	NumGC        string
 }
 
-var systemMutex = &sync.Mutex{}
+func getSystemStatus() {
+	system.mu.Lock()
+	defer system.mu.Unlock()
 
-func updateSystemStatus() {
 	system.Uptime = time.Since(config.AppUptime).Round(time.Second).String()
 	system.GoRoutines = runtime.NumGoroutine()
 
@@ -78,7 +81,7 @@ func updateSystemStatus() {
 	system.StackInuse = humanize.Bytes(m.StackInuse)
 	system.StackSys = humanize.Bytes(m.StackSys)
 
-	system.MSpanSys = humanize.Bytes(m.MCacheInuse)
+	system.MSpanSys = humanize.Bytes(m.MSpanSys)
 	system.MSpanInuse = humanize.Bytes(m.MSpanInuse)
 	system.MCacheSys = humanize.Bytes(m.MCacheSys)
 	system.MCacheInuse = humanize.Bytes(m.MCacheInuse)
@@ -105,11 +108,8 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
-	systemMutex.Lock()
-	// Mux should be unlocked after it's used in c.Render.
-	// As otherwise a next request can/will override the data.
-	defer systemMutex.Unlock()
-	updateSystemStatus()
+	// Get System statistics.
+	getSystemStatus()
 
 	// Get User statistics.
 	dashUsers := new(models.DashStats)
