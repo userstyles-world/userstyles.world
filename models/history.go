@@ -36,8 +36,8 @@ func GetAllStyleHistories() (h []History, err error) {
 
 	err = db().
 		Select(stmt).
-		Group("date(histories.created_at)").
-		Find(&h).
+		Group("date(created_at)").
+		Find(&h, "created_at > date('now', '-3 months')").
 		Error
 	if err != nil {
 		return nil, errors.ErrFailedHistoriesSearch
