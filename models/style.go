@@ -291,6 +291,7 @@ func GetAllFeaturedStyles() ([]StyleCard, error) {
 	stmt := `
 select
 	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
+	(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating,
 	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
 	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
 from
