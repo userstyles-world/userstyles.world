@@ -25,6 +25,7 @@ import (
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/templates"
+	"userstyles.world/modules/util/httputil"
 	"userstyles.world/search"
 	"userstyles.world/services/cron"
 	"userstyles.world/utils"
@@ -50,7 +51,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(views),
 		ViewsLayout: "layouts/main",
-		ProxyHeader: proxyHeader(),
+		ProxyHeader: httputil.ProxyHeader(config.Production),
 		JSONEncoder: utils.JSONEncoder,
 	})
 
@@ -167,13 +168,4 @@ func main() {
 	app.Use(core.NotFound)
 
 	log.Warn.Fatal(app.Listen(config.Port))
-}
-
-// Get proper IP depending on the environment.
-func proxyHeader() string {
-	if config.Production {
-		return "X-Real-IP"
-	}
-
-	return ""
 }
