@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 
@@ -12,16 +13,26 @@ import (
 	"userstyles.world/modules/log"
 )
 
+func isHostAllowed(host string) bool {
+	switch host {
+	case "0.0.0.0":
+	case "127.0.0.1":
+	case "localhost":
+		return false
+	}
+	return true
+}
+
 func Proxy(c *fiber.Ctx) error {
 	link, id, t := c.Query("link"), c.Query("id"), c.Query("type")
 
 	// Don't render this page.
-	if link == "" || id == "" || t == "" {
+	if link == "" || id == "" || t == "" || strings.Contains(link, "..") {
 		return c.Redirect("/", fiber.StatusSeeOther)
 	}
 
 	// Set resource location and name.
-	dir := fmt.Sprintf("./data/proxy/%s/%s", t, id)
+	dir := fmt.Sprintf("./data/proxy%s", path.Clean(fmt.Sprintf("/%s/%s", t, id)))
 	name := dir + "/" + url.PathEscape(link)
 
 	// Check if image exists.
@@ -49,6 +60,11 @@ func Proxy(c *fiber.Ctx) error {
 				return nil
 			}
 
+			if !isHostAllowed(string(a.Request().URI().Host())) {
+				log.Info.Println("An not allowed host, has been requested to proxied")
+				return nil
+			}
+
 			status, data, errs = a.Bytes()
 			if len(errs) > 0 {
 				log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
@@ -68,12 +84,24 @@ func Proxy(c *fiber.Ctx) error {
 				return nil
 			}
 
+			if !isHostAllowed(string(a.Request().URI().Host())) {
+				log.Info.Println("An not allowed host, has been requested to proxied")
+				return nil
+			}
+
 			// TODO: Show a fallback image.
 			_, data, errs = a.Bytes()
 			if len(errs) > 0 {
 				log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
 				return nil
 			}
+
+			// Check after all redirections if the host is still valid.
+			if !isHostAllowed(string(a.Request().URI().Host())) {
+				log.Info.Println("An not allowed host, has been requested to proxied")
+				return nil
+			}
+
 		}
 
 		if err := os.WriteFile(name, data, 0o600); err != nil {
