@@ -54,7 +54,7 @@ func Test404Pages(t *testing.T) {
 	t.Parallel()
 
 	app := fiber.New(fiber.Config{
-		Views: templates.New("../../views"),
+		Views: templates.New(nil, "../../views"),
 	})
 	app.Get("/", func(c *fiber.Ctx) error {
 		c.Response().Header.SetContentType(fiber.MIMETextHTMLCharsetUTF8)

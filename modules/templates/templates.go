@@ -1,7 +1,6 @@
 package templates
 
 import (
-	"embed"
 	"fmt"
 	"html/template"
 	"io/fs"
@@ -55,7 +54,7 @@ func status() sys {
 	}
 }
 
-func New(views embed.FS) *html.Engine {
+func New(views fs.FS, overideDir ...string) *html.Engine {
 	// Embed templates.
 	var fsys http.FileSystem
 	if config.Production {
@@ -66,7 +65,11 @@ func New(views embed.FS) *html.Engine {
 		}
 		fsys = http.FS(newFS)
 	} else {
-		fsys = http.Dir("views")
+		if len(overideDir) == 1 {
+			fsys = http.Dir(overideDir[0])
+		} else {
+			fsys = http.Dir("views")
+		}
 	}
 	engine := html.NewFileSystem(fsys, ".html")
 
