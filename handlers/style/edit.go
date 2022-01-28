@@ -1,11 +1,11 @@
 package style
 
 import (
+	"fmt"
 	"mime/multipart"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -46,9 +46,9 @@ func EditGet(c *fiber.Ctx) error {
 
 func EditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	styleID, t := c.Params("id"), new(models.Style)
+	id := c.Params("id")
 
-	s, err := models.GetStyleByID(styleID)
+	s, err := models.GetStyleByID(id)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -64,47 +64,21 @@ func EditPost(c *fiber.Ctx) error {
 		})
 	}
 
+	// Prepare initial data.
+	m := map[string]interface{}{
+		"id":      id,
+		"name":    strings.TrimSpace(c.FormValue("name")),
+		"preview": strings.TrimSpace(c.FormValue("previewURL")),
+	}
+
 	// Check if userstyle name is empty.
-	if strings.TrimSpace(c.FormValue("name")) == "" {
+	// TODO: Implement proper validation.
+	if m["name"] == "" {
 		return c.Render("err", fiber.Map{
 			"Title": "Style name can't be empty",
 			"User":  u,
 		})
 	}
-
-	q := models.Style{
-		Model:       gorm.Model{ID: s.ID},
-		Name:        c.FormValue("name"),
-		Description: c.FormValue("description"),
-		Notes:       c.FormValue("notes"),
-		Code:        c.FormValue("code"),
-		Homepage:    c.FormValue("homepage"),
-		Preview:     c.FormValue("previewUrl"),
-		License:     strings.TrimSpace(c.FormValue("license", "No License")),
-		Category:    strings.TrimSpace(c.FormValue("category", "unset")),
-		MirrorURL:   strings.TrimSpace(c.FormValue("mirrorURL")),
-		UserID:      u.ID,
-	}
-
-	err = database.Conn.
-		Model(t).
-		Where("id", styleID).
-		Updates(q).
-		// GORM doesn't update non-zero values in structs.
-		Update("mirror_code", c.FormValue("mirrorCode") == "on").
-		Update("mirror_meta", c.FormValue("mirrorMeta") == "on").
-		Error
-
-	if err != nil {
-		log.Warn.Println("Failed to update style:", err.Error())
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
-			"User":  u,
-		})
-	}
-
-	// TODO: Move to code section once we refactor this messy logic.
-	cache.LRU.Remove(styleID)
 
 	// Check for new image.
 	var image multipart.File
@@ -120,23 +94,39 @@ func EditPost(c *fiber.Ctx) error {
 	}
 
 	// Check for new preview image.
-	if image != nil || s.Preview != q.Preview {
-		err = images.Generate(image, styleID, q.Preview)
+	if image != nil || s.Preview != m["preview"] {
+		err = images.Generate(image, id, m["preview"].(string))
 		if err != nil {
 			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
-			q.Preview = ""
+			m["preview"] = ""
 		} else {
-			q.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+			m["preview"] = fmt.Sprintf("%s/api/style/preview/%s.jpeg", config.BaseURL, id)
 		}
 	}
 
-	if err = q.UpdateColumn("preview", q.Preview); err != nil {
-		log.Warn.Printf("Failed to update preview image for %s: %s\n", styleID, err.Error())
+	// Add the rest of the data.
+	m["description"] = strings.TrimSpace(c.FormValue("description"))
+	m["notes"] = strings.TrimSpace(c.FormValue("notes"))
+	m["code"] = strings.TrimSpace(c.FormValue("code"))
+	m["homepage"] = strings.TrimSpace(c.FormValue("homepage"))
+	m["license"] = strings.TrimSpace(c.FormValue("license", "No License"))
+	m["category"] = strings.TrimSpace(c.FormValue("category", "unset"))
+	m["mirror_url"] = strings.TrimSpace(c.FormValue("mirrorURL"))
+	m["mirror_code"] = c.FormValue("mirrorCode") == "on"
+	m["mirror_meta"] = c.FormValue("mirrorMeta") == "on"
+
+	// TODO: Split updates into sections.
+	err = database.Conn.Debug().Model(models.Style{}).Where("id", id).Updates(m).Error
+	if err != nil {
+		log.Warn.Printf("Failed to update style %d: %v\n", s.ID, err)
 		return c.Render("err", fiber.Map{
-			"Title": "Failed to update preview image",
+			"Title": "Failed to update userstyle",
 			"User":  u,
 		})
 	}
 
-	return c.Redirect("/style/"+c.Params("id"), fiber.StatusSeeOther)
+	// TODO: Move to code section once we refactor this messy logic.
+	cache.LRU.Remove(id)
+
+	return c.Redirect("/style/"+id, fiber.StatusSeeOther)
 }

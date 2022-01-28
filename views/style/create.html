@@ -71,11 +71,11 @@
                 </div>
             {{ end }}
 
-            <label for="previewUrl">Preview image URL</label>
+            <label for="previewURL">Preview image URL</label>
             <i class="fg:3">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
             <input
                 pattern="{{ config "allowedImagesRe" }}"
-                type="text" name="previewUrl" value="{{ .Styles.Preview }}"
+                type="text" name="previewURL" value="{{ .Styles.Preview }}"
                 placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
             <label for="preview">Upload preview image</label>
