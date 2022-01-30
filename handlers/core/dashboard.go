@@ -17,46 +17,48 @@ import (
 	"userstyles.world/modules/log"
 )
 
-var system struct {
-	mu sync.Mutex
+var (
+	systemMutex sync.Mutex
 
-	Uptime     string
-	GoRoutines int
+	system struct {
+		Uptime     string
+		GoRoutines int
 
-	MemAllocated string
-	MemTotal     string
-	MemSys       string
-	Lookups      string
-	MemMallocs   string
-	MemFrees     string
+		MemAllocated string
+		MemTotal     string
+		MemSys       string
+		Lookups      string
+		MemMallocs   string
+		MemFrees     string
 
-	HeapAlloc    string
-	HeapSys      string
-	HeapInuse    string
-	HeapIdle     string
-	HeapReleased string
-	HeapObjects  string
+		HeapAlloc    string
+		HeapSys      string
+		HeapInuse    string
+		HeapIdle     string
+		HeapReleased string
+		HeapObjects  string
 
-	StackInuse  string
-	StackSys    string
-	MSpanSys    string
-	MSpanInuse  string
-	MCacheSys   string
-	MCacheInuse string
-	BuckHashSys string
-	GCSys       string
-	OtherSys    string
+		StackInuse  string
+		StackSys    string
+		MSpanSys    string
+		MSpanInuse  string
+		MCacheSys   string
+		MCacheInuse string
+		BuckHashSys string
+		GCSys       string
+		OtherSys    string
 
-	NextGC       string
-	LastGC       string
-	PauseTotalNs string
-	PauseNs      string
-	NumGC        string
-}
+		NextGC       string
+		LastGC       string
+		PauseTotalNs string
+		PauseNs      string
+		NumGC        string
+	}
+)
 
 func getSystemStatus() {
-	system.mu.Lock()
-	defer system.mu.Unlock()
+	systemMutex.Lock()
+	defer systemMutex.Unlock()
 
 	system.Uptime = time.Since(config.AppUptime).Round(time.Second).String()
 	system.GoRoutines = runtime.NumGoroutine()
