@@ -1,10 +1,10 @@
 {{- $btn := "" -}}
 {{- $method := "" -}}
-{{- if eq .Method "add" -}}
-    {{ $method = "oauth_settings" }}
+{{- if eq .Method 0 -}}
+    {{ $method = "settings" }}
     {{ $btn = "Add OAuth Application" }}
 {{ else }}
-    {{ $method = printf "oauth_settings/%d" .OAuth.ID }}
+    {{ $method = printf "settings/%d" .OAuth.ID }}
     {{ $btn = "Save changes" }}
 {{ end }}
 <div class="wrapper py:l">
@@ -16,6 +16,7 @@
     <section class="alert">
         <style type="text/css">
             .alert > .limit { max-width: 100% }
+            .styles { max-width: var(--form-max-width) }
         </style>
         {{ template "partials/alert" . }}
     </section>
@@ -70,7 +71,7 @@
         </form>
     </section>
 
-    <section class="styles mt:l">
+    <section class="styles mt:l ml:a mr:a">
         <h2 class="sub-title td:d">OAuths applications</h2>
         {{ if ne (len .OAuths) 0 }}
             <p class="description">{{ len .OAuths }} styles in total.</p>
