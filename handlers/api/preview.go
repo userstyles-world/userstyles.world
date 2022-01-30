@@ -2,6 +2,7 @@ package api
 
 import (
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,6 +33,11 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 	// Redirect to prevent panic.
 	if format == "" {
 		return c.Redirect("/api/style/preview/"+styleID+".jpeg", fiber.StatusSeeOther)
+	}
+
+	// Only allow valid numbers.
+	if _, err := strconv.Atoi(styleID); err != nil {
+		return notFound(c)
 	}
 
 	// Only allow jpeg and webp as formats.
