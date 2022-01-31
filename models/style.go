@@ -232,9 +232,9 @@ func GetAllAvailableStylesPaginated(page int, order string) ([]StyleCard, error)
 	case strings.HasPrefix(order, "styles"):
 		stmt += "styles.id, styles.created_at, styles.updated_at"
 	case strings.HasPrefix(order, "views"):
-		stmt += "styles.id, (SELECT total_views FROM histories h WHERE h.style_id = styles.id) as views"
+		stmt += "styles.id, (SELECT sum(daily_views) FROM histories h WHERE h.style_id = styles.id) AS views"
 	default:
-		stmt += "styles.id, (SELECT total_installs FROM histories h WHERE h.style_id = styles.id) as installs"
+		stmt += "styles.id, (SELECT sum(daily_installs) FROM histories h WHERE h.style_id = styles.id) AS installs"
 	}
 
 	err := db().
