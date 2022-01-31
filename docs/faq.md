@@ -1,6 +1,6 @@
 # FAQ
 
-Last updated August 14, 2021
+Last updated January 31, 2022
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
@@ -11,6 +11,7 @@ Last updated August 14, 2021
     - [How can I contact the admins?](#how-can-i-contact-the-admins)
 - [Userstyles](#userstyles)
     - [Why are `@updateURL` fields overriden?](#why-are-updateurl-fields-overriden)
+    - [Why are ratings different in Stylus' search?](#why-are-ratings-different-in-stylus-search)
     - [How do view/install/update statistics work?](#how-do-view-install-update-statistics-work)
     - [How do I remove the `Get Stylus` button?](#how-do-i-remove-the-get-stylus-button)
     - [Why is mirroring source code updates not working?](#why-is-mirroring-source-code-updates-not-working)
@@ -62,6 +63,15 @@ Questions regarding userstyles.
 ### Why are `@updateURL` fields overriden?
 
 It's done in order to avoid the possibility of tracking, as well as broken URLs.
+
+
+### Why are ratings different in Stylus' search?
+
+We have to accommodate for how Stylus displays them due to compatibility with
+USo: their ratings are on a scale of 1 to 3 (bad, okay, and good), meanwhile our
+ratings are on a scale of 1 to 5. That results in having to fit them within
+those bounds by multiplying the average rating by 3 then dividing by 5, or
+multiplying by 0.6, so that Stylus can display it using appropriate icons.
 
 
 ### How do view/install/update statistics work?
