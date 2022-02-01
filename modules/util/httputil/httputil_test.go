@@ -2,6 +2,7 @@ package httputil
 
 import (
 	"io/fs"
+	"net/http"
 	"testing"
 	"testing/fstest"
 )
@@ -48,5 +49,26 @@ func TestSubFS(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("Got %d files, wanted %d", got, want)
+	}
+}
+
+func TestEmbedFS(t *testing.T) {
+	t.Parallel()
+
+	development := false
+	got, err := EmbedFS(fsys, "foo", development)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := http.Dir("foo")
+	if got != want {
+		t.Fatalf("Got %q, expected %q", got, want)
+	}
+
+	production := true
+	_, err = EmbedFS(fsys, "foo", production)
+	if err != nil {
+		t.Fatal(err)
 	}
 }

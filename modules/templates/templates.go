@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
-	"net/http"
 	"runtime"
 	"time"
 
@@ -55,22 +54,11 @@ func status() sys {
 	}
 }
 
-func New(views fs.FS, overideDir ...string) *html.Engine {
+func New(views fs.FS, dir string) *html.Engine {
 	// Embed templates.
-	var fsys http.FileSystem
-	if config.Production {
-		// Strip prefix.
-		sub, err := httputil.SubFS(views, "views")
-		if err != nil {
-			log.Warn.Fatal(err)
-		}
-		fsys = http.FS(sub)
-	} else {
-		if len(overideDir) == 1 {
-			fsys = http.Dir(overideDir[0])
-		} else {
-			fsys = http.Dir("views")
-		}
+	fsys, err := httputil.EmbedFS(views, dir, config.Production)
+	if err != nil {
+		log.Warn.Fatal(err)
 	}
 	engine := html.NewFileSystem(fsys, ".html")
 

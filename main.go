@@ -2,8 +2,6 @@ package main
 
 import (
 	"embed"
-	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -49,7 +47,7 @@ func main() {
 	search.Initialize()
 	images.Initialize()
 	app := fiber.New(fiber.Config{
-		Views:       templates.New(views),
+		Views:       templates.New(views, "views"),
 		ViewsLayout: "layouts/main",
 		ProxyHeader: httputil.ProxyHeader(config.Production),
 		JSONEncoder: utils.JSONEncoder,
@@ -83,15 +81,9 @@ func main() {
 	oauthprovider.Routes(app)
 
 	// Embed static files.
-	var fsys http.FileSystem
-	if !config.Production {
-		sub, err := httputil.SubFS(static, "static")
-		if err != nil {
-			log.Warn.Fatal(err)
-		}
-		fsys = http.FS(sub)
-	} else {
-		fsys = http.Dir("static")
+	fsys, err := httputil.EmbedFS(static, "static", config.Production)
+	if err != nil {
+		log.Warn.Fatal(err)
 	}
 	app.Use(filesystem.New(filesystem.Config{
 		MaxAge: int(time.Hour) * 2,
