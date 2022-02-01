@@ -2,7 +2,7 @@ package main
 
 import (
 	"embed"
-	"io/fs"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -85,12 +85,11 @@ func main() {
 	// Embed static files.
 	var fsys http.FileSystem
 	if !config.Production {
-		// Strip prefix.
-		newFS, err := fs.Sub(static, "static")
+		sub, err := httputil.SubFS(static, "static")
 		if err != nil {
 			log.Warn.Fatal(err)
 		}
-		fsys = http.FS(newFS)
+		fsys = http.FS(sub)
 	} else {
 		fsys = http.Dir("static")
 	}

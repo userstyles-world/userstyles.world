@@ -15,6 +15,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util/httputil"
 	"userstyles.world/utils/strutils"
 )
 
@@ -59,11 +60,11 @@ func New(views fs.FS, overideDir ...string) *html.Engine {
 	var fsys http.FileSystem
 	if config.Production {
 		// Strip prefix.
-		newFS, err := fs.Sub(views, "views")
+		sub, err := httputil.SubFS(views, "views")
 		if err != nil {
 			log.Warn.Fatal(err)
 		}
-		fsys = http.FS(newFS)
+		fsys = http.FS(sub)
 	} else {
 		if len(overideDir) == 1 {
 			fsys = http.Dir(overideDir[0])
