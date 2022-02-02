@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// ProxyHeader will return proper IP depending on the environment.
+// ProxyHeader returns proper IP depending on the environment.
 func ProxyHeader(production bool) string {
 	if production {
 		return "X-Real-IP"
@@ -15,18 +15,13 @@ func ProxyHeader(production bool) string {
 	return ""
 }
 
-// SubFS will return subtree of the fsys starting from the prefix.
+// SubFS returns subtree of the fsys starting from the prefix.
 func SubFS(fsys fs.FS, prefix string) (fs.FS, error) {
-	sub, err := fs.Sub(fsys, prefix)
-	if err != nil {
-		return nil, err
-	}
-
-	return sub, nil
+	return fs.Sub(fsys, prefix)
 }
 
-// EmbedFS will return proper http.FileSystem depending on the environment,
-// because we don't want to embed files into the executable during development.
+// EmbedFS returns proper http.FileSystem depending on the environment, because
+// we don't want to embed files into the executable during development.
 func EmbedFS(fsys fs.FS, dir string, production bool) (http.FileSystem, error) {
 	if production {
 		sub, err := SubFS(fsys, dir)

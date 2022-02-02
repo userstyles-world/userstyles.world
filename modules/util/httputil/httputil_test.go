@@ -1,7 +1,6 @@
 package httputil
 
 import (
-	"io/fs"
 	"net/http"
 	"testing"
 	"testing/fstest"
@@ -39,16 +38,9 @@ func TestSubFS(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got, want := 0, 3
-	files, err := fs.ReadDir(sub, ".")
-	for _, f := range files {
-		if !f.IsDir() {
-			got++
-		}
-	}
-
-	if got != want {
-		t.Fatalf("Got %d files, wanted %d", got, want)
+	want := []string{"foo.html", "bar.html", "baz.html", "bar/baz.html"}
+	if err := fstest.TestFS(sub, want...); err != nil {
+		t.Fatal(err)
 	}
 }
 
