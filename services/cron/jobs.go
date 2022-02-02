@@ -42,7 +42,7 @@ func Initialize() {
 		log.Warn.Println("Failed to update imported styles:", err.Error())
 	}
 
-	_, err = s.Cron("* */2 * * *").Do(func() {
+	_, err = s.Cron("30 */2 * * *").Do(func() {
 		err := sitemap.UpdateSitemapCache()
 		if err != nil {
 			log.Warn.Println("Failed to update sitemap:", err.Error())
