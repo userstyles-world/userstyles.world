@@ -49,7 +49,7 @@ func GetStyleSource(c *fiber.Ctx) error {
 		}
 	}(id, c.IP())
 
-	c.Type("text/css", "utf-8")
+	c.Type("css", "utf-8")
 	return c.SendString(code.(string))
 }
 
