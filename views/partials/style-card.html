@@ -7,8 +7,7 @@
 
     <div class="card-body f:col p:m">
         <small class="fg:3" style="margin-bottom: 0.125rem">
-            {{ $date := .UpdatedAt | shortDate }}
-            <span>Updated </span>
+            <span>Updated</span>
             <time datetime="{{ .UpdatedAt | DateISO8601 }}">
                 {{- .UpdatedAt | Date -}}
             </time>
