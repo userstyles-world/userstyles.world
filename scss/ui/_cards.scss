@@ -71,10 +71,9 @@
         }
 
         &.no-screenshot svg {
-            height: 140px;
             position: absolute;
-            top: calc(50% - 70px);
-            @at-root .no-screenshot.flex svg { height: 200px }
+            top: calc(50% - 16px);
+            color: var(--fg-2);
         }
     }
 
