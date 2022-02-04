@@ -1,10 +1,17 @@
-{{- $method := printf "api/oauth/style/new?token=%s&oauthID=%d&vendor_data=%s" .SecureToken .OAuth.ID .VendorData -}}
+{{- $method := printf "/api/oauth/style/new?token=%s&oauthID=%d&vendor_data=%s" .SecureToken .OAuth.ID .VendorData -}}
 <div class="card col gap animate">
     <picture class="no-screenshot flex jc:c ai:c">
-        {{- template "icons/plus" -}}
+        {{ template "icons/image_off" 32 }}
     </picture>
-    </a>
-    <form method="post" action="/{{ $method }}">
-        <button class="flex btn primary" type="submit">Link to a new style</button>
+    <div class="card-body f:col p:m">
+        <small class="fg:3" style="margin-bottom: 0.125rem">
+            <span>Placeholder date</span>
+        </small>
+        <a class="name fg:1 f:h3 f:b">Placeholder name</a>
+    </div>
+    <form method="post" action="{{ $method }}">
+        <button class="btn icon primary" type="submit">
+            {{ template "icons/plus" 16 }} Link to a new style
+        </button>
     </form>
 </div>
