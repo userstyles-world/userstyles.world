@@ -33,7 +33,7 @@
                 data-tooltip="{{ .Installs }} total installs"
             >{{ num .Installs }} installs</span>
         </small>
-        <small class="fg:3 flex ai:c ml:s rating score-{{ .Rating }}">
+        <small class="fg:3 flex ai:c ml:s rating score-{{ .Rating | floor }}">
             {{ template "icons/star" 16 }}
             {{ with .Rating }}
                 <span class="ml:s">{{ . }}/5</span>

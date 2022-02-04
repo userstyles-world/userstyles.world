@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
+	"math"
 	"runtime"
 	"time"
 
@@ -116,6 +117,10 @@ func New(views fs.FS, dir string) *html.Engine {
 
 	engine.AddFunc("add", func(a, b int) int {
 		return a + b
+	})
+
+	engine.AddFunc("floor", func(i float64) float64 {
+		return math.Floor(i)
 	})
 
 	engine.AddFunc("sub", func(a, b int) int {
