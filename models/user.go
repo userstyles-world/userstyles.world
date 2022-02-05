@@ -28,15 +28,16 @@ type User struct {
 	// The values within SocialMedia struct
 	Socials SocialMedia `gorm:"embedded"`
 	// Will be saved under the user struct
-	AuthorizedOAuth StringList `gorm:"type:varchar(255)"`
-	Username        string     `gorm:"unique;not null" validate:"required,username,min=3,max=32"`
-	Email           string     `gorm:"unique" validate:"required,email"`
-	OAuthProvider   string     `gorm:"default:none"`
-	Password        string     `validate:"required,min=8,max=32"`
-	Biography       string     `validate:"min=0,max=512"`
-	DisplayName     string     `validate:"displayName,min=3,max=32"`
-	Role            Role       `gorm:"default=0"`
-	LastLogin       time.Time
+	AuthorizedOAuth   StringList `gorm:"type:varchar(255)"`
+	Username          string     `gorm:"unique;not null" validate:"required,username,min=3,max=32"`
+	Email             string     `gorm:"unique" validate:"required,email"`
+	OAuthProvider     string     `gorm:"default:none"`
+	Password          string     `validate:"required,min=8,max=32"`
+	Biography         string     `validate:"min=0,max=512"`
+	DisplayName       string     `validate:"displayName,min=3,max=32"`
+	Role              Role       `gorm:"default=0"`
+	LastLogin         time.Time
+	LastPasswordReset time.Time
 }
 
 type APIUser struct {
@@ -186,4 +187,9 @@ func (*User) DeleteWhereID(id interface{}) error {
 func (u *User) UpdateLastLogin() error {
 	return db().Model(&u).Where("id", u.ID).
 		UpdateColumn("last_login", time.Now()).Error
+}
+
+func (u *User) UpdateLastPasswordRequest() error {
+	return db().Model(&u).Where("id", u.ID).
+		UpdateColumn("last_password_reset", time.Now()).Error
 }

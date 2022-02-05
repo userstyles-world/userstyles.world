@@ -153,6 +153,9 @@ func ResetPost(c *fiber.Ctx) error {
 	})
 }
 
+// Only allow a email request to happen every 5 minutes.
+const emailRequestLimit = 5 * time.Minute
+
 func RecoverPost(c *fiber.Ctx) error {
 	if u, ok := jwtware.User(c); ok {
 		log.Info.Printf("User %d has set session, redirecting.\n", u.ID)
@@ -176,13 +179,26 @@ func RecoverPost(c *fiber.Ctx) error {
 			})
 	}
 
-	if _, err := models.FindUserByEmail(u.Email); err != nil {
+	user, err := models.FindUserByEmail(u.Email)
+	// Return early if we got a error, or when the LastPasswordReset isn't zero
+	// And LastPasswordReset + 5 minutes is later than time.Now(). So we only
+	// allow to request a new password token every 5 minutes, also to prevent
+	// spamming a user's mail.
+	if err != nil || (!user.LastPasswordReset.IsZero() && user.LastPasswordReset.Add(emailRequestLimit).After(time.Now())) {
 		// We need to just say we have send an reset email.
 		// So that we can't leak if we have such email in our database ;).
 		return c.Render("user/email-sent", fiber.Map{
 			"Title":  "Password reset",
 			"Reason": "We've sent an email to reset your password.",
 		})
+	}
+
+	if err := user.UpdateLastPasswordRequest(); err != nil {
+		log.Warn.Printf("Not able to update user's last password reset: %v\n", err)
+		return c.Status(fiber.StatusInternalServerError).
+			Render("err", fiber.Map{
+				"Title": "Internal server error",
+			})
 	}
 
 	jwtToken, err := utils.NewJWTToken().
