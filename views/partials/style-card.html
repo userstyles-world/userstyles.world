@@ -35,11 +35,9 @@
         </small>
         <small class="fg:3 flex ai:c ml:s rating score-{{ .Rating | floor }}">
             {{ template "icons/star" 16 }}
-            {{ with .Rating }}
-                <span class="ml:s">{{ . }}/5</span>
-            {{ else }}
-                <span class="ml:s">-/5</span>
-            {{ end }}
+            <span class="ml:s">
+                {{ with .Rating }}{{ . }}{{ else }}-{{ end }}/5
+            </span>
         </small>
     </div>
 </div>
