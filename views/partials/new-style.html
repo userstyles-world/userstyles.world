@@ -1,5 +1,5 @@
 {{- $method := printf "/api/oauth/style/new?token=%s&oauthID=%d&vendor_data=%s" .SecureToken .OAuth.ID .VendorData -}}
-<div class="card col gap animate">
+<div class="card col gap">
     <picture class="no-screenshot flex jc:c ai:c">
         {{ template "icons/image_off" 32 }}
     </picture>

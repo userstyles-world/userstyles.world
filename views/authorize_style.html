@@ -18,7 +18,7 @@
         {{ if ne (len .Styles) 0 }}
             {{ range .Styles }}
                 {{- $method := printf "/api/oauth/style/link?styleID=%d&token=%s&oauthID=%d" .ID $.SecureToken $.OAuth.ID -}}
-                <div class="card col gap animate">
+                <div class="card col gap">
                     <div class="thumbnail">
                         {{ template "partials/preview-image" . }}
                     </div>
