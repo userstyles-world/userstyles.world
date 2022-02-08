@@ -9,6 +9,7 @@ import (
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
@@ -126,6 +127,11 @@ func StylePost(c *fiber.Ctx) error {
 			JSON(fiber.Map{
 				"data": "Error: Couldn't save style",
 			})
+	}
+
+	// Evict from LRU cache when source code is updated.
+	if style.Code != postStyle.Code {
+		cache.LRU.Remove(sStyleID)
 	}
 
 	go func(style *models.Style, styleID, preview string) {
