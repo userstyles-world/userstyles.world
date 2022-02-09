@@ -21,8 +21,8 @@ import (
 
 var ext = md.CommonExtensions | md.AutoHeadingIDs
 
-var appConfig = map[string]any{
-	"copyright":       time.Now().Year(),
+var appConfig = map[string]string{
+	"copyright":       time.Now().Format("2006"),
 	"appName":         config.AppName,
 	"appCodeName":     config.AppCodeName,
 	"appVersion":      config.GitVersion,
@@ -63,8 +63,8 @@ func New(views fs.FS, dir string) *html.Engine {
 	}
 	engine := html.NewFileSystem(fsys, ".html")
 
-	engine.AddFunc("config", func(key string) template.HTML {
-		return template.HTML(fmt.Sprintf("%v", appConfig[key]))
+	engine.AddFunc("config", func(key string) string {
+		return appConfig[key]
 	})
 
 	engine.AddFunc("sys", status)
