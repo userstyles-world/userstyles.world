@@ -1,3 +1,16 @@
+<style type="text/css" media="screen">
+.pb {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--bg-4);
+    background: linear-gradient(90deg, var(--bg-3) 40px, var(--bg-4) 41px, var(--bg-2) 40px);
+}
+.pb a {
+    margin-left: 1rem;
+    color: var(--fg-1);
+}
+</style>
+
 <div class="wrapper py:l">
     <section class="welcome">
         <h1 class="title mb:m">{{ .Profile.Name }}'s profile</h1>
@@ -27,19 +40,19 @@
             <p class="fg:3"><i>Socials aren't set.</i></p>
         {{- end -}}
         {{ with .Profile.Socials.Github }}
-            <div class="github flex mt:m">
+            <div class="github mr:s iflex pb">
                 {{- template "icons/github" -}}
                 <a class="link" href="https://github.com/{{ . }}">{{ . }}</a>
             </div>
         {{ end }}
         {{ with .Profile.Socials.Gitlab }}
-            <div class="gitlab flex mt:m">
+            <div class="gitlab mr:s iflex pb">
                 {{- template "icons/gitlab" -}}
                 <a class="link" href="https://gitlab.com/{{ . }}">{{ . }}</a>
             </div>
         {{ end }}
         {{ with .Profile.Socials.Codeberg }}
-            <div class="codeberg flex mt:m">
+            <div class="codeberg iflex pb">
                 {{- template "icons/codeberg" -}}
                 <a class="link" href="https://codeberg.org/{{ . }}">{{ . }}</a>
             </div>
