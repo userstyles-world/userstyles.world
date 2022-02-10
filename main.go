@@ -86,7 +86,7 @@ func main() {
 		log.Warn.Fatal(err)
 	}
 	app.Use(filesystem.New(filesystem.Config{
-		MaxAge: int(time.Hour) * 2,
+		MaxAge: 2 * int(time.Hour.Seconds()),
 		Root:   fsys,
 	}))
 
