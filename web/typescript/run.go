@@ -45,8 +45,8 @@ func main() {
 		}
 	}
 	buildResult := api.Build(api.BuildOptions{
-		EntryPoints:       []string{"./typescript/main.ts"},
-		Outfile:           "./static/js/main.js",
+		EntryPoints:       []string{"./web/typescript/main.ts"},
+		Outfile:           "./web/static/js/main.js",
 		Bundle:            true,
 		Write:             true,
 		LogLevel:          api.LogLevelInfo,

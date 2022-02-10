@@ -3,8 +3,8 @@ package templates
 import (
 	"fmt"
 	"html/template"
-	"io/fs"
 	"math"
+	"net/http"
 	"runtime"
 	"time"
 
@@ -12,9 +12,7 @@ import (
 	"github.com/gofiber/template/html"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/modules/log"
 	"userstyles.world/modules/markdown"
-	"userstyles.world/modules/util/httputil"
 	"userstyles.world/utils/strutils"
 )
 
@@ -52,13 +50,8 @@ func status() sys {
 	}
 }
 
-func New(views fs.FS, dir string) *html.Engine {
-	// Embed templates.
-	fsys, err := httputil.EmbedFS(views, dir, config.Production)
-	if err != nil {
-		log.Warn.Fatal(err)
-	}
-	engine := html.NewFileSystem(fsys, ".html")
+func New(views http.FileSystem, dir string) *html.Engine {
+	engine := html.NewFileSystem(views, ".html")
 
 	engine.AddFunc("config", func(key string) string {
 		return appConfig[key]

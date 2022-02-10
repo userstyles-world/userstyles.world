@@ -47,10 +47,10 @@ fonts() {
     # Check if the latest version is installed.
     if [ ! -e "data/inter-${version}.zip" ]; then
         # If fonts directory exists, remove it.
-        if [ -e static/fonts ]; then
+        if [ -e web/static/fonts ]; then
             log "Removing old fonts."
             rm -f data/inter-*.zip
-            rm -rf static/fonts
+            rm -rf web/static/fonts
         fi
 
         log "Downloading Inter $version..."
@@ -61,7 +61,7 @@ fonts() {
         _fontsExtract "$version"
     else
         # If fonts directory doesn't exist, extract fonts.
-        if [ ! -e static/fonts ]; then
+        if [ ! -e web/static/fonts ]; then
             log "Extracting fonts..."
             _fontsExtract "$version"
         else
@@ -74,7 +74,7 @@ _fontsExtract() {
     # Extract specific variants that we use.
     fonts="Regular Bold Italic BoldItalic"
     for font in $fonts; do
-        unzip -j -d static/fonts "data/inter-$1.zip" "Inter Web/Inter-${font}.*"
+        unzip -j -d web/static/fonts "data/inter-$1.zip" "Inter Web/Inter-${font}.*"
     done
 }
 
@@ -97,16 +97,16 @@ sass() {
     check_dir
 
     # Sassc fails if directory doesn't exist.
-    mkdir -p static/css
+    mkdir -p web/static/css
 
     if [ "$2" = "--watch" ]; then
         check_cmd inotifywait
         [ $? = 1 ] && exit
-        while inotifywait -r -e close_write scss; do
-            sassc scss/main.scss static/css/main.css
+        while inotifywait -r -e close_write web/scss; do
+            sassc web/scss/main.scss web/static/css/main.css
         done
     else
-        sassc --style compressed scss/main.scss static/css/main.css
+        sassc --style compressed web/scss/main.scss web/static/css/main.css
     fi
 }
 
@@ -144,7 +144,7 @@ build() {
     sass
 
     log "compiling typescript"
-    go run typescript/run.go
+    go run web/typescript/run.go
 
     log "compiling executable"
     c="$(git rev-list -1 HEAD)"
@@ -162,7 +162,7 @@ ts() {
 
     env DEBUG="${2:-false}" \
         WATCH="${3:-false}" \
-        go run typescript/run.go
+        go run web/typescript/run.go
 }
 
 case "$1" in

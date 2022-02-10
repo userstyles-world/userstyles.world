@@ -1,7 +1,6 @@
 package main
 
 import (
-	"embed"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -27,14 +26,7 @@ import (
 	"userstyles.world/search"
 	"userstyles.world/services/cron"
 	"userstyles.world/utils"
-)
-
-var (
-	//go:embed views/*
-	views embed.FS
-
-	//go:embed static/*
-	static embed.FS
+	"userstyles.world/web"
 )
 
 func main() {
@@ -48,7 +40,7 @@ func main() {
 	search.Initialize()
 
 	app := fiber.New(fiber.Config{
-		Views:       templates.New(views, "views"),
+		Views:       templates.New(web.ViewsDir, "views"),
 		ViewsLayout: "layouts/main",
 		ProxyHeader: httputil.ProxyHeader(config.Production),
 		JSONEncoder: utils.JSONEncoder,
@@ -82,13 +74,9 @@ func main() {
 	oauthprovider.Routes(app)
 
 	// Embed static files.
-	fsys, err := httputil.EmbedFS(static, "static", config.Production)
-	if err != nil {
-		log.Warn.Fatal(err)
-	}
 	app.Use(filesystem.New(filesystem.Config{
 		MaxAge: 2 * int(time.Hour.Seconds()),
-		Root:   fsys,
+		Root:   web.StaticDir,
 	}))
 
 	// Fallback route.

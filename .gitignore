@@ -1,14 +1,16 @@
-userstyles.world
-yarn-error.log
-styles.bleve/
-node_modules/
-image_cache/
-.eslintcache
-static/*/
+# Generic.
+.DS_Store
 .vscode/
-public/
 .idea/
+*.log
 data/
-.auth
-*.db
 tmp/
+bin/
+
+# JavaScript.
+node_modules/
+.eslintcache
+
+# Project-specific.
+userstyles.world
+web/static/*/
