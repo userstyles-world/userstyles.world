@@ -1,12 +1,16 @@
 package core
 
 import (
+	"io"
 	"os"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
+	"userstyles.world/modules/log"
+	"userstyles.world/modules/markdown"
+	"userstyles.world/web"
 )
 
 func readFile(f string) (s string) {
@@ -29,37 +33,41 @@ func readFile(f string) (s string) {
 func GetDocs(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	var title, content string
-	switch c.Params("document") {
-	case "":
-		content = readFile("readme")
-		title = "Documentation"
-	case "changelog":
-		content = readFile("changelog")
-		title = "Changelog"
-	case "faq":
-		content = readFile("faq")
-		title = "Frequently Asked Questions"
-	case "privacy":
-		content = readFile("privacy")
-		title = "Privacy Policy"
-	case "security":
-		content = readFile("security")
-		title = "Security Policy"
-	case "crypto":
-		content = readFile("crypto")
-		title = "Cryptography Usages"
-	case "content-guidelines":
-		content = readFile("content-guidelines")
-		title = "Content Guidelines"
+	doc := c.Params("document")
+	if doc == "" {
+		doc = "readme"
 	}
 
-	if content == "" {
+	f, err := web.DocsDir.Open(doc + ".md")
+	if err != nil {
+		log.Info.Printf("Failed to load document %q: %s\n", doc, err)
 		return c.Render("err", fiber.Map{
-			"Title": "Failed to load the document",
+			"Title": "Failed to load document",
 			"User":  u,
 		})
 	}
+
+	// TODO: Extract metadata.
+	var title string
+	switch doc {
+	case "":
+		title = "Documentation"
+	case "changelog":
+		title = "Changelog"
+	case "faq":
+		title = "Frequently Asked Questions"
+	case "privacy":
+		title = "Privacy Policy"
+	case "security":
+		title = "Security Policy"
+	case "crypto":
+		title = "Cryptography Usages"
+	case "content-guidelines":
+		title = "Content Guidelines"
+	}
+
+	b, _ := io.ReadAll(f)
+	content := markdown.RenderSafe(b)
 
 	return c.Render("core/docs", fiber.Map{
 		"Title":     title,
