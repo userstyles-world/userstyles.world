@@ -1,7 +1,12 @@
 a {
     color: var(--ac-1);
     text-decoration: none;
-    &:not([class]):hover { text-decoration: underline }
+
+    &:hover:not(.btn),
+    &:active:not(.btn),
+    &:focus:not(.btn) {
+        text-decoration: underline;
+    }
 
     // Special styles for JS functionality and external links.
     &::after {
@@ -38,6 +43,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     padding: 0.5rem 0.8rem;
     border-radius: var(--br-3);
     transition: $x, $y, $z, $s;
+    text-decoration: none;
     border: 1px solid var(--bg-3);
     background-color: var(--bg-2);
     color: var(--fg-2);
@@ -123,10 +129,6 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     border: none;
     background: none;
 
-    &:hover {
-        text-decoration: underline;
-        cursor: pointer;
-    }
     &:focus { box-shadow: none }
 }
 
