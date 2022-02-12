@@ -1,8 +1,8 @@
 .card {
     min-width: var(--card-min-width);
     border-radius: var(--br-3);
+    border: 1px solid var(--bg-3);
     background-color: var(--bg-2);
-    box-shadow: var(--sh-m);
 
     @at-root [data-color-scheme="light"] .card {
         background-color: var(--bg-1);
@@ -84,7 +84,7 @@
 
     &-body,
     &-footer {
-        box-shadow: 0 -1px var(--bg-3);
+        border-top: 1px solid var(--bg-3);
     }
 
     &-body {
