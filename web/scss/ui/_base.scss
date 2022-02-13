@@ -122,14 +122,11 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
             color: var(--inverse) !important;
         }
     }
-}
 
-.link {
-    padding: 0;
-    border: none;
-    background: none;
-
-    &:focus { box-shadow: none }
+    &.oauth {
+        width: 100%;
+        &:not(:first-child) { margin-left: 1rem }
+    }
 }
 
 // TODO: Refactor as an "alert" component later.
@@ -170,21 +167,6 @@ label[for="remember"] {
       scroll-behavior: auto !important;
       transition-delay: 0s !important;
       transition-duration: 0s !important;
-    }
-}
-
-.oauth {
-    width: 100%;
-    align-items: center;
-    display: inline-flex;
-    background-color: var(--bg-2);
-    &:not(:first-child) { margin-left: 1rem }
-
-    svg { margin-right: 0.8rem }
-
-    &:hover {
-        background-color: var(--bg-3);
-        cursor: pointer;
     }
 }
 

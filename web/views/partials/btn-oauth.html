@@ -1,17 +1,14 @@
 <div class="social mt:l mx:a">
     <p class="description mb:m">Join via</p>
-    <div class="btn-group flex jc:c">
-        <a href="/oauth/github" class="btn oauth github">
-            {{- template "icons/github" . -}}
-            Github
+    <div class="btn-group flex">
+        <a href="/oauth/github" class="github oauth btn icon">
+            {{ template "icons/github" . }} Github
         </a>
-        <a href="/oauth/gitlab" class="btn oauth gitlab">
-            {{- template "icons/gitlab" . -}}
-            Gitlab
+        <a href="/oauth/gitlab" class="gitlab oauth btn icon">
+            {{ template "icons/gitlab" . }} Gitlab
         </a>
-        <a href="/oauth/codeberg" class="btn oauth codeberg">
-            {{- template "icons/codeberg" . -}}
-            Codeberg
+        <a href="/oauth/codeberg" class="codeberg oauth btn icon">
+            {{ template "icons/codeberg" . }} Codeberg
         </a>
     </div>
     <p class="description mt:l">Or via</p>
