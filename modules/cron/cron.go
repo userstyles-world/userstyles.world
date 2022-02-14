@@ -7,10 +7,10 @@ import (
 
 	// "userstyles.world/models"
 	// "userstyles.world/modules/cache"
+	"userstyles.world/modules/database/snapshot"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/sitemap"
 	"userstyles.world/modules/update"
-	"userstyles.world/services/snapshot"
 )
 
 func Initialize() {
