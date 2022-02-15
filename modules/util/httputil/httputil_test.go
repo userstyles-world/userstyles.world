@@ -2,6 +2,7 @@ package httputil
 
 import (
 	"net/http"
+	"os"
 	"testing"
 	"testing/fstest"
 )
@@ -53,9 +54,9 @@ func TestEmbedFS(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := http.Dir("foo")
+	want := http.FS(os.DirFS("foo"))
 	if got != want {
-		t.Fatalf("Got %q, expected %q", got, want)
+		t.Fatalf("Got %#v, expected %#v", got, want)
 	}
 
 	production := true

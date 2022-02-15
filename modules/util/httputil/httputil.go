@@ -4,6 +4,8 @@ package httputil
 import (
 	"io/fs"
 	"net/http"
+	"os"
+	"path"
 )
 
 // ProxyHeader returns proper IP depending on the environment.
@@ -24,7 +26,8 @@ func SubFS(fsys fs.FS, prefix string) (fs.FS, error) {
 // we don't want to embed files into the executable during development.
 func EmbedFS(fsys fs.FS, dir string, production bool) (http.FileSystem, error) {
 	if production {
-		sub, err := SubFS(fsys, dir)
+		_, base := path.Split(dir)
+		sub, err := SubFS(fsys, base)
 		if err != nil {
 			return nil, err
 		}
@@ -32,5 +35,5 @@ func EmbedFS(fsys fs.FS, dir string, production bool) (http.FileSystem, error) {
 		return http.FS(sub), nil
 	}
 
-	return http.Dir(dir), nil
+	return http.FS(os.DirFS(dir)), nil
 }
