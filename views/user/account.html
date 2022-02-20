@@ -123,7 +123,7 @@
                     Github
                 </label>
                 <input
-                    pattern="^[a-zA-Z0-9_-]*$"
+                    pattern="^[a-zA-Z0-9._-]{0,39}$"
                     type="text" name="github"
                     placeholder="Your username"
                     value="{{ .Params.Socials.Github }}">
@@ -135,7 +135,7 @@
                     Gitlab
                 </label>
                 <input
-                    pattern="^[a-zA-Z0-9_-]*$"
+                    pattern="^[a-zA-Z0-9._-]{0,255}$"
                     type="text" name="gitlab"
                     placeholder="Your username"
                     value="{{ .Params.Socials.Gitlab }}">
@@ -148,7 +148,7 @@
                     Codeberg
                 </label>
                 <input
-                    pattern="^[a-zA-Z0-9_-]*$"
+                    pattern="^[a-zA-Z0-9._-]{0,40}$"
                     type="text" name="codeberg"
                     placeholder="Your username"
                     value="{{ .Params.Socials.Codeberg }}">
