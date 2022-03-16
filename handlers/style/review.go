@@ -16,6 +16,24 @@ func ReviewGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
 
+	// Check if style exists.
+	style, err := models.GetStyleByID(c.Params("id"))
+	if err != nil {
+		c.Status(fiber.StatusNotFound)
+		return c.Render("err", fiber.Map{
+			"Title": "Style not found",
+			"User":  u,
+		})
+	}
+
+	// Check if user isn't style's author.
+	if u.ID == style.UserID {
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
+			"Title": "Cannot review own style",
+			"User":  u,
+		})
+	}
+
 	// Prevent spam.
 	reviewSpam := new(models.Review)
 	// Collecting of the error is not needed.
@@ -57,6 +75,14 @@ func ReviewPost(c *fiber.Ctx) error {
 		c.Status(fiber.StatusNotFound)
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
+			"User":  u,
+		})
+	}
+
+	// Check if user isn't style's author.
+	if u.ID == style.UserID {
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
+			"Title": "Cannot review own style",
 			"User":  u,
 		})
 	}
