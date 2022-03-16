@@ -166,7 +166,7 @@
 
     <section class="reviews">
         <h2 class="td:d">Reviews</h2>
-        {{ if .User.ID }}
+        {{ if and (.User.ID) (not (eq .Style.UserID .User.ID))}}
             <a href="/styles/review/{{ $.Style.ID }}">Add your review</a>
         {{ end }}
         {{ with .Reviews }}
