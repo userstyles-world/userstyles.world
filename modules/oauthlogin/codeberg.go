@@ -2,7 +2,7 @@ package oauthlogin
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -58,7 +58,7 @@ func (codeberg) beforeRequest(body authURLPostBody, req *http.Request) error {
 	if err != nil {
 		return err
 	}
-	req.Body = ioutil.NopCloser(strings.NewReader(utils.UnsafeString(bodyString)))
+	req.Body = io.NopCloser(strings.NewReader(utils.UnsafeString(bodyString)))
 	req.ContentLength = int64(len(bodyString))
 	req.Header.Set("Content-Type", "application/json")
 	return nil
