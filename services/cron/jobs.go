@@ -23,19 +23,19 @@ func Initialize() {
 		log.Warn.Println("Failed to snapshot style statistics:", err.Error())
 	}
 
-    /*
-	_, err = s.Every("1h").Do(func() {
-		cache.Store.Add("siteStatistics", models.GetHomepageStatistics(), 5*time.Minute)
-		styles, err := models.GetAllFeaturedStyles()
+	/*
+		_, err = s.Every("1h").Do(func() {
+			cache.Store.Add("siteStatistics", models.GetHomepageStatistics(), 5*time.Minute)
+			styles, err := models.GetAllFeaturedStyles()
+			if err != nil {
+				return
+			}
+			cache.Store.Add("featuredStyles", styles, 5*time.Minute)
+		})
 		if err != nil {
-			return
+			log.Warn.Println("Failed to cache home page queries:", err.Error())
 		}
-		cache.Store.Add("featuredStyles", styles, 5*time.Minute)
-	})
-	if err != nil {
-		log.Warn.Println("Failed to cache home page queries:", err.Error())
-	}
-    */
+	*/
 
 	_, err = s.Cron("*/30 * * * *").Do(func() { update.ImportedStyles() })
 	if err != nil {
