@@ -17,14 +17,6 @@ func UnsafeString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-// UnsafeClone copies the current string to a new string with 1 allocation.
-// https://go-review.googlesource.com/c/go/+/345849/1/src/strings/clone.go
-func UnsafeClone(s string) string {
-	b := make([]byte, len(s))
-	copy(b, s)
-	return *(*string)(unsafe.Pointer(&b))
-}
-
 // UnsafeBytes returns a byte pointer without allocation.
 func UnsafeBytes(s string) (bs []byte) {
 	return unsafe.Slice((*byte)(unsafe.Pointer((*reflect.StringHeader)(unsafe.Pointer(&s)).Data)), len(s))
