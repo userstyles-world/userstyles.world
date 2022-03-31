@@ -57,16 +57,17 @@ func (*Log) AddLog(logEntry *Log) (err error) {
 
 // GetLogOfKind returns all the logs of the specified kind and
 // select the correct user Author.
-func GetLogOfKind(kind LogKind) (q *[]APILog, err error) {
-	err = db().
+func GetLogOfKind(kind LogKind) ([]APILog, error) {
+	var q []APILog
+
+	err := db().
 		Model(modelLog).
-		Select("logs.*, u.username").
-		Joins("join users u on u.id = logs.user_id").
+		Select("logs.*, (SELECT username FROM users WHERE id = logs.user_id) AS Username").
 		Where("kind = ?", kind).
 		Find(&q).
 		Error
 	if err != nil {
-		return nil, errors.ErrFailedLogRetrieval
+		return q, errors.ErrFailedLogRetrieval
 	}
 	return q, nil
 }
