@@ -1,6 +1,6 @@
 # FAQ
 
-Last updated January 31, 2022
+Last updated April 1, 2022
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
@@ -30,12 +30,12 @@ Non-specific questions.
 
 There is none. USw is funded from our own pockets.
 
-All donations to Vednoc's [LiberaPay] and/or [Ko-fi] go towards paying for the
-server costs as well as domain costs. In terms of numbers, the server costs $5
-per month (as of July 2021), and domain costs $22 per year.
+All donations made to Vednoc's [LiberaPay][lp] and/or [Ko-fi][kf] go towards
+paying for the server and domain costs. The server and backup cost is $6 per
+month (as of April 2022), and the domain cost is $22 per year.
 
-[LiberaPay]: https://liberapay.com/vednoc
-[Ko-fi]: https://ko-fi.com/vednoc
+[lp]: https://liberapay.com/vednoc
+[kf]: https://ko-fi.com/vednoc
 
 
 ### Why isn't [insert here] implemented?
