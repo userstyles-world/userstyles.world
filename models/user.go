@@ -152,7 +152,7 @@ func FindUserByID(id string) (*User, error) {
 
 	err := db().
 		Model(modelUser).
-		Where("id = ?", id).
+		Where("(SELECT user_id FROM styles WHERE user_id = users.id) AND id = ?", id).
 		First(&user).
 		Error
 	if err != nil {
