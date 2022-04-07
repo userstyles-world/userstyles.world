@@ -3,7 +3,7 @@ import {storeNewSettings} from './utils/storage';
 
 const PREFIX = 'usr-settings';
 
-export function SetValues(settings: UserSettings) {
+export function setValues(settings: UserSettings) {
     if (!window.location.pathname.startsWith('/account')) {
         return;
     }
@@ -11,7 +11,7 @@ export function SetValues(settings: UserSettings) {
     (document.getElementById(`${PREFIX}--entries-behavior`) as HTMLSelectElement).value = settings.entriesBehavior;
 }
 
-export function SaveUserSettingsButton(onSettingsUpdate: () => void) {
+export function saveUserSettingsButton(onSettingsUpdate: () => void) {
     const saveButton = document.getElementById(`${PREFIX}--save`) as HTMLButtonElement;
     if (!saveButton) {
         return;

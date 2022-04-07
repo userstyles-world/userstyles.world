@@ -54,7 +54,7 @@ const onMessage = (ev: MessageEvent<any>) => {
 
 addEventListener('message', onMessage);
 
-export function BroadcastReady() {
+export function broadcastReady() {
     dispatchEvent(new MessageEvent('message', {
         data: {type: 'usw-ready'},
         origin: 'https://userstyles.world'

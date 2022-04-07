@@ -23,7 +23,7 @@ const handleColorScheme = () => {
     }
 };
 
-export function InitalizeColorScheme(colorScheme: UserSettings['colorScheme']) {
+export function initalizeColorScheme(colorScheme: UserSettings['colorScheme']) {
     switch (colorScheme) {
         case 'follow-system': {
             handleColorScheme();

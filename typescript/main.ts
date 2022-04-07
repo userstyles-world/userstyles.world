@@ -1,9 +1,9 @@
 import {checkRedirect} from './page/account';
 import {saveRedirect} from './page/login';
 import {changeEntriesBehavior} from './page/modlog';
-import {InitalizeColorScheme as initalizeColorScheme} from './color-scheme';
-import {BroadcastReady} from './third-party';
-import {SaveUserSettingsButton, SetValues} from './user-settings';
+import {initalizeColorScheme as initalizeColorScheme} from './color-scheme';
+import {broadcastReady} from './third-party';
+import {saveUserSettingsButton, setValues} from './user-settings';
 import {doDomOperation} from './utils/dom';
 import type {UserSettings} from './utils/storage';
 import {getSettings} from './utils/storage';
@@ -17,16 +17,16 @@ const onSettingsUpdate = () => {
     initalizeColorScheme(settings.colorScheme);
 };
 
-const WhenDOMReady = () => {
-    BroadcastReady();
-    SaveUserSettingsButton(onSettingsUpdate);
-    SetValues(getSettings());
+const whenDOMReady = () => {
+    broadcastReady();
+    saveUserSettingsButton(onSettingsUpdate);
+    setValues(getSettings());
 };
 
 // WhenDOMReady contains code that only should be handle
 // when the DOM is ready to go.
 // Any other code shouldn't depend on this setup function.
-doDomOperation(WhenDOMReady);
+doDomOperation(whenDOMReady);
 
 // Initalize functions that requires settings and don't depend on the DOM.
 // Note that we don't save getSettings() result, as this initalize is a 1 time thing
