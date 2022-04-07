@@ -53,7 +53,10 @@
         width: 0;
     }
 
-    &#btn-share:not(.copied) {
+    &#btn-share:not(.copied):not(.copied-failed) {
         &::before, &::after { content: unset }
+    }
+    &#btn-share.copied-failed::before {
+        content: 'Style URL couldn\'t be copied to your clipboard.'
     }
 }

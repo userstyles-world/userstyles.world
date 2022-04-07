@@ -12,15 +12,11 @@ function shareButton() {
         return;
     }
     shareButton.addEventListener('click', () => {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(parentElement);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        // add to clipboard.
-        document.execCommand('copy');
-
-        shareButton.classList.add('copied');
+        navigator.clipboard.writeText(parentElement.textContent).then(() => {
+            shareButton.classList.add('copied');
+        }, () => {
+            shareButton.classList.add('copied-failed');
+        });
     });
 }
 
