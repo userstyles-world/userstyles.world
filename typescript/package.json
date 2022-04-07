@@ -11,10 +11,10 @@
     "lint": "eslint --cache \"./**/*.ts\" \".eslintrc.js\""
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "4.28.3",
-    "@typescript-eslint/parser": "4.28.3",
-    "eslint": "7.30.0",
-    "eslint-plugin-unicorn": "34.0.1",
-    "typescript": "4.3.5"
+    "@typescript-eslint/eslint-plugin": "5.18.0",
+    "@typescript-eslint/parser": "5.18.0",
+    "eslint": "8.12.0",
+    "eslint-plugin-unicorn": "42.0.0",
+    "typescript": "4.6.3"
   }
 }
