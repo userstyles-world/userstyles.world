@@ -17,12 +17,12 @@ export function getSettings(): UserSettings {
     if (settings) {
         return settings;
     }
-    const MaybeSettings = localStorage.getItem(localStorageKey);
-    if (!MaybeSettings) {
+    const storedSettings = localStorage.getItem(localStorageKey);
+    if (!storedSettings) {
         localStorage.setItem(localStorageKey, JSON.stringify(DEFAULT_SETTINGS));
         return DEFAULT_SETTINGS;
     }
-    const savedSettings = getValidatedObject(JSON.parse(MaybeSettings), DEFAULT_SETTINGS);
+    const savedSettings = getValidatedObject(JSON.parse(storedSettings), DEFAULT_SETTINGS);
 
     // Data migration, just to be sure if any new setting are added.
     // We should include the default value and save it.
@@ -49,13 +49,7 @@ function getValidatedObject<T>(source: any, compare: T): Partial<T> {
         if (null == value || null == compare[key]) {
             return;
         }
-        const array1 = Array.isArray(value);
-        const array2 = Array.isArray(compare[key]);
-        if (array1 || array2) {
-            if (array1 && array2) {
-                result[key] = value;
-            }
-        } else if ('object' === typeof value && 'object' === typeof compare[key]) {
+        if ('object' === typeof value && 'object' === typeof compare[key]) {
             result[key] = getValidatedObject(value, compare[key]);
         } else if (typeof value === typeof compare[key] && compare.hasOwnProperty(key)) {
             result[key] = value;

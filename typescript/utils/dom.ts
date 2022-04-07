@@ -14,10 +14,6 @@ if (!isDOMReady()) {
     document.addEventListener('readystatechange', onReadyStateChange, {passive: true});
 }
 
-export const removeElement = (element: HTMLElement) => {
-    element && element.remove();
-};
-
 export const doDomOperation = (callback: () => void) => {
     if (isDOMReady()) {
         callback();
