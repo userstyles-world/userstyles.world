@@ -1,6 +1,6 @@
 # FAQ
 
-Last updated April 1, 2022
+Last updated April 3, 2022
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
@@ -40,19 +40,21 @@ month (as of April 2022), and the domain cost is $22 per year.
 
 ### Why isn't [insert here] implemented?
 
-Well, it could be for various reasons. Contact us directly, or open a new issue
-over at [the issue tracker] and lets discuss it.
+Well, it could be a variety of reasons. Contact us directly, or open a new issue
+over at [the issue tracker][issues] and let's discuss it first.
 
-[the issue tracker]: https://github.com/userstyles-world/userstyles.world/issues/new/choose
+[issues]: https://github.com/userstyles-world/userstyles.world/issues
 
 
 ### How can I contact the admins?
 
-You could join us over at the [Discord server], however you can also reach over
-the email at [feedback@userstyles.world].
+You could join us over on [Discord], [Matrix], or send us an [email]. If you
+contacted us via email and didn't get a reply within a couple of days, please
+join us on either chat platform and let's talk about it.
 
-[Discord server]: https://discord.gg/WW6vnFsCpB
-[feedback@userstyles.world]: mailto:feedback@userstyles.world
+[Discord]: https://userstyles.world/link/discord
+[Matrix]: https://userstyles.world/link/matrix
+[email]: mailto:feedback@userstyles.world
 
 
 ## Userstyles
@@ -70,8 +72,8 @@ It's done in order to avoid the possibility of tracking, as well as broken URLs.
 We have to accommodate for how Stylus displays them due to compatibility with
 USo: their ratings are on a scale of 1 to 3 (bad, okay, and good), meanwhile our
 ratings are on a scale of 1 to 5. That results in having to fit them within
-those bounds by multiplying the average rating by 3 then dividing by 5, or
-multiplying by 0.6, so that Stylus can display it using appropriate icons.
+those bounds by multiplying the average rating by 3 then dividing it by 5 — or
+multiplying by 0.6 — so that Stylus can display them using appropriate icons.
 
 
 ### How do view/install/update statistics work?
@@ -87,7 +89,7 @@ As of July 2021, statistics work like so:
 
 That's the reason why some styles have more installs than views. You don't
 necessary need to visit a style page to have it installed, e.g. third-party
-applications can directly install any style.
+applications can directly install any style (e.g. Stylus' inline search).
 
 
 ### How do I remove the `Get Stylus` button?
@@ -102,22 +104,22 @@ option provided by [UserStyles.world Tweaks] userstyle.
 ### Why is mirroring source code updates not working?
 
 First of all, make sure the checkbox "Mirror source code updates" is enabled. If
-it isn't enabled, enable it then save changes.
+it isn't enabled, enable it on the edit page, then save changes.
 
 If you're mirroring source code from a different URL than your userstyle was
 originally imported from, make sure that the new URL location is correct. It's
 correct if Stylus' install/reinstall page shows up when you visit it.
 
-Last but certainly not least, make sure that you increase `@version` field in
-the UserStyle metadata header. Userstyle will be mirrored if the new version
-doesn't match the one stored in our database.
+Last, but certainly not least, make sure that you increase `@version` field in
+the UserStyle metadata header. The code is mirrored only if the new version
+doesn't match the one stored in our database, otherwise our updater ignores it.
 
 
 ### Why is there no support for traditional userstyles?
 
 Traditional userstyles don't fit in the current workflow because they can't be
 self-hosted like UserCSS userstyles. That means installing and/or updating any
-userstyle would be a manual process, which defeats the purpose of USw.
+userstyle would be a manual process, which defeats the purpose of having USw.
 
 Converting your traditional userstyle is as simple as exporting it in Mozilla
 format and using the mandatory UserStyle metadata header that's provided for you
@@ -192,10 +194,10 @@ it in the following:
 
 ### How does mirroring source code work?
 
-Every 30 minutes (00:30, 01:00, and so on) we check for style updates. Styles
-are checked in batches of 25 (as of August 27, 2021) and not all at once, so it
-can take up to a few minutes for your userstyle to be processed. The style will
-be updated if the `@version` field doesn't match the one in our database.
+Every 30th minute (00:30, 01:00, and so on) we check for style updates. Style
+checking runs in batches of 25 (as of August 27, 2021) and not all at once, so
+it can take up to a few minutes for your userstyle(s) to be processed. The style
+will be updated if the `@version` field doesn't match the one in our database.
 
 If your userstyle isn't being updated, read through [troubleshooting
 steps](#why-is-mirroring-source-code-updates-not-working) first.
