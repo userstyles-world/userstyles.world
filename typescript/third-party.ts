@@ -2,41 +2,32 @@ const fillInformationOnForm = (key: string, value: string) => {
     if (!value) {
         return;
     }
-    const element: HTMLInputElement = document.body.querySelector(`form [name="${key}"`);
+    const element: HTMLInputElement = document.querySelector(`form [name="${key}"`);
     if (!element) {
         return;
     }
     element.value = value;
 };
 
-const DEFAULT_USERSTYLE_META = (name: string) => `/* ==UserStyle==
-@name           ${name || 'A new userstyle!'}
-@namespace      userstyles.world
-@version        1.0.0
-==/UserStyle== */\n`;
-
-const handleSourceCode = (sourceCode: string, name: string) => {
+const handleSourceCode = (sourceCode: string) => {
     if (!sourceCode) {
         return;
-    }
-    if (!/\/\* *?==UserStyle==/g.test(sourceCode)) {
-        sourceCode = `${DEFAULT_USERSTYLE_META(name)}${sourceCode}`;
     }
     fillInformationOnForm('code', sourceCode);
 };
 
 const onMessage = (ev: MessageEvent<any>) => {
-    if (!ev.data || !ev.data.type) {
+    const {type, data} = ev.data;
+    if (!data || !type) {
         return;
     }
-    const {type, data} = ev.data;
     switch (type) {
         case 'usw-remove-stylus-button': {
             const el = document.querySelector('a#stylus');
             el && el.remove();
         }
         case 'usw-fill-new-style': {
-            if ('/api/oauth/style/new' !== location.pathname || !data) {
+            if ('/api/oauth/style/new' !== location.pathname) {
                 return;
             }
             fillInformationOnForm('name', data['name']);
@@ -46,7 +37,7 @@ const onMessage = (ev: MessageEvent<any>) => {
                 fillInformationOnForm('license', metaData['license']);
                 fillInformationOnForm('homepage', metaData['homepage']);
             }
-            handleSourceCode(data['sourceCode'], data['name']);
+            handleSourceCode(data['sourceCode']);
         }
     }
 };
