@@ -1,7 +1,7 @@
 import {checkRedirect} from './page/account';
 import {saveRedirect} from './page/login';
 import {changeEntriesBehavior} from './page/modlog';
-import {initalizeColorScheme as initalizeColorScheme} from './color-scheme';
+import {initalizeOrUpdateColorScheme as initalizeOrUpdateColorScheme} from './color-scheme';
 import {broadcastReady} from './third-party';
 import {saveUserSettingsButton, setValues} from './user-settings';
 import {doDomOperation} from './utils/dom';
@@ -13,8 +13,7 @@ import {page404} from './page/404';
 // Once settings update we should reinstalize any functionallity.
 // That relies on this settings.
 const onSettingsUpdate = () => {
-    const settings = getSettings();
-    initalizeColorScheme(settings.colorScheme);
+    initalizeOrUpdateColorScheme(getSettings().colorScheme);
 };
 
 const whenDOMReady = () => {
@@ -31,7 +30,7 @@ doDomOperation(whenDOMReady);
 // Initalize functions that requires settings and don't depend on the DOM.
 // Note that we don't save getSettings() result, as this initalize is a 1 time thing
 // And having it sit in the memory is kinda useless.
-initalizeColorScheme(getSettings().colorScheme);
+initalizeOrUpdateColorScheme(getSettings().colorScheme);
 
 const styleViewRegex = /\/style\/\d+\/(?!promote)\S*/;
 function pageSpecificFunctions(settings: UserSettings) {

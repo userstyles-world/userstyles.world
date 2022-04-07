@@ -2,6 +2,7 @@ const readyStateListeners = new Set<() => void>();
 
 export const isDOMReady = () => 'complete' === document.readyState || 'interactive' === document.readyState;
 export const addDOMReadyListener = (listener: () => void) => readyStateListeners.add(listener);
+export const doDomOperation = (callback: () => void) => isDOMReady() ? callback() : addDOMReadyListener(callback);
 
 if (!isDOMReady()) {
     const onReadyStateChange = () => {
@@ -13,11 +14,3 @@ if (!isDOMReady()) {
     };
     document.addEventListener('readystatechange', onReadyStateChange, {passive: true});
 }
-
-export const doDomOperation = (callback: () => void) => {
-    if (isDOMReady()) {
-        callback();
-    } else {
-        addDOMReadyListener(callback);
-    }
-};

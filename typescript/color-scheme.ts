@@ -1,4 +1,3 @@
-import {isMatchMediaChangeEventListenerSupported} from './utils/platform';
 import type {UserSettings} from './utils/storage';
 
 const setColorSchemeAttribute = (value: string) => {
@@ -15,36 +14,22 @@ const setColorSchemeMeta = (value: string) => {
 // doesn't have this media query it will matches to false and
 // set the site to a dark color-scheme.
 const lightScheme = matchMedia('(prefers-color-scheme: light)');
-const handleColorScheme = () => {
-    if (lightScheme.matches) {
-        setColorSchemeAttribute('light');
-    } else {
-        setColorSchemeAttribute('dark');
-    }
-};
+const handleColorScheme = () => setColorSchemeAttribute(lightScheme.matches ? 'light' : 'dark');
 
-export function initalizeColorScheme(colorScheme: UserSettings['colorScheme']) {
+export function initalizeOrUpdateColorScheme(colorScheme: UserSettings['colorScheme']) {
     switch (colorScheme) {
         case 'follow-system': {
             handleColorScheme();
             setColorSchemeMeta('dark light');
             // As it follows the system we should listen for any changes.
-            if (isMatchMediaChangeEventListenerSupported) {
-                lightScheme.addEventListener('change', handleColorScheme);
-            } else {
-                lightScheme.addListener(handleColorScheme);
-            }
+            lightScheme.addEventListener('change', handleColorScheme);
             break;
         }
         default:
             setColorSchemeAttribute(colorScheme);
             setColorSchemeMeta(colorScheme);
             // Make sure to remove the event listener.
-            if (isMatchMediaChangeEventListenerSupported) {
-                lightScheme.removeEventListener('change', handleColorScheme);
-            } else {
-                lightScheme.removeListener(handleColorScheme);
-            }
+            lightScheme.removeEventListener('change', handleColorScheme);
             break;
     }
 }
