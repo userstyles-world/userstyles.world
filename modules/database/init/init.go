@@ -18,7 +18,7 @@ import (
 
 var tables = []struct {
 	name  string
-	model interface{}
+	model any
 }{
 	{"users", &models.User{}},
 	{"styles", &models.Style{}},

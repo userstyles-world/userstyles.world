@@ -51,7 +51,7 @@ func TestExtractingID(t *testing.T) {
 	cases := []struct {
 		desc     string
 		a        string
-		expected interface{}
+		expected any
 	}{
 		{"TestCorrectURL", StyleURL + "123.user.css", "123"},
 		{"TestMaybeCorrectURL", StyleURL + "-123.user.css", "-123"},

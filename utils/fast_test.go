@@ -66,7 +66,7 @@ func TestJSON(t *testing.T) {
 
 	cases := []struct {
 		desc     string
-		a        interface{}
+		a        any
 		expected []byte
 	}{
 		{"SimpleTest", testStruct{

@@ -36,7 +36,7 @@ func TestDecryptionToken(t *testing.T) {
 	if token == "" {
 		t.Error("Token is empty")
 	}
-	decrypted, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	decrypted, err := jwt.Parse(token, func(token *jwt.Token) (any, error) {
 		return []byte("secret"), nil
 	})
 	if err != nil {
@@ -66,7 +66,7 @@ func TestExpiredToken(t *testing.T) {
 	if token == "" {
 		t.Error("Token is empty")
 	}
-	_, err = jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	_, err = jwt.Parse(token, func(token *jwt.Token) (any, error) {
 		return []byte("secret"), nil
 	})
 	if err == nil {
@@ -87,7 +87,7 @@ func TestInvalidSignature(t *testing.T) {
 	if token == "" {
 		t.Error("Token is empty")
 	}
-	_, err = jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	_, err = jwt.Parse(token, func(token *jwt.Token) (any, error) {
 		return []byte("secret2"), nil
 	})
 	if err == nil {
@@ -107,7 +107,7 @@ func TestInvalidSignature2(t *testing.T) {
 	if token == "" {
 		t.Error("Token is empty")
 	}
-	_, err = jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	_, err = jwt.Parse(token, func(token *jwt.Token) (any, error) {
 		return nil, errors.New("Some error")
 	})
 	if err == nil {

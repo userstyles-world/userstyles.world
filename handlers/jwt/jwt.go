@@ -11,7 +11,7 @@ import (
 	"userstyles.world/utils"
 )
 
-var NormalJWTSigning = func(t *lib.Token) (interface{}, error) {
+var NormalJWTSigning = func(t *lib.Token) (any, error) {
 	if t.Method.Alg() != SigningMethod {
 		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}

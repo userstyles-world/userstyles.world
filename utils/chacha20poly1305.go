@@ -191,14 +191,14 @@ func openText(encryptedMsg string, aead cipher.AEAD, nonceScrambling *config.Scr
 	return aead.Open(nil, nonce, ciphertext, nil)
 }
 
-func VerifyJwtKeyFunction(t *jwt.Token) (interface{}, error) {
+func VerifyJwtKeyFunction(t *jwt.Token) (any, error) {
 	if t.Method.Alg() != signingMethod {
 		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}
 	return VerifySigningKey, nil
 }
 
-func OAuthPJwtKeyFunction(t *jwt.Token) (interface{}, error) {
+func OAuthPJwtKeyFunction(t *jwt.Token) (any, error) {
 	if t.Method.Alg() != signingMethod {
 		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}

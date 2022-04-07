@@ -63,19 +63,19 @@ type ProviderFunctions interface {
 	oauthMakeURL() string
 
 	// Let's the implementation append to the redirect URL.
-	appendToRedirect(data interface{}) string
+	appendToRedirect(data any) string
 
 	// See if the current implementation allows state.
 	enableState() bool
 
 	// Get the providers specic URL to get the auth token.
-	getAuthTokenURL(data interface{}) string
+	getAuthTokenURL(data any) string
 
 	// Check if the provider needs to set a POST body for the request.
 	isAuthTokenPost() bool
 
 	// And if the provider needs to set such body, we get it via the special function.
-	getAuthTokenPostBody(data interface{}) authURLPostBody
+	getAuthTokenPostBody(data any) authURLPostBody
 
 	// Let the provider's implementation do some work before sending the request.
 	beforeRequest(body authURLPostBody, req *http.Request) error

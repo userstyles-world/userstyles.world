@@ -55,7 +55,7 @@ func getSourceCode(style models.Style) string {
 
 func Batch(batch models.Style) {
 	// Select which fields to update.
-	fields := make(map[string]interface{})
+	fields := make(map[string]any)
 	fields["id"] = batch.ID
 
 	// Don't update database record if nothing changed.

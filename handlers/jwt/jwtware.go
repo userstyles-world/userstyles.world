@@ -14,7 +14,7 @@ var (
 	SigningMethod = "HS512"
 )
 
-func New(local string, keyFunction func(t *jwt.Token) (interface{}, error)) fiber.Handler {
+func New(local string, keyFunction func(t *jwt.Token) (any, error)) fiber.Handler {
 	extractors := []func(c *fiber.Ctx) (string, bool){
 		jwtFromCookie(fiber.HeaderAuthorization),
 		jwtFromHeader(fiber.HeaderAuthorization),

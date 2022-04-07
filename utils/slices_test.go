@@ -21,13 +21,13 @@ func TestFilter(t *testing.T) {
 
 	tests := []struct {
 		input     []int
-		predicate func(interface{}) bool
+		predicate func(any) bool
 		expected  []int
 	}{
-		{[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, func(i interface{}) bool {
+		{[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, func(i any) bool {
 			return i.(int)%2 == 0
 		}, []int{2, 4, 6, 8, 10}},
-		{[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, func(i interface{}) bool {
+		{[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, func(i any) bool {
 			return i.(int)%2 != 0
 		}, []int{1, 3, 5, 7, 9}},
 	}

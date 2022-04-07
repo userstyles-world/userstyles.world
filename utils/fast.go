@@ -34,6 +34,6 @@ func decodeBase64(s string) ([]byte, error) {
 	return dbuf[:n], err
 }
 
-func JSONEncoder(value interface{}) ([]byte, error) {
+func JSONEncoder(value any) ([]byte, error) {
 	return oj.Marshal(value, jsonEncoderOptions)
 }

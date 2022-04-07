@@ -65,7 +65,7 @@ func EditPost(c *fiber.Ctx) error {
 	}
 
 	// Prepare initial data.
-	m := map[string]interface{}{
+	m := map[string]any{
 		"id":      id,
 		"name":    strings.TrimSpace(c.FormValue("name")),
 		"preview": strings.TrimSpace(c.FormValue("previewURL")),

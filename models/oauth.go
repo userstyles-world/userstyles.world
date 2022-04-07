@@ -46,7 +46,7 @@ func (s StringList) Value() (driver.Value, error) {
 	return fmt.Sprintf(`["%s"]`, strings.Join(s, `","`)), nil
 }
 
-func (s *StringList) Scan(src interface{}) (err error) {
+func (s *StringList) Scan(src any) (err error) {
 	var scopes []string
 	switch src := src.(type) {
 	case string:

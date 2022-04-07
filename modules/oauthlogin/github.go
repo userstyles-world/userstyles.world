@@ -27,7 +27,7 @@ func (github) enableState() bool {
 	return true
 }
 
-func (github) appendToRedirect(state interface{}) string {
+func (github) appendToRedirect(state any) string {
 	// Trying to follow our stateless design we encrypt the
 	// Nonsense state so we later can re-use by decrypting it.
 	// And than have the actual value. Also we use this to specify
@@ -35,7 +35,7 @@ func (github) appendToRedirect(state interface{}) string {
 	return utils.EncryptText(state.(string), utils.AEADOAuth, config.ScrambleConfig) + "/"
 }
 
-func (github) getAuthTokenURL(state interface{}) string {
+func (github) getAuthTokenURL(state any) string {
 	authURL := "https://github.com/login/oauth/access_token"
 	authURL += "?client_id=" + config.GitHubClientID
 	authURL += "&client_secret=" + config.GitHubClientSecret
@@ -49,7 +49,7 @@ func (github) isAuthTokenPost() bool {
 	return false
 }
 
-func (github) getAuthTokenPostBody(interface{}) authURLPostBody {
+func (github) getAuthTokenPostBody(any) authURLPostBody {
 	return authURLPostBody{}
 }
 

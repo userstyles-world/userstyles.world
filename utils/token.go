@@ -16,7 +16,7 @@ func NewJWTToken() *JWTTokenBuilder {
 	return &JWTTokenBuilder{jwt.New(jwt.SigningMethodHS512)}
 }
 
-func (jt *JWTTokenBuilder) SetClaim(name string, value interface{}) *JWTTokenBuilder {
+func (jt *JWTTokenBuilder) SetClaim(name string, value any) *JWTTokenBuilder {
 	jt.Claims.(jwt.MapClaims)[name] = value
 	return jt
 }

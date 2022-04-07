@@ -20,7 +20,7 @@ import (
 
 var ext = md.CommonExtensions | md.AutoHeadingIDs
 
-var appConfig = map[string]interface{}{
+var appConfig = map[string]any{
 	"copyright":       time.Now().Year(),
 	"appName":         config.AppName,
 	"appCodeName":     config.AppCodeName,
@@ -164,7 +164,7 @@ func New(views fs.FS, overideDir ...string) *html.Engine {
 }`
 	})
 
-	engine.AddFunc("canonical", func(url interface{}) template.HTML {
+	engine.AddFunc("canonical", func(url any) template.HTML {
 		if url == nil {
 			return template.HTML(config.BaseURL)
 		}

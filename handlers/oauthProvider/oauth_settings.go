@@ -102,7 +102,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		RedirectURI: strings.TrimSuffix(c.FormValue("redirect_uri"), "/"),
-		Scopes: utils.Filter([]string{"style", "user"}, func(name interface{}) bool {
+		Scopes: utils.Filter([]string{"style", "user"}, func(name any) bool {
 			return c.FormValue(name.(string)) == "on"
 		}).([]string),
 		UserID: u.ID,

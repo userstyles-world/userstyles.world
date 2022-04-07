@@ -13,7 +13,7 @@ import (
 	"userstyles.world/utils"
 )
 
-var ParseAPIJWT = jwtware.New("apiUser", func(t *jwt.Token) (interface{}, error) {
+var ParseAPIJWT = jwtware.New("apiUser", func(t *jwt.Token) (any, error) {
 	if t.Method.Alg() != jwtware.SigningMethod {
 		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}

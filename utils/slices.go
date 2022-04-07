@@ -23,7 +23,7 @@ func ContainsString(arr []string, entry string) bool {
 }
 
 // Filter an slice while "preserving" the type with the reflect package.
-func Filter(arr interface{}, cond func(interface{}) bool) interface{} {
+func Filter(arr any, cond func(any) bool) any {
 	contentType := reflect.TypeOf(arr)
 	contentValue := reflect.ValueOf(arr)
 

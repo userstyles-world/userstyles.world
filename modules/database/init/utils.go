@@ -20,10 +20,10 @@ func logLevel() logger.LogLevel {
 	}
 }
 
-func migrate(t ...interface{}) error {
+func migrate(t ...any) error {
 	return database.Conn.AutoMigrate(t...)
 }
 
-func drop(t ...interface{}) error {
+func drop(t ...any) error {
 	return database.Conn.Migrator().DropTable(t...)
 }

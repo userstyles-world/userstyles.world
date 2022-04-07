@@ -52,7 +52,7 @@ func EditAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	record := map[string]interface{}{"id": user.ID}
+	record := map[string]any{"id": user.ID}
 
 	form := c.Params("form")
 	switch form {

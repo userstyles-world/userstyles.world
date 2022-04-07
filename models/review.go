@@ -16,7 +16,7 @@ type Review struct {
 	StyleID int
 }
 
-func (Review) FindAllForStyle(id interface{}) (q []Review, err error) {
+func (Review) FindAllForStyle(id any) (q []Review, err error) {
 	err = db().
 		// Preload(clause.Associations).
 		Preload("User").
@@ -36,11 +36,11 @@ func (r Review) CreateForStyle() error {
 	return db().Create(&r).Error
 }
 
-func (r *Review) FindLastForStyle(styleID, userID interface{}) error {
+func (r *Review) FindLastForStyle(styleID, userID any) error {
 	return db().Last(&r, "style_id = ? and user_id = ?", styleID, userID).Error
 }
 
-func (r *Review) FindLastFromUser(styleID, userID interface{}) error {
+func (r *Review) FindLastFromUser(styleID, userID any) error {
 	return db().
 		Preload("User").
 		Model(modelReview).

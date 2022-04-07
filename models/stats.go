@@ -97,7 +97,7 @@ func (s *Stats) UpsertInstall(id, ip string) error {
 		Model(modelStats).
 		Clauses(clause.OnConflict{
 			Columns: []clause.Column{{Name: "hash"}},
-			DoUpdates: clause.Assignments(map[string]interface{}{
+			DoUpdates: clause.Assignments(map[string]any{
 				"updated_at": t,
 				"install":    t,
 			}),
@@ -118,7 +118,7 @@ func (s *Stats) UpsertView(id, ip string) error {
 		Model(modelStats).
 		Clauses(clause.OnConflict{
 			Columns: []clause.Column{{Name: "hash"}},
-			DoUpdates: clause.Assignments(map[string]interface{}{
+			DoUpdates: clause.Assignments(map[string]any{
 				"updated_at": t,
 				"view":       t,
 			}),
@@ -127,7 +127,7 @@ func (s *Stats) UpsertView(id, ip string) error {
 }
 
 // Delete will remove stats for a given style ID.
-func (*Stats) Delete(id interface{}) error {
+func (*Stats) Delete(id any) error {
 	return db().Delete(&modelStats, "style_id = ?", id).Error
 }
 

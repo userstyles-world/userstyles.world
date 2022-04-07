@@ -28,7 +28,7 @@ func Initialize() {
 	Store.Set("index", b, 0)
 }
 
-func SaveToDisk(f string, data interface{}) error {
+func SaveToDisk(f string, data any) error {
 	b, err := json.Marshal(data)
 	if err != nil {
 		log.Warn.Println("Failed to marshal JSON:", err)
