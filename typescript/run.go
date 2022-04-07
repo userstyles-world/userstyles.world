@@ -70,13 +70,12 @@ func main() {
 
 	// When we are watching we shouldn't exit program.
 	// So a quick and dirty hack to let an never end loop run.
-	// From Go 1.15 this section will be optimized away into (amd64).
+	// From Go 1.18 this section will be optimized away into (amd64).
 	// any_label:
-	// XCHGL   AX, AX
-	// JMP     any_label
-	// Whereby XCHGL acts as a "write block".
+	//    PCDATA  $1, $0
+	//    CALL    runtime.block(SB)
+	//    XCHGL   AX, AX
 	if shouldWatch {
-		for {
-		}
+		select {}
 	}
 }
