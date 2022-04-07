@@ -25,8 +25,3 @@ export const doDomOperation = (callback: () => void) => {
         addDOMReadyListener(callback);
     }
 };
-
-export const doDomOperationProxy = (callback: () => void) => {
-    return () => doDomOperation(callback);
-};
-

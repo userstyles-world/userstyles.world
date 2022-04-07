@@ -1,6 +1,6 @@
-import {doDomOperationProxy} from 'utils/dom';
+import {doDomOperation} from 'utils/dom';
 
-export const initViewStyle = doDomOperationProxy(() => {
+export const initViewStyle = () => doDomOperation(() => {
     shareButton();
     checkIfStyleInstalled();
 });
