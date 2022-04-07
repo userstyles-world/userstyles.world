@@ -6,13 +6,13 @@ export const initViewStyle = () => doDomOperation(() => {
 });
 
 function shareButton() {
-    const parentElement = document.getElementById('share') as HTMLSpanElement;
+    const urlValue = document.getElementById('share').textContent;
     const shareButton = document.getElementById('btn-share') as HTMLButtonElement;
     if (!shareButton) {
         return;
     }
     shareButton.addEventListener('click', () => {
-        navigator.clipboard.writeText(parentElement.textContent).then(() => {
+        navigator.clipboard.writeText(urlValue).then(() => {
             shareButton.classList.add('copied');
         }, () => {
             shareButton.classList.add('copied-failed');
@@ -22,10 +22,10 @@ function shareButton() {
 
 function checkIfStyleInstalled() {
     const onMessage = (ev: MessageEvent<any>) => {
-        if (!ev.data || !ev.data.type) {
+        const {type, data} = ev.data;
+        if (!data || !type) {
             return;
         }
-        const {type, data} = ev.data;
         if ('usw-style-info-response' === type && 'installed' === data.requestType) {
             window.removeEventListener('message', onMessage);
             if (data.installed) {

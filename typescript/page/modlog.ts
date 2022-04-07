@@ -3,26 +3,25 @@ import type {UserSettings} from 'utils/storage';
 
 export function changeEntriesBehavior(behavior: UserSettings['entriesBehavior']) {
     doDomOperation(() => {
+        const explaination = document.querySelector('#explaination');
+        const spoilers = document.querySelectorAll('.spoiler');
         if ('click' === behavior) {
-            document.querySelector('#explaination').textContent = 'You can click on censored entries to see them.';
+            explaination.textContent = 'You can click on censored entries to see them.';
 
-            const onClick = (e: MouseEvent) => {
-                const entry = e.target as HTMLElement;
-                entry.classList.remove('spoiler');
-                entry.style.cursor = '';
-            };
+            spoilers.forEach((spoiler: HTMLElement) => {
+                spoiler.classList.add('spoiler-click');
+                spoiler.style.cursor = 'pointer';
 
-            document.querySelectorAll('.spoiler').forEach((entry: HTMLElement) => {
-                entry.classList.add('spoiler-click');
-                entry.addEventListener('click', onClick);
-                entry.style.cursor = 'pointer';
+                spoiler.addEventListener('click', (e: MouseEvent) => {
+                    const entry = e.target as HTMLElement;
+                    entry.classList.remove('spoiler');
+                    entry.style.cursor = '';
+                });
             });
         }
         if ('no-hide' === behavior) {
-            document.querySelector('#explaination').remove();
-            document.querySelectorAll('.spoiler').forEach((entry: HTMLElement) => {
-                entry.classList.remove('spoiler');
-            });
+            explaination.remove();
+            spoilers.forEach((spoiler) => spoiler.classList.remove('spoiler'));
         }
     });
 }

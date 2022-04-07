@@ -12,9 +12,7 @@ import {page404} from './page/404';
 
 // Once settings update we should reinstalize any functionallity.
 // That relies on this settings.
-const onSettingsUpdate = () => {
-    initalizeOrUpdateColorScheme(getSettings().colorScheme);
-};
+const onSettingsUpdate = () => initalizeOrUpdateColorScheme(getSettings().colorScheme);
 
 const whenDOMReady = () => {
     broadcastReady();
