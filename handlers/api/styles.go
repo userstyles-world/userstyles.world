@@ -1,7 +1,7 @@
 package api
 
 import (
-	"fmt"
+	"mime/multipart"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,6 +10,7 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
@@ -134,33 +135,14 @@ func StylePost(c *fiber.Ctx) error {
 		cache.LRU.Remove(sStyleID)
 	}
 
-	go func(style *models.Style, styleID, preview string) {
-		style.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
-
-		var err error
-		err = images.GenerateImagesForStyle(styleID, preview, false)
-		if err != nil {
-			style.Preview = ""
-			log.Warn.Println("Failed to generate images:", err.Error())
-			return
+	go func(style *models.Style) {
+		if err = search.IndexStyle(style.ID); err != nil {
+			log.Warn.Printf("Failed to re-index style %d: %s\n", style.ID, err)
 		}
-
-		err = database.Conn.
-			Model(new(models.Style)).
-			Where("id", styleID).
-			Updates(style).
-			Error
-		if err != nil {
-			log.Warn.Println("Failed to update style:", err.Error())
-		}
-	}(&postStyle, sStyleID, postStyle.Preview)
-
-	if err = search.IndexStyle(postStyle.ID); err != nil {
-		log.Warn.Printf("Failed to re-index style %d: %s", postStyle.ID, err.Error())
-	}
+	}(&postStyle)
 
 	return c.JSON(fiber.Map{
-		"data": "Successful edited style!",
+		"data": "Successfully edited style.",
 	})
 }
 
@@ -291,34 +273,42 @@ func NewStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	styleID := strconv.FormatUint(uint64(newStyle.ID), 10)
-
-	go func(style *models.Style, styleID, preview string) {
-		style.Preview = "https://userstyles.world/api/style/preview/" + styleID + ".jpeg"
-
-		var err error
-		err = images.GenerateImagesForStyle(styleID, preview, false)
+	// Check uploaded image.
+	var image multipart.File
+	if ff, _ := c.FormFile("preview"); ff != nil {
+		image, err = ff.Open()
 		if err != nil {
-			style.Preview = ""
-			log.Warn.Println("Failed to generate images:", err.Error())
-			return
+			log.Warn.Printf("Failed to process uploaded image for %d: %s\n", newStyle.ID, err)
+			return c.Render("err", fiber.Map{
+				"Title": "Failed to process uploaded image",
+				"User":  u,
+			})
 		}
-
-		err = database.Conn.
-			Model(new(models.Style)).
-			Where("id", styleID).
-			Updates(style).
-			Error
-		if err != nil {
-			log.Warn.Println("Failed to update style:", err.Error())
-		}
-	}(newStyle, styleID, newStyle.Preview)
-
-	if err = search.IndexStyle(postStyle.ID); err != nil {
-		log.Warn.Printf("Failed to re-index style %d: %s", postStyle.ID, err.Error())
 	}
 
+	// Check linked image.
+	styleID := strconv.FormatUint(uint64(newStyle.ID), 10)
+	if image != nil || newStyle.Preview != "" {
+		err = images.Generate(image, styleID, newStyle.Preview)
+		if err != nil {
+			log.Warn.Printf("Failed to generate images for %d: %s\n", newStyle.ID, err)
+			newStyle.Preview = ""
+		} else {
+			newStyle.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+		}
+	}
+
+	if err = newStyle.UpdateColumn("preview", newStyle.Preview); err != nil {
+		log.Warn.Printf("Failed to update preview for style %s: %s\n", styleID, err)
+	}
+
+	go func(style *models.Style) {
+		if err = search.IndexStyle(style.ID); err != nil {
+			log.Warn.Printf("Failed to re-index style %d: %s", style.ID, err)
+		}
+	}(newStyle)
+
 	return c.JSON(fiber.Map{
-		"data": "Successful added the style! With ID: " + fmt.Sprintf("%d", newStyle.ID),
+		"data": "Successfully added the style. ID: " + styleID,
 	})
 }
