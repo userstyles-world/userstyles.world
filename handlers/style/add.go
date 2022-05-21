@@ -47,7 +47,7 @@ func CreatePost(c *fiber.Ctx) error {
 		Description: c.FormValue("description"),
 		Notes:       c.FormValue("notes"),
 		Homepage:    c.FormValue("homepage"),
-		Preview:     c.FormValue("previewUrl"),
+		Preview:     c.FormValue("previewURL"),
 		Code:        c.FormValue("code"),
 		License:     strings.TrimSpace(c.FormValue("license", "No License")),
 		Category:    strings.TrimSpace(c.FormValue("category", "unset")),
