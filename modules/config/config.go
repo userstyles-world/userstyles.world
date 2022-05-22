@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"path"
 	"time"
 )
 
@@ -50,6 +51,12 @@ var (
 		StepSize:       getEnvInt("NONCE_SCRAMBLE_STEP", 2),
 		BytesPerInsert: getEnvInt("NONCE_SCRAMBLE_BYTES_PER_INSERT", 3),
 	}
+
+	DataDir   = path.Join(getEnv("DATA_DIR", "data"))
+	CacheDir  = path.Join(DataDir, "cache")
+	ImageDir  = path.Join(DataDir, "images")
+	ProxyDir  = path.Join(DataDir, "proxy")
+	PublicDir = path.Join(DataDir, "public")
 
 	AppName         = "UserStyles.world"
 	AppCodeName     = "Fennec Fox"

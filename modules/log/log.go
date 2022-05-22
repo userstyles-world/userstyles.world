@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 
 	"userstyles.world/modules/config"
 )
@@ -22,7 +23,8 @@ func setOutput(f *os.File) io.Writer {
 }
 
 func Initialize() {
-	f, err := os.OpenFile("./data/server.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o666)
+	f, err := os.OpenFile(path.Join(config.DataDir, "server.log"),
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o666)
 	if err != nil {
 		log.Fatalf("Failed to open log file, err: %v\n", err)
 	}

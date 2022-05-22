@@ -2,39 +2,15 @@ package images
 
 import (
 	"io"
-	"io/fs"
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path"
 	"regexp"
 
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
-
-var (
-	CacheFolder = "./data/images/"
-	ProxyFolder = "./data/proxy/"
-)
-
-func Initialize() {
-	dirs := [...]string{CacheFolder, ProxyFolder}
-
-	for _, dir := range dirs {
-		if fileInfo := fileExist(dir); fileInfo == nil {
-			if err := os.Mkdir(dir, 0o755); err != nil {
-				log.Warn.Fatalln(err)
-			}
-		}
-	}
-}
-
-func fileExist(path string) fs.FileInfo {
-	stat, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		return nil
-	}
-	return stat
-}
 
 func fixRawURL(url string) string {
 	re := regexp.MustCompile(`(?mi)^(http.*)/(raw|src|blob)/(.*.(png|jpe?g|avif|webp))(\?.*)*$`)
@@ -42,7 +18,7 @@ func fixRawURL(url string) string {
 }
 
 func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
-	template := CacheFolder + id
+	template := path.Join(config.ImageDir, id)
 	original := template + ".original"
 	jpeg := template + ".jpeg"
 	webp := template + ".webp"
@@ -84,7 +60,7 @@ func GenerateImagesForStyle(id, preview string, isOriginalLocal bool) error {
 func Generate(img multipart.File, id, preview string) error {
 	if img != nil {
 		data, _ := io.ReadAll(img)
-		original := CacheFolder + id + ".original"
+		original := path.Join(config.ImageDir, id+".original")
 		if err := os.WriteFile(original, data, 0o600); err != nil {
 			return err
 		}

@@ -20,7 +20,6 @@ import (
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
 	database "userstyles.world/modules/database/init"
-	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/templates"
 	"userstyles.world/modules/util/httputil"
@@ -45,7 +44,7 @@ func main() {
 	database.Initialize()
 	cron.Initialize()
 	search.Initialize()
-	images.Initialize()
+
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(views, "views"),
 		ViewsLayout: "layouts/main",

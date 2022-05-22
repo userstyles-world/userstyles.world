@@ -2,12 +2,12 @@ package api
 
 import (
 	"os"
+	"path"
 	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-
-	"userstyles.world/modules/images"
+	"userstyles.world/modules/config"
 )
 
 func getFileExtension(path string) string {
@@ -43,9 +43,9 @@ func GetPreviewScreenshot(c *fiber.Ctx) error {
 	// Only allow jpeg and webp as formats.
 	switch format[1:] {
 	case "jpeg":
-		fileName = images.CacheFolder + styleID + ".jpeg"
+		fileName = path.Join(config.ImageDir, styleID+".jpeg")
 	case "webp":
-		fileName = images.CacheFolder + styleID + ".webp"
+		fileName = path.Join(config.ImageDir, styleID+".webp")
 	default:
 		return notFound(c)
 	}

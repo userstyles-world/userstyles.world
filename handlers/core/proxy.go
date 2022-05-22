@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"net/url"
 	"os"
 	"path"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -23,8 +23,8 @@ func Proxy(c *fiber.Ctx) error {
 	}
 
 	// Set resource location and name.
-	dir := "./data/proxy" + path.Clean(fmt.Sprintf("/%s/%s", t, id))
-	name := dir + "/" + url.PathEscape(link)
+	dir := path.Join(config.ProxyDir, path.Clean(t), path.Clean(id))
+	name := path.Join(dir, url.PathEscape(link))
 
 	// Check if image exists.
 	if _, err := os.Stat(name); os.IsNotExist(err) {

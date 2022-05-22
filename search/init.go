@@ -3,6 +3,7 @@ package search
 import (
 	"errors"
 	"os"
+	"path"
 	"strconv"
 	"time"
 
@@ -10,15 +11,15 @@ import (
 	"github.com/blevesearch/bleve/v2/index/upsidedown"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
 
 var (
 	StyleIndex bleve.Index
 	batchSize  = 500
+	indexFile  = path.Join(config.DataDir, "styles.bleve")
 )
-
-const indexFile = "data/styles.bleve"
 
 func openBleveIndexFile(path string) (bleve.Index, error) {
 	_, err := os.Stat(path)
