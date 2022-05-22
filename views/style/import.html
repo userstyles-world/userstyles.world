@@ -13,14 +13,21 @@
             required pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
             placeholder="Path to external userstyle's install URL">
 
-        <label for="preview">Preview image URL</label>
+        <label for="previewURL">Preview image URL</label>
         <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-        <i class="fg:3" id="preview-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
+        <i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
         <input
-            type="url" name="preview" id="preview"
-            aria-describedby="preview-hint"
+            type="url" name="previewURL" id="preview"
+            aria-describedby="previewURL-hint"
             pattern="{{ config "allowedImagesRe" }}"
             placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
+
+        <label for="preview">Upload preview image</label>
+        <i class="fg:3" id="preview-hint">Only jpg, jpeg, png, avif, and webp formats are allowed.</i>
+        <input type="file"
+            name="preview" id="preview"
+            aria-describedby="preview-hint"
+            accept="image/jpeg,image/png,image/webp,image/avif">
 
         <label for="category">Category</label>
         <i class="fg:3">Skip this step if importing from USo-archive.</i><br>

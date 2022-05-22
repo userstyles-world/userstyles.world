@@ -75,7 +75,7 @@ func ImportPost(c *fiber.Ctx) error {
 		s.License = uc.License
 		s.Description = uc.Description
 		s.Homepage = uc.HomepageURL
-		s.Preview = c.FormValue("preview")
+		s.Preview = c.FormValue("previewURL")
 		s.Category = strings.TrimSpace(c.FormValue("category", "unset"))
 		s.Original = r
 	}
@@ -102,10 +102,21 @@ func ImportPost(c *fiber.Ctx) error {
 		})
 	}
 
+	var image multipart.File
+	if ff, _ := c.FormFile("preview"); ff != nil {
+		image, err = ff.Open()
+		if err != nil {
+			log.Warn.Println("Failed to open image:", err.Error())
+			return c.Render("err", fiber.Map{
+				"Title": "Internal server error.",
+				"User":  u,
+			})
+		}
+	}
+
 	// Check preview image.
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
-	if s.Preview != "" {
-		var image multipart.File // dummy
+	if image != nil || s.Preview != "" {
 		err = images.Generate(image, styleID, s.Preview)
 		if err != nil {
 			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
