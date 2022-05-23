@@ -2,7 +2,6 @@ package style
 
 import (
 	"fmt"
-	"mime/multipart"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -80,28 +79,13 @@ func EditPost(c *fiber.Ctx) error {
 		})
 	}
 
-	// Check for new image.
-	var image multipart.File
-	if ff, _ := c.FormFile("preview"); ff != nil {
-		image, err = ff.Open()
-		if err != nil {
-			log.Warn.Println("Failed to open image:", err.Error())
-			return c.Render("err", fiber.Map{
-				"Title": "Internal server error.",
-				"User":  u,
-			})
-		}
-	}
-
 	// Check for new preview image.
-	if image != nil || s.Preview != m["preview"] {
-		err = images.Generate(image, id, m["preview"].(string))
-		if err != nil {
-			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
-			m["preview"] = ""
-		} else {
-			m["preview"] = fmt.Sprintf("%s/api/style/preview/%s.jpeg", config.BaseURL, id)
-		}
+	ff, _ := c.FormFile("preview")
+	if err := images.Generate(ff, id, s.Preview, m["preview"].(string)); err != nil {
+		log.Warn.Println("Error:", err)
+		m["preview"] = ""
+	} else {
+		m["preview"] = fmt.Sprintf("%s/api/style/preview/%s.jpeg", config.BaseURL, id)
 	}
 
 	// Add the rest of the data.

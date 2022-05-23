@@ -2,7 +2,6 @@ package style
 
 import (
 	"fmt"
-	"mime/multipart"
 	"strconv"
 	"strings"
 
@@ -102,34 +101,17 @@ func ImportPost(c *fiber.Ctx) error {
 		})
 	}
 
-	var image multipart.File
-	if ff, _ := c.FormFile("preview"); ff != nil {
-		image, err = ff.Open()
-		if err != nil {
-			log.Warn.Println("Failed to open image:", err.Error())
-			return c.Render("err", fiber.Map{
-				"Title": "Internal server error.",
-				"User":  u,
-			})
-		}
-	}
-
 	// Check preview image.
+	ff, _ := c.FormFile("preview")
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
-	if image != nil || s.Preview != "" {
-		err = images.Generate(image, styleID, s.Preview)
-		if err != nil {
-			log.Warn.Printf("Failed to generate images for %d: %s\n", s.ID, err.Error())
-			s.Preview = ""
-		} else {
-			s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+	if err := images.Gen(ff, styleID, "", s.Preview); err != nil {
+		log.Warn.Println(err)
+		s.Preview = ""
+	} else {
+		s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+		if err = s.UpdateColumn("preview", s.Preview); err != nil {
+			log.Warn.Printf("Failed to update preview for %s: %s\n", styleID, err)
 		}
-	}
-
-	// TODO: Remove during rewrite of images module. The name-schema shouldn't
-	// require a style id; hashing username+time.Now() should be sufficient. #77
-	if err = s.UpdateColumn("preview", s.Preview); err != nil {
-		log.Warn.Printf("Failed to update style %s: %s\n", styleID, err.Error())
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)

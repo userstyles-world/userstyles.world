@@ -1,7 +1,6 @@
 package api
 
 import (
-	"mime/multipart"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -273,33 +272,17 @@ func NewStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	// Check uploaded image.
-	var image multipart.File
-	if ff, _ := c.FormFile("preview"); ff != nil {
-		image, err = ff.Open()
-		if err != nil {
-			log.Warn.Printf("Failed to process uploaded image for %d: %s\n", newStyle.ID, err)
-			return c.Render("err", fiber.Map{
-				"Title": "Failed to process uploaded image",
-				"User":  u,
-			})
-		}
-	}
-
-	// Check linked image.
+	// Check preview image.
+	ff, _ := c.FormFile("preview")
 	styleID := strconv.FormatUint(uint64(newStyle.ID), 10)
-	if image != nil || newStyle.Preview != "" {
-		err = images.Generate(image, styleID, newStyle.Preview)
-		if err != nil {
-			log.Warn.Printf("Failed to generate images for %d: %s\n", newStyle.ID, err)
-			newStyle.Preview = ""
-		} else {
-			newStyle.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+	if err := images.Generate(ff, styleID, "", newStyle.Preview); err != nil {
+		log.Warn.Println("Error:", err)
+		newStyle.Preview = ""
+	} else {
+		newStyle.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+		if err = newStyle.UpdateColumn("preview", newStyle.Preview); err != nil {
+			log.Warn.Printf("Failed to update preview for style %s: %s\n", styleID, err)
 		}
-	}
-
-	if err = newStyle.UpdateColumn("preview", newStyle.Preview); err != nil {
-		log.Warn.Printf("Failed to update preview for style %s: %s\n", styleID, err)
 	}
 
 	go func(style *models.Style) {
