@@ -20,6 +20,7 @@ import (
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
 	database "userstyles.world/modules/database/init"
+	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/templates"
 	"userstyles.world/modules/util/httputil"
@@ -39,6 +40,7 @@ var (
 func main() {
 	log.Initialize()
 	cache.Initialize()
+	images.CheckVips()
 	utils.InitalizeCrypto()
 	utils.InitializeValidator()
 	database.Initialize()

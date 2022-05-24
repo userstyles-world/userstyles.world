@@ -14,36 +14,15 @@ const (
 	ImageTypeJPEG
 )
 
-type VipsStatus int
-
-const (
-	notKnown VipsStatus = iota
-	notInstalled
-	installed
-)
-
-var vipsStatus = notKnown
-
-func isVipsInstalled() VipsStatus {
-	if vipsStatus != notKnown {
-		return vipsStatus
+// CheckVips will look for Vips binary and exit if it's not found.
+func CheckVips() {
+	cmd := exec.Command("vips", "--version")
+	if err := cmd.Run(); err != nil {
+		log.Warn.Fatal(errors.ErrVipsNotFound)
 	}
-	vipsLocation := exec.Command("which", "vips")
-	if vipsLocation.Run() != nil {
-		vipsStatus = notInstalled
-	} else {
-		vipsStatus = installed
-	}
-
-	return vipsStatus
 }
 
 func decodeImage(original, newPath string, imageType ImageType) error {
-	// Ensure vips installed
-	if isVipsInstalled() == notInstalled {
-		return errors.ErrVipsNotFound
-	}
-
 	var vipsCommand *exec.Cmd
 
 	switch imageType {
