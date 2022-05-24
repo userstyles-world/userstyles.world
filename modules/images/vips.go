@@ -22,22 +22,20 @@ func CheckVips() {
 	}
 }
 
-func decodeImage(original, newPath string, imageType ImageType) error {
-	var vipsCommand *exec.Cmd
+func decodeImage(src, out string, imageType ImageType) error {
+	var cmd *exec.Cmd
 
 	switch imageType {
 	case ImageTypeWEBP:
-		vipsCommand = exec.Command("vips", "webpsave", "--strip",
-			"--reduction-effort", "4", "-n", "--Q", "80", original, newPath)
+		cmd = exec.Command("vips", "webpsave", "--strip", "--reduction-effort",
+			"4", "-n", "--Q", "80", src, out)
 	case ImageTypeJPEG:
-		vipsCommand = exec.Command("vips", "jpegsave", "--strip",
-			"--Q", "80", "--optimize-coding", "--optimize-scans",
-			"--trellis-quant", "--quant-table", "3", original, newPath)
+		cmd = exec.Command("vips", "jpegsave", "--strip", "--Q", "80",
+			"--optimize-coding", "--optimize-scans", "--trellis-quant",
+			"--quant-table", "3", src, out)
 	}
 
-	err := vipsCommand.Run()
-	if err != nil || vipsCommand.ProcessState.ExitCode() == 1 {
-		log.Warn.Printf("Failed to run vips: %v\n", err)
+	if err := cmd.Run(); err != nil {
 		return errors.ErrNoImageProcessing
 	}
 
