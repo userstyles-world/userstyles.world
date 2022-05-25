@@ -2,6 +2,7 @@ package style
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -81,11 +82,13 @@ func EditPost(c *fiber.Ctx) error {
 
 	// Check for new preview image.
 	ff, _ := c.FormFile("preview")
-	if err := images.Generate(ff, id, s.Preview, m["preview"].(string)); err != nil {
+	version := strconv.Itoa(s.PreviewVersion + 1)
+	if err := images.Generate(ff, id, version, s.Preview, m["preview"].(string)); err != nil {
 		log.Warn.Println("Error:", err)
 		m["preview"] = ""
 	} else {
-		m["preview"] = fmt.Sprintf("%s/api/style/preview/%s.jpeg", config.BaseURL, id)
+		m["preview"] = fmt.Sprintf("%s/preview/%s/%s.webp", config.BaseURL, id, version)
+		m["preview_version"] = version
 	}
 
 	// Add the rest of the data.

@@ -275,7 +275,7 @@ func NewStyle(c *fiber.Ctx) error {
 	// Check preview image.
 	ff, _ := c.FormFile("preview")
 	styleID := strconv.FormatUint(uint64(newStyle.ID), 10)
-	if err := images.Generate(ff, styleID, "", newStyle.Preview); err != nil {
+	if err := images.Generate(ff, styleID, "0", "", newStyle.Preview); err != nil {
 		log.Warn.Println("Error:", err)
 		newStyle.Preview = ""
 	} else {

@@ -30,6 +30,8 @@ type Style struct {
 	Featured    bool `gorm:"default:false"`
 	MirrorCode  bool `gorm:"default:false"`
 	MirrorMeta  bool `gorm:"default:false"`
+
+	PreviewVersion int `gorm:"default:0"`
 }
 
 type APIStyle struct {
@@ -53,6 +55,8 @@ type APIStyle struct {
 	MirrorCode  bool      `json:"-"`
 	MirrorMeta  bool      `json:"-"`
 	Archived    bool      `json:"-"`
+
+	PreviewVersion int `json:"-"`
 }
 
 type StyleCard struct {

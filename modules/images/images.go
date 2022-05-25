@@ -14,29 +14,29 @@ import (
 )
 
 // Generate will generate all needed images used for styles.
-func Generate(fh *multipart.FileHeader, id, old, new string) error {
+func Generate(fh *multipart.FileHeader, id, version, old, new string) error {
 	if fh != nil {
-		GenerateFromUpload(fh, id)
+		return GenerateFromUpload(fh, id, version)
 	} else if fh == nil && old != new {
-		return GenerateFromURL(id, new)
+		return GenerateFromURL(id, version, new)
 	}
 
 	return nil
 }
 
 // GenerateFromUpload will generate images from an uploaded file.
-func GenerateFromUpload(fh *multipart.FileHeader, id string) error {
+func GenerateFromUpload(fh *multipart.FileHeader, id, version string) error {
 	img, err := fh.Open()
 	if err != nil {
 		return err
 	}
 
 	data, _ := io.ReadAll(img)
-	return processImages(id, "file upload", data)
+	return processImages(id, version, "file upload", data)
 }
 
 // GenerateFromURL will generate images from an external URL.
-func GenerateFromURL(id, url string) error {
+func GenerateFromURL(id, version, url string) error {
 	url = fixRawURL(url)
 	req, err := http.Get(url)
 	if err != nil {
@@ -46,25 +46,30 @@ func GenerateFromURL(id, url string) error {
 	defer req.Body.Close()
 
 	data, _ := io.ReadAll(req.Body)
-	return processImages(id, url, data)
+	return processImages(id, version, url, data)
 }
 
-func processImages(id, from string, data []byte) error {
-	template := path.Join(config.ImageDir, id)
-	original := template + ".original"
-	jpeg := template + ".jpeg"
-	webp := template + ".webp"
-
+func processImages(id, version, from string, data []byte) error {
+	original := path.Join(config.ImageDir, id+".original")
 	if err := os.WriteFile(original, data, 0o600); err != nil {
 		return fmt.Errorf("failed to save image for %s from %q: %s",
 			id, from, err)
 	}
 
+	dir := path.Join(config.PublicDir, id)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			log.Warn.Fatalf("Failed to create %q: %s\n", dir, err)
+		}
+	}
+
+	jpeg := path.Join(dir, version+".jpeg")
 	if err := decodeImage(original, jpeg, ImageTypeJPEG); err != nil {
 		return fmt.Errorf("failed to generate JPEG image for %s from %q: %s",
 			id, from, err)
 	}
 
+	webp := path.Join(dir, version+".webp")
 	if err := decodeImage(original, webp, ImageTypeWEBP); err != nil {
 		return fmt.Errorf("failed to generate WebP image for %s from %q: %s",
 			id, from, err)

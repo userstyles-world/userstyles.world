@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	jwtware "userstyles.world/handlers/jwt"
+	"userstyles.world/modules/config"
 )
 
 // Routes provides routes for Fiber's router.
@@ -25,4 +26,5 @@ func Routes(app *fiber.App) {
 	r.Post("/styles/ban/:id", jwtware.Protected, BanPost)
 	r.Get("/styles/review/:id", jwtware.Protected, ReviewGet)
 	r.Post("/styles/review/:id", jwtware.Protected, ReviewPost)
+	r.Static("/preview", config.PublicDir)
 }

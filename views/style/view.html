@@ -13,9 +13,8 @@
             <div class="screenshot">
                 {{ if .Style.Preview }}
                     <picture class="blurred" aria-hidden="true">
-                        {{ $img := printf "/api/style/preview/%d" .Style.ID }}
-                        <source srcset="{{ $img }}.webp" type="image/webp">
-                        <img src="{{ $img }}.jpeg" loading="lazy">
+                        <source srcset="{{ .Style.Preview }}" type="image/webp">
+                        <img src="{{ .Style.Preview | toJPEG }}" loading="lazy">
                     </picture>
                 {{ end }}
                 {{ template "partials/preview-image" .Style }}

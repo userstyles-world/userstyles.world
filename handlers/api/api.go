@@ -11,7 +11,6 @@ func Routes(app *fiber.App) {
 	r.Head("/style/:id.user.css", GetStyleEtag)
 	r.Get("/style/:id.user.css", GetStyleSource)
 	r.Get("/style/:id", GetStyleDetails)
-	r.Get("/style/preview/:id", GetPreviewScreenshot)
 	r.Get("/style/stats/:id/:type?", GetStyleStats)
 	r.Get("/index/:format?", GetStyleIndex)
 	r.Get("/search/:query", GetSearchResult)

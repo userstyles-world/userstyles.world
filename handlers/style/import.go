@@ -104,11 +104,11 @@ func ImportPost(c *fiber.Ctx) error {
 	// Check preview image.
 	ff, _ := c.FormFile("preview")
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
-	if err := images.Gen(ff, styleID, "", s.Preview); err != nil {
-		log.Warn.Println(err)
+	if err := images.Generate(ff, styleID, "0", "", s.Preview); err != nil {
+		log.Warn.Println("Error:", err)
 		s.Preview = ""
 	} else {
-		s.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+		s.Preview = fmt.Sprintf("%s/preview/%s/0.webp", config.BaseURL, styleID)
 		if err = s.UpdateColumn("preview", s.Preview); err != nil {
 			log.Warn.Printf("Failed to update preview for %s: %s\n", styleID, err)
 		}

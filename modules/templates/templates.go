@@ -171,6 +171,10 @@ func New(views fs.FS, dir string) *html.Engine {
 		return template.HTML(dur.String())
 	})
 
+	engine.AddFunc("toJPEG", func(url string) string {
+		return url[:len(url)-4] + "jpeg"
+	})
+
 	if !config.Production {
 		engine.Reload(true)
 	}
