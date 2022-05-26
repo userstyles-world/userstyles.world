@@ -9,7 +9,6 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
@@ -277,11 +276,10 @@ func NewStyle(c *fiber.Ctx) error {
 	styleID := strconv.FormatUint(uint64(newStyle.ID), 10)
 	if err := images.Generate(ff, styleID, "0", "", newStyle.Preview); err != nil {
 		log.Warn.Println("Error:", err)
-		newStyle.Preview = ""
 	} else {
-		newStyle.Preview = config.BaseURL + "/api/style/preview/" + styleID + ".jpeg"
+		newStyle.SetPreview()
 		if err = newStyle.UpdateColumn("preview", newStyle.Preview); err != nil {
-			log.Warn.Printf("Failed to update preview for style %s: %s\n", styleID, err)
+			log.Warn.Printf("Failed to update preview for style %d: %s\n", newStyle.ID, err)
 		}
 	}
 

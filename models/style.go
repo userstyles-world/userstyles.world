@@ -429,3 +429,8 @@ func (*Style) MirrorStyle(f map[string]any) error {
 func (s *Style) UpdateColumn(col string, val any) error {
 	return db().Model(modelStyle).Where("id", s.ID).UpdateColumn(col, val).Error
 }
+
+// SetPreview will set preview image URL.
+func (s *Style) SetPreview() {
+	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.BaseURL, s.ID, s.PreviewVersion)
+}

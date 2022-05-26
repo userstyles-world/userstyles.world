@@ -10,7 +10,6 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
-	"userstyles.world/modules/config"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
@@ -74,7 +73,6 @@ func ImportPost(c *fiber.Ctx) error {
 		s.License = uc.License
 		s.Description = uc.Description
 		s.Homepage = uc.HomepageURL
-		s.Preview = c.FormValue("previewURL")
 		s.Category = strings.TrimSpace(c.FormValue("category", "unset"))
 		s.Original = r
 	}
@@ -103,12 +101,12 @@ func ImportPost(c *fiber.Ctx) error {
 
 	// Check preview image.
 	ff, _ := c.FormFile("preview")
+	preview := c.FormValue("previewURL")
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
-	if err := images.Generate(ff, styleID, "0", "", s.Preview); err != nil {
+	if err := images.Generate(ff, styleID, "0", "", preview); err != nil {
 		log.Warn.Println("Error:", err)
-		s.Preview = ""
 	} else {
-		s.Preview = fmt.Sprintf("%s/preview/%s/0.webp", config.BaseURL, styleID)
+		s.SetPreview()
 		if err = s.UpdateColumn("preview", s.Preview); err != nil {
 			log.Warn.Printf("Failed to update preview for %s: %s\n", styleID, err)
 		}

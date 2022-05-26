@@ -68,7 +68,6 @@ func EditPost(c *fiber.Ctx) error {
 	m := map[string]any{
 		"id":      id,
 		"name":    strings.TrimSpace(c.FormValue("name")),
-		"preview": strings.TrimSpace(c.FormValue("previewURL")),
 	}
 
 	// Check if userstyle name is empty.
@@ -83,9 +82,9 @@ func EditPost(c *fiber.Ctx) error {
 	// Check for new preview image.
 	ff, _ := c.FormFile("preview")
 	version := strconv.Itoa(s.PreviewVersion + 1)
-	if err := images.Generate(ff, id, version, s.Preview, m["preview"].(string)); err != nil {
+	preview := strings.TrimSpace(c.FormValue("previewURL"))
+	if err := images.Generate(ff, id, version, s.Preview, preview); err != nil {
 		log.Warn.Println("Error:", err)
-		m["preview"] = ""
 	} else {
 		m["preview"] = fmt.Sprintf("%s/preview/%s/%s.webp", config.BaseURL, id, version)
 		m["preview_version"] = version
