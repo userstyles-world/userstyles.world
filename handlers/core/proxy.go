@@ -11,17 +11,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/modules/log"
+	"userstyles.world/utils"
 )
-
-func isHostAllowed(host string) bool {
-	switch host {
-	case "0.0.0.0":
-	case "127.0.0.1":
-	case "localhost":
-		return false
-	}
-	return true
-}
 
 func Proxy(c *fiber.Ctx) error {
 	link, id, t := c.Query("link"), c.Query("id"), c.Query("type")
@@ -32,7 +23,7 @@ func Proxy(c *fiber.Ctx) error {
 	}
 
 	// Set resource location and name.
-	dir := fmt.Sprintf("./data/proxy%s", path.Clean(fmt.Sprintf("/%s/%s", t, id)))
+	dir := "./data/proxy" + path.Clean(fmt.Sprintf("/%s/%s", t, id))
 	name := dir + "/" + url.PathEscape(link)
 
 	// Check if image exists.
@@ -51,57 +42,44 @@ func Proxy(c *fiber.Ctx) error {
 		var data []byte
 		var errs []error
 
-		// HACK: GitHub doesn't set "Location" response header.
-		if strings.Contains(link, "https://github.com/") {
-		getImage:
-			a.Request().SetRequestURI(link)
-			if err := a.Parse(); err != nil {
-				log.Info.Println("Agent err:", err.Error())
-				return nil
-			}
+	getImage:
+		// Set the request URI.
+		a.Request().SetRequestURI(link)
 
-			if !isHostAllowed(string(a.Request().URI().Host())) {
-				log.Info.Println("An not allowed host, has been requested to proxied")
-				return nil
-			}
+		// Parse the request URI.
+		if err := a.Parse(); err != nil {
+			log.Info.Println("Agent err:", err.Error())
+			return nil
+		}
 
-			status, data, errs = a.Bytes()
-			if len(errs) > 0 {
-				log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
-				return nil
-			}
+		// Ensure we're not doing a local host request.
+		if utils.IsLoopback(string(a.Request().URI().Host())) {
+			log.Info.Println("A local network was requested to be proxied.")
+			return nil
+		}
 
-			if status >= 300 && status <= 400 {
-				link = extractImage(string(data))
-				goto getImage
-			}
-		} else {
-			a.Request().SetRequestURI(link)
+		// If we don't request to github.com set a max redirect of three.
+		if !strings.Contains(link, "https://github.com/") {
 			a.MaxRedirectsCount(3)
+		}
 
-			if err := a.Parse(); err != nil {
-				log.Info.Println("Agent err:", err.Error())
-				return nil
-			}
+		// Make the actual request and get the status and bytes.
+		status, data, errs = a.Bytes()
+		if len(errs) > 0 {
+			log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
+			return nil
+		}
 
-			if !isHostAllowed(string(a.Request().URI().Host())) {
-				log.Info.Println("An not allowed host, has been requested to proxied")
-				return nil
-			}
+		// Check after all redirections if the host is still valid.
+		if utils.IsLoopback(string(a.Request().URI().Host())) {
+			log.Info.Println("A local network was requested to be proxied.")
+			return nil
+		}
 
-			// TODO: Show a fallback image.
-			_, data, errs = a.Bytes()
-			if len(errs) > 0 {
-				log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
-				return nil
-			}
-
-			// Check after all redirections if the host is still valid.
-			if !isHostAllowed(string(a.Request().URI().Host())) {
-				log.Info.Println("An not allowed host, has been requested to proxied")
-				return nil
-			}
-
+		// HACK: GitHub doesn't set "Location" response header.
+		if strings.Contains(link, "https://github.com/") && status >= 300 && status < 400 {
+			link = extractImage(string(data))
+			goto getImage
 		}
 
 		if err := os.WriteFile(name, data, 0o600); err != nil {
