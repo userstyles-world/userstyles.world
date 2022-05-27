@@ -63,15 +63,23 @@ func processImages(id, version, from string, data []byte) error {
 		}
 	}
 
-	jpeg := path.Join(dir, version+".jpeg")
-	if err := decodeImage(original, jpeg, ImageTypeJPEG); err != nil {
-		return fmt.Errorf("failed to generate JPEG image for %s from %q: %s",
+	webp := path.Join(dir, version+".webp")
+	if err := decodeImage(original, webp, imageFullWebP); err != nil {
+		return fmt.Errorf("Failed to decode WebP image for %s from %q: %s",
+			id, from, err)
+	}
+	if err := decodeImage(original, webp, imageThumbWebP); err != nil {
+		return fmt.Errorf("Failed to decode WebP thumb for %s from %q: %s",
 			id, from, err)
 	}
 
-	webp := path.Join(dir, version+".webp")
-	if err := decodeImage(original, webp, ImageTypeWEBP); err != nil {
-		return fmt.Errorf("failed to generate WebP image for %s from %q: %s",
+	jpeg := path.Join(dir, version+".jpeg")
+	if err := decodeImage(original, jpeg, imageFullJPEG); err != nil {
+		return fmt.Errorf("Failed to decode JPEG image for %s from %q: %s",
+			id, from, err)
+	}
+	if err := decodeImage(original, jpeg, imageThumbJPEG); err != nil {
+		return fmt.Errorf("Failed to decode JPEG thumb for %s from %q: %s",
 			id, from, err)
 	}
 

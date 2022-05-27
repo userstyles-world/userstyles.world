@@ -171,6 +171,10 @@ func New(views fs.FS, dir string) *html.Engine {
 		return template.HTML(dur.String())
 	})
 
+	engine.AddFunc("fullImage", func(url string) string {
+		return url[:len(url)-6] + url[len(url)-5:]
+	})
+
 	engine.AddFunc("toJPEG", func(url string) string {
 		return url[:len(url)-4] + "jpeg"
 	})
