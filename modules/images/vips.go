@@ -3,7 +3,6 @@ package images
 import (
 	"os/exec"
 
-	"userstyles.world/modules/errors"
 	"userstyles.world/modules/log"
 )
 
@@ -16,11 +15,13 @@ const (
 	imageThumbJPEG
 )
 
-// CheckVips will look for Vips binary and exit if it's not found.
+// CheckVips will look for Vips binaries and exit if they're not found.
 func CheckVips() {
-	cmd := exec.Command("vips", "--version")
-	if err := cmd.Run(); err != nil {
-		log.Warn.Fatal(errors.ErrVipsNotFound)
+	for _, name := range []string{"vips", "vipsthumbnail"} {
+		cmd := exec.Command(name, "--version")
+		if err := cmd.Run(); err != nil {
+			log.Warn.Fatalf("%q binary not found on the $PATH.\n", name)
+		}
 	}
 }
 
@@ -47,7 +48,7 @@ func decodeImage(src, out string, imageType imageKind) error {
 	}
 
 	if err := cmd.Run(); err != nil {
-		return errors.ErrNoImageProcessing
+		return err
 	}
 
 	return nil

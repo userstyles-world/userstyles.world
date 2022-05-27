@@ -65,13 +65,6 @@ var (
 
 	errUnexpectedSigningMethod = errors.New("unexpected jwt signing method")
 
-	// ErrVipsNotFound errors that the `which vips` command couldn't vips in the current PATH.
-	ErrVipsNotFound = errors.New("the vips binary wasn't found")
-
-	// ErrNoImageProcessing errors that the vips CLI returned a error or a non-zero return code.
-	// meaning that it failed to do the task.
-	ErrNoImageProcessing = errors.New("the image processor couldn't process the image")
-
 	// ErrFailedHistoriesSearch errors that it couldn't find all histories.
 	ErrFailedHistoriesSearch = errors.New("failed to find all style histories")
 
