@@ -434,3 +434,21 @@ func (s *Style) UpdateColumn(col string, val any) error {
 func (s *Style) SetPreview() {
 	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.BaseURL, s.ID, s.PreviewVersion)
 }
+
+// SetPreview will set preview image URL.
+func (s *APIStyle) SetPreview() {
+	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.BaseURL, s.ID, s.PreviewVersion)
+}
+
+// SelectUpdateStyle will update specific fields in the styles table.
+func SelectUpdateStyle(s *APIStyle) error {
+	fields := []string{"name", "description", "notes", "code", "homepage",
+		"license", "category", "preview", "preview_version", "mirror_url",
+		"mirror_code", "mirror_meta"}
+
+	return db().
+		Model(modelStyle).
+		Select(fields).
+		Where("id = ?", s.ID).
+		Updates(s).Error
+}
