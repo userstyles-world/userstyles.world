@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"regexp"
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
@@ -47,6 +48,11 @@ func GenerateFromURL(id, version, url string) error {
 
 	data, _ := io.ReadAll(req.Body)
 	return processImages(id, version, url, data)
+}
+
+func fixRawURL(url string) string {
+	re := regexp.MustCompile(`(?mi)^(http.*)/(raw|src|blob)/(.*.(png|jpe?g|avif|webp))(\?.*)*$`)
+	return re.ReplaceAllString(url, "${1}/raw/${3}")
 }
 
 func processImages(id, version, from string, data []byte) error {
