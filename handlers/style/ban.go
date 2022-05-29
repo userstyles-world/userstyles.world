@@ -145,6 +145,10 @@ func BanPost(c *fiber.Ctx) error {
 		})
 	}
 
+	if err = search.DeleteStyle(s.ID); err != nil {
+		log.Warn.Printf("Failed to delete style %d from index: %s", s.ID, err)
+	}
+
 	go func(baseURL string, style *models.APIStyle, modLogID uint) {
 		// Add notification to database.
 		notification := models.Notification{
@@ -157,11 +161,6 @@ func BanPost(c *fiber.Ctx) error {
 
 		if err := notification.Create(); err != nil {
 			log.Warn.Printf("Failed to create a notification for ban removal %d: %v\n", style.ID, err)
-		}
-
-		// Delete from search index.
-		if err = search.DeleteStyle(style.ID); err != nil {
-			log.Warn.Printf("Failed to delete style %d: %s", style.ID, err.Error())
 		}
 
 		targetUser, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))

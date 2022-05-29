@@ -11,6 +11,7 @@ import (
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
+	"userstyles.world/search"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -107,6 +108,10 @@ func EditPost(c *fiber.Ctx) error {
 
 	// TODO: Move to code section once we refactor this messy logic.
 	cache.LRU.Remove(id)
+
+	if err = search.IndexStyle(s.ID); err != nil {
+		log.Warn.Printf("Failed to re-index style %d: %s\n", s.ID, err)
+	}
 
 	return c.Redirect("/style/"+id, fiber.StatusSeeOther)
 }

@@ -193,7 +193,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 	}
 
 	if err = search.DeleteStyle(style.ID); err != nil {
-		log.Warn.Printf("Failed to delte style %d from index: %s", style.ID, err.Error())
+		log.Warn.Printf("Failed to delete style %d from index: %s", style.ID, err)
 	}
 
 	return c.JSON(fiber.Map{
@@ -286,11 +286,9 @@ func NewStyle(c *fiber.Ctx) error {
 		}
 	}
 
-	go func(style *models.Style) {
-		if err = search.IndexStyle(style.ID); err != nil {
-			log.Warn.Printf("Failed to re-index style %d: %s", style.ID, err)
-		}
-	}(s)
+	if err = search.IndexStyle(s.ID); err != nil {
+		log.Warn.Printf("Failed to index style %d: %s", s.ID, err)
+	}
 
 	return c.JSON(fiber.Map{
 		"data": "Successfully added the style. ID: " + styleID,

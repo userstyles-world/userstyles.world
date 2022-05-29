@@ -12,6 +12,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
+	"userstyles.world/search"
 	"userstyles.world/utils"
 )
 
@@ -113,6 +114,10 @@ func ImportPost(c *fiber.Ctx) error {
 				log.Warn.Printf("Failed to update preview for %s: %s\n", styleID, err)
 			}
 		}
+	}
+
+	if err = search.IndexStyle(s.ID); err != nil {
+		log.Warn.Printf("Failed to index style %d: %s\n", s.ID, err)
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", int(s.ID)), fiber.StatusSeeOther)
