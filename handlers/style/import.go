@@ -100,15 +100,18 @@ func ImportPost(c *fiber.Ctx) error {
 	}
 
 	// Check preview image.
-	ff, _ := c.FormFile("preview")
+	file, _ := c.FormFile("preview")
 	preview := c.FormValue("previewURL")
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
-	if err := images.Generate(ff, styleID, "0", "", preview); err != nil {
-		log.Warn.Println("Error:", err)
-	} else {
-		s.SetPreview()
-		if err = s.UpdateColumn("preview", s.Preview); err != nil {
-			log.Warn.Printf("Failed to update preview for %s: %s\n", styleID, err)
+	if file != nil || preview != "" {
+		if err := images.Generate(file, styleID, "0", "", preview); err != nil {
+			log.Warn.Println("Error:", err)
+			s.Preview = ""
+		} else {
+			s.SetPreview()
+			if err = s.UpdateColumn("preview", s.Preview); err != nil {
+				log.Warn.Printf("Failed to update preview for %s: %s\n", styleID, err)
+			}
 		}
 	}
 

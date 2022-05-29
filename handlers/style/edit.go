@@ -72,15 +72,17 @@ func EditPost(c *fiber.Ctx) error {
 	}
 
 	// Check for new preview image.
-	ff, _ := c.FormFile("preview")
+	file, _ := c.FormFile("preview")
 	version := strconv.Itoa(s.PreviewVersion + 1)
 	preview := strings.TrimSpace(c.FormValue("previewURL"))
-	if err := images.Generate(ff, id, version, s.Preview, preview); err != nil {
-		log.Warn.Println("Error:", err)
-		s.Preview = ""
-	} else {
-		s.PreviewVersion++
-		s.SetPreview()
+	if file != nil || preview != "" {
+		if err := images.Generate(file, id, version, s.Preview, preview); err != nil {
+			log.Warn.Println("Error:", err)
+			s.Preview = ""
+		} else {
+			s.PreviewVersion++
+			s.SetPreview()
+		}
 	}
 
 	// Update the other fields with new data.

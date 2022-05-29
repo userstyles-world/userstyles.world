@@ -263,7 +263,7 @@ func NewStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	newStyle, err := models.CreateStyle(&postStyle)
+	s, err := models.CreateStyle(&postStyle)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -272,14 +272,17 @@ func NewStyle(c *fiber.Ctx) error {
 	}
 
 	// Check preview image.
-	ff, _ := c.FormFile("preview")
-	styleID := strconv.FormatUint(uint64(newStyle.ID), 10)
-	if err := images.Generate(ff, styleID, "0", "", newStyle.Preview); err != nil {
-		log.Warn.Println("Error:", err)
-	} else {
-		newStyle.SetPreview()
-		if err = newStyle.UpdateColumn("preview", newStyle.Preview); err != nil {
-			log.Warn.Printf("Failed to update preview for style %d: %s\n", newStyle.ID, err)
+	file, _ := c.FormFile("preview")
+	styleID := strconv.FormatUint(uint64(s.ID), 10)
+	if file != nil || s.Preview != "" {
+		if err = images.Generate(file, styleID, "0", "", s.Preview); err != nil {
+			log.Warn.Println("Error:", err)
+			s.Preview = ""
+		} else {
+			s.SetPreview()
+			if err = s.UpdateColumn("preview", s.Preview); err != nil {
+				log.Warn.Printf("Failed to update preview for %d: %s\n", s.ID, err)
+			}
 		}
 	}
 
@@ -287,7 +290,7 @@ func NewStyle(c *fiber.Ctx) error {
 		if err = search.IndexStyle(style.ID); err != nil {
 			log.Warn.Printf("Failed to re-index style %d: %s", style.ID, err)
 		}
-	}(newStyle)
+	}(s)
 
 	return c.JSON(fiber.Map{
 		"data": "Successfully added the style. ID: " + styleID,
