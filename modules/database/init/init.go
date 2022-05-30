@@ -2,6 +2,7 @@ package init
 
 import (
 	l "log"
+	"fmt"
 	"os"
 	"time"
 
@@ -73,9 +74,9 @@ func Initialize() {
 	}
 
 	if _, ok := os.LookupEnv("MAGIC"); ok {
-		log.Info.Println("Started stats table migration!")
-		migrateStats()
-		log.Info.Println("Finished stats table migration!")
+		log.Info.Println("Started image migration!")
+		migrateImages()
+		log.Info.Println("Finished image migration!")
 	}
 
 	// Migrate tables.
@@ -94,56 +95,32 @@ func Initialize() {
 	}
 }
 
-func migrateStats() {
+func migrateImages() {
 	var err error
+	var style models.Style
+	var db = database.Conn
 
-	log.Info.Println("Dropping stats indices")
-	stmt := `
-DROP INDEX IF EXISTS idx_stats_weekly_installs;
-DROP INDEX IF EXISTS idx_stats_deleted_at;
-DROP INDEX IF EXISTS idx_stats_installed;
-DROP INDEX IF EXISTS idx_stats_style_id;
-DROP INDEX IF EXISTS idx_stats_viewed;
-DROP INDEX IF EXISTS idx_stats;`
-	if err = database.Conn.Exec(stmt).Error; err != nil {
-		log.Warn.Fatalln("Failed to drop stats indices:", err)
+	log.Info.Println("Adding preview_version column")
+	if !db.Migrator().HasColumn(style, "preview_version") {
+		if err = db.Migrator().AddColumn(style, "preview_version"); err != nil {
+			log.Warn.Fatalln("Failed to add preview_version column:", err)
+		}
 	}
 
-	log.Info.Println("Renaming stats to stats_old")
-	stmt = `ALTER TABLE stats RENAME TO stats_old;`
-	if err = database.Conn.Exec(stmt).Error; err != nil {
-		log.Warn.Fatalln("Failed to rename stats to stats_old:", err)
+	var styles []struct{ ID, Preview string }
+	log.Info.Println("Get styles with preview images")
+	if err = db.Model(style).Find(&styles, "preview like 'http%'").Error; err != nil {
+		log.Warn.Fatalln("Failed to get styles with preview images:", err)
 	}
 
-	log.Info.Println("Creating new stats table")
-	if err = migrate(models.Stats{}); err != nil {
-		log.Warn.Fatalln("Failed to create new stats table:", err)
-	}
+	log.Info.Println("Update preview image URLs")
+	for _, s := range styles {
+		s.Preview = fmt.Sprintf("https://userstyles.world/preview/%s/0.webp", s.ID)
 
-	log.Info.Println("Inserting original data")
-	stmt = `INSERT INTO stats(id, created_at, updated_at, deleted_at, hash, install, style_id, view) SELECT * FROM stats_old;`
-	if err = database.Conn.Exec(stmt).Error; err != nil {
-		log.Warn.Fatalln("Failed to insert original data:", err)
-	}
-
-	log.Info.Println("Dropping stats_old table")
-	stmt = `DROP TABLE stats_old;`
-	if err = database.Conn.Exec(stmt).Error; err != nil {
-		log.Warn.Fatalln("Failed to drop stats_old table:", err)
-	}
-
-	log.Info.Println("Updating columns with no data")
-	stmt = `
-UPDATE stats SET install = NULL WHERE install = 0;
-UPDATE stats SET view = NULL WHERE view = 0;`
-	if err = database.Conn.Exec(stmt).Error; err != nil {
-		log.Warn.Fatalln("Failed to update columns with no data:", err)
-	}
-
-	log.Info.Println("Cleaning up database file")
-	stmt = `VACUUM;`
-	if err = database.Conn.Exec(stmt).Error; err != nil {
-		log.Warn.Fatalln("Failed to clean up database file:", err)
+		err = db.Model(style).Select("preview").Where("id = ?", s.ID).Updates(s).Error
+		if err != nil {
+			log.Warn.Fatalln("Failed to update preview image URLs:", err)
+		}
 	}
 }
 
