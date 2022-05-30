@@ -15,14 +15,15 @@ import (
 )
 
 // Generate will generate all needed images used for styles.
-func Generate(fh *multipart.FileHeader, id, version, old, new string) error {
-	if fh != nil {
+func Generate(fh *multipart.FileHeader, id, version, oldURL, newURL string) error {
+	switch {
+	case fh != nil:
 		return GenerateFromUpload(fh, id, version)
-	} else if fh == nil && old != new {
-		return GenerateFromURL(id, version, new)
+	case oldURL != newURL:
+		return GenerateFromURL(id, version, newURL)
+	default:
+		return nil
 	}
-
-	return nil
 }
 
 // GenerateFromUpload will generate images from an uploaded file.
