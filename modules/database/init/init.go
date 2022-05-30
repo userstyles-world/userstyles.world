@@ -1,9 +1,9 @@
 package init
 
 import (
-	l "log"
 	"fmt"
 	"os"
+	"path"
 	"time"
 
 	"gorm.io/driver/sqlite"
@@ -32,18 +32,19 @@ var tables = []struct {
 }
 
 func connect() (*gorm.DB, error) {
-	newLogger := logger.New(
-		l.New(os.Stdout, "\r\n", l.LstdFlags),
-		logger.Config{
-			SlowThreshold: time.Second,
-			LogLevel:      logLevel(),
-			Colorful:      config.DBColor,
-		},
-	)
+	gormConfig := &gorm.Config{
+		Logger: logger.New(
+			log.Database,
+			logger.Config{
+				SlowThreshold: time.Second,
+				LogLevel:      logLevel(),
+				Colorful:      config.DBColor,
+			},
+		),
+	}
 
-	conn, err := gorm.Open(sqlite.Open(config.DB), &gorm.Config{
-		Logger: newLogger,
-	})
+	file := path.Join(config.DataDir, config.DB)
+	conn, err := gorm.Open(sqlite.Open(file), gormConfig)
 	if err != nil {
 		return nil, err
 	}

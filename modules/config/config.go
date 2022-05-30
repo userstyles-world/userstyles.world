@@ -58,6 +58,8 @@ var (
 	ProxyDir  = path.Join(DataDir, "proxy")
 	PublicDir = path.Join(DataDir, "public")
 
+	LogFile = path.Join(DataDir, "userstyles.log")
+
 	AppName         = "UserStyles.world"
 	AppCodeName     = "Fennec Fox"
 	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"

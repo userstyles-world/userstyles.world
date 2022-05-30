@@ -4,7 +4,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"path"
 
 	"userstyles.world/modules/config"
 )
@@ -12,6 +11,9 @@ import (
 var (
 	Info *log.Logger
 	Warn *log.Logger
+
+	// Database logger will emit output from our DBMS.
+	Database *log.Logger
 )
 
 func setOutput(f *os.File) io.Writer {
@@ -23,10 +25,10 @@ func setOutput(f *os.File) io.Writer {
 }
 
 func Initialize() {
-	f, err := os.OpenFile(path.Join(config.DataDir, "server.log"),
-		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o666)
+	flags := os.O_APPEND | os.O_CREATE | os.O_WRONLY
+	f, err := os.OpenFile(config.LogFile, flags, 0o666)
 	if err != nil {
-		log.Fatalf("Failed to open log file, err: %v\n", err)
+		log.Fatalf("Failed to open %v: %s\n", config.LogFile, err)
 	}
 
 	// Configure output.
@@ -35,4 +37,5 @@ func Initialize() {
 	// Initialize loggers.
 	Info = log.New(mw, "INFO ", log.Ldate|log.Ltime|log.Lshortfile)
 	Warn = log.New(mw, "WARN ", log.Ldate|log.Ltime|log.Lshortfile)
+	Database = log.New(mw, "DBMS ", log.Ldate|log.Ltime)
 }
