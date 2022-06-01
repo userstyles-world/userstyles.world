@@ -1,79 +1,39 @@
 #!/usr/bin/env sh
 
-data="data-links"
-images="data-images"
-thumbs="data-thumbs"
-
 log() { printf "%s\n" "$@"; }
 
-scrape() {
-    log "Scraping images..."
-
-    grep -h "preview" ../content/styles/**/*md | awk '{ print $2 }' > "$data"
-
-    log "Done!"
+gen() {
+    vips webpsave "$1" "$2.webp" --strip --reduction-effort 4 --Q 80 || return
+    vips jpegsave "$1" "$2.jpeg" --strip --Q 80 --optimize-coding || return
+    vipsthumbnail "$2.webp" --size 300 --export-profile srgb -o '%st.webp[profile=none]' || return
+    vipsthumbnail "$2.jpeg" --size 300 --export-profile srgb -o '%st.jpeg[profile=none]' || return
+    log "Generated images for style ${1%.original}"
 }
 
-download() {
-    log "Downloading images..."
+root="$(git rev-parse --show-toplevel)"
+images="$root/data/images"
+public="$root/data/public"
 
-    mkdir -p "$images"
+cd "$images" || exit
 
-    while read -r line; do
-        # Remove `https://` then replace all `/` with `_` so that the downloaded
-        # image can be saved in the `$images` directory.
-        escaped=$( printf "%s" "$line" | sed -e 's/https\?:\/\///g; s/\//_/g' )
+batch=10
+count=0
+for i in *.original; do
+    count=$(( count + 1 ))
 
-        # TODO: Implement a comparsion to avoid re-downloading images.
+    # Set up output directory.
+    out="${public}/${i%.original}"
+    mkdir -p "$out"
 
-        # Download the images.
-        curl -# -o "$images/$escaped" -L "$line"
-    done < "$data"
+    # Process images in a subshell.
+    gen "$i" "${out}/0" &
 
-    log "Done!"
-}
+    # Process images in batches.
+    [ $(( count % batch )) = 0 ] && sleep 1
+done
 
-resize() {
-    log "Making thumbnails..."
+# Wait for all subshells to finish.
+wait
 
-    mkdir -p "$thumbs"
-
-    for f in "$images"/*png; do
-        output=${f##"$images/"}
-        printf "I: %s\nO: %s\n\n" "$f" "$thumbs/$output"
-        convert "$f" -resize 309x173 "$thumbs/$output"
-    done
-
-    log "Done!"
-}
-
-clean() {
-    log "Cleaning files..."
-
-    rm -r "$images" "$thumbs" "$data"
-
-    log "Done!"
-}
-
-all() {
-    scrape
-    log ""
-    download
-    log ""
-    resize
-}
-
-if [ "$#" -eq 0 ]; then
-    all
-    exit 0
-fi
-
-case "$1" in
-    h|help) printf "See the source code.\n" ;;
-    g|rg|grep|scrape) scrape "$@" ;;
-    d|dl|download) download "$@" ;;
-    r|resize) resize "$@" ;;
-    c|clean) clean "$@" ;;
-    a|all) all "$@" ;;
-    *) printf "Invalid option: %s\n" "$*" ;;
-esac
+# Remove empty directories from broken images.
+find "$public" -type d -empty -delete
