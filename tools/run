@@ -17,11 +17,6 @@ check_cmd() {
     fi
 }
 
-check_dir() {
-    pwd="$(pwd)"
-    cd "${pwd%/tools}" || exit
-}
-
 export_secrets() {
     set -a 
     . data/.env
@@ -34,8 +29,6 @@ fonts() {
     # Check if unzip is installed.
     check_cmd unzip
     [ $? = 1 ] && exit
-
-    check_dir
 
     # Extract the latest release.
     src="$(curl -s https://api.github.com/repos/rsms/inter/releases/latest | sed -n 's/.*browser_download_url.*"\(http.*\)"/\1/p')"
@@ -80,7 +73,6 @@ _fontsExtract() {
 
 prod() {
     log "prod"
-    check_dir
     export_secrets
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
@@ -92,9 +84,6 @@ sass() {
     log "sass"
     check_cmd sassc
     [ $? = 1 ] && exit
-
-    # Go to project root.
-    check_dir
 
     # Sassc fails if directory doesn't exist.
     mkdir -p web/static/css
@@ -123,7 +112,6 @@ drop() {
 dev() {
     log "dev"
     check_cmd air
-    check_dir
     export_secrets
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
@@ -135,7 +123,6 @@ dev() {
 # To build it on unsupported systems, run `go build` in project root directory.
 build() {
     log "build"
-    check_dir
 
     log "setting up fonts"
     fonts
@@ -165,6 +152,12 @@ ts() {
         go run web/typescript/run.go
 }
 
+init() {
+    # Go to project's root directory.
+    cd "$(git rev-parse --show-toplevel)" || exit
+}
+
+init "$@"
 case "$1" in
     build) build "$@" ;;
     fonts) fonts "$@" ;;
