@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-log() { printf "%s\n" "$@"; }
+log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 
 invalid() { printf "Invalid option: %s\n" "$*"; }
 

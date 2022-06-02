@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-log() { printf "%s\n" "$@"; }
+log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 
 gen() {
     vips webpsave "$1" "$2.webp" --strip --reduction-effort 4 --Q 80 || return
