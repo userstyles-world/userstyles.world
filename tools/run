@@ -4,16 +4,16 @@ log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 
 invalid() { printf "Invalid option: %s\n" "$*"; }
 
-check_cmd() {
+check() {
     if ! command -v "$1" >/dev/null; then
-        log "Missing $1!"
+        printf "Error: Missing '%s' dependency.\n" "$1"
         case "$1" in
-            air) log "Install it with 'go install github.com/cosmtrek/air'" ;;
-            sassc) log "Install 'sassc' with your package manager" ;;
-            unzip) log "Install 'unzip' with your package manager" ;;
-            inotify*) log "Install 'notify-tools' with your package manager" ;;
+            air) printf "Install it with 'go install github.com/cosmtrek/air'.\n" ;;
+            sassc) printf "Install 'sassc' with your package manager.\n" ;;
+            unzip) printf "Install 'unzip' with your package manager.\n" ;;
+            inotify*) printf "Install 'notify-tools' with your package manager.\n" ;;
         esac
-        return 1
+        exit 1
     fi
 }
 
@@ -27,8 +27,7 @@ fonts() {
     log "fonts"
 
     # Check if unzip is installed.
-    check_cmd unzip
-    [ $? = 1 ] && exit
+    check unzip
 
     # Extract the latest release.
     src="$(curl -s https://api.github.com/repos/rsms/inter/releases/latest | sed -n 's/.*browser_download_url.*"\(http.*\)"/\1/p')"
@@ -82,15 +81,13 @@ prod() {
 
 sass() {
     log "sass"
-    check_cmd sassc
-    [ $? = 1 ] && exit
+    check sassc
 
     # Sassc fails if directory doesn't exist.
     mkdir -p web/static/css
 
     if [ "$2" = "--watch" ]; then
-        check_cmd inotifywait
-        [ $? = 1 ] && exit
+        check inotifywait
         while inotifywait -r -e close_write web/scss; do
             sassc web/scss/main.scss web/static/css/main.css
         done
@@ -101,7 +98,7 @@ sass() {
 
 drop() {
     log "drop"
-    check_cmd air
+    check air
     env DB_DROP="1" \
         DB_COLOR="true" \
         DB_DEBUG="${2:-silent}" \
@@ -111,7 +108,7 @@ drop() {
 
 dev() {
     log "dev"
-    check_cmd air
+    check air
     export_secrets
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
