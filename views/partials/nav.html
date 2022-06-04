@@ -49,7 +49,8 @@
                 {{ if .User.IsAdmin }}
                     <li><a href="/monitor">Monitor</a></li>
                 {{ end }}
-                <li><a href="/account">Account</a></li>
+                <li><a href="/user/{{ .User.Username }}">Profile</a></li>
+                <li><a href="/account">Settings</a></li>
                 <li><a href="/logout">Logout</a></li>
             {{ else }}
                 <li><a href="/register">Register</a></li>
