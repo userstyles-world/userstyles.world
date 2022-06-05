@@ -10,16 +10,13 @@ import (
 
 	"github.com/dustin/go-humanize"
 	"github.com/gofiber/template/html"
-	"github.com/microcosm-cc/bluemonday"
-	md "github.com/russross/blackfriday/v2"
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/markdown"
 	"userstyles.world/modules/util/httputil"
 	"userstyles.world/utils/strutils"
 )
-
-var ext = md.CommonExtensions | md.AutoHeadingIDs
 
 var appConfig = map[string]string{
 	"copyright":       time.Now().Format("2006"),
@@ -79,20 +76,12 @@ func New(views fs.FS, dir string) *html.Engine {
 		return template.HTML(strutils.ProxyResources(s, t, id))
 	})
 
-	engine.AddFunc("MarkdownSafe", func(s string) template.HTML {
-		gen := md.Run([]byte(s), md.WithExtensions(ext))
-		return template.HTML(gen)
+	engine.AddFunc("MarkdownSafe", func(text string) string {
+		return markdown.RenderSafe([]byte(text))
 	})
 
-	engine.AddFunc("MarkdownUnsafe", func(s string) string {
-		// Generate Markdown then sanitize it before returning HTML.
-		gen := md.Run(
-			[]byte(s),
-			md.WithExtensions(md.HardLineBreak),
-		)
-		out := bluemonday.UGCPolicy().SanitizeBytes(gen)
-
-		return string(out)
+	engine.AddFunc("MarkdownUnsafe", func(text string) string {
+		return markdown.RenderUnsafe([]byte(text))
 	})
 
 	engine.AddFunc("descMax", func(s string) string {

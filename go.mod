@@ -18,10 +18,10 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/ohler55/ojg v1.14.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/userstyles-world/go-chart/v2 v2.5.2
 	github.com/valyala/bytebufferpool v1.0.0
 	github.com/vednoc/go-usercss-parser v0.10.0
+	github.com/yuin/goldmark v1.4.11
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
 	gorm.io/driver/sqlite v1.3.2
 	gorm.io/gorm v1.23.5
