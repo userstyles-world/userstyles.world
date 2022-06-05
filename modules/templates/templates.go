@@ -72,8 +72,8 @@ func New(views fs.FS, dir string) *html.Engine {
 		return strutils.HumanizeNumber(int(i))
 	})
 
-	engine.AddFunc("proxy", func(s, t string, id uint) template.HTML {
-		return template.HTML(strutils.ProxyResources(s, t, id))
+	engine.AddFunc("proxy", func(src, kind string, id uint) string {
+		return strutils.ProxyResources(src, kind, id)
 	})
 
 	engine.AddFunc("MarkdownSafe", func(text string) string {
@@ -166,6 +166,10 @@ func New(views fs.FS, dir string) *html.Engine {
 
 	engine.AddFunc("toJPEG", func(url string) string {
 		return url[:len(url)-4] + "jpeg"
+	})
+
+	engine.AddFunc("toHTML", func(text string) template.HTML {
+		return template.HTML(text)
 	})
 
 	if !config.Production {
