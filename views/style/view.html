@@ -3,11 +3,18 @@
         <h1 class="mb:m">{{ .Style.Name -}}
             <span class="fg:4"> by {{ .Style.Username }}</span>
         </h1>
-        {{ with .Style.Original }}
-            <p class="mb:m md">Imported from <code>{{ . }}</code></p>
-        {{ end }}
-        {{ with .Style.MirrorURL }}
-            <p class="mb:m md">Mirrored from <code>{{ . }}</code></p>
+
+        {{ if .Style.CompareMirrorURL }}
+            <p class="mb:m md">
+                Imported and mirrored from <code>{{ .Style.Original }}</code>
+            </p>
+        {{ else }}
+            {{ if .Style.Original }}
+                <p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
+            {{ end }}
+            {{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
+                <p class="mb:m md">Mirrored from <code>{{ .Style.MirrorURL }}</code></p>
+            {{ end }}
         {{ end }}
         <div class="card">
             <div class="screenshot">

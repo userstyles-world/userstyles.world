@@ -452,3 +452,15 @@ func SelectUpdateStyle(s *APIStyle) error {
 		Where("id = ?", s.ID).
 		Updates(s).Error
 }
+
+// CompareMirrorURL will return true if a style is being imported and mirrored
+// from the same URL.
+func (s *APIStyle) CompareMirrorURL() bool {
+	if s.Original != "" &&
+		(s.MirrorCode || s.MirrorMeta) &&
+		(s.MirrorURL == "" || s.MirrorURL == s.Original) {
+		return true
+	}
+
+	return false
+}
