@@ -1,49 +1,44 @@
 package config
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"strconv"
 )
 
-var envNotFound = "__NOT_FOUND__"
-
 func getEnv(name, fallback string) string {
-	if env, set := os.LookupEnv(name); set {
-		return env
-	}
-
-	if fallback != "" {
+	env, ok := os.LookupEnv(name)
+	if !ok {
 		return fallback
 	}
 
-	panic(fmt.Sprintf(`Env variable not found: %v`, name))
+	return env
 }
 
 func getEnvInt(name string, fallback int) int {
-	env := getEnv(name, envNotFound)
-	if env == envNotFound {
+	env, ok := os.LookupEnv(name)
+	if !ok {
 		return fallback
 	}
 
-	envInt, err := strconv.Atoi(env)
+	res, err := strconv.Atoi(env)
 	if err != nil {
-		return fallback
+		log.Fatalf("Failed to convert %q to an int for %q.\n", env, name)
 	}
 
-	return envInt
+	return res
 }
 
 func getEnvBool(name string, fallback bool) bool {
-	env := getEnv(name, envNotFound)
-	if env == envNotFound {
+	env, ok := os.LookupEnv(name)
+	if !ok {
 		return fallback
 	}
 
-	envBool, err := strconv.ParseBool(name)
+	res, err := strconv.ParseBool(env)
 	if err != nil {
-		return fallback
+		log.Fatalf("Failed to convert %q to a bool for %q.\n", env, name)
 	}
 
-	return envBool
+	return res
 }
