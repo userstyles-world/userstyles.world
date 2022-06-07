@@ -14,7 +14,7 @@ func GetLinkedSite(c *fiber.Ctx) error {
 	case "matrix":
 		return c.Redirect(config.AppLinkChatMatrix, fiber.StatusSeeOther)
 	case "source":
-		return c.Redirect(config.AppLinkSource, fiber.StatusSeeOther)
+		return c.Redirect(config.AppSourceCode, fiber.StatusSeeOther)
 	default:
 		u, _ := jwt.User(c)
 		return c.Render("err", fiber.Map{
