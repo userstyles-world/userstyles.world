@@ -12,11 +12,11 @@ type ScrambleSettings struct {
 }
 
 var (
-	BaseURL    string
 	GitCommit  string
 	GitVersion string
 
 	Port                 = getEnv("PORT", ":3000")
+	BaseURL              = getEnv("BASE_URL", "http://localhost"+Port)
 	DB                   = getEnv("DB", "dev.db")
 	DBDebug              = getEnv("DB_DEBUG", "silent")
 	DBColor              = getEnvBool("DB_COLOR", false)
@@ -81,16 +81,4 @@ var (
 // OAuthURL returns the proper callback URL depending on the environment.
 func OAuthURL() string {
 	return BaseURL + "/api/callback/"
-}
-
-func setBaseURL() {
-	if Production {
-		BaseURL = "https://userstyles.world"
-	} else {
-		BaseURL = "http://localhost" + Port
-	}
-}
-
-func init() {
-	setBaseURL()
 }
