@@ -64,7 +64,7 @@
             <label for="redirect-uri">Redirect URI</label>
             <input
                 required pattern="^(https?:\/\/)([a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\.[a-z]{2,6}|localhost)\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)$"
-                type="url" name="redirect_uri" id="redirect_uri" value="{{ .OAuth.RedirectURI }}"
+                type="url" name="redirect_uri" id="redirect-uri" value="{{ .OAuth.RedirectURI }}"
                 placeholder="e.g. http://localhost:8080/api/callback">
 
             <button class="flex btn primary" type="submit">{{ $btn }}</button>
