@@ -15,33 +15,38 @@
                 <input
                     required
                     pattern="^[a-zA-Z0-9][a-zA-Z0-9-_]{1,30}[a-zA-Z0-9]$"
-                    type="text" name="username"
-                    placeholder="e.g. my-cool-username (3–32 characters)">
+                    type="text" name="username" id="username"
+                    placeholder="e.g. my-cool-username"
+                    title="3–32 characters, no spaces">
             </div>
 
             <div class="Form-section Form-full">
-                <label for="email">E-mail</label>
+                <label for="email">Email address</label>
                 <input
                     required pattern="{{ config "allowedEmailsRe" }}"
-                    type="text" name="email"
-                    placeholder="e.g. username@example.org">
+                    type="email" name="email" id="email"
+                    placeholder="e.g. username@example.org"
+                    title="Must be an email address">
             </div>
 
             <div class="Form-section Form-full">
-                <label for="password">Password</label>
+                <label for="new-password">Password</label>
                 <input
                     required pattern="^[\S]{8,32}$"
-                    type="password" name="password"
-                    placeholder="(8–32 characters)">
-
+                    type="password" name="password" id="new-password"
+                    placeholder="Must have at least 8 characters"
+                    title="8–32 characters"
+                    autocomplete="new-password">
             </div>
 
             <div class="Form-section Form-full">
-                <label for="confirm">Confirm password</label>
+                <label for="confirm-new-password">Confirm password</label>
                 <input
                     required pattern="^[\S]{8,32}$"
-                    type="password" name="confirm"
-                    placeholder="Repeat password">
+                    type="password" name="confirm" id="confirm-new-password"
+                    placeholder="Repeat password"
+                    title="8–32 characters"
+                    autocomplete="new-password">
             </div>
 
             <div class="Form-control">

@@ -11,19 +11,21 @@
 
         <form class="Form Form-box" method="post" action="/login{{- .Redirect -}}">
             <div class="Form-section Form-full">
-                <label for="email">Mail address</label>
+                <label for="email">Email address</label>
                 <input
                     required pattern="{{ config "allowedEmailsRe" }}"
-                    type="text" name="email"
-                    placeholder="name@example.com">
+                    type="email" name="email" id="email"
+                    title="Must be an email address"
+                    autocomplete="username">
             </div>
 
             <div class="Form-section Form-full">
                 <label for="password">Password</label>
                 <input
                     required pattern="^[\S]{8,32}$"
-                    type="password" name="password"
-                    placeholder="Minimum 8 characters">
+                    type="password" name="password" id="password"
+                    title="Minimum 8 characters"
+                    autocomplete="current-password">
             </div>
 
             <div class="Form-section">

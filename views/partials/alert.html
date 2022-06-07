@@ -1,5 +1,5 @@
 {{ if or .Error .Errors }}
-    <section class="err limit">
+    <div role="alert" class="err limit">
         {{ with .Error }}
             <p>{{ . }}</p>
         {{ end }}
@@ -16,5 +16,5 @@
                 {{ end }}
             </ul>
         {{ end }}
-    </section>
+    </div>
 {{ end }}

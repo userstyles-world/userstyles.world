@@ -22,16 +22,16 @@
             <span class="name">{{ config "appName" }}</span>
         </a>
 
-        <input class="menu-btn" type="checkbox" id="menu-btn">
+        <input class="menu-btn" type="checkbox" id="menu-btn" title="Menu">
         <label class="menu-icon" for="menu-btn"><span class="i"></span></label>
 
         <ul class="menu py:m">
             <li>
                 <form class="search" method="get" action="/search">
                     <input
-                        type="text" name="q"
+                        type="search" name="q"
                         required pattern=".+"
-                        placeholder="Search userstyles...">
+                        placeholder="Search userstyles…">
                     <button
                         type="submit"
                         class="icon flex ai:c"

@@ -8,11 +8,12 @@
     <section class="limit mx:a">
         <form class="Form Form-box" method="post" action="/recover">
             <div class="Form-section Form-full">
-                <label for="email">E-mail</label>
+                <label for="email">Enter your email address</label>
                 <input
                     required pattern="{{ config "allowedEmailsRe" }}"
-                    type="text" name="email"
-                    placeholder="e.g. username@example.org">
+                    type="email" name="email" id="email"
+                    placeholder="e.g. username@example.org"
+                    title="Must be an email address">
             </div>
 
             <div class="Form-control">

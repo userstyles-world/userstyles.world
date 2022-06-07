@@ -40,9 +40,9 @@
         <p>If set, display name will be used instead of username.</p>
         <form class="Form Form-box mt:m" method="post" action="/account/name">
             <div class="Form-section Form-max">
-                <label for="name">Set your display name</label>
+                <label for="displayName">Set your display name</label>
                 <input
-                    type="text" name="name"
+                    type="text" name="name" id="displayName"
                     pattern="^[a-zA-Z0-9-_ ]{3,32}$"
                     value="{{ .Params.DisplayName }}">
             </div>
@@ -60,27 +60,33 @@
         <p>Change your password for manual login.</p>
         <form class="Form Form-box mt:m" method="post" action="/account/password">
             <div class="Form-section Form-full">
-                <label for="password">Current password</label>
+                <label for="current-password">Current password</label>
                 <input
                     required pattern="^[\S]{8,32}$"
-                    type="password" name="current"
-                    placeholder="(8–32 characters)">
+                    type="password" name="current" id="current-password"
+                    placeholder="Must have at least 8 characters"
+                    title="8–32 characters"
+                    autocomplete="current-password">
             </div>
 
             <div class="Form-section Form-full">
-                <label for="password">New password</label>
+                <label for="new-password">New password</label>
                 <input
                     required pattern="^[\S]{8,32}$"
-                    type="password" name="new_password"
-                    placeholder="(8–32 characters)">
+                    type="password" name="new_password" id="new-password"
+                    placeholder="Must have at least 8 characters"
+                    title="8–32 characters"
+                    autocomplete="new-password">
             </div>
 
             <div class="Form-section Form-full">
-                <label for="confirm">Confirm new password</label>
+                <label for="confirm-new-password">Confirm new password</label>
                 <input
                     required pattern="^[\S]{8,32}$"
-                    type="password" name="confirm_password"
-                    placeholder="Repeat password">
+                    type="password" name="confirm_password" id="confirm-new-password"
+                    placeholder="Repeat password"
+                    title="8–32 characters"
+                    autocomplete="new-password">
             </div>
 
             <div class="Form-control">
@@ -96,12 +102,13 @@
         <h2 class="sub-title td:d mt:l">About</h2>
         <div class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID }}</div>
         <form class="Form Form-box mt:m" method="post" action="/account/bio">
-            <label for="name">Set your about info</label>
-            <i class="fg:3">Supports Markdown syntax.</i>
+            <label for="biography">Set your about info</label>
+            <i class="fg:3" id="biography-hint">Supports Markdown syntax.</i>
             <textarea
                 pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
-                type="text" name="bio"
-                placeholder="e.g. I'd often make styles.">
+                type="text" name="bio" id="biography"
+                placeholder="e.g. I'd often make styles."
+                aria-describedby="biography-hint">
                 {{- .Params.Biography -}}
             </textarea>
             <div class="Form-control">
@@ -124,7 +131,7 @@
                 </label>
                 <input
                     pattern="^[a-zA-Z0-9._-]{0,39}$"
-                    type="text" name="github"
+                    type="text" name="github" id="github"
                     placeholder="Your username"
                     value="{{ .Params.Socials.Github }}">
             </div>
@@ -136,7 +143,7 @@
                 </label>
                 <input
                     pattern="^[a-zA-Z0-9._-]{0,255}$"
-                    type="text" name="gitlab"
+                    type="text" name="gitlab" id="gitlab"
                     placeholder="Your username"
                     value="{{ .Params.Socials.Gitlab }}">
                 </input>
@@ -149,7 +156,7 @@
                 </label>
                 <input
                     pattern="^[a-zA-Z0-9._-]{0,40}$"
-                    type="text" name="codeberg"
+                    type="text" name="codeberg" id="codeberg"
                     placeholder="Your username"
                     value="{{ .Params.Socials.Codeberg }}">
                 </input>
@@ -169,9 +176,9 @@
         <p>The use of user settings requires JavaScript.</p>
         <div class="Form Form-box mt:m">
             <div class="Form-section">
-                <label>Color-scheme</label>
+                <label for="usr-settings--color-scheme">Color-scheme</label>
                 <div class="Form-row">
-                    <select class="Form-select" id="usr-settings--color-scheme">
+                    <select class="Form-select" id="usr-settings--color-scheme" title="Set website color scheme">
                         <option value="follow-system">Follow system theme</option>
                         <option value="dark">Dark mode</option>
                         <option value="light">Light mode</option>
@@ -181,9 +188,9 @@
             </div>
 
             <div class="Form-section">
-                <label>Censored entries</label>
+                <label for="usr-settings--entries-behavior">Censored entries</label>
                 <div class="Form-row">
-                    <select class="Form-select" id="usr-settings--entries-behavior">
+                    <select class="Form-select" id="usr-settings--entries-behavior" title="Set website censored entries behavior">
                         <option value="hover">Hover to see</option>
                         <option value="click">Click to see</option>
                         <option value="no-hide">Don't hide</option>
