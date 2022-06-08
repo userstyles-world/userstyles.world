@@ -18,13 +18,14 @@ check() {
 }
 
 export_secrets() {
-    set -a 
+    log "Loading environment variables."
+    set -a
     . data/.env
     set +a
 }
 
 fonts() {
-    log "fonts"
+    log "Downloading fonts."
 
     # Check if unzip is installed.
     check unzip
@@ -71,7 +72,7 @@ _fontsExtract() {
 }
 
 prod() {
-    log "prod"
+    log "Running production configuration."
     export_secrets
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
@@ -80,7 +81,7 @@ prod() {
 }
 
 sass() {
-    log "sass"
+    log "Compiling SCSS files."
     check sassc
 
     # Sassc fails if directory doesn't exist.
@@ -97,7 +98,7 @@ sass() {
 }
 
 drop() {
-    log "drop"
+    log "Dropping database tables."
     check air
     env DB_DROP="1" \
         DB_COLOR="true" \
@@ -107,7 +108,7 @@ drop() {
 }
 
 dev() {
-    log "dev"
+    log "Running development configuration."
     check air
     export_secrets
     env DB_DEBUG="${2:-silent}" \
@@ -119,18 +120,12 @@ dev() {
 # This option builds USw executable for use in production.
 # To build it on unsupported systems, run `go build` in project root directory.
 build() {
-    log "build"
+    log "Compiling static executable."
 
-    log "setting up fonts"
     fonts
-
-    log "compiling sass"
     sass
+    ts
 
-    log "compiling typescript"
-    go run web/typescript/run.go
-
-    log "compiling executable"
     c="$(git rev-list -1 HEAD)"
     v="$(git describe --tags)"
 
@@ -142,7 +137,7 @@ build() {
 }
 
 ts() {
-    log "Compiling typescript"
+    log "Compiling TypeScript files."
 
     env DEBUG="${2:-false}" \
         WATCH="${3:-false}" \
