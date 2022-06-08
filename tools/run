@@ -2,8 +2,6 @@
 
 log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 
-invalid() { printf "Invalid option: %s\n" "$*"; }
-
 check() {
     if ! command -v "$1" >/dev/null; then
         printf "Error: Missing '%s' dependency.\n" "$1"
@@ -147,6 +145,7 @@ ts() {
 init() {
     if [ $# -eq 0 ]; then
         printf "Error: No arguments.\n"
+        # TODO: Show usage/help command.
         exit 1
     fi
 
@@ -163,5 +162,9 @@ case "$1" in
     prod) prod   "$@" ;;
     sass) sass   "$@" ;;
     ts) ts       "$@" ;;
-    *) invalid   "$@" ;;
+    *)
+        printf "Error: Unknown subcommand '%s'.\n" "$1"
+        # TODO: Show usage/help command.
+        exit 1
+        ;;
 esac
