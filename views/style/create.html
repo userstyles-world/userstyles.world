@@ -76,7 +76,7 @@
             {{ end }}
 
             <label for="previewURL">Preview image URL</label>
-            <i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
+            <i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org. To remove preview image, remove the URL.</i>
             <input
                 pattern="{{ config "allowedImagesRe" }}"
                 type="url" name="previewURL" id="previewURL"

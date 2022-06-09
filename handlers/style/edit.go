@@ -84,6 +84,11 @@ func EditPost(c *fiber.Ctx) error {
 			s.PreviewVersion++
 			s.SetPreview()
 		}
+	} else if preview == "" {
+		// TODO: Figure out a better UI/UX for this functionality.  ATM, one has
+		// to set "Preview image URL" field to be empty or upload an image that
+		// can't be processed in order for it to be unset in the database.
+		s.Preview = ""
 	}
 
 	// Update the other fields with new data.
