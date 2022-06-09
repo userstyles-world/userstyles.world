@@ -6,7 +6,7 @@ check() {
     if ! command -v "$1" >/dev/null; then
         printf "Error: Missing '%s' dependency.\n" "$1"
         case "$1" in
-            air) printf "Install it with 'go install github.com/cosmtrek/air'.\n" ;;
+            air) printf "Install it with 'go install github.com/cosmtrek/air@latest'.\n" ;;
             sassc) printf "Install 'sassc' with your package manager.\n" ;;
             unzip) printf "Install 'unzip' with your package manager.\n" ;;
             inotify*) printf "Install 'notify-tools' with your package manager.\n" ;;
