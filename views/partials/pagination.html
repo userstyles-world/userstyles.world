@@ -48,7 +48,12 @@
         {{ end }}
 
         <div class="Pagination-divider"></div>
-        <div class="Pagination-active now" aria-current="page"><b>{{ .Now }}</b></div>
+        <a
+            class="Pagination-active now"
+            href="{{ paginate .Now .Sort }}"
+            aria-current="page">
+            <b>{{ .Now }}</b>
+        </a>
         <div class="Pagination-divider"></div>
 
         {{ if not (eq .Now .Max) }}
