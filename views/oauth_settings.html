@@ -33,18 +33,19 @@
             <label for="name">Name</label>
             <input
                 required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
-                type="text" name="name" value="{{ .OAuth.Name }}"
+                type="text" name="name" id="name" value="{{ .OAuth.Name }}"
                 placeholder="e.g. UserCSS Manager">
 
             <label for="description">Description</label>
-            <i class="fg:3">Supports Markdown syntax.</i>
+            <i class="fg:3" id="description-hint">Supports Markdown syntax.</i>
             <textarea
                 required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
-                type="text" name="description"
+                type="text" name="description" id="description"
                 placeholder="Allow integration between the extension and Userstyles.world"
+                aria-describedby="description-hint"
             >{{ .OAuth.Description }}</textarea>
 
-            <label class="mb:s">Scopes</label>
+            <p class="mb:s">Scopes</p>
             <div class="checkbox flex mb:s">
                 <input type="checkbox" name="user" id="user"
                     {{ if .Scope_user }}checked{{ end }}
@@ -60,12 +61,11 @@
                 <label class="ml:s" for="style">Style</label>
             </div>
 
-            <label for="redirect_uri">Redirect URI</label>
+            <label for="redirect-uri">Redirect URI</label>
             <input
                 required pattern="^(https?:\/\/)([a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\.[a-z]{2,6}|localhost)\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)$"
-                type="text" name="redirect_uri" value="{{ .OAuth.RedirectURI }}"
+                type="url" name="redirect_uri" id="redirect-uri" value="{{ .OAuth.RedirectURI }}"
                 placeholder="e.g. http://localhost:8080/api/callback">
-
 
             <button class="flex btn primary" type="submit">{{ $btn }}</button>
         </form>

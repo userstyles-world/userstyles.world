@@ -1,5 +1,5 @@
-<section class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
-    <div class="Pagination flex jc:c ai:c">
+<div class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
+    <nav class="Pagination flex jc:c ai:c" aria-label="pagination">
         {{ if not (eq .Now .Min) }}
             <a
                 class="Pagination-button icon min"
@@ -48,7 +48,12 @@
         {{ end }}
 
         <div class="Pagination-divider"></div>
-        <div class="Pagination-active now"><b>{{ .Now }}</b></div>
+        <a
+            class="Pagination-active now"
+            href="{{ paginate .Now .Sort }}"
+            aria-current="page">
+            <b>{{ .Now }}</b>
+        </a>
         <div class="Pagination-divider"></div>
 
         {{ if not (eq .Now .Max) }}
@@ -97,5 +102,5 @@
         {{ else }}
             <div class="Pagination-disabled">{{ template "icons/chevrons-right" 16 }}</div>
         {{ end }}
-    </div>
-</section>
+    </nav>
+</div>

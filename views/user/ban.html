@@ -8,17 +8,18 @@
             <label class="mb:m f:b">Are you sure you want to ban user "{{ .Params.Name }}"?</label>
             <br>
             <label for="reason">Reason for ban</label>
-            <i class="fg:3">Be aware that this reason will be made public alongwith this action.</i>
+            <i class="fg:3" id="reason-hint">Be aware that this reason will be made public along with this action.</i>
             <input
                 required
-                type="text" name="reason"
+                type="text" name="reason" id="reason"
+                aria-describedby="reason-hint"
                 placeholder="Your reason to ban this person">
                 <div class="checkbox flex">
-                    <input type="checkbox" name="censor">
+                    <input type="checkbox" name="censor" id="censor" aria-describedby="censor-hint">
                     {{ template "partials/checkboxes" }}
                     <label class="ml:s" for="censor">Censor style's information</label>
                 </div>
-                <i class="fg:3">This will censor the style's information with a spoiler, use this if the style has an innapropiate name.</i>
+                <i class="fg:3" id="censor-hint">This will censor the style's information with a spoiler, use this if the style has an innapropiate name.</i>
                 <div class="mt:m">
                 <button class="btn primary mr:s" type="submit">Confirm</button>
                 <a class="fg:1" href="/dashboard">Cancel</a>

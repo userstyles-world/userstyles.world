@@ -14,12 +14,12 @@
             <label for="alert">Notice ⚠</label>
             <p class="mt:s pb:m">As spam prevention, you're limited to only one review per style every single week. Please proofread your comment since we don't yet have an edit page yet.</p>
             <label for="rating">Rating</label>
-            <input required type="number" name="rating" min="1" max="5"
+            <input required type="number" name="rating" id="rating" min="1" max="5" inputmode="numeric"
                 value="{{ .Rating }}" placeholder="Choose a rating on a scale from 1 to 5">
 
-            <label for="description">Comment</label>
-            <i class="fg:3">Please avoid reporting bugs and/or feature requests here.</i>
-            <textarea type="text" name="comment">{{ .Comment }}</textarea>
+            <label for="comment">Comment</label>
+            <i class="fg:3" id="comment-hint">Please avoid reporting bugs and/or feature requests here.</i>
+            <textarea type="text" name="comment" id="comment" aria-describedby="comment-hint">{{ .Comment }}</textarea>
 
             <div class="mt:m">
                 <button class="btn primary mr:s" type="submit">Confirm</button>
