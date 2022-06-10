@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -45,31 +46,31 @@ func EditGet(c *fiber.Ctx) error {
 func EditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	id := c.Params("id")
+	args := fiber.Map{
+		"User":   u,
+		"Title":  "Edit userstyle",
+		"Method": "edit", // TODO: Remove later.
+	}
 
 	s, err := models.GetStyleByID(id)
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Style not found",
-			"User":  u,
-		})
+		args["Title"] = "Style not found"
+		return c.Render("err", args)
 	}
+	args["Styles"] = s
 
 	// Check if logged-in user matches style author.
 	if u.ID != s.UserID {
-		return c.Render("err", fiber.Map{
-			"Title": "Users don't match",
-			"User":  u,
-		})
+		args["Title"] = "User and style author don't match"
+		return c.Render("err", args)
 	}
 
 	// Check if userstyle name is empty.
 	// TODO: Implement proper validation.
 	s.Name = strings.TrimSpace(c.FormValue("name"))
 	if s.Name == "" {
-		return c.Render("err", fiber.Map{
-			"Title": "Style name can't be empty",
-			"User":  u,
-		})
+		args["Error"] = "Name field can't be empty"
+		return c.Render("style/create", args)
 	}
 
 	// Check for new preview image.
@@ -91,10 +92,20 @@ func EditPost(c *fiber.Ctx) error {
 		s.Preview = ""
 	}
 
+	var uc usercss.UserCSS
+	s.Code = c.FormValue("code")
+	if err := uc.Parse(s.Code); err != nil {
+		args["Error"] = err
+		return c.Render("style/create", args)
+	}
+	if errs := uc.Validate(); errs != nil {
+		args["Errors"] = errs
+		return c.Render("style/create", args)
+	}
+
 	// Update the other fields with new data.
 	s.Description = strings.TrimSpace(c.FormValue("description"))
 	s.Notes = strings.TrimSpace(c.FormValue("notes"))
-	s.Code = strings.TrimSpace(c.FormValue("code"))
 	s.Homepage = strings.TrimSpace(c.FormValue("homepage"))
 	s.License = strings.TrimSpace(c.FormValue("license", "No License"))
 	s.Category = strings.TrimSpace(c.FormValue("category", "unset"))
@@ -103,12 +114,11 @@ func EditPost(c *fiber.Ctx) error {
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 
 	// TODO: Split updates into sections.
-	if err := models.SelectUpdateStyle(s); err != nil {
-		log.Warn.Printf("Failed to update style %d: %s\n", s.ID, err)
-		return c.Render("err", fiber.Map{
-			"Title": "Failed to update userstyle",
-			"User":  u,
-		})
+	if err = models.SelectUpdateStyle(s); err != nil {
+		log.Database.Printf("Failed to update style %d: %s\n", s.ID, err)
+		args["Title"] = "Failed to update userstyle"
+		args["Error"] = "Failed to update style in database"
+		return c.Render("style/create", args)
 	}
 
 	// TODO: Move to code section once we refactor this messy logic.
