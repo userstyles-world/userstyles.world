@@ -7,6 +7,9 @@ check() {
         printf "Error: Missing '%s' dependency.\n" "$1"
         case "$1" in
             air) printf "Install it with 'go install github.com/cosmtrek/air@latest'.\n" ;;
+            curl) printf "Install 'curl' with your package manager.\n" ;;
+            go) printf "Install 'go' with your package manager.\n" ;;
+            git) printf "Install 'git' with your package manager.\n" ;;
             sassc) printf "Install 'sassc' with your package manager.\n" ;;
             unzip) printf "Install 'unzip' with your package manager.\n" ;;
             inotify*) printf "Install 'notify-tools' with your package manager.\n" ;;
@@ -17,6 +20,7 @@ check() {
 
 export_secrets() {
     log "Loading environment variables."
+
     set -a
     . data/.env
     set +a
@@ -24,8 +28,7 @@ export_secrets() {
 
 fonts() {
     log "Downloading fonts."
-
-    # Check if unzip is installed.
+    check curl
     check unzip
 
     # Extract the latest release.
@@ -71,6 +74,7 @@ _fontsExtract() {
 
 prod() {
     log "Running production configuration."
+
     export_secrets
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
@@ -81,12 +85,12 @@ prod() {
 sass() {
     log "Compiling SCSS files."
     check sassc
+    check inotifywait
 
     # Sassc fails if directory doesn't exist.
     mkdir -p web/static/css
 
     if [ "$2" = "--watch" ]; then
-        check inotifywait
         while inotifywait -r -e close_write web/scss; do
             sassc web/scss/main.scss web/static/css/main.css
         done
@@ -97,7 +101,7 @@ sass() {
 
 drop() {
     log "Dropping database tables."
-    check air
+
     env DB_DROP="1" \
         DB_COLOR="true" \
         DB_DEBUG="${2:-silent}" \
@@ -107,7 +111,7 @@ drop() {
 
 dev() {
     log "Running development configuration."
-    check air
+
     export_secrets
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
@@ -148,6 +152,10 @@ init() {
         # TODO: Show usage/help command.
         exit 1
     fi
+
+    check git # Seems unnecessary, but you never know.
+    check go
+    check air
 
     # Go to project's root directory.
     cd "$(git rev-parse --show-toplevel)" || exit
