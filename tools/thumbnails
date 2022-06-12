@@ -1,12 +1,14 @@
 #!/usr/bin/env sh
 
+set -xe
+
 log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 
 gen() {
-    vips webpsave "$1" "$2.webp" --strip --reduction-effort 4 --Q 80 || return
-    vips jpegsave "$1" "$2.jpeg" --strip --Q 80 --optimize-coding || return
-    vipsthumbnail "$2.webp" --size 300 --export-profile srgb -o '%st.webp[profile=none]' || return
-    vipsthumbnail "$2.jpeg" --size 300 --export-profile srgb -o '%st.jpeg[profile=none]' || return
+    vips webpsave "$1" "$2.webp" --strip --reduction-effort 4 --Q 80
+    vips jpegsave "$1" "$2.jpeg" --strip --Q 80 --optimize-coding
+    vipsthumbnail "$2.webp" --size 300 --export-profile srgb -o '%st.webp[profile=none]'
+    vipsthumbnail "$2.jpeg" --size 300 --export-profile srgb -o '%st.jpeg[profile=none]'
     log "Generated images for style ${1%.original}"
 }
 
@@ -14,7 +16,7 @@ root="$(git rev-parse --show-toplevel)"
 images="$root/data/images"
 public="$root/data/public"
 
-cd "$images" || exit
+cd "$images"
 
 batch=10
 count=0

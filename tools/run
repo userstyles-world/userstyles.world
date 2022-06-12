@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -eu
+
 log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 
 check() {
@@ -19,7 +21,7 @@ check() {
         if ! command -v "$arg" >/dev/null; then
             printf "Error: Missing '%s' dependency.\n" "$arg"
             hint "$arg"
-            exit 1
+            return 1
         fi
     done
 }
@@ -94,7 +96,7 @@ sass() {
     # Sassc fails if directory doesn't exist.
     mkdir -p web/static/css
 
-    if [ "$2" = "--watch" ]; then
+    if [ "$#" -eq 2 ] && [ "$2" = "--watch" ]; then
         while inotifywait -r -e close_write web/scss; do
             sassc web/scss/main.scss web/static/css/main.css
         done
@@ -154,14 +156,14 @@ init() {
     if [ $# -eq 0 ]; then
         printf "Error: No arguments.\n"
         # TODO: Show usage/help command.
-        exit 1
+        return 1
     fi
 
     # Seems unnecessary, but you never know.
     check git go air
 
     # Go to project's root directory.
-    cd "$(git rev-parse --show-toplevel)" || exit
+    cd "$(git rev-parse --show-toplevel)"
 }
 
 init "$@"
