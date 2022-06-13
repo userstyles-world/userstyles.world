@@ -66,6 +66,12 @@
             position: absolute;
             top: calc(50% - 16px);
             color: var(--fg-2);
+
+            // Gopher SVG.
+            &:not([width]) {
+                top: calc(50% - 64px);
+                max-width: 128px;
+            }
         }
     }
 

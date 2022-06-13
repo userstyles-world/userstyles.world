@@ -70,8 +70,27 @@
             {{- if eq .Method "edit" }}
                 <p>Current image</p>
                 <i class="fg:3">To change it, set a new preview URL or upload a new image.</i>
-                <div class="flex mt:s">
-                    {{ template "partials/preview-image" .Styles }}
+                <div class="card mt:s mb:m">
+                    <div class="screenshot">
+                        {{ if .Styles.Preview }}
+                            {{ $img := .Styles.Preview | fullImage }}
+                            <picture class="blurred" aria-hidden="true">
+                                <source srcset="{{ $img }}" type="image/webp">
+                                <img src="{{ $img }}" loading="lazy">
+                            </picture>
+                            <picture>
+                                <source srcset="{{ $img }}" type="image/webp">
+                                <img
+                                    loading="lazy"
+                                    src="{{ $img | toJPEG }}"
+                                    alt="{{ .Style.Name }} screenshot" >
+                            </picture>
+                        {{ else }}
+                            <picture class="no-screenshot flex jc:c ai:c">
+                                {{ template "partials/no-screenshot" .Styles }}
+                            </picture>
+                        {{ end }}
+                    </div>
                 </div>
             {{ end }}
 
