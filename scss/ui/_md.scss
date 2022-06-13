@@ -32,4 +32,9 @@
         border-radius: var(--br-3);
         background-color: var(--bg-3);
     }
+
+    img {
+        width: initial;
+        max-width: 100%;
+    }
 }
