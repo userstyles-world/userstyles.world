@@ -5,21 +5,22 @@ All notable changes to this project will be documented in this file. See [standa
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
 
-- [v1.7.0](#1-7-0-https-github-com-userstyles-world-userstyles-world-compare-v1-6-1-v1-7-0-2021-08-27)
-- [v1.6.1](#1-6-1-https-github-com-userstyles-world-userstyles-world-compare-v1-6-0-v1-6-1-2021-08-12)
-- [v1.6.0](#1-6-0-https-github-com-userstyles-world-userstyles-world-compare-v1-5-0-v1-6-0-2021-08-11)
-- [v1.5.0](#1-5-0-https-github-com-userstyles-world-userstyles-world-compare-v1-4-0-v1-5-0-2021-07-18)
-- [v1.4.0](#1-4-0-https-github-com-userstyles-world-userstyles-world-compare-v1-3-0-v1-4-0-2021-07-12)
-- [v1.3.0](#1-3-0-https-github-com-userstyles-world-userstyles-world-compare-v1-2-1-v1-3-0-2021-06-19)
-- [v1.2.1](#1-2-1-https-github-com-userstyles-world-userstyles-world-compare-v1-2-0-v1-2-1-2021-05-30)
-- [v1.2.0](#1-2-0-https-github-com-userstyles-world-userstyles-world-compare-v1-1-0-v1-2-0-2021-05-29)
-- [v1.1.0](#1-1-0-https-github-com-userstyles-world-userstyles-world-compare-v1-0-0-v1-1-0-2021-05-21)
-- [v1.0.0](#1-0-0-https-github-com-userstyles-world-userstyles-world-compare-fef3eb9-v1-0-0-2021-05-16)
+- [v1.7.0](#v170-2021-08-27)
+- [v1.6.1](#v161-2021-08-12)
+- [v1.6.0](#v160-2021-08-11)
+- [v1.5.0](#v150-2021-07-18)
+- [v1.4.0](#v140-2021-07-12)
+- [v1.3.0](#v130-2021-06-19)
+- [v1.2.1](#v121-2021-05-30)
+- [v1.2.0](#v120-2021-05-29)
+- [v1.1.0](#v110-2021-05-21)
+- [v1.0.0](#v100-2021-05-16)
 
 <!-- markdown-toc end -->
 
-## [1.7.0](https://github.com/userstyles-world/userstyles.world/compare/v1.6.1...v1.7.0) (2021-08-27)
+## v1.7.0 (2021-08-27)
 
+[v1.6.1...v1.7.0](https://github.com/userstyles-world/userstyles.world/compare/v1.6.1...v1.7.0)
 
 ### Features
 
@@ -67,16 +68,18 @@ All notable changes to this project will be documented in this file. See [standa
 * **ui:** make style card overflow pixel-perfect ([e63ea09](https://github.com/userstyles-world/userstyles.world/commit/e63ea093b3797872fdae390f25c1bcb9c577fbfe))
 * **ui:** switch to accent color for footer links ([a5ef219](https://github.com/userstyles-world/userstyles.world/commit/a5ef21927dee9d4ec35de2f7b0ff485e572715c0))
 
-## [1.6.1](https://github.com/userstyles-world/userstyles.world/compare/v1.6.0...v1.6.1) (2021-08-12)
+## v1.6.1 (2021-08-12)
 
+[v1.6.0...v1.6.1](https://github.com/userstyles-world/userstyles.world/compare/v1.6.0...v1.6.1)
 
 ### Bug Fixes
 
 
 * **db:** revert duplicate style conditional ([02a8101](https://github.com/userstyles-world/userstyles.world/commit/02a81019643a1d309c2e46be69baddc2b8c42a10)), closes [#79](https://github.com/userstyles-world/userstyles.world/issues/79)
 
-## [1.6.0](https://github.com/userstyles-world/userstyles.world/compare/v1.5.0...v1.6.0) (2021-08-11)
+## v1.6.0 (2021-08-11)
 
+[v1.5.0...v1.6.0](https://github.com/userstyles-world/userstyles.world/compare/v1.5.0...v1.6.0)
 
 ### Features
 
@@ -168,8 +171,9 @@ All notable changes to this project will be documented in this file. See [standa
 * **ts:** initialize log for watch mode ([f7bace6](https://github.com/userstyles-world/userstyles.world/commit/f7bace6f034216046d82ea6601f98c3aa7123499))
 * **ts:** remove redirect when on correct page ([1540f39](https://github.com/userstyles-world/userstyles.world/commit/1540f39f42e76b8b4a587b79ad58e540e3916448))
 
-## [1.5.0](https://github.com/userstyles-world/userstyles.world/compare/v1.4.0...v1.5.0) (2021-07-18)
+## v1.5.0 (2021-07-18)
 
+[v1.4.0...v1.5.0](https://github.com/userstyles-world/userstyles.world/compare/v1.4.0...v1.5.0)
 
 ### Features
 
@@ -240,8 +244,9 @@ All notable changes to this project will be documented in this file. See [standa
 * **todo:** remove non-possible todo ([9561f2c](https://github.com/userstyles-world/userstyles.world/commit/9561f2c121782e683a795e5f9322e0f6f490d835))
 * **typecheck:** don't force types without checks ([f39bebb](https://github.com/userstyles-world/userstyles.world/commit/f39bebb9ad55a33116856294de5dbfc8ae295b6e))
 
-## [1.4.0](https://github.com/userstyles-world/userstyles.world/compare/v1.3.0...v1.4.0) (2021-07-12)
+## v1.4.0 (2021-07-12)
 
+[v1.3.0...v1.4.0](https://github.com/userstyles-world/userstyles.world/compare/v1.3.0...v1.4.0)
 
 ### Features
 
@@ -304,8 +309,9 @@ All notable changes to this project will be documented in this file. See [standa
 * **ts:** auto-fill proper metadata for homepage ([afc459b](https://github.com/userstyles-world/userstyles.world/commit/afc459b8752b6d8c1ed714afcd0f354fd39cbcf3))
 * **ts:** prevent prototype pollution ([a086a49](https://github.com/userstyles-world/userstyles.world/commit/a086a49b36ffa63f096d6598cfb1aab3425d40b4))
 
-## [1.3.0](https://github.com/userstyles-world/userstyles.world/compare/v1.2.1...v1.3.0) (2021-06-19)
+## v1.3.0 (2021-06-19)
 
+[v1.2.1...v1.3.0](https://github.com/userstyles-world/userstyles.world/compare/v1.2.1...v1.3.0)
 
 ### Features
 
@@ -336,8 +342,9 @@ All notable changes to this project will be documented in this file. See [standa
 * **ts:** compile production version ([c7f58e0](https://github.com/userstyles-world/userstyles.world/commit/c7f58e041f9080b4fb1a6eb159c68b4bbfccc8ca))
 * **ts:** safe remove of element ([30c2a39](https://github.com/userstyles-world/userstyles.world/commit/30c2a39ab87f27a28b95ec99d2b65fed97160191))
 
-## [1.2.1](https://github.com/userstyles-world/userstyles.world/compare/v1.2.0...v1.2.1) (2021-05-30)
+## v1.2.1 (2021-05-30)
 
+[v1.2.0...v1.2.1](https://github.com/userstyles-world/userstyles.world/compare/v1.2.0...v1.2.1)
 
 ### Features
 
@@ -353,8 +360,9 @@ All notable changes to this project will be documented in this file. See [standa
 * **oauth:** redirect to oauth after creation ([e080ea6](https://github.com/userstyles-world/userstyles.world/commit/e080ea6684d03b9abe30bdfa06e9f902bd1dd8de))
 * **tools:** don't watch static folder ([df9c0b3](https://github.com/userstyles-world/userstyles.world/commit/df9c0b36900829354f55f909caef858e7a76136b))
 
-## [1.2.0](https://github.com/userstyles-world/userstyles.world/compare/v1.1.0...v1.2.0) (2021-05-29)
+## v1.2.0 (2021-05-29)
 
+[v1.1.0...v1.2.0](https://github.com/userstyles-world/userstyles.world/compare/v1.1.0...v1.2.0)
 
 ### Features
 
@@ -420,7 +428,9 @@ All notable changes to this project will be documented in this file. See [standa
 * use Post ([8efc8b4](https://github.com/userstyles-world/userstyles.world/commit/8efc8b4d28f00b53691b85fbfc650d627764e82d))
 * **styles:** make url relative to canonical ([93eded2](https://github.com/userstyles-world/userstyles.world/commit/93eded2678fab8c0e4c1c5e0fe716bca3e52820f))
 
-## [1.1.0](https://github.com/userstyles-world/userstyles.world/compare/v1.0.0...v1.1.0) (2021-05-21)
+## v1.1.0 (2021-05-21)
+
+[v1.0.0...v1.1.0](https://github.com/userstyles-world/userstyles.world/compare/v1.0.0...v1.1.0)
 
 ### Features
 
@@ -455,7 +465,9 @@ All notable changes to this project will be documented in this file. See [standa
 * **ts:** yoda-compatible ([224c3d4](https://github.com/userstyles-world/userstyles.world/commit/224c3d49c364f6445deaa77cf862ad148305ec4a))
 * **ts:** don't error that esbuild isn't used ([85f616c](https://github.com/userstyles-world/userstyles.world/commit/85f616c5c054e3a6146da22d611d6dee0743ea38))
 
-## [1.0.0](https://github.com/userstyles-world/userstyles.world/compare/fef3eb9...v1.0.0) (2021-05-16)
+## v1.0.0 (2021-05-16)
+
+[fef3eb9...v1.0.0](https://github.com/userstyles-world/userstyles.world/compare/fef3eb9...v1.0.0)
 
 ### Features
 
