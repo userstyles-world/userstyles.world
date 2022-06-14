@@ -26,6 +26,7 @@ func IndexStyle(id uint) error {
 		Notes:       style.Notes,
 		Installs:    style.Installs,
 		Views:       style.Views,
+		Rating:      style.Rating,
 	})
 }
 
