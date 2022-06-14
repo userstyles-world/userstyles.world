@@ -56,7 +56,7 @@ func SpecificUserGet(c *fiber.Ctx) error {
 	var user *models.User
 	var err error
 	if _, intErr := strconv.Atoi(identifier); intErr == nil {
-		user, err = models.FindUserByID(identifier)
+		user, err = models.FindUserByID(identifier, "HACK")
 	} else {
 		user, err = models.FindUserByName(identifier)
 	}

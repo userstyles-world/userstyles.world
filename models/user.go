@@ -147,14 +147,16 @@ func FindUserByNameOrEmail(name, email string) (*User, error) {
 	return user, nil
 }
 
-func FindUserByID(id string) (*User, error) {
+func FindUserByID(id string, forbid ...string) (*User, error) {
 	user := new(User)
 
-	err := db().
-		Model(modelUser).
-		Where("(SELECT user_id FROM styles WHERE user_id = users.id) AND id = ?", id).
-		First(&user).
-		Error
+	// HACK: Forbid scraping public user info via API if they have no userstyles.
+	var hack string
+	if len(forbid) > 0 {
+		hack = "(SELECT user_id FROM styles WHERE user_id = users.id) AND "
+	}
+
+	err := db().Model(modelUser).Where(hack+"id = ?", id).First(&user).Error
 	if err != nil {
 		return nil, err
 	}
