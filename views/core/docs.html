@@ -1,3 +1,3 @@
 <div class="docs wrapper py:l">
-    <div class="md">{{ .content | MarkdownSafe | toHTML }}</div>
+    <div class="md">{{ .content | MarkdownSafe | unescape }}</div>
 </div>

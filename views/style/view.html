@@ -138,7 +138,7 @@
             <div class="mt:m">
                 <h2 class="td:d">Description</h2>
                 {{ if .Style.Description }}
-                    <div class="md">{{ proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID | toHTML }}</div>
+                    <div class="md">{{ proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID | unescape }}</div>
                 {{ else }}
                     <i>Userstyle doesn't have description.</i>
                 {{ end }}
@@ -146,7 +146,7 @@
             <div class="mt:m">
                 <h2 class="td:d">Notes</h2>
                 {{ if .Style.Notes }}
-                    <div class="md">{{ proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID | toHTML }}</div>
+                    <div class="md">{{ proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID | unescape }}</div>
                 {{ else }}
                     <i>Userstyle doesn't have notes.</i>
                 {{ end }}

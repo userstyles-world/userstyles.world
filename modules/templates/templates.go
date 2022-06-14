@@ -166,10 +166,6 @@ func New(views fs.FS, dir string) *html.Engine {
 		return url[:len(url)-4] + "jpeg"
 	})
 
-	engine.AddFunc("toHTML", func(text string) template.HTML {
-		return template.HTML(text)
-	})
-
 	if !config.Production {
 		engine.Reload(true)
 	}
