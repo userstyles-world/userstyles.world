@@ -115,7 +115,10 @@
             }
         }
 
-        img { object-position: left top }
+        img {
+            object-position: center;
+            object-fit: contain;
+        }
     }
 
     &-body,
