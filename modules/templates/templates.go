@@ -108,9 +108,7 @@ func New(views fs.FS, dir string) *html.Engine {
 		return a + b
 	})
 
-	engine.AddFunc("floor", func(i float64) float64 {
-		return math.Floor(i)
-	})
+	engine.AddFunc("floor", math.Floor)
 
 	engine.AddFunc("sub", func(a, b int) int {
 		return a - b
