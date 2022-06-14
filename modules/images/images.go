@@ -51,9 +51,10 @@ func GenerateFromURL(id, version, url string) error {
 	return processImages(id, version, url, data)
 }
 
+var rawURLExtractor = regexp.MustCompile(`(?mi)^(http.*)/(raw|src|blob)/(.*.(png|jpe?g|avif|webp))(\?.*)*$`)
+
 func fixRawURL(url string) string {
-	re := regexp.MustCompile(`(?mi)^(http.*)/(raw|src|blob)/(.*.(png|jpe?g|avif|webp))(\?.*)*$`)
-	return re.ReplaceAllString(url, "${1}/raw/${3}")
+	return rawURLExtractor.ReplaceAllString(url, "${1}/raw/${3}")
 }
 
 func processImages(id, version, from string, data []byte) error {
