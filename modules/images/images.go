@@ -34,7 +34,7 @@ func GenerateFromUpload(fh *multipart.FileHeader, id, version string) error {
 	}
 
 	data, _ := io.ReadAll(img)
-	return processImages(id, version, "file upload", data)
+	return processImages(id, version, fh.Filename, data)
 }
 
 // GenerateFromURL will generate images from an external URL.
