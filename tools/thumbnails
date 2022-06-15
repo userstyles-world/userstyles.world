@@ -7,8 +7,8 @@ log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 gen() {
     vips webpsave "$1" "$2.webp" --strip --reduction-effort 4 --Q 80
     vips jpegsave "$1" "$2.jpeg" --strip --Q 80 --optimize-coding
-    vipsthumbnail "$2.webp" --size 300 --export-profile srgb -o '%st.webp[profile=none]'
-    vipsthumbnail "$2.jpeg" --size 300 --export-profile srgb -o '%st.jpeg[profile=none]'
+    vipsthumbnail "$2.webp" --size 300 -o '%st.webp[profile=none]'
+    vipsthumbnail "$2.jpeg" --size 300 -o '%st.jpeg[profile=none]'
     log "Generated images for style ${1%.original}"
 }
 
