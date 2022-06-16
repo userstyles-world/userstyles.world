@@ -15,6 +15,10 @@ const (
 	imageThumbJPEG
 )
 
+func (x imageKind) String() string {
+	return [...]string{"WebP", "JPEG", "WebP thumb", "JPEG thumb"}[x]
+}
+
 // CheckVips will look for Vips binaries and exit if they're not found.
 func CheckVips() {
 	for _, name := range []string{"vips", "vipsthumbnail"} {

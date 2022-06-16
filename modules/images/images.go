@@ -57,11 +57,11 @@ func fixRawURL(url string) string {
 	return rawURLExtractor.ReplaceAllString(url, "${1}/raw/${3}")
 }
 
-func processImages(id, version, from string, data []byte) error {
+func processImages(id, version, url string, data []byte) error {
 	original := path.Join(config.ImageDir, id+".original")
 	if err := os.WriteFile(original, data, 0o600); err != nil {
 		return fmt.Errorf("failed to save image for %s from %q: %s",
-			id, from, err)
+			id, url, err)
 	}
 
 	dir := path.Join(config.PublicDir, id)
@@ -72,23 +72,22 @@ func processImages(id, version, from string, data []byte) error {
 	}
 
 	webp := path.Join(dir, version+".webp")
-	if err := decodeImage(original, webp, imageFullWebP); err != nil {
-		return fmt.Errorf("Failed to decode WebP image for %s from %q: %s",
-			id, from, err)
-	}
-	if err := decodeImage(original, webp, imageThumbWebP); err != nil {
-		return fmt.Errorf("Failed to decode WebP thumb for %s from %q: %s",
-			id, from, err)
+	jpeg := path.Join(dir, version+".jpeg")
+	images := []struct {
+		out  string
+		kind imageKind
+	}{
+		{out: webp, kind: imageFullWebP},
+		{out: webp, kind: imageThumbWebP},
+		{out: jpeg, kind: imageFullJPEG},
+		{out: jpeg, kind: imageThumbJPEG},
 	}
 
-	jpeg := path.Join(dir, version+".jpeg")
-	if err := decodeImage(original, jpeg, imageFullJPEG); err != nil {
-		return fmt.Errorf("Failed to decode JPEG image for %s from %q: %s",
-			id, from, err)
-	}
-	if err := decodeImage(original, jpeg, imageThumbJPEG); err != nil {
-		return fmt.Errorf("Failed to decode JPEG thumb for %s from %q: %s",
-			id, from, err)
+	for _, image := range images {
+		if err := decodeImage(original, image.out, image.kind); err != nil {
+			return fmt.Errorf("failed to decode %s for style %s from %q: %s",
+				image.kind, id, url, err)
+		}
 	}
 
 	return nil
