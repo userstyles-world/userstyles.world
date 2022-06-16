@@ -67,7 +67,8 @@ func processImages(id, version, url string, data []byte) error {
 	dir := path.Join(config.PublicDir, id)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err := os.MkdirAll(dir, 0o755); err != nil {
-			log.Warn.Fatalf("Failed to create %q: %s\n", dir, err)
+			log.Warn.Printf("Failed to create %q for %s: %s\n", dir, id, err)
+			return err
 		}
 	}
 
