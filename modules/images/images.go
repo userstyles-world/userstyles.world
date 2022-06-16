@@ -33,7 +33,11 @@ func GenerateFromUpload(fh *multipart.FileHeader, id, version string) error {
 		return err
 	}
 
-	data, _ := io.ReadAll(img)
+	data, err := io.ReadAll(img)
+	if err != nil {
+		return err
+	}
+
 	return processImages(id, version, fh.Filename, data)
 }
 
@@ -47,7 +51,11 @@ func GenerateFromURL(id, version, url string) error {
 	}
 	defer req.Body.Close()
 
-	data, _ := io.ReadAll(req.Body)
+	data, err := io.ReadAll(req.Body)
+	if err != nil {
+		return err
+	}
+
 	return processImages(id, version, url, data)
 }
 
