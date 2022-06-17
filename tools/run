@@ -172,6 +172,26 @@ case "$1" in
     prod) prod   "$@" ;;
     sass) sass   "$@" ;;
     ts) ts       "$@" ;;
+
+    watch)
+        shift
+        if [ "$#" -eq 1 ]; then
+            case "$1" in
+                go) dev ;;
+                [jt]s) ts '' 'true' 'true' ;;
+                s[ac]ss) sass '' '--watch' ;;
+                *)
+                    printf "Error: Invalid argument '%s'.  " "$1"
+                    printf "Try using go, ts, or scss.\n"
+                    exit 1
+                    ;;
+            esac
+        else
+            printf "Error: No argument found.  Try using go, ts, or scss.\n"
+            exit 1
+        fi
+        ;;
+
     *)
         printf "Error: Unknown subcommand '%s'.\n" "$1"
         # TODO: Show usage/help command.
