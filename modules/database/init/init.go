@@ -116,7 +116,7 @@ func migrateImages() {
 
 	log.Info.Println("Update preview image URLs")
 	for _, s := range styles {
-		s.Preview = fmt.Sprintf("https://userstyles.world/preview/%s/0.webp", s.ID)
+		s.Preview = fmt.Sprintf("%s/preview/%s/0t.webp", config.BaseURL, s.ID)
 
 		err = db.Model(style).Select("preview").Where("id = ?", s.ID).Updates(s).Error
 		if err != nil {
