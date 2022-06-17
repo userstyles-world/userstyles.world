@@ -13,7 +13,6 @@ check() {
             git) printf "Install 'git' with your package manager.\n" ;;
             sassc) printf "Install 'sassc' with your package manager.\n" ;;
             unzip) printf "Install 'unzip' with your package manager.\n" ;;
-            inotify*) printf "Install 'notify-tools' with your package manager.\n" ;;
         esac
     }
 
@@ -91,15 +90,13 @@ prod() {
 
 sass() {
     log "Compiling SCSS files."
-    check sassc inotifywait
+    check sassc
 
-    # Sassc fails if directory doesn't exist.
+    # Sassc fails if target directory doesn't exist.
     mkdir -p web/static/css
 
     if [ "$#" -eq 2 ] && [ "$2" = "--watch" ]; then
-        while inotifywait -r -e close_write web/scss; do
-            sassc web/scss/main.scss web/static/css/main.css
-        done
+        air -c tools/air_scss.toml
     else
         sassc --style compressed web/scss/main.scss web/static/css/main.css
     fi
