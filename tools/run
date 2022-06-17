@@ -25,14 +25,6 @@ check() {
     done
 }
 
-export_secrets() {
-    log "Loading environment variables."
-
-    set -a
-    . data/.env
-    set +a
-}
-
 fonts() {
     log "Downloading fonts."
     check curl unzip
@@ -81,7 +73,6 @@ _fontsExtract() {
 prod() {
     log "Running production configuration."
 
-    export_secrets
     env PORT=":${2:-3001}" \
         DB="${3:-prod.db}" \
         SALT="${4:-15}" \
@@ -115,7 +106,6 @@ drop() {
 dev() {
     log "Running development configuration."
 
-    export_secrets
     env DB_DEBUG="${2:-silent}" \
         DB_DROP="${3:-false}" \
         DB_COLOR="true" \
@@ -149,6 +139,19 @@ ts() {
         go run web/typescript/run.go
 }
 
+config() {
+    if [ -n "$1" ] && [ -e "tools/${1}" ]; then
+        printf "Loading environment variables from '%s' file.\n" "$1"
+        set -a
+        # shellcheck disable=SC1090
+        . "tools/${1}"
+        set +a
+    else
+        printf "Failed to load environment variables from '%s' file.\n" "$1"
+        return 1
+    fi
+}
+
 init() {
     if [ $# -eq 0 ]; then
         printf "Error: No arguments.\n"
@@ -172,6 +175,16 @@ case "$1" in
     prod) prod   "$@" ;;
     sass) sass   "$@" ;;
     ts) ts       "$@" ;;
+
+    config)
+        shift
+        if [ "$#" -eq 1 ]; then
+            config "$1"
+        else
+            printf "Error: No argument found.  Try passing a valid env file.\n"
+            exit 1
+        fi
+        ;;
 
     watch)
         shift
