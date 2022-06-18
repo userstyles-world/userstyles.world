@@ -167,6 +167,8 @@ init() {
 }
 
 init "$@"
+
+while [ $# -gt 0 ]; do
 case "$1" in
     build) build "$@" ;;
     fonts) fonts "$@" ;;
@@ -178,8 +180,9 @@ case "$1" in
 
     config)
         shift
-        if [ "$#" -eq 1 ]; then
+        if [ "$#" -ge 1 ]; then
             config "$1"
+            shift
         else
             printf "Error: No argument found.  Try passing a valid env file.\n"
             exit 1
@@ -188,7 +191,7 @@ case "$1" in
 
     watch)
         shift
-        if [ "$#" -eq 1 ]; then
+        if [ $# -eq 1 ]; then
             case "$1" in
                 go) dev ;;
                 [jt]s) ts '' 'true' 'true' ;;
@@ -211,3 +214,4 @@ case "$1" in
         exit 1
         ;;
 esac
+done
