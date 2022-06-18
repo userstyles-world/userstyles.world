@@ -112,23 +112,16 @@ dev() {
         air -c tools/air.toml
 }
 
-# This option builds USw executable for use in production.
-# To build it on unsupported systems, run `go build` in project root directory.
-build() {
+compileGoProd() {
     log "Compiling static executable."
 
-    fonts
-    sass
-    ts
+    f="-s -w -extldflags '-fno-PIC -static'"
+    f="$f -X userstyles.world/modules/config.GitCommit=$(git rev-list -1 HEAD)"
+    f="$f -X userstyles.world/modules/config.GitVersion=$(git describe --tags)"
 
-    c="$(git rev-list -1 HEAD)"
-    v="$(git describe --tags)"
-
-    GOOS=linux go build \
-        -ldflags "-s -w -extldflags '-fno-PIC -static'
-                  -X userstyles.world/modules/config.GitCommit=${c}
-                  -X userstyles.world/modules/config.GitVersion=${v}" \
-        -buildmode pie -tags 'osusergo netgo static_build'
+    go build -v \
+        -ldflags "$f" -buildmode pie \
+        -tags 'osusergo netgo static_build'
 }
 
 ts() {
@@ -170,7 +163,7 @@ init "$@"
 
 while [ $# -gt 0 ]; do
 case "$1" in
-    build) build "$@" ;;
+    build) fonts; sass; ts; compileGoProd ;;
     fonts) fonts "$@" ;;
     dev)  dev    "$@" ;;
     drop) drop   "$@" ;;
