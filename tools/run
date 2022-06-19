@@ -191,22 +191,26 @@ init() {
 init "$@"
 
 while [ $# -gt 0 ]; do
-case "$1" in
-    build) fonts; sass; ts; compileGoProd ;;
-    fonts) fonts "$@" ;;
-    dev)  dev    "$@" ;;
-    drop) drop   "$@" ;;
-    prod) prod   "$@" ;;
-    sass) sass   "$@" ;;
-    ts) ts       "$@" ;;
-
-    config)
-        shift; configCmd "$@"; shift ;;
-
-    watch)
-        shift; watchCmd "$@"; shift ;;
-
-    *)
-        fallbackCmd "$@" ;;
-esac
+    case "$1" in
+        build)
+            shift; fonts; sass; ts; compileGoProd ;;
+        fonts) # TODO: Move to buildCmd.
+            shift; fonts ;;
+        sass) # TODO: Move to buildCmd.
+            shift; sass ;;
+        ts) # TODO: Move to buildCmd.
+            shift; ts ;;
+        dev) # TODO: Move to 'watch' under 'all'.
+            dev "$@" ;;
+        drop) # TODO: Remove? I suppose we could handle it in Go code.
+            drop "$@" ;;
+        prod) # TODO: Remove? It could be used with 'build prod start'.
+            prod "$@" ;;
+        config)
+            shift; configCmd "$@"; shift ;;
+        watch)
+            shift; watchCmd "$@"; shift ;;
+        *)
+            fallbackCmd "$@" ;;
+    esac
 done
