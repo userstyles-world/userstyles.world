@@ -132,17 +132,46 @@ ts() {
         go run web/typescript/run.go
 }
 
-config() {
-    if [ -n "$1" ] && [ -e "tools/${1}" ]; then
-        printf "Loading environment variables from '%s' file.\n" "$1"
-        set -a
-        # shellcheck disable=SC1090
-        . "tools/${1}"
-        set +a
+configCmd() {
+    if [ $# -ge 1 ]; then
+        if  [ -e "tools/${1}" ]; then
+            printf "Loading environment variables from '%s' file.\n" "$1"
+            set -a
+            # shellcheck disable=SC1090
+            . "tools/${1}"
+            set +a
+        else
+            printf "Failed to load environment variables from '%s' file.\n" "$1"
+            return 1
+        fi
     else
-        printf "Failed to load environment variables from '%s' file.\n" "$1"
+        printf "Error: No argument found.  Try passing a valid env file.\n"
         return 1
     fi
+}
+
+watchCmd() {
+    if [ $# -eq 1 ]; then
+        case "$1" in
+            go) dev ;;
+            [jt]s) ts '' 'true' 'true' ;;
+            s[ac]ss) sass '' '--watch' ;;
+            *)
+                printf "Error: Invalid argument '%s'.  " "$1"
+                printf "Try using go, ts, or scss.\n"
+                return 1
+                ;;
+        esac
+    else
+        printf "Error: No argument found.  Try using go, ts, or scss.\n"
+        return 1
+    fi
+}
+
+fallbackCmd() {
+    printf "Error: Unknown subcommand '%s'.\n" "$1"
+    # TODO: Show usage/help command.
+    return 1
 }
 
 init() {
@@ -172,39 +201,12 @@ case "$1" in
     ts) ts       "$@" ;;
 
     config)
-        shift
-        if [ "$#" -ge 1 ]; then
-            config "$1"
-            shift
-        else
-            printf "Error: No argument found.  Try passing a valid env file.\n"
-            exit 1
-        fi
-        ;;
+        shift; configCmd "$@"; shift ;;
 
     watch)
-        shift
-        if [ $# -eq 1 ]; then
-            case "$1" in
-                go) dev ;;
-                [jt]s) ts '' 'true' 'true' ;;
-                s[ac]ss) sass '' '--watch' ;;
-                *)
-                    printf "Error: Invalid argument '%s'.  " "$1"
-                    printf "Try using go, ts, or scss.\n"
-                    exit 1
-                    ;;
-            esac
-        else
-            printf "Error: No argument found.  Try using go, ts, or scss.\n"
-            exit 1
-        fi
-        ;;
+        shift; watchCmd "$@"; shift ;;
 
     *)
-        printf "Error: Unknown subcommand '%s'.\n" "$1"
-        # TODO: Show usage/help command.
-        exit 1
-        ;;
+        fallbackCmd "$@" ;;
 esac
 done
