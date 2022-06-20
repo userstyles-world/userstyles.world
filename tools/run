@@ -150,6 +150,14 @@ configCmd() {
     fi
 }
 
+setupCmd() {
+    log "Setting up development environment."
+    fonts
+    sass
+    ts
+    go build -v .
+}
+
 watchCmd() {
     if [ $# -eq 1 ]; then
         case "$1" in
@@ -208,6 +216,8 @@ while [ $# -gt 0 ]; do
             prod "$@" ;;
         config)
             shift; configCmd "$@"; shift ;;
+        setup)
+            shift; sass "$@" ;;
         watch)
             shift; watchCmd "$@"; shift ;;
         *)
