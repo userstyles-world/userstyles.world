@@ -79,18 +79,25 @@ prod() {
         ./userstyles.world
 }
 
-sass() {
-    log "Compiling SCSS files."
-    check sassc
+setupSass() {
+    log "Setting up Sass."
 
-    # Sassc fails if target directory doesn't exist.
+    # Sassc fails to create the compiled file if target directory doesn't exist,
+    # so we have to create it manually.
     mkdir -p web/static/css
 
-    if [ "$#" -eq 2 ] && [ "$2" = "--watch" ]; then
-        air -c tools/air_scss.toml
-    else
-        sassc --style compressed web/scss/main.scss web/static/css/main.css
-    fi
+    # Compile initial CSS file.
+    compileSass
+}
+
+watchSass() {
+    log "Watching Sass files."
+    air -c tools/air_sass.toml
+}
+
+compileSass() {
+    log "Compiling Sass files."
+    sassc web/scss/main.scss web/static/css/main.css
 }
 
 drop() {
@@ -153,8 +160,8 @@ configCmd() {
 setupCmd() {
     log "Setting up development environment."
     fonts
-    sass
     ts
+    setupSass
     go build -v .
 }
 
@@ -163,15 +170,15 @@ watchCmd() {
         case "$1" in
             go) dev ;;
             [jt]s) ts '' 'true' 'true' ;;
-            s[ac]ss) sass '' '--watch' ;;
+            s[ac]ss|css) watchSass ;; # Match on sass, scss, or css.
             *)
                 printf "Error: Invalid argument '%s'.  " "$1"
-                printf "Try using go, ts, or scss.\n"
+                printf "Try using go, ts, or sass.\n"
                 return 1
                 ;;
         esac
     else
-        printf "Error: No argument found.  Try using go, ts, or scss.\n"
+        printf "Error: No argument found.  Try using go, ts, or sass.\n"
         return 1
     fi
 }
@@ -201,11 +208,11 @@ init "$@"
 while [ $# -gt 0 ]; do
     case "$1" in
         build)
-            shift; fonts; sass; ts; compileGoProd ;;
+            shift; fonts; compileSass; ts; compileGoProd ;;
         fonts) # TODO: Move to buildCmd.
             shift; fonts ;;
         sass) # TODO: Move to buildCmd.
-            shift; sass ;;
+            shift; compileSass ;;
         ts) # TODO: Move to buildCmd.
             shift; ts ;;
         dev) # TODO: Move to 'watch' under 'all'.
@@ -217,7 +224,7 @@ while [ $# -gt 0 ]; do
         config)
             shift; configCmd "$@"; shift ;;
         setup)
-            shift; sass "$@" ;;
+            shift; setupCmd "$@" ;;
         watch)
             shift; watchCmd "$@"; shift ;;
         *)
