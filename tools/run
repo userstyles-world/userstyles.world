@@ -131,6 +131,29 @@ ts() {
         go run web/typescript/run.go
 }
 
+buildCmd() {
+    if [ $# -ge 1 ]; then
+        case "$1" in
+            dev)
+                log "Build development USw executable."
+                ts; compileSass; compileGoDev
+                ;;
+            prod)
+                log "Build production USw executable."
+                ts; compileSass; compileGoProd
+                ;;
+            *)
+                printf "Error: Invalid argument '%s'.  " "$1"
+                printf "Try using dev or prod."
+                return 1
+                ;;
+        esac
+    else
+        printf "Error: No argument found.  Try using dev or prod.\n"
+        return 1
+    fi
+}
+
 configCmd() {
     if [ $# -ge 1 ]; then
         if  [ -e "tools/${1}" ]; then
@@ -200,13 +223,7 @@ init "$@"
 while [ $# -gt 0 ]; do
     case "$1" in
         build)
-            shift; fonts; compileSass; ts; compileGoProd ;;
-        fonts) # TODO: Move to buildCmd.
-            shift; fonts ;;
-        sass) # TODO: Move to buildCmd.
-            shift; compileSass ;;
-        ts) # TODO: Move to buildCmd.
-            shift; ts ;;
+            shift; buildCmd "$@"; shift ;;
         dev) # TODO: Move to 'watch' under 'all'.
             shift; compileGoDev "$@" ;;
         drop) # TODO: Remove? I suppose we could handle it in Go code.
