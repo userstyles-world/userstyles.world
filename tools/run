@@ -70,15 +70,6 @@ _fontsExtract() {
     done
 }
 
-prod() {
-    log "Running production configuration."
-
-    env PORT=":${2:-3001}" \
-        DB="${3:-prod.db}" \
-        SALT="${4:-15}" \
-        ./userstyles.world
-}
-
 setupSass() {
     log "Setting up Sass."
 
@@ -110,13 +101,14 @@ drop() {
         air -c tools/air.toml
 }
 
-dev() {
-    log "Running development configuration."
+watchGo() {
+    log "Watching Go files."
+    air -c tools/air.toml
+}
 
-    env DB_DEBUG="${2:-silent}" \
-        DB_DROP="${3:-false}" \
-        DB_COLOR="true" \
-        air -c tools/air.toml
+compileGoDev() {
+    log "Compiling executable."
+    go build -v
 }
 
 compileGoProd() {
@@ -162,13 +154,13 @@ setupCmd() {
     fonts
     ts
     setupSass
-    go build -v .
+    compileGoDev
 }
 
 watchCmd() {
     if [ $# -eq 1 ]; then
         case "$1" in
-            go) dev ;;
+            go) watchGo ;;
             [jt]s) ts '' 'true' 'true' ;;
             s[ac]ss|css) watchSass ;; # Match on sass, scss, or css.
             *)
@@ -216,11 +208,11 @@ while [ $# -gt 0 ]; do
         ts) # TODO: Move to buildCmd.
             shift; ts ;;
         dev) # TODO: Move to 'watch' under 'all'.
-            dev "$@" ;;
+            shift; compileGoDev "$@" ;;
         drop) # TODO: Remove? I suppose we could handle it in Go code.
             drop "$@" ;;
         prod) # TODO: Remove? It could be used with 'build prod start'.
-            prod "$@" ;;
+            shift; compileGoProd "$@" ;;
         config)
             shift; configCmd "$@"; shift ;;
         setup)
