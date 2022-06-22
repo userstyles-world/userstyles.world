@@ -108,7 +108,7 @@ watchGo() {
 
 compileGoDev() {
     log "Compiling executable."
-    go build -v
+    go build -v -o bin/userstyles-world
 }
 
 compileGoProd() {
@@ -119,6 +119,7 @@ compileGoProd() {
     f="$f -X userstyles.world/modules/config.GitVersion=$(git describe --tags)"
 
     go build -v \
+        -o bin/userstyles-world \
         -ldflags "$f" -buildmode pie \
         -tags 'osusergo netgo static_build'
 }
@@ -180,6 +181,11 @@ setupCmd() {
     compileGoDev
 }
 
+startCmd() {
+    log "Starting USw."
+    ./bin/userstyles-world
+}
+
 watchCmd() {
     if [ $# -eq 1 ]; then
         case "$1" in
@@ -227,13 +233,13 @@ while [ $# -gt 0 ]; do
         dev) # TODO: Move to 'watch' under 'all'.
             shift; compileGoDev "$@" ;;
         drop) # TODO: Remove? I suppose we could handle it in Go code.
-            drop "$@" ;;
-        prod) # TODO: Remove? It could be used with 'build prod start'.
-            shift; compileGoProd "$@" ;;
+            shift; drop "$@" ;;
         config)
             shift; configCmd "$@"; shift ;;
         setup)
             shift; setupCmd "$@" ;;
+        start)
+            shift; startCmd "$@" ;;
         watch)
             shift; watchCmd "$@"; shift ;;
         *)
