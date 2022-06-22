@@ -34,16 +34,26 @@ check() {
     done
 }
 
-fonts() {
+getFonts() {
     log "Downloading fonts."
     check curl unzip
 
     # Extract the latest release.
-    src="$(curl -s https://api.github.com/repos/rsms/inter/releases/latest | sed -n 's/.*browser_download_url.*"\(http.*\)"/\1/p')"
+    url="https://api.github.com/repos/rsms/inter/releases/latest"
+    src=$(curl -s "$url" | sed -n 's|.*browser_download_url.*"\(http.*\)"|\1|p')
 
     # Extract tag version from the following URL:
     # https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
-    version="$(echo "$src" | sed -n 's/.*\/\(v.*\)\/.*/\1/p')"
+    version=$(printf "%s" "$src" | sed -n 's|.*\/\(v.*\)\/.*|\1|p')
+
+    extract() {
+        # Extract specific variants that we use.
+        fonts="Regular Bold Italic BoldItalic"
+        for font in $fonts; do
+            unzip -j -d web/static/fonts \
+                "data/inter-${1}.zip" "Inter Web/Inter-${font}.*"
+        done
+    }
 
     # Check if the latest version is installed.
     if [ ! -e "data/inter-${version}.zip" ]; then
@@ -59,24 +69,16 @@ fonts() {
         # Download the archive with their respective version number.
         curl -L "$src" -o "data/inter-$version.zip"
 
-        _fontsExtract "$version"
+        extract "$version"
     else
         # If fonts directory doesn't exist, extract fonts.
         if [ ! -e web/static/fonts ]; then
             log "Extracting fonts..."
-            _fontsExtract "$version"
+            extract "$version"
         else
             log "Fonts are up to date."
         fi
     fi
-}
-
-_fontsExtract() {
-    # Extract specific variants that we use.
-    fonts="Regular Bold Italic BoldItalic"
-    for font in $fonts; do
-        unzip -j -d web/static/fonts "data/inter-$1.zip" "Inter Web/Inter-${font}.*"
-    done
 }
 
 setupSass() {
@@ -184,7 +186,7 @@ configCmd() {
 
 setupCmd() {
     log "Setting up development environment."
-    fonts
+    getFonts
     ts
     setupSass
     compileGoDev
