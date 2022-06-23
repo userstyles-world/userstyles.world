@@ -135,12 +135,17 @@ compileGoProd() {
         -tags 'osusergo netgo static_build'
 }
 
+setupTS() {
+    log "Compiling TypeScript executable."
+    go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
+}
+
 ts() {
     log "Compiling TypeScript files."
 
     env DEBUG="${2:-false}" \
         WATCH="${3:-false}" \
-        go run web/typescript/run.go
+        ./bin/userstyles-ts
 }
 
 buildCmd() {
@@ -187,7 +192,7 @@ configCmd() {
 setupCmd() {
     log "Setting up development environment."
     getFonts
-    ts
+    setupTS
     setupSass
     compileGoDev
 }

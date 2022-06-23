@@ -1,12 +1,10 @@
-//go:build script
-// +build script
-
 package main
 
 import (
 	"os"
 
 	"github.com/evanw/esbuild/pkg/api"
+
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 )
