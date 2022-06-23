@@ -2,7 +2,16 @@
 
 set -eu
 
+# Start timer.
+start=$(date '+%s.%N')
+
 log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
+
+took() {
+    now=$(date '+%s.%N') # Unix Epoch and nanoseconds.
+    res=$(printf "%f %f - p" "$now" "$start" | dc) # [FP]orth.
+    log "$(printf "Done.  Action took %.2fs to complete.\n" "$res")"
+}
 
 check() {
     hint() {
@@ -229,7 +238,7 @@ init "$@"
 while [ $# -gt 0 ]; do
     case "$1" in
         build)
-            shift; buildCmd "$@"; shift ;;
+            shift; buildCmd "$@"; took; shift ;;
         dev) # TODO: Move to 'watch' under 'all'.
             shift; compileGoDev "$@" ;;
         drop) # TODO: Remove? I suppose we could handle it in Go code.
@@ -237,7 +246,7 @@ while [ $# -gt 0 ]; do
         config)
             shift; configCmd "$@"; shift ;;
         setup)
-            shift; setupCmd "$@" ;;
+            shift; setupCmd "$@"; took ;;
         start)
             shift; startCmd "$@" ;;
         watch)
