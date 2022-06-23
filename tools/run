@@ -119,7 +119,7 @@ watchGo() {
 
 compileGoDev() {
     log "Compiling executable."
-    go build -v -o bin/userstyles-world
+    go build -v -o bin/userstyles-world cmd/userstyles-world/main.go
 }
 
 compileGoProd() {
@@ -132,7 +132,8 @@ compileGoProd() {
     go build -v \
         -o bin/userstyles-world \
         -ldflags "$f" -buildmode pie \
-        -tags 'osusergo netgo static_build'
+        -tags 'osusergo netgo static_build' \
+        cmd/userstyles-world/main.go
 }
 
 setupTS() {
