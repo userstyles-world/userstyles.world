@@ -112,6 +112,21 @@ drop() {
         air -c tools/air.toml
 }
 
+setupTS() {
+    log "Setting up TypeScript environment."
+    go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
+}
+
+compileTSDev() {
+    log "Compiling TS files for development."
+    env DEBUG="true" ./bin/userstyles-ts
+}
+
+compileTSProd() {
+    log "Compiling TS files for production."
+    ./bin/userstyles-ts
+}
+
 watchGo() {
     log "Watching Go files."
     air -c tools/air.toml
@@ -136,29 +151,16 @@ compileGoProd() {
         cmd/userstyles-world/main.go
 }
 
-setupTS() {
-    log "Compiling TypeScript executable."
-    go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
-}
-
-ts() {
-    log "Compiling TypeScript files."
-
-    env DEBUG="${2:-false}" \
-        WATCH="${3:-false}" \
-        ./bin/userstyles-ts
-}
-
 buildCmd() {
     if [ $# -ge 1 ]; then
         case "$1" in
             dev)
                 log "Build development USw executable."
-                ts; compileSass; compileGoDev
+                compileTSDev; compileSass; compileGoDev
                 ;;
             prod)
                 log "Build production USw executable."
-                ts; compileSass; compileGoProd
+                compileTSProd; compileSass; compileGoProd
                 ;;
             *)
                 printf "Error: Invalid argument '%s'.  " "$1"
@@ -207,7 +209,7 @@ watchCmd() {
     if [ $# -eq 1 ]; then
         case "$1" in
             go) watchGo ;;
-            [jt]s) ts '' 'true' 'true' ;;
+            [jt]s) WATCH="true" compileTSDev ;;
             s[ac]ss|css) watchSass ;; # Match on sass, scss, or css.
             *)
                 printf "Error: Invalid argument '%s'.  " "$1"
