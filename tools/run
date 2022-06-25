@@ -231,7 +231,7 @@ fallbackCmd() {
     return 1
 }
 
-init() {
+main() {
     if [ $# -eq 0 ]; then
         printf "Error: No arguments.\n"
         # TODO: Show usage/help command.
@@ -243,27 +243,28 @@ init() {
 
     # Go to project's root directory.
     cd "$(git rev-parse --show-toplevel)"
+
+    # Command/argument parser.
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            build)
+                shift; buildCmd "$@"; took; shift ;;
+            dev) # TODO: Move to 'watch' under 'all'.
+                shift; compileGoDev "$@" ;;
+            drop) # TODO: Remove? I suppose we could handle it in Go code.
+                shift; drop "$@" ;;
+            config)
+                shift; configCmd "$@"; shift ;;
+            setup)
+                shift; setupCmd "$@"; took ;;
+            start)
+                shift; startCmd "$@" ;;
+            watch)
+                shift; watchCmd "$@"; return 0 ;;
+            *)
+                fallbackCmd "$@" ;;
+        esac
+    done
 }
 
-init "$@"
-
-while [ $# -gt 0 ]; do
-    case "$1" in
-        build)
-            shift; buildCmd "$@"; took; shift ;;
-        dev) # TODO: Move to 'watch' under 'all'.
-            shift; compileGoDev "$@" ;;
-        drop) # TODO: Remove? I suppose we could handle it in Go code.
-            shift; drop "$@" ;;
-        config)
-            shift; configCmd "$@"; shift ;;
-        setup)
-            shift; setupCmd "$@"; took ;;
-        start)
-            shift; startCmd "$@" ;;
-        watch)
-            shift; watchCmd "$@"; shift ;;
-        *)
-            fallbackCmd "$@" ;;
-    esac
-done
+main "$@"
