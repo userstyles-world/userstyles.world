@@ -153,6 +153,9 @@ compileGoProd() {
 buildCmd() {
     if [ $# -ge 1 ]; then
         case "$1" in
+            go) compileGoDev ;;
+            [jt]s) compileTSDev ;;      # Match on js or ts.
+            s[ac]ss|css) compileSass ;; # Match on sass, scss, or css.
             dev)
                 log "Build development USw executable."
                 compileTSDev; compileSass; compileGoDev
@@ -205,10 +208,10 @@ startCmd() {
 }
 
 watchCmd() {
-    if [ $# -eq 1 ]; then
+    if [ $# -ge 1 ]; then
         case "$1" in
             go) watchGo ;;
-            [jt]s) WATCH="true" compileTSDev ;;
+            [jt]s) WATCH="true" compileTSDev ;; # Match on js or ts.
             s[ac]ss|css) watchSass ;; # Match on sass, scss, or css.
             *)
                 printf "Error: Invalid argument '%s'.  " "$1"
