@@ -36,7 +36,6 @@ check() {
 
 getFonts() {
     log "Downloading fonts."
-    check curl unzip
 
     # Extract the latest release.
     url="https://api.github.com/repos/rsms/inter/releases/latest"
@@ -236,8 +235,8 @@ init() {
         return 1
     fi
 
-    # Seems unnecessary, but you never know.
-    check git go air
+    # Make sure all dependencies are installed.
+    check git go air curl unzip sassc
 
     # Go to project's root directory.
     cd "$(git rev-parse --show-toplevel)"
