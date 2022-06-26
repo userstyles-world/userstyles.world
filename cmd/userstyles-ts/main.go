@@ -28,6 +28,8 @@ func main() {
 	if isProduction {
 		sourceMap = api.SourceMapNone
 	}
+
+	// TODO: Remove this code?
 	if shouldWatch {
 		// Ensure we're seeing the error messages in stdout.
 		config.Production = false

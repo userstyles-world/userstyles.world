@@ -116,6 +116,11 @@ setupTS() {
     go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
 }
 
+watchTS() {
+    log "Watching TypeScript files."
+    env DEBUG="true" air -c tools/air_ts.toml
+}
+
 compileTSDev() {
     log "Compiling TS files for development."
     env DEBUG="true" ./bin/userstyles-ts
@@ -211,7 +216,7 @@ watchCmd() {
     if [ $# -ge 1 ]; then
         case "$1" in
             go) watchGo ;;
-            [jt]s) WATCH="true" compileTSDev ;; # Match on js or ts.
+            [jt]s) watchTS ;;         # Match on js or ts.
             s[ac]ss|css) watchSass ;; # Match on sass, scss, or css.
             *)
                 printf "Error: Invalid argument '%s'.  " "$1"
