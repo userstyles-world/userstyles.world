@@ -22,6 +22,7 @@ check() {
             git) printf "Install 'git' with your package manager.\n" ;;
             sassc) printf "Install 'sassc' with your package manager.\n" ;;
             unzip) printf "Install 'unzip' with your package manager.\n" ;;
+            vips) printf "Install 'vips' with your package manager.\n" ;;
         esac
     }
 
@@ -244,7 +245,7 @@ main() {
     fi
 
     # Make sure all dependencies are installed.
-    check git go air curl unzip sassc
+    check git go air curl unzip sassc vips
 
     # Go to project's root directory.
     cd "$(git rev-parse --show-toplevel)"
