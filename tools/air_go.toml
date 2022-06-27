@@ -1,0 +1,9 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+log         = "air_go.log"
+bin         = "tools/run start"
+cmd         = "tools/run build go"
+include_dir = [ "cmd", "handlers", "models", "modules", "web" ]
+include_ext = [ "go" ]

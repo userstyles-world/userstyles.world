@@ -2,9 +2,9 @@ root    = "."
 tmp_dir = "tmp"
 
 [build]
-bin         = " "
-full_bin    = " "
-cmd         = "bin/userstyles-ts"
+bin         = " " # skip
+full_bin    = " " # skip
 log         = "air_ts.log"
+cmd         = "tools/run build ts"
 include_dir = [ "web/typescript" ]
 include_ext = [ "ts" ]

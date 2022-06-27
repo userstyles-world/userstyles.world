@@ -108,7 +108,7 @@ drop() {
         DB_COLOR="true" \
         DB_DEBUG="${2:-silent}" \
         DB_RANDOM_DATA="${3:-false}" \
-        air -c tools/air.toml
+        air -c tools/air_go.toml
 }
 
 setupTS() {
@@ -133,7 +133,7 @@ compileTSProd() {
 
 watchGo() {
     log "Watching Go files."
-    air -c tools/air.toml
+    air -c tools/air_go.toml
 }
 
 compileGoDev() {

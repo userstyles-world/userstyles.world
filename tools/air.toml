@@ -1,8 +1,0 @@
-root = "."
-tmp_dir = "tmp"
-
-[build]
-exclude_dir = [
-    "data", "docs", "node_modules",
-    "web/scss", "web/static", "web/typescript", "web/views"
-]

@@ -1,0 +1,10 @@
+root    = "."
+tmp_dir = "tmp"
+
+[build]
+bin         = " " # skip
+full_bin    = " " # skip
+log         = "air_sass.log"
+cmd         = "tools/run build sass"
+include_dir = [ "web/scss" ]
+include_ext = [ "scss" ]
