@@ -115,6 +115,9 @@ drop() {
 setupTS() {
     log "Setting up TypeScript environment."
     go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
+
+    # Compile initial JS file.
+    compileTSDev
 }
 
 watchTS() {
@@ -130,6 +133,11 @@ compileTSDev() {
 compileTSProd() {
     log "Compiling TS files for production."
     ./bin/userstyles-ts
+}
+
+setupGo() {
+    log "Setting up Go environment."
+    compileGoDev
 }
 
 watchGo() {
@@ -202,10 +210,11 @@ configCmd() {
 
 setupCmd() {
     log "Setting up development environment."
+    mkdir -p data
     getFonts
-    setupTS
     setupSass
-    compileGoDev
+    setupTS
+    setupGo
 }
 
 startCmd() {
