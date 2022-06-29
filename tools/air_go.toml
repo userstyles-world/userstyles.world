@@ -7,3 +7,6 @@ bin         = "tools/run start"
 cmd         = "tools/run build go"
 include_dir = [ "cmd", "handlers", "models", "modules", "web" ]
 include_ext = [ "go" ]
+
+[log]
+time = true

@@ -8,3 +8,6 @@ log         = "air_ts.log"
 cmd         = "tools/run build ts"
 include_dir = [ "web/typescript" ]
 include_ext = [ "ts" ]
+
+[log]
+time = true

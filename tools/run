@@ -5,7 +5,7 @@ set -eu
 # Start timer.
 start=$(date '+%s.%N')
 
-log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
+log() { printf "[%s] %s\n" "$(date '+%H:%M:%S')" "$@"; }
 
 took() {
     now=$(date '+%s.%N') # Unix Epoch and nanoseconds.
