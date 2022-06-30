@@ -46,37 +46,34 @@ getFonts() {
     # https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
     version=$(printf "%s" "$src" | sed -n 's|.*\/\(v.*\)\/.*|\1|p')
 
+    archive="data/inter-${version}.zip"
+    distDir="web/static/fonts"
+
     extract() {
         # Extract specific variants that we use.
         fonts="Regular Bold Italic BoldItalic"
         for font in $fonts; do
-            unzip -j -d web/static/fonts \
-                "data/inter-${1}.zip" "Inter Web/Inter-${font}.*"
+            unzip -j -d "$distDir" "$archive" "Inter Web/Inter-${font}.*"
         done
     }
 
-    # Check if the latest version is installed.
-    if [ ! -e "data/inter-${version}.zip" ]; then
-        # If fonts directory exists, remove it.
-        if [ -e web/static/fonts ]; then
-            log "Removing old fonts."
-            rm -f data/inter-*.zip
-            rm -rf web/static/fonts
-        fi
+    # Check if the latest version isn't downloaded.
+    if [ ! -e "$archive" ]; then
+        log "Downloading Inter $version archive."
 
-        log "Downloading Inter $version..."
+        # Remove old fonts.
+        rm -rf "$distDir"
 
         # Download the archive with their respective version number.
-        curl -L "$src" -o "data/inter-$version.zip"
+        curl -L "$src" -o "$archive"
 
-        extract "$version"
+        extract
     else
-        # If fonts directory doesn't exist, extract fonts.
-        if [ ! -e web/static/fonts ]; then
-            log "Extracting fonts..."
-            extract "$version"
-        else
+        # Skip if directory exists, otherwise extract fonts.
+        if [ -e "$distDir" ]; then
             log "Fonts are up to date."
+        else
+            extract
         fi
     fi
 }
