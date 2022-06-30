@@ -216,10 +216,12 @@ setupCmd() {
 
 startCmd() {
     log "Starting USw."
+    check vips
     ./bin/userstyles-world
 }
 
 watchCmd() {
+    check air vips
     if [ $# -ge 1 ]; then
         case "$1" in
             go) watchGo ;;
@@ -250,8 +252,8 @@ main() {
         return 1
     fi
 
-    # Make sure all dependencies are installed.
-    check git go air curl unzip sassc vips
+    # Check if build dependencies are installed.
+    check git go curl unzip sassc
 
     # Go to project's root directory.
     cd "$(git rev-parse --show-toplevel)"
