@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"sort"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,16 @@ func Search(c *fiber.Ctx) error {
 			"Title": "Search",
 			"User":  u,
 		})
+	}
+
+	s, metrics, err := search.FindStylesByText(keyword)
+	if errors.Is(err, search.ErrSearchNoResults) {
+		return c.
+			Status(fiber.StatusNotFound).
+			Render("core/search", fiber.Map{
+				"Title": "No results found",
+				"Error": "No results found for <b>" + keyword + "</b>.",
+			})
 	}
 
 	fv := c.Query("sort")

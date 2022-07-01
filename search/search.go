@@ -1,6 +1,7 @@
 package search
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -11,6 +12,11 @@ import (
 
 const (
 	timeFormat = "2006-01-02T15:04:05Z"
+)
+
+var (
+	// ErrSearchNoResults errors that it couldn't match anything in search index.
+	ErrSearchNoResults = errors.New("no search results found")
 )
 
 type MinimalStyle struct {
@@ -64,6 +70,10 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
 		return nil, PerformanceMetrics{}, err
+	}
+
+	if len(sr.Hits) == 0 {
+		return nil, performanceMetrics, ErrSearchNoResults
 	}
 
 	returnResult := make([]MinimalStyle, 0, len(sr.Hits))

@@ -45,6 +45,8 @@
                     {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
+        {{ else if .Error }}
+            <div role="alert" class="err">{{ .Error | unescape }}</div>
         {{ else }}
             <div class="ta:c">
                 <p>Please try searching for something.</p>
