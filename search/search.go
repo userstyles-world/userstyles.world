@@ -82,10 +82,6 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 
 	res := make([]MinimalStyle, 0, hits)
 	for _, hit := range sr.Hits {
-		if err != nil {
-			return nil, PerformanceMetrics{}, err
-		}
-
 		created, err := time.Parse(timeFormat, hit.Fields["created_at"].(string))
 		if err != nil {
 			return nil, PerformanceMetrics{}, err
