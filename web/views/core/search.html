@@ -12,7 +12,7 @@
                 <div class="Form-row">
                     <input
                         type="search" name="q" id="q"
-                        value="{{ .Value }}"
+                        value="{{ .Keyword }}"
                         required pattern=".+"
                         placeholder="e.g. dark">
                 </div>
@@ -32,7 +32,7 @@
     </section>
 
     <section class="mt:l">
-        {{ if gt (len .Styles) 0 }}
+        {{ if .Styles }}
             <div class="search-perf-metrics">
                 <span class="f:b">Metrics of search engine:</span>
                 <span>Hits: {{ .Metrics.Hits }}</span>
@@ -45,9 +45,9 @@
                     {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
-        {{ else if not .Root }}
+        {{ else }}
             <div class="ta:c">
-                <p>Couldn't find styles that matches your keywords.</p>
+                <p>Please try searching for something.</p>
             </div>
         {{ end }}
     </section>

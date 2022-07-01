@@ -12,8 +12,13 @@ import (
 func Search(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	q := c.Query("q")
-	s, metrics, _ := search.FindStylesByText(q)
+	keyword := c.Query("q")
+	if keyword == "" {
+		return c.Render("core/search", fiber.Map{
+			"Title": "Search",
+			"User":  u,
+		})
+	}
 
 	fv := c.Query("sort")
 
@@ -44,8 +49,7 @@ func Search(c *fiber.Ctx) error {
 		"Title":     "Search",
 		"User":      u,
 		"Styles":    s,
-		"Value":     q,
-		"Root":      c.OriginalURL() == "/search",
+		"Keyword":   keyword,
 		"Sort":      fv,
 		"Canonical": "search",
 		"Metrics":   metrics,
