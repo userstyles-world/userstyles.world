@@ -7,6 +7,7 @@ import (
 
 	"github.com/blevesearch/bleve/v2"
 
+	"userstyles.world/modules/log"
 	"userstyles.world/utils/strutils"
 )
 
@@ -56,7 +57,7 @@ func (s MinimalStyle) Author() string {
 }
 
 func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
-	performanceMetrics := PerformanceMetrics{}
+	metrics := PerformanceMetrics{}
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
 	// This way it will be more "loslly" and actually uses the tokenizers.
@@ -69,17 +70,17 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
-		return nil, PerformanceMetrics{}, err
+		log.Warn.Printf("Failed to find results for %q: %s\n", text, err)
+		return nil, metrics, err
 	}
 
-	if len(sr.Hits) == 0 {
-		return nil, performanceMetrics, ErrSearchNoResults
+	hits := len(sr.Hits)
+	if hits == 0 {
+		return nil, metrics, ErrSearchNoResults
 	}
+	metrics.Hits = hits
 
-	returnResult := make([]MinimalStyle, 0, len(sr.Hits))
-
-	performanceMetrics.Hits = len(sr.Hits)
-
+	res := make([]MinimalStyle, 0, hits)
 	for _, hit := range sr.Hits {
 		if err != nil {
 			return nil, PerformanceMetrics{}, err
@@ -110,8 +111,8 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 			Rating:      hit.Fields["rating"].(float64),
 		}
 
-		returnResult = append(returnResult, styleInfo)
+		res = append(res, styleInfo)
 	}
-	performanceMetrics.TimeSpent = time.Since(timeStart)
-	return returnResult, performanceMetrics, nil
+	metrics.TimeSpent = time.Since(timeStart)
+	return res, metrics, nil
 }
