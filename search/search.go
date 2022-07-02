@@ -16,8 +16,11 @@ const (
 )
 
 var (
-	// ErrSearchNoResults errors that it couldn't match anything in search index.
+	// ErrSearchNoResults errors that search engine couldn't find results.
 	ErrSearchNoResults = errors.New("no search results found")
+
+	// ErrSearchBadRequest errors that search engine had an internal error.
+	ErrSearchBadRequest = errors.New("bad search request")
 )
 
 type MinimalStyle struct {
@@ -71,7 +74,7 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
 		log.Warn.Printf("Failed to find results for %q: %s\n", text, err)
-		return nil, metrics, err
+		return nil, metrics, ErrSearchBadRequest
 	}
 
 	hits := len(sr.Hits)
