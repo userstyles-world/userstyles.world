@@ -54,16 +54,18 @@ func Initialize() {
 
 	StyleIndex = stylesIndex
 
-	go func() {
-		styleEntries, err := models.GetAllStyles()
-		if err != nil {
-			log.Warn.Fatal(err)
-		}
-		err = indexStyles(stylesIndex, styleEntries)
-		if err != nil {
-			log.Warn.Fatal(err)
-		}
-	}()
+	if config.SearchReindex {
+		go func() {
+			styleEntries, err := models.GetAllStyles()
+			if err != nil {
+				log.Warn.Fatal(err)
+			}
+			err = indexStyles(StyleIndex, styleEntries)
+			if err != nil {
+				log.Warn.Fatal(err)
+			}
+		}()
+	}
 }
 
 func indexStyles(index bleve.Index, data []models.StyleSearch) error {

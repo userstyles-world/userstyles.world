@@ -43,6 +43,7 @@ var (
 	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
 	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
 	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
+	SearchReindex        = getEnvBool("SEARCH_REINDEX", false)
 
 	// Production is used for various "feature flags".
 	Production = DB != "dev.db"
