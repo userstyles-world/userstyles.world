@@ -3,10 +3,12 @@ package search
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
 
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils/strutils"
 )
@@ -83,34 +85,25 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 	}
 	metrics.Hits = hits
 
-	res := make([]MinimalStyle, 0, hits)
-	for _, hit := range sr.Hits {
-		created, err := time.Parse(timeFormat, hit.Fields["created_at"].(string))
-		if err != nil {
-			return nil, PerformanceMetrics{}, err
+	nums := func() []int {
+		hits := make([]int, metrics.Hits)
+		for i, hit := range sr.Hits {
+			hits[i] = int(hit.Fields["id"].(float64))
 		}
+		return hits
+	}
 
-		updated, err := time.Parse(timeFormat, hit.Fields["updated_at"].(string))
-		if err != nil {
-			return nil, PerformanceMetrics{}, err
-		}
-
-		styleInfo := MinimalStyle{
-			CreatedAt:   created,
-			UpdatedAt:   updated,
-			ID:          int(hit.Fields["id"].(float64)),
-			Username:    hit.Fields["username"].(string),
-			DisplayName: hit.Fields["display_name"].(string),
-			Name:        hit.Fields["name"].(string),
-			Description: hit.Fields["description"].(string),
-			Preview:     hit.Fields["preview"].(string),
-			Notes:       hit.Fields["notes"].(string),
-			Views:       int64(hit.Fields["views"].(float64)),
-			Installs:    int64(hit.Fields["installs"].(float64)),
-			Rating:      hit.Fields["rating"].(float64),
-		}
-
-		res = append(res, styleInfo)
+	var res []MinimalStyle
+	installed := "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.install > 0) AS Installs"
+	viewed := "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.view > 0) AS Views"
+	author := "(SELECT username FROM users WHERE styles.user_id = users.id) AS Username"
+	rating := "(SELECT ROUND(AVG(rating), 1) FROM reviews WHERE reviews.style_id = styles.id AND reviews.deleted_at IS NULL) AS Rating"
+	fields := []string{"id", "created_at", "updated_at", "name", "preview", installed, viewed, author, rating}
+	tx := database.Conn.Debug().Table("styles").Select(strings.Join(fields, ", "))
+	// TODO: Fix up ordering of results.
+	if err := tx.Find(&res, "id in ?", nums()).Error; err != nil {
+		metrics.Hits = 0
+		return res, metrics, err
 	}
 	metrics.TimeSpent = time.Since(timeStart)
 	return res, metrics, nil
