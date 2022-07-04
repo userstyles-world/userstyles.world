@@ -3,18 +3,13 @@ package search
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 	"userstyles.world/utils/strutils"
-)
-
-const (
-	timeFormat = "2006-01-02T15:04:05Z"
 )
 
 var (
@@ -61,7 +56,7 @@ func (s MinimalStyle) Author() string {
 	return s.Username
 }
 
-func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
+func FindStylesByText(text string) ([]storage.StyleCard, PerformanceMetrics, error) {
 	metrics := PerformanceMetrics{}
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
@@ -93,18 +88,12 @@ func FindStylesByText(text string) ([]MinimalStyle, PerformanceMetrics, error) {
 		return hits
 	}
 
-	var res []MinimalStyle
-	installed := "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.install > 0) AS Installs"
-	viewed := "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.view > 0) AS Views"
-	author := "(SELECT username FROM users WHERE styles.user_id = users.id) AS Username"
-	rating := "(SELECT ROUND(AVG(rating), 1) FROM reviews WHERE reviews.style_id = styles.id AND reviews.deleted_at IS NULL) AS Rating"
-	fields := []string{"id", "created_at", "updated_at", "name", "preview", installed, viewed, author, rating}
-	tx := database.Conn.Debug().Table("styles").Select(strings.Join(fields, ", "))
-	// TODO: Fix up ordering of results.
-	if err := tx.Find(&res, "id in ?", nums()).Error; err != nil {
+	res, err := storage.FindStyleCardsForSearch(nums())
+	if err != nil {
 		metrics.Hits = 0
 		return res, metrics, err
 	}
 	metrics.TimeSpent = time.Since(timeStart)
+
 	return res, metrics, nil
 }
