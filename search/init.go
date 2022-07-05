@@ -10,9 +10,9 @@ import (
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/index/upsidedown"
 
-	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 var (
@@ -55,76 +55,41 @@ func Initialize() {
 	StyleIndex = stylesIndex
 
 	if config.SearchReindex {
-		go func() {
-			styleEntries, err := models.GetAllStyles()
-			if err != nil {
-				log.Warn.Fatal(err)
-			}
-			err = indexStyles(StyleIndex, styleEntries)
-			if err != nil {
-				log.Warn.Fatal(err)
-			}
-		}()
+		go index()
 	}
 }
 
-func indexStyles(index bleve.Index, data []models.StyleSearch) error {
+func index() {
+	log.Info.Println("Re-indexing search engine...")
+
 	count := 0
-	startTime := time.Now()
-	batch := index.NewBatch()
-	batchCount := 0
-	var err error
-	for _, styleEntry := range data {
-		id := strconv.Itoa(styleEntry.ID)
-		err = batch.Index(id, MinimalStyle{
-			ID:          styleEntry.ID,
-			CreatedAt:   styleEntry.CreatedAt,
-			UpdatedAt:   styleEntry.UpdatedAt,
-			Username:    styleEntry.Username,
-			DisplayName: styleEntry.DisplayName,
-			Name:        styleEntry.Name,
-			Description: styleEntry.Description,
-			Preview:     styleEntry.Preview,
-			Notes:       styleEntry.Notes,
-			Installs:    styleEntry.Installs,
-			Views:       styleEntry.Views,
-			Rating:      styleEntry.Rating,
-		})
-		if err != nil {
-			return err
-		}
+	start := time.Now()
+	action := func(ss []storage.StyleSearch) error {
+		b := StyleIndex.NewBatch()
 
-		batchCount++
-
-		if batchCount >= batchSize {
-			err := index.Batch(batch)
-			if err != nil {
+		for _, s := range ss {
+			if err := b.Index(strconv.Itoa(s.ID), s); err != nil {
 				return err
 			}
-			batch = index.NewBatch()
-			batchCount = 0
-		}
-		count++
-		if count%1000 == 0 {
-			indexDuration := time.Since(startTime)
-			indexDurationSeconds := float64(indexDuration) / float64(time.Second)
-			timePerDoc := float64(indexDuration) / float64(count)
-			log.Info.Printf("Indexed %d documents, in %.2fs (average %.2fms/doc)",
-				count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
-		}
-	}
-	// flush the last batch
-	if batchCount > 0 {
-		err := index.Batch(batch)
-		if err != nil {
-			log.Warn.Fatal(err)
-		}
-	}
-	indexDuration := time.Since(startTime)
-	indexDurationSeconds := float64(indexDuration) / float64(time.Second)
-	timePerDoc := float64(indexDuration) / float64(count)
-	log.Info.Printf("Indexed %d documents, in %.2fs (average %.2fms/doc)",
-		count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
 
-	return nil
+			count++
+			indexMetrics(count, start)
+		}
+
+		return StyleIndex.Batch(b)
+	}
+
+	if err := storage.FindStylesForSearch(action); err != nil {
+		log.Warn.Fatal(err)
+	}
+}
+
+func indexMetrics(count int, start time.Time) {
+	if count%1000 == 0 {
+		indexDuration := time.Since(start)
+		indexDurationSeconds := float64(indexDuration) / float64(time.Second)
+		timePerDoc := float64(indexDuration) / float64(count)
+		log.Info.Printf("Indexed %d documents in %.2fs (average %.2fms/doc).",
+			count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
+	}
 }

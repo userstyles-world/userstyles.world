@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/storage"
 )
 
 func IndexStyle(id uint) error {
@@ -14,19 +15,12 @@ func IndexStyle(id uint) error {
 		return err
 	}
 
-	return StyleIndex.Index(styleID, MinimalStyle{
+	return StyleIndex.Index(styleID, storage.StyleSearch{
 		ID:          style.ID,
-		CreatedAt:   style.CreatedAt,
-		UpdatedAt:   style.UpdatedAt,
 		Username:    style.Username,
-		DisplayName: style.DisplayName,
 		Name:        style.Name,
 		Description: style.Description,
-		Preview:     style.Preview,
 		Notes:       style.Notes,
-		Installs:    style.Installs,
-		Views:       style.Views,
-		Rating:      style.Rating,
 	})
 }
 

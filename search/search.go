@@ -2,14 +2,12 @@ package search
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
 
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
-	"userstyles.world/utils/strutils"
 )
 
 var (
@@ -20,40 +18,9 @@ var (
 	ErrSearchBadRequest = errors.New("bad search request")
 )
 
-type MinimalStyle struct {
-	ID          int       `json:"id"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	Username    string    `json:"username"`
-	DisplayName string    `json:"display_name"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Preview     string    `json:"preview"`
-	Notes       string    `json:"notes"`
-	Views       int64     `json:"views"`
-	Installs    int64     `json:"installs"`
-	Rating      float64   `json:"rating"`
-}
-
 type PerformanceMetrics struct {
 	Hits      int
 	TimeSpent time.Duration
-}
-
-func (s MinimalStyle) Slug() string {
-	return strutils.SlugifyURL(s.Name)
-}
-
-func (s MinimalStyle) StyleURL() string {
-	return fmt.Sprintf("/style/%d/%s", s.ID, s.Slug())
-}
-
-func (s MinimalStyle) Author() string {
-	if s.DisplayName != "" {
-		return s.DisplayName
-	}
-
-	return s.Username
 }
 
 func FindStylesByText(text string) ([]storage.StyleCard, PerformanceMetrics, error) {
