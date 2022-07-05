@@ -72,23 +72,6 @@ type StyleCard struct {
 	Rating      float64
 }
 
-type StyleSearch struct {
-	ID          int
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	Name        string
-	Description string
-	Notes       string
-	Preview     string
-	DisplayName string
-	Username    string
-	Views       int64
-	Installs    int64
-	User        User `gorm:"foreignKey:ID"`
-	UserID      uint
-	Rating      float64
-}
-
 type StyleSiteMap struct {
 	ID int
 }
@@ -124,29 +107,6 @@ func GetAllSitesSiteMap() ([]StyleSiteMap, error) {
 		Scan(q).Error
 	if err != nil {
 		return nil, err
-	}
-
-	return *q, nil
-}
-
-func GetStyleForIndex(id string) (StyleSearch, error) {
-	q := new(StyleSearch)
-
-	stmt := `
-select
-	styles.id, styles.created_at, styles.updated_at, styles.name, styles.description, styles.notes,
-	styles.preview, u.username, u.display_name,
-	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
-from
-	styles
-join
-	users u on u.id = styles.user_id
-where
-	styles.deleted_at is null and styles.id = ?
-`
-	if err := db().Raw(stmt, id).First(q).Error; err != nil {
-		return *q, err
 	}
 
 	return *q, nil

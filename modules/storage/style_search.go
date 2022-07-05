@@ -15,6 +15,19 @@ type StyleSearch struct {
 	ID          int    `json:"id"`
 }
 
+// FindStyleForSearch returns a style for search index or an error.
+func FindStyleForSearch(id uint) (StyleSearch, error) {
+	var res StyleSearch
+	err := database.Conn.
+		Table("styles").Select("id, name, description, notes", selectAuthor).
+		Find(&res, "id = ?", id).Error
+	if err != nil {
+		return StyleSearch{}, err
+	}
+
+	return res, nil
+}
+
 // FindStylesForSearch queries for styles in batches, and runs a passed action
 // that might return an error.
 func FindStylesForSearch(action func([]StyleSearch) error) error {
