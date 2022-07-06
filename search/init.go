@@ -15,12 +15,6 @@ import (
 	"userstyles.world/modules/storage"
 )
 
-var (
-	StyleIndex bleve.Index
-	batchSize  = 500
-	indexFile  = path.Join(config.DataDir, "styles.bleve")
-)
-
 func openBleveIndexFile(path string) (bleve.Index, error) {
 	_, err := os.Stat(path)
 	if err != nil {
@@ -36,21 +30,23 @@ func openBleveIndexFile(path string) (bleve.Index, error) {
 	return index, nil
 }
 
+// Initialize sets up search engine.
 func Initialize() {
 	// We don't have any ms a new style, so we don't need 4 analysis workers
 	// for that, we're good by only having 1.
 	bleve.Config.SetAnalysisQueueSize(1)
 
+	indexFile := path.Join(config.DataDir, "styles.bleve")
 	stylesIndex, err := openBleveIndexFile(indexFile)
 	if err != nil {
-		log.Info.Println("Creating new index...")
+		log.Info.Println("Creating a new search index.")
 		indexMapping := buildIndexMapping()
 		stylesIndex, err = bleve.New(indexFile, indexMapping)
 		if err != nil {
 			log.Warn.Fatal(err)
 		}
 	}
-	log.Info.Println("Opening existing index...")
+	log.Info.Println("Opening search index.")
 
 	StyleIndex = stylesIndex
 
@@ -60,7 +56,7 @@ func Initialize() {
 }
 
 func index() {
-	log.Info.Println("Re-indexing search engine...")
+	log.Info.Println("Re-indexing search index.")
 
 	count := 0
 	start := time.Now()

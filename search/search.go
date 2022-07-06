@@ -1,3 +1,4 @@
+// Package search provides helper functions for Bleve.
 package search
 
 import (
@@ -16,15 +17,21 @@ var (
 
 	// ErrSearchBadRequest errors that search engine had an internal error.
 	ErrSearchBadRequest = errors.New("bad search request")
+
+	// StyleIndex holds the connection to search engine.
+	StyleIndex bleve.Index
 )
 
-type PerformanceMetrics struct {
+// engineMetrics returns basic metrics for search queries.
+type engineMetrics struct {
 	Hits      int
 	TimeSpent time.Duration
 }
 
-func FindStylesByText(text string) ([]storage.StyleCard, PerformanceMetrics, error) {
-	metrics := PerformanceMetrics{}
+// FindStylesByText searches for text and returns styles from search index and
+// performance metrics, or an error if it fails to find anything.
+func FindStylesByText(text string) ([]storage.StyleCard, engineMetrics, error) {
+	metrics := engineMetrics{}
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
 	// This way it will be more "loslly" and actually uses the tokenizers.
