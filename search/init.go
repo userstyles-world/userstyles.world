@@ -4,15 +4,12 @@ import (
 	"errors"
 	"os"
 	"path"
-	"strconv"
-	"time"
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/index/upsidedown"
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/storage"
 )
 
 func openBleveIndexFile(path string) (bleve.Index, error) {
@@ -51,41 +48,6 @@ func Initialize() {
 	StyleIndex = stylesIndex
 
 	if config.SearchReindex {
-		go index()
-	}
-}
-
-func index() {
-	log.Info.Println("Re-indexing search index.")
-
-	count := 0
-	start := time.Now()
-	action := func(ss []storage.StyleSearch) error {
-		b := StyleIndex.NewBatch()
-
-		for _, s := range ss {
-			if err := b.Index(strconv.Itoa(s.ID), s); err != nil {
-				return err
-			}
-
-			count++
-			indexMetrics(count, start)
-		}
-
-		return StyleIndex.Batch(b)
-	}
-
-	if err := storage.FindStylesForSearch(action); err != nil {
-		log.Warn.Fatal(err)
-	}
-}
-
-func indexMetrics(count int, start time.Time) {
-	if count%1000 == 0 {
-		indexDuration := time.Since(start)
-		indexDurationSeconds := float64(indexDuration) / float64(time.Second)
-		timePerDoc := float64(indexDuration) / float64(count)
-		log.Info.Printf("Indexed %d documents in %.2fs (average %.2fms/doc).",
-			count, indexDurationSeconds, timePerDoc/float64(time.Millisecond))
+		go indexStyles()
 	}
 }
