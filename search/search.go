@@ -39,7 +39,7 @@ func FindStylesByText(text string) ([]storage.StyleCard, engineMetrics, error) {
 	timeStart := time.Now()
 	sanitzedQuery := bleve.NewMatchQuery(text)
 
-	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, 99, 0, false)
+	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, 96, 0, false)
 	searchRequest.Fields = []string{"*"}
 
 	sr, err := StyleIndex.Search(searchRequest)
