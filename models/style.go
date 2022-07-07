@@ -225,29 +225,6 @@ where
 	return *q, nil
 }
 
-func GetAllFeaturedStyles() ([]StyleCard, error) {
-	q := new([]StyleCard)
-	stmt := `
-select
-	styles.id, styles.name, styles.updated_at, styles.preview, u.username, u.display_name,
-	(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating,
-	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
-from
-	styles
-join
-	users u on u.id = styles.user_id
-where
-	styles.deleted_at is null and styles.featured = 1
-`
-
-	if err := db().Raw(stmt).Find(q).Error; err != nil {
-		return nil, err
-	}
-
-	return *q, nil
-}
-
 func GetImportedStyles() ([]Style, error) {
 	q := new([]Style)
 	err := db().

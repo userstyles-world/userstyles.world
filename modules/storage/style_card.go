@@ -100,3 +100,21 @@ func FindStyleCardsForUsername(username string) ([]StyleCard, error) {
 
 	return res, nil
 }
+
+// FindStyleCardsFeatured returns style cars that are featured.
+func FindStyleCardsFeatured() ([]StyleCard, error) {
+	var res []StyleCard
+
+	fields := []string{
+		"id", "updated_at", "name", "preview",
+		selectAuthor, selectInstalls, selectViews, selectRatings,
+	}
+	err := database.Conn.
+		Select(strings.Join(fields, ", ")).
+		Find(&res, "deleted_at IS NULL AND featured = 1").Error
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

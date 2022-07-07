@@ -6,9 +6,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
-	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 func Home(c *fiber.Ctx) error {
@@ -35,7 +35,7 @@ func Home(c *fiber.Ctx) error {
 Styles:
 	featured, found := cache.Store.Get("featuredStyles")
 	if !found {
-		styles, err := models.GetAllFeaturedStyles()
+		styles, err := storage.FindStyleCardsFeatured()
 		if err != nil {
 			log.Warn.Println("Couldn't get featured styles, due", err)
 			return c.Render("core/home", fiber.Map{
