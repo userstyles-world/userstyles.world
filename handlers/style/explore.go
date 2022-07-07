@@ -9,6 +9,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 func GetExplore(c *fiber.Ctx) error {
@@ -43,7 +44,7 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	// Query for [sorted] styles.
-	s, err := models.GetAllAvailableStylesPaginated(p.Now, p.SortStyles())
+	s, err := storage.FindStyleCardsPaginated(p.Now, p.SortStyles())
 	if err != nil {
 		log.Warn.Println("Failed to get paginated styles:", err.Error())
 		return c.Render("err", fiber.Map{

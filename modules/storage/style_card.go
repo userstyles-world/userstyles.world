@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/utils/strutils"
 )
@@ -112,6 +113,53 @@ func FindStyleCardsFeatured() ([]StyleCard, error) {
 	err := database.Conn.
 		Select(strings.Join(fields, ", ")).
 		Find(&res, "deleted_at IS NULL AND featured = 1").Error
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// FindStyleCardsPaginated returns style cards for paginated pages.
+func FindStyleCardsPaginated(page int, order string) ([]StyleCard, error) {
+	var res []StyleCard
+
+	size := config.AppPageMaxItems
+	offset := (page - 1) * size
+
+	// Reflection go brrrr.
+	nums := []struct {
+		ID, Views, Installs int
+	}{}
+
+	var stmt string
+	switch {
+	case strings.HasPrefix(order, "styles"):
+		stmt = "id, created_at, updated_at"
+	case strings.HasPrefix(order, "views"):
+		stmt = "id, (SELECT SUM(daily_views) FROM histories h WHERE h.style_id = styles.id) AS views"
+	case strings.HasPrefix(order, "installs"):
+		stmt = "id, (SELECT SUM(daily_installs) FROM histories h WHERE h.style_id = styles.id) AS installs"
+	}
+
+	err := database.Conn.
+		Select(stmt).Table("styles").
+		Order(order).Offset(offset).Limit(size).Find(&nums).Error
+	if err != nil {
+		return nil, err
+	}
+
+	styleIDs := make([]int, 0, len(nums))
+	for _, partial := range nums {
+		styleIDs = append(styleIDs, partial.ID)
+	}
+
+	fields := []string{
+		"id", "updated_at", "name", "preview",
+		selectAuthor, selectInstalls, selectViews, selectRatings,
+	}
+	err = database.Conn.
+		Select(strings.Join(fields, ", ")).Order(order).Find(&res, styleIDs).Error
 	if err != nil {
 		return nil, err
 	}

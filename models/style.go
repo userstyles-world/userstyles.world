@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -154,53 +153,6 @@ func GetStyleCount() (int, error) {
 	}
 
 	return int(c), nil
-}
-
-func GetAllAvailableStylesPaginated(page int, order string) ([]StyleCard, error) {
-	q := new([]StyleCard)
-	size := config.AppPageMaxItems
-	offset := (page - 1) * size
-
-	// Reflection go brrrr.
-	nums := []struct {
-		ID, Views, Installs int
-	}{}
-
-	var stmt string
-	switch {
-	case strings.HasPrefix(order, "styles"):
-		stmt += "styles.id, styles.created_at, styles.updated_at"
-	case strings.HasPrefix(order, "views"):
-		stmt += "styles.id, (SELECT sum(daily_views) FROM histories h WHERE h.style_id = styles.id) AS views"
-	default:
-		stmt += "styles.id, (SELECT sum(daily_installs) FROM histories h WHERE h.style_id = styles.id) AS installs"
-	}
-
-	err := db().
-		Select(stmt).Model(modelStyle).Order(order).Offset(offset).
-		Limit(size).Find(&nums).Error
-	if err != nil {
-		return nil, err
-	}
-
-	styleIDs := make([]int, 0, len(nums))
-	for _, partial := range nums {
-		styleIDs = append(styleIDs, partial.ID)
-	}
-
-	stmt = "styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name, "
-	stmt += "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating, "
-	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.install > 0) installs, "
-	stmt += "(select count(id) from stats s where s.style_id = styles.id and s.view > 0) views"
-
-	err = db().
-		Select(stmt).Model(modelStyle).Joins("join users u on u.id = styles.user_id").
-		Order(order).Find(&q, styleIDs).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return *q, nil
 }
 
 func GetAllAvailableStyles() ([]StyleCard, error) {
