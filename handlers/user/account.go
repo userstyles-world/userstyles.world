@@ -11,13 +11,14 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 	"userstyles.world/utils"
 )
 
 func Account(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	styles, err := models.GetStylesByUser(u.Username)
+	styles, err := storage.FindStyleCardsForUsername(u.Username)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Server error",

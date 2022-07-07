@@ -30,6 +30,9 @@ type StyleCard struct {
 	Rating    float64   `json:"rating"`
 }
 
+// TableName returns which table in database to use with GORM.
+func (StyleCard) TableName() string { return "styles" }
+
 // Slug returns a URL- and SEO-friendly string.
 func (x StyleCard) Slug() string {
 	return strutils.SlugifyURL(x.Name)
@@ -74,6 +77,24 @@ func FindStyleCardsForSearch(items []int) ([]StyleCard, error) {
 
 	var res []StyleCard
 	if err := database.Conn.Raw(b.String()).Scan(&res).Error; err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// FindStyleCardsForUsername returns style cards for a user.
+func FindStyleCardsForUsername(username string) ([]StyleCard, error) {
+	var res []StyleCard
+
+	fields := []string{
+		"id", "updated_at", "name", "preview",
+		selectAuthor, selectInstalls, selectViews, selectRatings,
+	}
+	err := database.Conn.
+		Select(strings.Join(fields, ", ")).
+		Find(&res, "deleted_at IS NULL AND username = ?", username).Error
+	if err != nil {
 		return nil, err
 	}
 

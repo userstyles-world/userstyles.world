@@ -12,6 +12,7 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 	"userstyles.world/search"
 	"userstyles.world/utils"
 )
@@ -26,7 +27,7 @@ func StylesGet(c *fiber.Ctx) error {
 			})
 	}
 
-	styles, err := models.GetStylesByUser(u.Username)
+	styles, err := storage.FindStyleCardsForUsername(u.Username)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{

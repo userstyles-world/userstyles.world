@@ -11,6 +11,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 	"userstyles.world/utils"
 )
 
@@ -47,9 +48,9 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	}
 	secureToken := utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig)
 
-	styles, err := models.GetStylesByUser(u.Username)
+	styles, err := storage.FindStyleCardsForUsername(u.Username)
 	if err != nil {
-		log.Info.Println("Failed to get styles from user:", err.Error())
+		log.Warn.Printf("Failed to get styles for %q: %s\n", u.Username, err)
 		return errorMessage(c, 500, "Couldn't retrieve styles of user")
 	}
 

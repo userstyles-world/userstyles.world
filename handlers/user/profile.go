@@ -7,6 +7,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/storage"
 )
 
 func Profile(c *fiber.Ctx) error {
@@ -26,7 +27,7 @@ func Profile(c *fiber.Ctx) error {
 		return c.Redirect("/user/"+strings.ToLower(p), fiber.StatusSeeOther)
 	}
 
-	styles, err := models.GetStylesByUser(p)
+	styles, err := storage.FindStyleCardsForUsername(p)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"User":  u,
