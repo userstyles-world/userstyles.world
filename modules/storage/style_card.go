@@ -18,6 +18,17 @@ const (
 	notDeleted     = "deleted_at IS NULL"
 )
 
+var (
+	selectCards = strings.Join([]string{
+		"id", "updated_at", "name", "preview",
+		selectAuthor, selectInstalls, selectViews, selectRatings,
+	}, ", ")
+	selectSearchCards = strings.Join([]string{
+		"id", "created_at", "updated_at", "name", "preview",
+		selectAuthor, selectInstalls, selectViews, selectRatings,
+	}, ", ")
+)
+
 // StyleCard is a field-aligned struct optimized for style cards.
 type StyleCard struct {
 	CreatedAt time.Time `json:"created_at"`
@@ -46,12 +57,8 @@ func (x StyleCard) StyleURL() string {
 
 // FindStyleCardsForSearch returns style cards for search page.
 func FindStyleCardsForSearch(items []int) ([]StyleCard, error) {
-	fields := []string{
-		"id", "created_at", "updated_at", "name", "preview",
-		selectAuthor, selectInstalls, selectViews, selectRatings,
-	}
 	var b strings.Builder
-	b.WriteString("SELECT " + strings.Join(fields, ", ") + " ")
+	b.WriteString("SELECT " + selectSearchCards + " ")
 	b.WriteString("FROM styles WHERE id in (")
 	for i, item := range items {
 		if i == 0 {
@@ -88,12 +95,8 @@ func FindStyleCardsForSearch(items []int) ([]StyleCard, error) {
 func FindStyleCardsForUsername(username string) ([]StyleCard, error) {
 	var res []StyleCard
 
-	fields := []string{
-		"id", "updated_at", "name", "preview",
-		selectAuthor, selectInstalls, selectViews, selectRatings,
-	}
 	err := database.Conn.
-		Select(strings.Join(fields, ", ")).
+		Select(selectCards).
 		Find(&res, "deleted_at IS NULL AND username = ?", username).Error
 	if err != nil {
 		return nil, err
@@ -106,12 +109,8 @@ func FindStyleCardsForUsername(username string) ([]StyleCard, error) {
 func FindStyleCardsFeatured() ([]StyleCard, error) {
 	var res []StyleCard
 
-	fields := []string{
-		"id", "updated_at", "name", "preview",
-		selectAuthor, selectInstalls, selectViews, selectRatings,
-	}
 	err := database.Conn.
-		Select(strings.Join(fields, ", ")).
+		Select(selectCards).
 		Find(&res, "deleted_at IS NULL AND featured = 1").Error
 	if err != nil {
 		return nil, err
@@ -148,12 +147,8 @@ func FindStyleCardsPaginated(page, size int, order string) ([]StyleCard, error) 
 		items = append(items, num.ID)
 	}
 
-	fields := []string{
-		"id", "updated_at", "name", "preview",
-		selectAuthor, selectInstalls, selectViews, selectRatings,
-	}
 	err = database.Conn.
-		Select(strings.Join(fields, ", ")).Order(order).Find(&res, items).Error
+		Select(selectCards).Order(order).Find(&res, items).Error
 	if err != nil {
 		return nil, err
 	}
