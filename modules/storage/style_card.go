@@ -10,11 +10,12 @@ import (
 	"userstyles.world/utils/strutils"
 )
 
-var (
+const (
 	selectAuthor   = "(SELECT username FROM users WHERE user_id = users.id AND deleted_at IS NULL) AS Username"
 	selectInstalls = "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.install > 0) AS Installs"
 	selectViews    = "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.view > 0) AS Views"
 	selectRatings  = "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS Rating"
+	notDeleted     = "deleted_at IS NULL"
 )
 
 // StyleCard is a field-aligned struct optimized for style cards.
@@ -137,7 +138,7 @@ func FindStyleCardsPaginated(page, size int, order string) ([]StyleCard, error) 
 	var nums []struct{ ID int }
 	err := database.Conn.
 		Select(stmt).Table("styles").
-		Order(order).Offset(offset).Limit(size).Find(&nums).Error
+		Order(order).Offset(offset).Limit(size).Find(&nums, notDeleted).Error
 	if err != nil {
 		return nil, err
 	}
