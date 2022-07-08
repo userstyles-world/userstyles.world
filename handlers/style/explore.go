@@ -32,7 +32,8 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	// Set pagination.
-	p.CalcItems(int(styleCount), config.AppPageMaxItems)
+	size := config.AppPageMaxItems
+	p.CalcItems(int(styleCount), size)
 	p.Sort = c.Query("sort")
 	if p.OutOfBounds() {
 		r := fmt.Sprintf("/explore?page=%d", p.Now)
@@ -44,7 +45,7 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	// Query for [sorted] styles.
-	s, err := storage.FindStyleCardsPaginated(p.Now, p.SortStyles())
+	s, err := storage.FindStyleCardsPaginated(p.Now, size, p.SortStyles())
 	if err != nil {
 		log.Warn.Println("Failed to get paginated styles:", err.Error())
 		return c.Render("err", fiber.Map{
