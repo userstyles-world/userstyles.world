@@ -155,3 +155,18 @@ func FindStyleCardsPaginated(page, size int, order string) ([]StyleCard, error) 
 
 	return res, nil
 }
+
+// FindStyleCardsCreatedOn returns style cards created on a specific date.
+func FindStyleCardsCreatedOn(date time.Time) ([]StyleCard, error) {
+	var res []StyleCard
+
+	cond := notDeleted + " AND DATE(?) == DATE(created_at)"
+	err := database.Conn.
+		Select(selectCards).
+		Find(&res, cond, date).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

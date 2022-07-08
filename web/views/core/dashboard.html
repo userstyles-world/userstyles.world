@@ -25,6 +25,7 @@
         <p class="fg:3">WIP functionality to help with moderation.</p>
     </section>
 
+    {{ if .System }}
     <section class="overview">
         <h2 class="td:d">Overview</h2>
         {{ with .LatestUser }}
@@ -81,7 +82,9 @@
             </table>
         {{ end }}
     </section>
+    {{ end }}
 
+    {{ if or .DailyHistory .TotalHiistory .UserHistory .StyleHistory }}
     <section class="history">
         <h2 class="td:d">History</h2>
         <p>Learn more about style statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
@@ -101,6 +104,7 @@
             <div class="chart styles mt:m">{{ . | unescape }}</div>
         {{ end }}
     </section>
+    {{ end }}
 
     <section class="users u-TableScrollX">
         <h2 class="td:d">Users</h2>
@@ -140,22 +144,20 @@
         {{ end }}
     </section>
 
-    <section class="styles mt:l">
-        <h2 class="td:d">Styles</h2>
-        <p class="fg:3 mb:m">{{ with .Styles }}{{ len . }} styles in total.{{ end }}</p>
-        {{ if .Styles }}
-        {{ if gt (len .Styles) 1 }}
+    {{ if .RenderStyles }}
+        <section class="styles mt:l">
+            <h2 class="td:d">Styles</h2>
+            <p class="fg:3 mb:m">{{ with .Styles }}{{ len . }} styles in total.{{ end }}</p>
             {{/* template "partials/debug-styles" . */}}
+            {{ if .Styles }}
             <div class="grid flex rwrap mx:r mt:m">
                 {{ range .Styles }}
                     {{ template "partials/style-card" . }}
                 {{ end }}
             </div>
-        {{ else }}
-            <p class="fg:3">No userstyles found.</p>
-        {{ end }}
-        {{ else }}
-            <a href="/dashboard?data=styles">See all styles</a>
-        {{ end }}
-    </section>
+            {{ else }}
+                <p class="fg:3">No styles found.</p>
+            {{ end }}
+        </section>
+    {{ end }}
 </div>

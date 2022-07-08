@@ -15,6 +15,7 @@ import (
 	"userstyles.world/modules/charts"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 var (
@@ -110,6 +111,24 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
+	// Get styles.
+	if c.Query("data") == "styles" {
+		styles, err := storage.FindStyleCardsCreatedOn(time.Now())
+		if err != nil {
+			return c.Render("err", fiber.Map{
+				"Title": "Styles not found",
+				"User":  u,
+			})
+		}
+
+		return c.Render("core/dashboard", fiber.Map{
+			"Title":        "Dashboard",
+			"User":         u,
+			"Styles":       styles,
+			"RenderStyles": true,
+		})
+	}
+
 	// Get System statistics.
 	getSystemStatus()
 
@@ -157,24 +176,6 @@ func Dashboard(c *fiber.Ctx) error {
 				CountSum:  0,
 			}
 		}
-	}
-
-	// Get styles.
-	var styles []models.StyleCard
-	if c.Query("data") == "styles" {
-		s, err := models.GetAllAvailableStyles()
-		if err != nil {
-			return c.Render("err", fiber.Map{
-				"Title": "Styles not found",
-				"User":  u,
-			})
-		}
-
-		sort.Slice(s, func(i, j int) bool {
-			return s[i].ID > s[j].ID
-		})
-
-		styles = s
 	}
 
 	// Get users.
@@ -235,7 +236,6 @@ func Dashboard(c *fiber.Ctx) error {
 		"LatestStyle":  latestStyle,
 		"TotalUsers":   totalUsers,
 		"LatestUser":   latestUser,
-		"Styles":       styles,
 		"Users":        users,
 		"DailyHistory": dailyHistory,
 		"TotalHistory": totalHistory,

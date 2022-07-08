@@ -8,7 +8,6 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
-	"userstyles.world/utils/strutils"
 )
 
 type Style struct {
@@ -58,37 +57,8 @@ type APIStyle struct {
 	PreviewVersion int `json:"-"`
 }
 
-type StyleCard struct {
-	gorm.Model
-	Views       int64
-	Installs    int64
-	Name        string
-	Preview     string
-	DisplayName string
-	Username    string
-	User        User `gorm:"foreignKey:ID"`
-	UserID      uint
-	Rating      float64
-}
-
 type StyleSiteMap struct {
 	ID int
-}
-
-func (s StyleCard) Slug() string {
-	return strutils.SlugifyURL(s.Name)
-}
-
-func (s StyleCard) StyleURL() string {
-	return fmt.Sprintf("/style/%d/%s", s.ID, s.Slug())
-}
-
-func (s StyleCard) Author() string {
-	if s.DisplayName != "" {
-		return s.DisplayName
-	}
-
-	return s.Username
 }
 
 // TruncateCode returns if it should the style, to prevent long loading times.
@@ -153,28 +123,6 @@ func GetStyleCount() (int, error) {
 	}
 
 	return int(c), nil
-}
-
-func GetAllAvailableStyles() ([]StyleCard, error) {
-	q := new([]StyleCard)
-	stmt := `
-select
-	styles.id, styles.name, styles.created_at, styles.updated_at, styles.preview, u.username, u.display_name,
-	(select count(*) from stats s where s.style_id = styles.id and s.install > 0) installs,
-	(select count(*) from stats s where s.style_id = styles.id and s.view > 0) views
-from
-	styles
-join
-	users u on u.id = styles.user_id
-where
-	styles.deleted_at is null
-`
-
-	if err := db().Raw(stmt).Find(q).Error; err != nil {
-		return nil, err
-	}
-
-	return *q, nil
 }
 
 func GetImportedStyles() ([]Style, error) {
