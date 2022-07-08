@@ -3,7 +3,6 @@ package core
 import (
 	"fmt"
 	"runtime"
-	"sort"
 	"sync"
 	"time"
 
@@ -129,6 +128,24 @@ func Dashboard(c *fiber.Ctx) error {
 		})
 	}
 
+	// Get users.
+	if c.Query("data") == "users" {
+		users, err := storage.FindUsersCreatedOn(time.Now())
+		if err != nil {
+			return c.Render("err", fiber.Map{
+				"Title": "Users not found",
+				"User":  u,
+			})
+		}
+
+		return c.Render("core/dashboard", fiber.Map{
+			"Title":       "Dashboard",
+			"User":        u,
+			"Users":       users,
+			"RenderUsers": true,
+		})
+	}
+
 	// Get System statistics.
 	getSystemStatus()
 
@@ -178,24 +195,6 @@ func Dashboard(c *fiber.Ctx) error {
 		}
 	}
 
-	// Get users.
-	var users []models.User
-	if c.Query("data") == "users" {
-		u, err := models.FindAllUsers()
-		if err != nil {
-			return c.Render("err", fiber.Map{
-				"Title": "Users not found",
-				"User":  u,
-			})
-		}
-
-		sort.Slice(u, func(i, j int) bool {
-			return u[i].ID > u[j].ID
-		})
-
-		users = u
-	}
-
 	// Render user history.
 	var userHistory string
 	if len(userCount) > 1 {
@@ -236,7 +235,6 @@ func Dashboard(c *fiber.Ctx) error {
 		"LatestStyle":  latestStyle,
 		"TotalUsers":   totalUsers,
 		"LatestUser":   latestUser,
-		"Users":        users,
 		"DailyHistory": dailyHistory,
 		"TotalHistory": totalHistory,
 		"UserHistory":  userHistory,

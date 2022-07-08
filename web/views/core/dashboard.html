@@ -106,12 +106,11 @@
     </section>
     {{ end }}
 
-    <section class="users u-TableScrollX">
-        <h2 class="td:d">Users</h2>
-        <p class="fg:3 mb:m">{{ with .Users }}{{ len . }} users in total.{{ end }}</p>
-
-        {{ if .Users }}
-        {{ if gt (len .Users) 1 }}
+    {{ if .RenderUsers }}
+        <section class="users u-TableScrollX">
+            <h2 class="td:d">Users</h2>
+            <p class="fg:3 mb:m">{{ with .Users }}{{ len . }} users in total.{{ end }}</p>
+            {{ if .Users }}
             <table>
                 <thead>
                     <th>ID</th>
@@ -136,13 +135,11 @@
                     {{ end }}
                 </tbody>
             </table>
-        {{ else }}
-            <p class="fg:3">No users found.</p>
-        {{ end }}
-        {{ else }}
-            <a href="/dashboard?data=users">See all users</a>
-        {{ end }}
-    </section>
+            {{ else }}
+                <p class="fg:3">No users found.</p>
+            {{ end }}
+        </section>
+    {{ end }}
 
     {{ if .RenderStyles }}
         <section class="styles mt:l">

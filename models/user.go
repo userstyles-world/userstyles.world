@@ -89,14 +89,6 @@ func (u APIUser) IsModOrAdmin() bool {
 	return u.Role == Moderator || u.Role == Admin
 }
 
-func FindAllUsers() (u []User, err error) {
-	if err = db().Find(&u).Error; err != nil {
-		return nil, err
-	}
-
-	return u, nil
-}
-
 func FindUserByEmail(email string) (*User, error) {
 	user := new(User)
 
