@@ -28,10 +28,20 @@
         {{ with .Params.Email }}
             <p><span class="minw">Email</span>{{ . }}</p>
         {{ end }}
-        <p class="joined"><span class="minw">Joined</span>{{ .Params.CreatedAt | Date }}</p>
-        <p class="updated"><span class="minw">Updated</span>{{ .Params.UpdatedAt | Date }}</p>
+        <p class="joined">
+            <span class="minw">Joined</span>
+            <time datetime="{{ .Params.CreatedAt | iso }}">
+                {{ .Params.CreatedAt | rel }}
+            </time>
+        </p>
+        <p class="updated">
+            <span class="minw">Updated</span>
+            <time datetime="{{ .Params.UpdatedAt | iso }}">
+                {{ .Params.UpdatedAt | rel }}
+            </time>
+        </p>
         {{ if not (eq .Params.LastLogin.String "0001-01-01 00:00:00 +0000 UTC") }}
-            <p class="lastlogin"><span class="minw">Last login</span>{{ .Params.LastLogin | Date }}</p>
+            <p class="lastlogin"><span class="minw">Last login</span>{{ .Params.LastLogin | rel }}</p>
         {{ end }}
     </section>
 

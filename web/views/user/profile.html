@@ -7,9 +7,19 @@
         {{ with .Profile.DisplayName }}
             <p class="displayname"><span class="minw">Display name</span>{{ . }}</p>
         {{ end }}
-        <p class="joined"><span class="minw">Joined</span>{{ .Profile.CreatedAt | Date }}</p>
+        <p class="joined">
+            <span class="minw">Joined</span>
+            <time datetime="{{ .Profile.CreatedAt | iso }}">
+                {{ .Profile.CreatedAt | rel }}
+            </time>
+        </p>
         {{ if .User.IsModOrAdmin }}
-            <p class="updated"><span class="minw">Updated</span>{{ .Profile.UpdatedAt | Date }}</p>
+            <p class="updated">
+                <span class="minw">Updated</span>
+                <time datetime="{{ .Profile.UpdatedAt | iso }}">
+                    {{ .Profile.UpdatedAt | rel }}
+                </time>
+            </p>
         {{ end }}
         <h2 class="sub-title td:d mt:l">Biography</h2>
         <div class="md">

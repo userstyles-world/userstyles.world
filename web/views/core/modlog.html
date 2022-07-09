@@ -40,9 +40,9 @@
                     {{ range .BannedUsers }}
                         <tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
-                            <td datetime="{{ .CreatedAt | DateISO8601 }}"
+                            <td datetime="{{ .CreatedAt | iso }}"
                                 class="u-TableMin">
-                                <a href="#id-{{ .ID }}">{{ .CreatedAt | shortDate }}</a>
+                                <a href="#id-{{ .ID }}">{{ .CreatedAt | rel }}</a>
                             </td>
                             <td class="u-Truncate">{{ .TargetUserName }}</td>
                             <td class="u-Truncate M">{{ .Reason }}</td>
@@ -70,9 +70,9 @@
                     {{ range .RemovedStyles }}
                         <tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
-                            <td datetime="{{ .CreatedAt | DateISO8601 }}"
+                            <td datetime="{{ .CreatedAt | iso }}"
                                 class="u-TableMin">
-                                <a href="#id-{{ .ID }}">{{ .CreatedAt | shortDate }}</a>
+                                <a href="#id-{{ .ID }}">{{ .CreatedAt | rel }}</a>
                             </td>
                             <td class="u-Truncate">{{ .TargetData }}</td>
                             <td><a href="/user/{{ .TargetUserName }}">{{ .TargetUserName }}</a></td>

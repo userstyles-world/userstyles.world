@@ -125,7 +125,11 @@
                     {{ range .Users }}
                         <tr>
                             <td>{{ .ID }}</td>
-                            <td class="u-TableMin">{{ .CreatedAt | shortDate }}</td>
+                            <td class="u-TableMin">
+                                <time datetime="{{ .CreatedAt | iso }}">
+                                    {{ .CreatedAt | rel }}
+                                </time>
+                            </td>
                             <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
                             <td>{{ .DisplayName }}</td>
                             {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}

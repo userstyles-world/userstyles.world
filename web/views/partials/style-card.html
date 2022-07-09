@@ -8,8 +8,8 @@
     <div class="card-body f:col p:m">
         <small class="fg:3" style="margin-bottom: 0.125rem">
             <span>Updated</span>
-            <time datetime="{{ .UpdatedAt | DateISO8601 }}">
-                {{- .UpdatedAt | Date -}}
+            <time datetime="{{ .UpdatedAt | iso }}">
+                {{ .UpdatedAt | rel }}
             </time>
         </small>
         <a class="name fg:1 f:h3 f:b" href="{{ .StyleURL }}">{{ .Name }}</a>

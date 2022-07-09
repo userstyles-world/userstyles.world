@@ -85,16 +85,12 @@ func New(views http.FileSystem, dir string) *html.Engine {
 		return s
 	})
 
-	engine.AddFunc("Date", func(time time.Time) string {
-		return time.Format("January 2, 2006 15:04")
+	engine.AddFunc("rel", func(t time.Time) string {
+		return humanize.Time(t)
 	})
 
-	engine.AddFunc("shortDate", func(time time.Time) string {
-		return time.Format("2006-01-02 15:04")
-	})
-
-	engine.AddFunc("DateISO8601", func(time time.Time) string {
-		return time.Format("2006-01-02T15:04:05-0700")
+	engine.AddFunc("iso", func(t time.Time) string {
+		return t.Format(time.RFC3339)
 	})
 
 	engine.AddFunc("add", func(a, b int) int {

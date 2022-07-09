@@ -124,8 +124,8 @@
             <h2 class="td:d">Details</h2>
             <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
             <p><span class="minw">License</span>{{ .Style.License }}</p>
-            <p><span class="minw">Created at</span>{{ .Style.CreatedAt | Date }}</p>
-            <p><span class="minw">Updated at</span>{{ .Style.UpdatedAt | Date }}</p>
+            <p><span class="minw">Created at</span>{{ .Style.CreatedAt | rel }}</p>
+            <p><span class="minw">Updated at</span>{{ .Style.UpdatedAt | rel }}</p>
             <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
             <div class="stats mt:m">
                 <h2 class="td:d">Statistics</h2>
@@ -191,8 +191,12 @@
             <div class="Box mt:m" id="id-{{ .ID }}">
                 <div class="Box-header">
                     <a class="username" href="/user/{{ .User.Username }}"><b>{{ .User.Username }}</b></a>
-                    reviewed and gave {{ .Rating }}/5 ⭐ on
-                    <a class="datetime" href="#id-{{ .ID }}">{{ .CreatedAt.Format "January 02, 2006 at 15:04" }}</a>
+                    reviewed and gave {{ .Rating }}/5 ⭐
+                    <a class="datetime" href="#id-{{ .ID }}">
+                        <time datetime="{{ .CreatedAt | iso }}">
+                            {{ .CreatedAt | rel }}
+                        </time>
+                    </a>
                 </div>
 
                 {{ with.Comment }}

@@ -6,8 +6,7 @@
 
     <section class="mt:l">
         <form class="Form Form-inline jc:c" method="get" action="/explore">
-            <input type="text" name="page"
-                value="{{ with .P.Now }}{{ . }}{{ else }}1{{ end }}" hidden>
+            <input type="text" name="page" value="1" hidden>
             <div class="Form-section Form-row">
                 {{ template "partials/form-sort" . }}
             </div>
