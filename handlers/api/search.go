@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/search"
+	"userstyles.world/modules/search"
 )
 
 func GetSearchResult(c *fiber.Ctx) error {

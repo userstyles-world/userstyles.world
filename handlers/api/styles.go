@@ -12,8 +12,8 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/search"
 	"userstyles.world/modules/storage"
-	"userstyles.world/search"
 	"userstyles.world/utils"
 )
 

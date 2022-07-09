@@ -9,7 +9,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
-	"userstyles.world/search"
+	"userstyles.world/modules/search"
 	"userstyles.world/utils"
 )
 

@@ -12,7 +12,7 @@ import (
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
-	"userstyles.world/search"
+	"userstyles.world/modules/search"
 )
 
 func EditGet(c *fiber.Ctx) error {

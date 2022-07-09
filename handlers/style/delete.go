@@ -7,7 +7,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
-	"userstyles.world/search"
+	"userstyles.world/modules/search"
 )
 
 func DeleteGet(c *fiber.Ctx) error {

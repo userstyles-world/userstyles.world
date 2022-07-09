@@ -11,7 +11,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
-	"userstyles.world/search"
+	"userstyles.world/modules/search"
 	"userstyles.world/utils"
 )
 

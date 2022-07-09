@@ -22,9 +22,9 @@ import (
 	database "userstyles.world/modules/database/init"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/search"
 	"userstyles.world/modules/templates"
 	"userstyles.world/modules/util/httputil"
-	"userstyles.world/search"
 	"userstyles.world/utils"
 	"userstyles.world/web"
 )

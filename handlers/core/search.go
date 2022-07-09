@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
-	"userstyles.world/search"
+	"userstyles.world/modules/search"
 )
 
 func Search(c *fiber.Ctx) error {

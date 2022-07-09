@@ -6,7 +6,8 @@ import (
 	"time"
 
 	"github.com/ohler55/ojg/oj"
-	"userstyles.world/search"
+
+	"userstyles.world/modules/search"
 )
 
 func TestUnsafeString(t *testing.T) {
