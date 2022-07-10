@@ -1,4 +1,7 @@
-[data-tooltip] {
+// HACK: Temporary workaround.  Find a way to abstract away tooltips.
+time[datetime]::before { content: attr(datetime) !important }
+
+[data-tooltip], time[datetime] {
     cursor: pointer;
     position: relative;
   

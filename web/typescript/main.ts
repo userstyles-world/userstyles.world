@@ -9,6 +9,7 @@ import type {UserSettings} from './utils/storage';
 import {getSettings} from './utils/storage';
 import {initViewStyle} from './page/view-style';
 import {page404} from './page/404';
+import {updateTimestamps} from './utils/time';
 
 // Once settings update we should reinstalize any functionallity.
 // That relies on this settings.
@@ -16,6 +17,7 @@ const onSettingsUpdate = () => initalizeOrUpdateColorScheme(getSettings().colorS
 
 const whenDOMReady = () => {
     broadcastReady();
+    updateTimestamps();
     saveUserSettingsButton(onSettingsUpdate);
     setValues(getSettings());
 };
