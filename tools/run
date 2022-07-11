@@ -162,24 +162,28 @@ compileGoProd() {
 }
 
 buildCmd() {
+    err() {
+        printf "Error: Invalid argument '%s'.  Try using one of: " "$1"
+        printf "go, ts, sass, dev, or prod.\n"
+        return 1
+    }
+
+    compile() {
+        log "Building USw for $1 environment."
+        case "$1" in
+            dev)  compileSass; compileTSDev;  compileGoDev  ;;
+            prod) compileSass; compileTSProd; compileGoProd ;;
+        esac
+    }
+
     if [ $# -ge 1 ]; then
         case "$1" in
-            go) compileGoDev ;;
-            [jt]s) compileTSDev ;;      # Match on js or ts.
-            s[ac]ss|css) compileSass ;; # Match on sass, scss, or css.
-            dev)
-                log "Build development USw executable."
-                compileTSDev; compileSass; compileGoDev
-                ;;
-            prod)
-                log "Build production USw executable."
-                compileTSProd; compileSass; compileGoProd
-                ;;
-            *)
-                printf "Error: Invalid argument '%s'.  " "$1"
-                printf "Try using dev or prod."
-                return 1
-                ;;
+            go)          compileGoDev ;;
+            [jt]s)       compileTSDev ;; # Match on js or ts.
+            s[ac]ss|css) compileSass  ;; # Match on sass, scss, or css.
+            dev)         compile dev  ;;
+            prod)        compile prod ;;
+            *)           err "$1"     ;;
         esac
     else
         printf "Error: No argument found.  Try using dev or prod.\n"
@@ -222,18 +226,22 @@ startCmd() {
 
 watchCmd() {
     check air vips
+
+    err() {
+        printf "Error: Invalid argument '%s'.  Try using one of: " "$1"
+        printf "go, ts, or sass.\n"
+        return 1
+    }
+
     if [ $# -ge 1 ]; then
         case "$1" in
-            go) watchGo ;;
-            [jt]s) watchTS ;;         # Match on js or ts.
+            go)          watchGo   ;;
+            [jt]s)       watchTS   ;; # Match on js or ts.
             s[ac]ss|css) watchSass ;; # Match on sass, scss, or css.
-            *)
-                printf "Error: Invalid argument '%s'.  " "$1"
-                printf "Try using go, ts, or sass.\n"
-                return 1
-                ;;
+            *)           err "$1"  ;;
         esac
     else
+        # TODO: Show usage for this command.
         printf "Error: No argument found.  Try using go, ts, or sass.\n"
         return 1
     fi
