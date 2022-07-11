@@ -78,6 +78,23 @@ getFonts() {
     fi
 }
 
+watch() {
+    case "$1" in
+        go)
+            log "Watching Go files."
+            air -c tools/air_go.toml
+            ;;
+        [tj]s)
+            log "Watching TypeScript files."
+            env DEBUG="true" air -c tools/air_ts.toml
+            ;;
+        s[as]ss|css)
+            log "Watching Sass files."
+            air -c tools/air_sass.toml
+            ;;
+    esac
+}
+
 setupSass() {
     log "Setting up Sass."
 
@@ -87,11 +104,6 @@ setupSass() {
 
     # Compile initial CSS file.
     compileSass
-}
-
-watchSass() {
-    log "Watching Sass files."
-    air -c tools/air_sass.toml
 }
 
 compileSass() {
@@ -117,11 +129,6 @@ setupTS() {
     compileTSDev
 }
 
-watchTS() {
-    log "Watching TypeScript files."
-    env DEBUG="true" air -c tools/air_ts.toml
-}
-
 compileTSDev() {
     log "Compiling TS files for development."
     env DEBUG="true" ./bin/userstyles-ts
@@ -135,11 +142,6 @@ compileTSProd() {
 setupGo() {
     log "Setting up Go environment."
     compileGoDev
-}
-
-watchGo() {
-    log "Watching Go files."
-    air -c tools/air_go.toml
 }
 
 compileGoDev() {
@@ -179,7 +181,7 @@ buildCmd() {
     if [ $# -ge 1 ]; then
         case "$1" in
             go)          compileGoDev ;;
-            [jt]s)       compileTSDev ;; # Match on js or ts.
+            [tj]s)       compileTSDev ;; # Match on ts or js.
             s[ac]ss|css) compileSass  ;; # Match on sass, scss, or css.
             dev)         compile dev  ;;
             prod)        compile prod ;;
@@ -235,10 +237,10 @@ watchCmd() {
 
     if [ $# -ge 1 ]; then
         case "$1" in
-            go)          watchGo   ;;
-            [jt]s)       watchTS   ;; # Match on js or ts.
-            s[ac]ss|css) watchSass ;; # Match on sass, scss, or css.
-            *)           err "$1"  ;;
+            go)          watch go   ;;
+            [tj]s)       watch ts   ;; # Match on ts or js.
+            s[ac]ss|css) watch sass ;; # Match on sass, scss, or css.
+            *)           err "$1"   ;;
         esac
     else
         # TODO: Show usage for this command.
