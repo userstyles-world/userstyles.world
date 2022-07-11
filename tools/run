@@ -145,11 +145,13 @@ setupGo() {
 }
 
 compileGoDev() {
+    : "Setting BIN to ${BIN:=bin/userstyles-dev}."
     log "Compiling executable."
-    go build -v -o bin/userstyles-world cmd/userstyles-world/main.go
+    go build -v -o "$BIN" cmd/userstyles-world/main.go
 }
 
 compileGoProd() {
+    : "Setting BIN to ${BIN:=bin/userstyles-prod}."
     log "Compiling static executable."
 
     f="-s -w -extldflags '-fno-PIC -static'"
@@ -157,8 +159,9 @@ compileGoProd() {
     f="$f -X userstyles.world/modules/config.GitVersion=$(git describe --tags)"
 
     go build -v \
-        -o bin/userstyles-world \
-        -ldflags "$f" -buildmode pie \
+        -o "$BIN" \
+        -ldflags "$f" \
+        -buildmode pie \
         -tags 'osusergo netgo static_build' \
         cmd/userstyles-world/main.go
 }
@@ -221,9 +224,10 @@ setupCmd() {
 }
 
 startCmd() {
-    log "Starting USw."
+    : "Setting BIN to ${BIN:=bin/userstyles-dev}."
+    log "Starting USw from ${BIN}."
     check vips
-    ./bin/userstyles-world
+    "./${BIN}"
 }
 
 watchCmd() {
