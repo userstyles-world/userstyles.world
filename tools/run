@@ -125,6 +125,36 @@ build() {
     esac
 }
 
+setup() {
+    case "$1" in
+        go)
+            log "Setting up Go environment."
+
+            # Build initial executable.
+            build go-dev
+            ;;
+        ts)
+            log "Setting up TypeScript environment."
+
+            # Build esbuild executable.
+            go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
+
+            # Build initial JS file.
+            build ts-dev
+            ;;
+        sass)
+            log "Setting up Sass environment."
+
+            # Sassc fails to create the compiled file if target directory
+            # doesn't exist, so we have to create it manually.
+            mkdir -p web/static/css
+
+            # Build initial CSS file.
+            build sass
+            ;;
+    esac
+}
+
 watch() {
     case "$1" in
         go)
@@ -142,17 +172,6 @@ watch() {
     esac
 }
 
-setupSass() {
-    log "Setting up Sass."
-
-    # Sassc fails to create the compiled file if target directory doesn't exist,
-    # so we have to create it manually.
-    mkdir -p web/static/css
-
-    # Compile initial CSS file.
-    build sass
-}
-
 drop() {
     log "Dropping database tables."
 
@@ -161,19 +180,6 @@ drop() {
         DB_DEBUG="${2:-silent}" \
         DB_RANDOM_DATA="${3:-false}" \
         air -c tools/air_go.toml
-}
-
-setupTS() {
-    log "Setting up TypeScript environment."
-    go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
-
-    # Compile initial JS file.
-    build ts-dev
-}
-
-setupGo() {
-    log "Setting up Go environment."
-    build go-dev
 }
 
 buildCmd() {
@@ -220,9 +226,9 @@ setupCmd() {
     log "Setting up development environment."
     mkdir -p data
     getFonts
-    setupSass
-    setupTS
-    setupGo
+    setup sass
+    setup ts
+    setup go
 }
 
 startCmd() {
