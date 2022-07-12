@@ -78,6 +78,53 @@ getFonts() {
     fi
 }
 
+build() {
+    case "$1" in
+        go-dev)
+            : "Setting BIN to ${BIN:=bin/userstyles-dev}."
+            log "Compiling development executable to ${BIN}."
+            go build -v -o "$BIN" cmd/userstyles-world/main.go
+            ;;
+        go-prod)
+            : "Setting BIN to ${BIN:=bin/userstyles-prod}."
+            log "Compiling production executable to ${BIN}."
+
+            c="$(git rev-list -1 HEAD)"
+            v="$(git describe --tags)"
+            f="-s -w -extldflags '-fno-PIC -static'"
+            f="$f -X userstyles.world/modules/config.GitCommit=${c}"
+            f="$f -X userstyles.world/modules/config.GitVersion=${v}"
+
+            go build -v \
+                -o "$BIN" \
+                -ldflags "$f" \
+                -buildmode pie \
+                -tags 'osusergo netgo static_build' \
+                cmd/userstyles-world/main.go
+            ;;
+        ts-dev)
+            log "Compiling TypeScript for development environment."
+            env DEBUG="true" ./bin/userstyles-ts
+            ;;
+        ts-prod)
+            log "Compiling TypeScript for production environment."
+            ./bin/userstyles-ts
+            ;;
+        sass)
+            log "Compiling Sass files."
+            sassc web/scss/main.scss web/static/css/main.css
+            ;;
+        dev)
+            log "Building USw for $1 environment."
+            build sass; build ts-dev; build go-dev
+            ;;
+        prod)
+            log "Building USw for $1 environment."
+            build sass; build ts-prod; build go-prod
+            ;;
+    esac
+}
+
 watch() {
     case "$1" in
         go)
@@ -103,12 +150,7 @@ setupSass() {
     mkdir -p web/static/css
 
     # Compile initial CSS file.
-    compileSass
-}
-
-compileSass() {
-    log "Compiling Sass files."
-    sassc web/scss/main.scss web/static/css/main.css
+    build sass
 }
 
 drop() {
@@ -126,44 +168,12 @@ setupTS() {
     go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
 
     # Compile initial JS file.
-    compileTSDev
-}
-
-compileTSDev() {
-    log "Compiling TS files for development."
-    env DEBUG="true" ./bin/userstyles-ts
-}
-
-compileTSProd() {
-    log "Compiling TS files for production."
-    ./bin/userstyles-ts
+    build ts-dev
 }
 
 setupGo() {
     log "Setting up Go environment."
-    compileGoDev
-}
-
-compileGoDev() {
-    : "Setting BIN to ${BIN:=bin/userstyles-dev}."
-    log "Compiling executable."
-    go build -v -o "$BIN" cmd/userstyles-world/main.go
-}
-
-compileGoProd() {
-    : "Setting BIN to ${BIN:=bin/userstyles-prod}."
-    log "Compiling static executable."
-
-    f="-s -w -extldflags '-fno-PIC -static'"
-    f="$f -X userstyles.world/modules/config.GitCommit=$(git rev-list -1 HEAD)"
-    f="$f -X userstyles.world/modules/config.GitVersion=$(git describe --tags)"
-
-    go build -v \
-        -o "$BIN" \
-        -ldflags "$f" \
-        -buildmode pie \
-        -tags 'osusergo netgo static_build' \
-        cmd/userstyles-world/main.go
+    build go-dev
 }
 
 buildCmd() {
@@ -173,21 +183,13 @@ buildCmd() {
         return 1
     }
 
-    compile() {
-        log "Building USw for $1 environment."
-        case "$1" in
-            dev)  compileSass; compileTSDev;  compileGoDev  ;;
-            prod) compileSass; compileTSProd; compileGoProd ;;
-        esac
-    }
-
     if [ $# -ge 1 ]; then
         case "$1" in
-            go)          compileGoDev ;;
-            [tj]s)       compileTSDev ;; # Match on ts or js.
-            s[ac]ss|css) compileSass  ;; # Match on sass, scss, or css.
-            dev)         compile dev  ;;
-            prod)        compile prod ;;
+            go)          build go-dev ;;
+            [tj]s)       build ts-dev ;; # Match on ts or js.
+            s[ac]ss|css) build sass   ;; # Match on sass, scss, or css.
+            dev)         build dev    ;;
+            prod)        build prod   ;;
             *)           err "$1"     ;;
         esac
     else
@@ -278,7 +280,7 @@ main() {
             build)
                 shift; buildCmd "$@"; took; shift ;;
             dev) # TODO: Move to 'watch' under 'all'.
-                shift; compileGoDev "$@" ;;
+                shift; build go-dev "$@" ;;
             drop) # TODO: Remove? I suppose we could handle it in Go code.
                 shift; drop "$@" ;;
             config)
