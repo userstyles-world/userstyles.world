@@ -206,11 +206,11 @@ buildCmd() {
 
 configCmd() {
     if [ $# -ge 1 ]; then
-        if  [ -e "tools/${1}" ]; then
+        if  [ -e "$1" ]; then
             printf "Loading environment variables from '%s' file.\n" "$1"
             set -a
             # shellcheck disable=SC1090
-            . "tools/${1}"
+            . "$1"
             set +a
         else
             printf "Failed to load environment variables from '%s' file.\n" "$1"
