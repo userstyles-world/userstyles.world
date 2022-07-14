@@ -169,6 +169,20 @@ watch() {
             log "Watching Sass files."
             air -c tools/air_sass.toml
             ;;
+        all|dev)
+            # Execute jobs in subshells, so that we can run all of them
+            # simultaneously.  I'm not sure if there's a better way to implement
+            # this functionality, but this is the best attempt I could come up
+            # with that doesn't have any dealbreaking downsides to it.  Delay is
+            # there only to separate log messages.
+            (watch sass) &
+            (sleep 0.4 && watch ts) &
+            (sleep 0.8 && watch go) &
+
+            # Wait for subshells to terminate before exiting the process,
+            # otherwise you'd have to manually kill processes.
+            wait
+            ;;
     esac
 }
 
@@ -252,6 +266,7 @@ watchCmd() {
             go)          watch go   ;;
             [tj]s)       watch ts   ;; # Match on ts or js.
             s[ac]ss|css) watch sass ;; # Match on sass, scss, or css.
+            all|dev)     watch all  ;;
             *)           err "$1"   ;;
         esac
     else
@@ -285,8 +300,6 @@ main() {
         case "$1" in
             build)
                 shift; buildCmd "$@"; took; shift ;;
-            dev) # TODO: Move to 'watch' under 'all'.
-                shift; build go-dev "$@" ;;
             drop) # TODO: Remove? I suppose we could handle it in Go code.
                 shift; drop "$@" ;;
             config)
