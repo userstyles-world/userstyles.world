@@ -46,7 +46,7 @@ getFonts() {
     # https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
     version=$(printf "%s" "$src" | sed -n 's|.*\/\(v.*\)\/.*|\1|p')
 
-    archive="data/inter-${version}.zip"
+    archive="${DATA_DIR:=data}/inter-${version}.zip"
     distDir="web/static/fonts"
 
     extract() {
@@ -221,24 +221,24 @@ buildCmd() {
 configCmd() {
     if [ $# -ge 1 ]; then
         if  [ -e "$1" ]; then
-            printf "Loading environment variables from '%s' file.\n" "$1"
+            log "Loading variables from '$1' file."
             set -a
             # shellcheck disable=SC1090
             . "$1"
             set +a
         else
-            printf "Failed to load environment variables from '%s' file.\n" "$1"
+            log "Error: Failed to load '$1' file.  Is the path correct?"
             return 1
         fi
     else
-        printf "Error: No argument found.  Try passing a valid env file.\n"
+        log "Error: No argument found.  Try passing a valid file."
         return 1
     fi
 }
 
 setupCmd() {
     log "Setting up development environment."
-    mkdir -p data
+    mkdir -p "$DATA_DIR"
     getFonts
     setup sass
     setup ts
