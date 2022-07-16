@@ -237,12 +237,17 @@ configCmd() {
 }
 
 setupCmd() {
+    : "Setting DATA_DIR to ${DATA_DIR:=data}"
     log "Setting up development environment."
+
     mkdir -p "$DATA_DIR"
     getFonts
     setup sass
     setup ts
     setup go
+
+    # Perform database migration and exit.
+    DB_DROP=1 DB_MIGRATE=1 startCmd
 }
 
 startCmd() {

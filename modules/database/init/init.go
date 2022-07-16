@@ -87,12 +87,18 @@ func Initialize() {
 				log.Warn.Fatalf("Failed to migrate %s, err: %s\n", table.name, err.Error())
 			}
 
-			log.Info.Println("Migrated database table", table.name)
+			log.Info.Println("Migrated table", table.name)
 		}
 	}
 
 	if shouldSeed {
 		seed()
+	}
+
+	// TODO: Simplify the entire process, including dropping and seeing data.
+	if config.DBMigrate {
+		log.Info.Println("Database migration complete.")
+		os.Exit(0)
 	}
 }
 
