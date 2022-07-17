@@ -79,6 +79,11 @@ func main() {
 		Root:   web.StaticDir,
 	}))
 
+	// TODO: Investigate how to "truly" inline sourcemaps in Sass.
+	if !config.Production {
+		app.Static("/scss", "web/scss")
+	}
+
 	// Fallback route.
 	app.Use(core.NotFound)
 

@@ -110,17 +110,22 @@ build() {
             log "Compiling TypeScript for production environment."
             ./bin/userstyles-ts
             ;;
-        sass)
-            log "Compiling Sass files."
-            sassc web/scss/main.scss web/static/css/main.css
+        sass-dev)
+            log "Compiling Sass for development environment."
+            sassc --style nested --sourcemap=inline -l \
+                web/scss/main.scss web/static/css/main.css
+            ;;
+        sass-prod)
+            log "Compiling Sass for production environment."
+            sassc --style compressed web/scss/main.scss web/static/css/main.css
             ;;
         dev)
             log "Building USw for $1 environment."
-            build sass; build ts-dev; build go-dev
+            build sass-dev; build ts-dev; build go-dev
             ;;
         prod)
             log "Building USw for $1 environment."
-            build sass; build ts-prod; build go-prod
+            build sass-prod; build ts-prod; build go-prod
             ;;
     esac
 }
@@ -150,7 +155,7 @@ setup() {
             mkdir -p web/static/css
 
             # Build initial CSS file.
-            build sass
+            build sass-dev
             ;;
     esac
 }
@@ -205,12 +210,12 @@ buildCmd() {
 
     if [ $# -ge 1 ]; then
         case "$1" in
-            go)          build go-dev ;;
-            [tj]s)       build ts-dev ;; # Match on ts or js.
-            s[ac]ss|css) build sass   ;; # Match on sass, scss, or css.
-            dev)         build dev    ;;
-            prod)        build prod   ;;
-            *)           err "$1"     ;;
+            go)          build go-dev   ;;
+            [tj]s)       build ts-dev   ;; # Match on ts or js.
+            s[ac]ss|css) build sass-dev ;; # Match on sass, scss, or css.
+            dev)         build dev      ;;
+            prod)        build prod     ;;
+            *)           err "$1"       ;;
         esac
     else
         printf "Error: No argument found.  Try using dev or prod.\n"
