@@ -9,6 +9,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 func fixCategory(cat string) string {
@@ -36,8 +37,8 @@ func getUSoIndex(c *fiber.Ctx) error {
 Convert:
 	cached, found := cache.Store.Get("index")
 	if !found {
-		styles := new(models.USoStyles)
-		if err := styles.Query(); err != nil {
+		styles, err := storage.GetStyleCompactIndex()
+		if err != nil {
 			log.Warn.Println("Failed to get styles for USo-formatted index:", err.Error())
 			return c.JSON(fiber.Map{
 				"data": "styles not found",
@@ -45,13 +46,13 @@ Convert:
 		}
 
 		// TODO: Normalize categories on add/import/edit pages.
-		for _, style := range *styles {
+		for _, style := range styles {
 			style.Category = fixCategory(style.Category)
 		}
 
 		// Save to disk and read it to avoid converting between types.
 		if err := cache.SaveToDisk(cache.CachedIndex, fiber.Map{
-			"data": *styles,
+			"data": styles,
 		}); err != nil {
 			log.Warn.Println("Failed to cache USo-formatted index:", err)
 			goto Convert
