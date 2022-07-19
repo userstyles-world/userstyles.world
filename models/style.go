@@ -125,19 +125,6 @@ func GetStyleCount() (int, error) {
 	return int(c), nil
 }
 
-func GetImportedStyles() ([]Style, error) {
-	q := new([]Style)
-	err := db().
-		Model(modelStyle).
-		Find(q, "styles.mirror_url <> '' or styles.original <> '' and styles.mirror_code = ?", true).
-		Error
-	if err != nil {
-		return nil, errors.ErrNoImportedStyles
-	}
-
-	return *q, nil
-}
-
 // GetStyleByID note: Using ID as a string is fine in this case.
 func GetStyleByID(id string) (*APIStyle, error) {
 	q := new(APIStyle)

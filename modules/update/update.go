@@ -5,34 +5,30 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
-var size = 25
-
 func ImportedStyles() {
-	styles, err := models.GetImportedStyles()
+	count, err := storage.CountStylesForMirror()
 	if err != nil {
-		log.Warn.Println("Failed to find imported styles:", err.Error())
-		return // stop if error occurs
+		log.Warn.Println("Failed to find imported styles:", err)
+		return
 	}
 
-	length := len(styles)
-	log.Info.Printf("Updating %d mirrored styles.\n", length)
+	log.Info.Printf("Updating %d mirrored styles.\n", count)
 
-	for i := 0; i < length; i += size {
-		j := i + size
-		if j > length {
-			j = length
+	action := func(styles []models.Style) error {
+		for _, style := range styles {
+			time.Sleep(200 * time.Millisecond)
+			go Batch(style)
 		}
 
-		for _, style := range styles[i:j] {
-			if !style.Archived {
-				time.Sleep(200 * time.Millisecond)
-				go Batch(style)
-			}
-		}
+		return nil
+	}
 
-		time.Sleep(time.Second * 5)
+	if err := storage.FindStylesForMirror(action); err != nil {
+		log.Warn.Println("Failed to find imported styles:", err)
+		return
 	}
 
 	log.Info.Println("Mirrored styles have been updated.")
