@@ -77,10 +77,9 @@ func EditPost(c *fiber.Ctx) error {
 	file, _ := c.FormFile("preview")
 	version := strconv.Itoa(s.PreviewVersion + 1)
 	preview := strings.TrimSpace(c.FormValue("previewURL"))
-	if file != nil || preview != "" {
+	if file != nil || preview != s.Preview {
 		if err := images.Generate(file, id, version, s.Preview, preview); err != nil {
 			log.Warn.Println("Error:", err)
-			s.Preview = ""
 		} else {
 			s.PreviewVersion++
 			s.SetPreview()
