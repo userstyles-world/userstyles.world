@@ -175,11 +175,11 @@ watch() {
             air -c tools/air_sass.toml
             ;;
         all|dev)
-            # Execute jobs in subshells, so that we can run all of them
+            # Execute jobs in separate subshells, so that we can run all of them
             # simultaneously.  I'm not sure if there's a better way to implement
             # this functionality, but this is the best attempt I could come up
-            # with that doesn't have any dealbreaking downsides to it.  Delay is
-            # there only to separate log messages.
+            # with that doesn't have any downsides to it.  Delay is there only
+            # to separate log messages.
             (watch sass) &
             (sleep 0.4 && watch ts) &
             (sleep 0.8 && watch go) &
@@ -202,9 +202,31 @@ drop() {
 }
 
 buildCmd() {
-    err() {
-        printf "Error: Invalid argument '%s'.  Try using one of: " "$1"
-        printf "go, ts, sass, dev, or prod.\n"
+    ## Build command builds different things for use during development cycle,
+    ## with the exception of 'prod' argument, which builds everything for use in
+    ## production environment.
+    ##
+    ## Arguments:
+    ##
+    ##   sass, scss, css - Builds Sass files to 'web/static/css' directory.
+    ##   ts, js          - Builds TS files to 'web/static/ts' directory.
+    ##   go              - Builds Go files to a development executable.
+    ##   dev             - Builds all files for development environment.
+    ##   prod            - Builds all files for production environment.
+    ##
+    ## Usage:
+    ##
+    ##   run build sass          - Builds Sass files.
+    ##   run build sass build ts - Builds Sass then TS files.
+    ##   run build dev start     - Builds all files, then runs starts command.
+
+    fail() {
+        case "$1" in
+            -) printf "Error: No argument found.\n\n" ;;
+            *) printf "Error: Invalid argument '%s'.\n\n" "$1" ;;
+        esac
+
+        helpCmd build
         return 1
     }
 
@@ -215,15 +237,23 @@ buildCmd() {
             s[ac]ss|css) build sass-dev ;; # Match on sass, scss, or css.
             dev)         build dev      ;;
             prod)        build prod     ;;
-            *)           err "$1"       ;;
+            *)           fail "$1"      ;;
         esac
     else
-        printf "Error: No argument found.  Try using dev or prod.\n"
-        return 1
+        fail -
     fi
 }
 
 configCmd() {
+    ## Config command loads a configuration file containing environment
+    ## variables.  It's meant to be used in tandem with other command(s).
+    ##
+    ## Usage:
+    ##
+    ##   run config path/to/.env       - Loads config file and exists.
+    ##   run config path/to/.env setup - Creates a custom environment.
+    ##   run config path/to/.env start - Starts a custom environment.
+
     if [ $# -ge 1 ]; then
         if  [ -e "$1" ]; then
             log "Loading variables from '$1' file."
@@ -232,7 +262,7 @@ configCmd() {
             . "$1"
             set +a
         else
-            log "Error: Failed to load '$1' file.  Is the path correct?"
+            log "Error: Failed to loadf '$1' file.  Is the path correct?"
             return 1
         fi
     else
@@ -241,7 +271,47 @@ configCmd() {
     fi
 }
 
+helpCmd() {
+    ## Help command prints detailed documentation for a specified command, or
+    ## the overview documentation of this tool.
+    ##
+    ## Usage:
+    ##
+    ##   run help       - Prints full documentation.
+    ##   run help help  - Prints documentation for help command.
+    ##   run help build - Prints documentation for build command.
+
+    overview() {
+        printf "TODO: Implement.\n"
+    }
+
+    if [ $# -ge 1 ]; then
+        pattern="${1}Cmd()"
+        if ! grep "$pattern" "$0" >/dev/null; then
+            printf "Failed to find '%s' command.\n" "$1"
+            return 1
+        fi
+
+        res=$(sed -n "/^${pattern}/,/^}$/{ /^ *##/{ s| *## \?||;p }}" "$0")
+        printf "%s\n" "$res"
+    else
+        overview
+    fi
+
+    # TODO: Implement proper exit/return codes.
+    exit 0
+}
+
 setupCmd() {
+    ## Setup command prepares your entire development environment.  It doesn't
+    ## accept any arguments, but you use 'config' (run help config) command to
+    ## load a custom variables.
+    ##
+    ## Usage:
+    ##
+    ##   run setup                     - Sets up environment with default vars.
+    ##   run config path/to/.env setup - Sets up environment with custom vars.
+
     : "Setting DATA_DIR to ${DATA_DIR:=data}"
     log "Setting up development environment."
 
@@ -256,6 +326,10 @@ setupCmd() {
 }
 
 startCmd() {
+    ## Start command runs an executable depending on $BIN environment variable.
+    ## It doesn't accept any arguments, but you can provide the $BIN variable
+    ## using a custom configuration file.
+
     : "Setting BIN to ${BIN:=bin/userstyles-dev}."
     log "Starting USw from ${BIN}."
     check vips
@@ -263,11 +337,32 @@ startCmd() {
 }
 
 watchCmd() {
+    ## Watch command, similarly to build command, builds different things.
+    ## Unlike build command, it isn't chainable and it starts watching for file
+    ## changes.  Additionally, it only creates builds suitable for development
+    ## environment.  It accepts only one argument.
+    ##
+    ## Arguments:
+    ##
+    ##   sass, scss, css - Starts watching and rebuilding Sass files.
+    ##   ts, js          - Starts watching and rebuilding TS files.
+    ##   go              - Starts watching and rebuilding Go files.
+    ##   all, dev        - Runs all of the above at the same time.
+    ##
+    ## Usage:
+    ##
+    ##   run watch go  - Starts watching and rebuilding Go files.
+    ##   run watch all - Starts watching and rebuilding all files.
+
     check air vips
 
-    err() {
-        printf "Error: Invalid argument '%s'.  Try using one of: " "$1"
-        printf "go, ts, or sass.\n"
+    fail() {
+        case "$1" in
+            -) printf "Error: No argument found.\n\n" ;;
+            *) printf "Error: Invalid argument '%s'.\n\n" "$1" ;;
+        esac
+
+        helpCmd watch
         return 1
     }
 
@@ -277,12 +372,10 @@ watchCmd() {
             [tj]s)       watch ts   ;; # Match on ts or js.
             s[ac]ss|css) watch sass ;; # Match on sass, scss, or css.
             all|dev)     watch all  ;;
-            *)           err "$1"   ;;
+            *)           fail "$@"  ;;
         esac
     else
-        # TODO: Show usage for this command.
-        printf "Error: No argument found.  Try using go, ts, or sass.\n"
-        return 1
+        fail -
     fi
 }
 
@@ -314,6 +407,8 @@ main() {
                 shift; drop "$@" ;;
             config)
                 shift; configCmd "$@"; shift ;;
+            help)
+                shift; helpCmd "$@"; shift ;;
             setup)
                 shift; setupCmd "$@"; took ;;
             start)
