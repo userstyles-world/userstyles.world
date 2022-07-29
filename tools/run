@@ -7,6 +7,8 @@ start=$(date '+%s.%N')
 
 log() { printf "[%s] %s\n" "$(date '+%H:%M:%S')" "$@"; }
 
+err() { printf "%s\n" "$@" >&2; }
+
 took() {
     now=$(date '+%s.%N') # Unix Epoch and nanoseconds.
     res=$(printf "%f %f - p" "$now" "$start" | dc) # [FP]orth.
@@ -28,8 +30,8 @@ check() {
 
     for arg in "$@"; do
         if ! command -v "$arg" >/dev/null; then
-            printf "Error: Missing '%s' dependency.\n" "$arg"
-            hint "$arg"
+            err "Error: Missing '$arg' dependency."
+            err "$(hint "$arg")"
             return 1
         fi
     done
@@ -222,11 +224,11 @@ buildCmd() {
 
     fail() {
         case "$1" in
-            -) printf "Error: No argument found.\n\n" ;;
-            *) printf "Error: Invalid argument '%s'.\n\n" "$1" ;;
+            -) err "Error: No argument found." ;;
+            *) err "Error: Invalid argument '$1'." ;;
         esac
 
-        helpCmd build
+        err "$(helpCmd build)"
         return 1
     }
 
@@ -241,6 +243,7 @@ buildCmd() {
         esac
     else
         fail -
+        return 1
     fi
 }
 
@@ -262,11 +265,11 @@ configCmd() {
             . "$1"
             set +a
         else
-            log "Error: Failed to loadf '$1' file.  Is the path correct?"
+            err "Error: Failed to load '$1' file.  Is the path correct?"
             return 1
         fi
     else
-        log "Error: No argument found.  Try passing a valid file."
+        err "Error: No argument found.  Try passing a valid file."
         return 1
     fi
 }
@@ -288,18 +291,16 @@ helpCmd() {
     if [ $# -ge 1 ]; then
         pattern="${1}Cmd()"
         if ! grep "$pattern" "$0" >/dev/null; then
-            printf "Failed to find '%s' command.\n" "$1"
+            err "Error: Failed to find '$1' command."
             return 1
         fi
 
         res=$(sed -n "/^${pattern}/,/^}$/{ /^ *##/{ s| *## \?||;p }}" "$0")
         printf "%s\n" "$res"
     else
-        overview
+        err "$(overview)"
+        exit 0
     fi
-
-    # TODO: Implement proper exit/return codes.
-    exit 0
 }
 
 setupCmd() {
@@ -358,11 +359,11 @@ watchCmd() {
 
     fail() {
         case "$1" in
-            -) printf "Error: No argument found.\n\n" ;;
-            *) printf "Error: Invalid argument '%s'.\n\n" "$1" ;;
+            -) err "Error: No argument found." ;;
+            *) err "Error: Invalid argument '$1'." ;;
         esac
 
-        helpCmd watch
+        err "$(helpCmd watch)"
         return 1
     }
 
@@ -376,18 +377,19 @@ watchCmd() {
         esac
     else
         fail -
+        return 1
     fi
 }
 
 fallbackCmd() {
-    printf "Error: Unknown subcommand '%s'.\n" "$1"
+    err "Error: Unknown command '$1'."
     # TODO: Show usage/help command.
     return 1
 }
 
 main() {
     if [ $# -eq 0 ]; then
-        printf "Error: No arguments.\n"
+        err "Error: No arguments found."
         # TODO: Show usage/help command.
         return 1
     fi
