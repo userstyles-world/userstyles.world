@@ -285,7 +285,60 @@ helpCmd() {
     ##   run help build - Prints documentation for build command.
 
     overview() {
-        printf "TODO: Implement.\n"
+        printf \
+"run - UserStyles.world build tool
+
+Synopsis:
+
+  run COMMAND [ARGUMENT]
+  run COMMAND... [ARGUMENT]
+
+Description:
+
+  run is a tool that abstracts common actions behind a simple interface.  It
+  features a 'chainable' command parser, which allows for using multiple
+  commands at once.  Case sensitivity and order of commands matters.
+
+Commands:
+
+  help
+    Prints help overview and exits.
+
+  help argument
+    Prints help for a specific argument (command).
+
+  setup
+    Prepares development environment.
+
+  config
+    Loads environment variables from a file. (See 'run help config'.)
+
+  build argument
+    Builds files based on the argument and exit.  (See 'run help build'.)
+
+  start
+    Starts a built executable depending on the environment.
+
+  watch argument
+      Watch for file changes and rebuild files. (See 'run help watch'.)
+
+Examples:
+
+  run setup start
+    Prepares your development environment, then runs built executable.
+
+  run build dev start
+    Builds a development executable, then runs it.
+
+  run config path/to/custom.env build prod start
+    Loads a custom environment file, builds production executable, then runs it.
+
+  run watch all
+    Continuously watches for all file changes and automatically rebuilds them.
+
+  run config path/to/custom.env watch all
+    Like previous example, but with custom environment variables [if set].
+"
     }
 
     if [ $# -ge 1 ]; then
@@ -382,15 +435,13 @@ watchCmd() {
 }
 
 fallbackCmd() {
-    err "Error: Unknown command '$1'."
-    # TODO: Show usage/help command.
+    err "Error: Unknown command '$1'."; err; err "$(helpCmd)"
     return 1
 }
 
 main() {
     if [ $# -eq 0 ]; then
-        err "Error: No arguments found."
-        # TODO: Show usage/help command.
+        err "Error: No arguments found."; err; err "$(helpCmd)"
         return 1
     fi
 
