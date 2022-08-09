@@ -193,16 +193,6 @@ watch() {
     esac
 }
 
-drop() {
-    log "Dropping database tables."
-
-    env DB_DROP="1" \
-        DB_COLOR="true" \
-        DB_DEBUG="${2:-silent}" \
-        DB_RANDOM_DATA="${3:-false}" \
-        air -c tools/air_go.toml
-}
-
 buildCmd() {
     ## Build command builds different things for use during development cycle,
     ## with the exception of 'prod' argument, which builds everything for use in
@@ -456,8 +446,6 @@ main() {
         case "$1" in
             build)
                 shift; buildCmd "$@"; took; shift ;;
-            drop) # TODO: Remove? I suppose we could handle it in Go code.
-                shift; drop "$@" ;;
             config)
                 shift; configCmd "$@"; shift ;;
             help)
