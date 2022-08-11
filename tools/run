@@ -1,9 +1,12 @@
 #!/usr/bin/env sh
 
+# Append 'x' flag to enable tracing.
 set -eu
 
 # Start timer.
 start=$(date '+%s.%N')
+
+# Helpers.
 
 log() { printf "[%s] %s\n" "$(date '+%H:%M:%S')" "$@"; }
 
@@ -12,7 +15,7 @@ err() { printf "%s\n" "$@" >&2; }
 took() {
     now=$(date '+%s.%N') # Unix Epoch and nanoseconds.
     res=$(printf "%f %f - p" "$now" "$start" | dc) # [FP]orth.
-    log "$(printf "Done.  Action took %.2fs to complete.\n" "$res")"
+    log "$(printf "Done in %.2fs.\n" "$res")"
 }
 
 check() {
@@ -37,9 +40,9 @@ check() {
     done
 }
 
-getFonts() {
-    log "Downloading fonts."
+# Jobs.
 
+getFonts() {
     # Extract the latest release.
     url="https://api.github.com/repos/rsms/inter/releases/latest"
     src=$(curl -s "$url" | sed -n 's|.*browser_download_url.*"\(http.*\)"|\1|p')
@@ -134,6 +137,10 @@ build() {
 
 setup() {
     case "$1" in
+        fonts)
+            log "Setting up fonts."
+            getFonts
+            ;;
         go)
             log "Setting up Go environment."
 
@@ -193,6 +200,8 @@ watch() {
     esac
 }
 
+# Commands.
+
 buildCmd() {
     ## Build command builds different things for use during development cycle,
     ## with the exception of 'prod' argument, which builds everything for use in
@@ -218,7 +227,7 @@ buildCmd() {
             *) err "Error: Invalid argument '$1'." ;;
         esac
 
-        err "$(helpCmd build)"
+        err "$(printf "\n%s" "$(helpCmd build)")"
         return 1
     }
 
@@ -360,10 +369,7 @@ setupCmd() {
     log "Setting up development environment."
 
     mkdir -p "$DATA_DIR"
-    getFonts
-    setup sass
-    setup ts
-    setup go
+    setup fonts; setup sass; setup ts; setup go
 
     # Perform database migration and exit.
     DB_DROP=1 DB_MIGRATE=1 startCmd
@@ -398,19 +404,20 @@ watchCmd() {
     ##   run watch go  - Starts watching and rebuilding Go files.
     ##   run watch all - Starts watching and rebuilding all files.
 
-    check air vips
-
     fail() {
         case "$1" in
             -) err "Error: No argument found." ;;
             *) err "Error: Invalid argument '$1'." ;;
         esac
 
-        err "$(helpCmd watch)"
+        err "$(printf "\n%s" "$(helpCmd watch)")"
         return 1
     }
 
     if [ $# -ge 1 ]; then
+        log "Watching $1 files."
+        check air vips
+
         case "$1" in
             go)          watch go   ;;
             [tj]s)       watch ts   ;; # Match on ts or js.
@@ -428,6 +435,8 @@ fallbackCmd() {
     err "Error: Unknown command '$1'."; err; err "$(helpCmd)"
     return 1
 }
+
+# Main.
 
 main() {
     if [ $# -eq 0 ]; then
