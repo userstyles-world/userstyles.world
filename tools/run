@@ -42,49 +42,12 @@ check() {
 
 # Jobs.
 
-getFonts() {
-    # Extract the latest release.
-    url="https://api.github.com/repos/rsms/inter/releases/latest"
-    src=$(curl -s "$url" | sed -n 's|.*browser_download_url.*"\(http.*\)"|\1|p')
-
-    # Extract tag version from the following URL:
-    # https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
-    version=$(printf "%s" "$src" | sed -n 's|.*\/\(v.*\)\/.*|\1|p')
-
-    archive="${DATA_DIR:=data}/inter-${version}.zip"
-    distDir="web/static/fonts"
-
-    extract() {
-        # Extract specific variants that we use.
-        fonts="Regular Bold Italic BoldItalic"
-        for font in $fonts; do
-            unzip -j -d "$distDir" "$archive" "Inter Web/Inter-${font}.*"
-        done
-    }
-
-    # Check if the latest version isn't downloaded.
-    if [ ! -e "$archive" ]; then
-        log "Downloading Inter $version archive."
-
-        # Remove old fonts.
-        rm -rf "$distDir"
-
-        # Download the archive with their respective version number.
-        curl -L "$src" -o "$archive"
-
-        extract
-    else
-        # Skip if directory exists, otherwise extract fonts.
-        if [ -e "$distDir" ]; then
-            log "Fonts are up to date."
-        else
-            extract
-        fi
-    fi
-}
-
 build() {
     case "$1" in
+        fonts)
+            log "Downloading fonts."
+            ./bin/userstyles-fonts
+            ;;
         go-dev)
             : "Setting BIN to ${BIN:=bin/userstyles-dev}."
             log "Compiling development executable to ${BIN}."
@@ -138,8 +101,13 @@ build() {
 setup() {
     case "$1" in
         fonts)
-            log "Setting up fonts."
-            getFonts
+            log "Setting up fonts environment."
+
+            # Build userstyles-fonts executable.
+            go build -v -o bin/userstyles-fonts cmd/userstyles-fonts/main.go
+
+            # Download and extract fonts.
+            build fonts
             ;;
         go)
             log "Setting up Go environment."
@@ -209,6 +177,7 @@ buildCmd() {
     ##
     ## Arguments:
     ##
+    ##   fonts           - Downloads fonts to 'web/static/fonts' directory.
     ##   sass, scss, css - Builds Sass files to 'web/static/css' directory.
     ##   ts, js          - Builds TS files to 'web/static/ts' directory.
     ##   go              - Builds Go files to a development executable.
@@ -236,6 +205,7 @@ buildCmd() {
             go)          build go-dev   ;;
             [tj]s)       build ts-dev   ;; # Match on ts or js.
             s[ac]ss|css) build sass-dev ;; # Match on sass, scss, or css.
+            fonts)       build fonts    ;;
             dev)         build dev      ;;
             prod)        build prod     ;;
             *)           fail "$1"      ;;
@@ -445,7 +415,7 @@ main() {
     fi
 
     # Check if build dependencies are installed.
-    check git go curl unzip sassc
+    check git go sassc
 
     # Go to project's root directory.
     cd "$(git rev-parse --show-toplevel)"
