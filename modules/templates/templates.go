@@ -103,15 +103,6 @@ func New(views http.FileSystem, dir string) *html.Engine {
 		return a - b
 	})
 
-	engine.AddFunc("paginate", func(page int, sort string) template.HTML {
-		s := fmt.Sprintf("/explore?page=%v", page)
-		if sort != "" {
-			s += fmt.Sprintf("&sort=%v", sort)
-		}
-
-		return template.HTML(strutils.QueryUnescape(s))
-	})
-
 	engine.AddFunc("unescape", func(s string) template.HTML {
 		return template.HTML(s)
 	})

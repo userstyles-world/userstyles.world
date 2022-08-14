@@ -3,7 +3,7 @@
         {{ if not (eq .Now .Min) }}
             <a
                 class="Pagination-button icon min"
-                href="{{ paginate 1 .Sort }}"
+                href="{{ .URL 1 }}"
                 data-tooltip="Go to the first page"
                 aria-label="Go to the first page"
             >{{ template "icons/chevrons-left" 16 }}</a>
@@ -15,7 +15,7 @@
         {{ if not (eq .Now .Min) }}
             <a
                 class="Pagination-button icon back"
-                href="{{ paginate .Prev .Sort }}"
+                href="{{ .URL .Prev }}"
                 data-tooltip="Go to the previous page"
                 aria-label="Go to the previous page"
             >{{ template "icons/chevron-left" 16 }}</a>
@@ -27,7 +27,7 @@
         {{ if not (lt $prev3 .Min) }}
             <div class="Pagination-divider"></div>
             <a class="Pagination-button page"
-                href="{{ paginate $prev3 .Sort }}"
+                href="{{ .URL $prev3 }}"
             >{{ $prev3 }}</a>
         {{ end }}
 
@@ -35,7 +35,7 @@
         {{ if not (lt $prev2 .Min) }}
             <div class="Pagination-divider"></div>
             <a class="Pagination-button page"
-                href="{{ paginate $prev2 .Sort }}"
+                href="{{ .URL $prev2 }}"
             >{{ $prev2 }}</a>
         {{ end }}
 
@@ -43,14 +43,14 @@
             <div class="Pagination-divider"></div>
             <a
                 class="Pagination-button back"
-                href="{{ paginate .Prev .Sort }}"
+                href="{{ .URL .Prev }}"
             >{{ .Prev }}</a>
         {{ end }}
 
         <div class="Pagination-divider"></div>
         <a
             class="Pagination-active now"
-            href="{{ paginate .Now .Sort }}"
+            href="{{ .URL .Now }}"
             aria-current="page">
             <b>{{ .Now }}</b>
         </a>
@@ -59,7 +59,7 @@
         {{ if not (eq .Now .Max) }}
             <a
                 class="Pagination-button next"
-                href="{{ paginate .Next .Sort }}"
+                href="{{ .URL .Next }}"
             >{{ .Next }}</a>
             <div class="Pagination-divider"></div>
         {{ end }}
@@ -67,7 +67,7 @@
         {{ $next2 := add .Now 2 }}
         {{ if not (gt $next2 .Max) }}
             <a class="Pagination-button page"
-                href="{{ paginate $next2 .Sort }}"
+                href="{{ .URL $next2 }}"
             >{{ $next2 }}</a>
             <div class="Pagination-divider"></div>
         {{ end }}
@@ -75,7 +75,7 @@
         {{ $next3 := add .Now 3 }}
         {{ if not (gt $next3 .Max) }}
             <a class="Pagination-button page"
-                href="{{ paginate $next3 .Sort }}"
+                href="{{ .URL $next3 }}"
             >{{ $next3 }}</a>
             <div class="Pagination-divider"></div>
         {{ end }}
@@ -83,7 +83,7 @@
         {{ if not (eq .Now .Max) }}
             <a
                 class="Pagination-button icon next"
-                href="{{ paginate .Next .Sort }}"
+                href="{{ .URL .Next }}"
                 data-tooltip="Go to the next page"
                 aria-label="Go to the next page"
             >{{ template "icons/chevron-right" 16 }}</a>
@@ -95,7 +95,7 @@
         {{ if not (eq .Now .Max) }}
             <a
                 class="Pagination-button icon max"
-                href="{{ paginate .Max .Sort }}"
+                href="{{ .URL .Max }}"
                 data-tooltip="Go to the last page"
                 aria-label="Go to the last page"
             >{{ template "icons/chevrons-right" 16 }}</a>

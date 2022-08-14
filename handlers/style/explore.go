@@ -1,8 +1,6 @@
 package style
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -26,7 +24,7 @@ func GetExplore(c *fiber.Ctx) error {
 	styleCount, err := models.GetStyleCount()
 	if err != nil {
 		return c.Render("err", fiber.Map{
-			"Title": "Failed to add pagination",
+			"Title": "Failed to count userstyles",
 			"User":  u,
 		})
 	}
@@ -35,13 +33,9 @@ func GetExplore(c *fiber.Ctx) error {
 	size := config.AppPageMaxItems
 	p.CalcItems(int(styleCount), size)
 	p.Sort = c.Query("sort")
+	p.Path = c.Path()
 	if p.OutOfBounds() {
-		r := fmt.Sprintf("/explore?page=%d", p.Now)
-		if p.Sort != "" {
-			r += "&sort=" + p.Sort
-		}
-
-		return c.Redirect(r, 302)
+		return c.Redirect(p.URL(p.Now), 302)
 	}
 
 	// Query for [sorted] styles.

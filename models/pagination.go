@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -12,6 +13,16 @@ type Pagination struct {
 	Max  int
 	Rem  int
 	Sort string
+	Path string
+}
+
+// URL generates a dynamic path from available items.
+func (p Pagination) URL(page int) string {
+	s := fmt.Sprintf("%s?page=%d", p.Path, page)
+	if p.Sort != "" {
+		s += fmt.Sprintf("&sort=%s", p.Sort)
+	}
+	return s
 }
 
 func (p *Pagination) ConvPage(s string) error {
