@@ -66,8 +66,25 @@
 
     <section class="styles mt:l">
         <h2 class="sub-title td:d">Userstyles</h2>
-        {{ if ne (len .Styles) 0 }}
-            <p class="description">{{ len .Styles }} styles in total.</p>
+
+        {{ if .Styles }}
+            <div class="flex ai:c">
+                <p class="count">{{ .Count }} styles in total.</p>
+                <form
+                    class="Form Form-inline jc:c ml:a"
+                    method="get" action="/user/{{ .Profile.Username }}">
+                    <input type="text" name="page" value="1" hidden>
+                    <div class="Form-section Form-row">
+                        {{ template "partials/form-sort" . }}
+                    </div>
+                    <div class="Form-control">
+                        <button
+                            type="submit"
+                            class="btn icon primary"
+                        >{{ template "icons/search" 16 }} Sort</button>
+                    </div>
+                </form>
+            </div>
             {{/* template "partials/debug-styles" . */}}
             <div class="grid  flex rwrap mx:r mt:m">
                 {{ range .Styles }}
@@ -78,4 +95,6 @@
             <p class="fg:3"><i>No styles found.</i></p>
         {{ end }}
     </section>
+
+    {{ with .P }}{{ template "partials/pagination" . }}{{ end }}
 </div>

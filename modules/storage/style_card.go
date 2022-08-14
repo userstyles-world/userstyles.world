@@ -156,6 +156,44 @@ func FindStyleCardsPaginated(page, size int, order string) ([]StyleCard, error) 
 	return res, nil
 }
 
+// FindStyleCardsPaginatedForUserID returns user's style cards for paginated pages.
+func FindStyleCardsPaginatedForUserID(page, size int, order string, id uint) ([]StyleCard, error) {
+	var stmt string
+	switch {
+	case strings.HasPrefix(order, "styles"):
+		stmt = "id"
+	case strings.HasPrefix(order, "views"):
+		stmt = "id, (SELECT SUM(daily_views) FROM histories h WHERE h.style_id = styles.id) AS views"
+	case strings.HasPrefix(order, "installs"):
+		stmt = "id, (SELECT SUM(daily_installs) FROM histories h WHERE h.style_id = styles.id) AS installs"
+	}
+
+	offset := (page - 1) * size
+	var nums []struct{ ID int }
+	err := database.Conn.
+		Select(stmt).Table("styles").
+		Order(order).Offset(offset).Limit(size).
+		Find(&nums, notDeleted+" AND user_id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+
+	items := make([]int, 0, len(nums))
+	for _, num := range nums {
+		items = append(items, num.ID)
+	}
+
+	var res []StyleCard
+	err = database.Conn.
+		Select(selectCards).Order(order).
+		Find(&res, "id in ?", items).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
 // FindStyleCardsCreatedOn returns style cards created on a specific date.
 func FindStyleCardsCreatedOn(date time.Time) ([]StyleCard, error) {
 	var res []StyleCard
