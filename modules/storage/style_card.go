@@ -70,7 +70,7 @@ func FindStyleCardsForSearch(items []int) ([]StyleCard, error) {
 
 	// NOTE: This is a dynamic/custom ordering implementation, because there's
 	// no other way [that I know of] to return results in the order they were
-	// selected.  We might need to decrease the amount (99 ATM) of results that
+	// selected.  We might need to decrease the amount (96 ATM) of results that
 	// we return, because it could be too much for Pluto (our VPS) to process.
 	//
 	// We want to keep "ordering by relevance" by default, which is returned by

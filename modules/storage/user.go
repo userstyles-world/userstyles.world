@@ -17,7 +17,7 @@ type User struct {
 	ID            int       `json:"id"`
 }
 
-// FindUsersCreatedOn returns style cards made on a specific date.
+// FindUsersCreatedOn returns users made on a specific date.
 func FindUsersCreatedOn(date time.Time) ([]User, error) {
 	var res []User
 

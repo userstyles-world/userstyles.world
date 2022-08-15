@@ -95,7 +95,7 @@ func Initialize() {
 		seed()
 	}
 
-	// TODO: Simplify the entire process, including dropping and seeing data.
+	// TODO: Simplify the entire process, including dropping and seeding data.
 	if config.DBMigrate {
 		log.Info.Println("Database migration complete.")
 		os.Exit(0)

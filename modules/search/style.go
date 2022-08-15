@@ -32,7 +32,6 @@ func indexStyles() {
 	if err := storage.FindStylesForSearch(action); err != nil {
 		log.Warn.Fatal(err)
 	}
-
 }
 
 // indexMetrics reports the time it took to index all styles.

@@ -29,8 +29,7 @@ func openBleveIndexFile(path string) (bleve.Index, error) {
 
 // Initialize sets up search engine.
 func Initialize() {
-	// We don't have any ms a new style, so we don't need 4 analysis workers
-	// for that, we're good by only having 1.
+	// Limiting query size to 1 due to not having to process a lot of data.
 	bleve.Config.SetAnalysisQueueSize(1)
 
 	indexFile := path.Join(config.DataDir, "styles.bleve")
