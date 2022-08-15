@@ -28,20 +28,25 @@
         {{ with .Params.Email }}
             <p><span class="minw">Email</span>{{ . }}</p>
         {{ end }}
-        <p class="joined">
+        <p class="joined flex">
             <span class="minw">Joined</span>
             <time datetime="{{ .Params.CreatedAt | iso }}">
                 {{ .Params.CreatedAt | rel }}
             </time>
         </p>
-        <p class="updated">
+        <p class="updated flex">
             <span class="minw">Updated</span>
             <time datetime="{{ .Params.UpdatedAt | iso }}">
                 {{ .Params.UpdatedAt | rel }}
             </time>
         </p>
         {{ if not (eq .Params.LastLogin.String "0001-01-01 00:00:00 +0000 UTC") }}
-            <p class="lastlogin"><span class="minw">Last login</span>{{ .Params.LastLogin | rel }}</p>
+            <p class="lastlogin flex">
+                <span class="minw">Last login</span>
+                <time datetime="{{ .Params.LastLogin | iso }}">
+                    {{ .Params.LastLogin | rel }}
+                </time>
+            </p>
         {{ end }}
     </section>
 
@@ -131,7 +136,7 @@
     </section>
 
     <section id="socials">
-        <h2 class="sub-title td:d mt:l">Socials</h2>
+        <h2 class="sub-title td:d mt:l">Links</h2>
         <p>You can login via OAuth if you have an account on platforms listed below.</p>
         <form class="Form Form-box mt:m" method="post" action="/account/socials">
             <div class="Form-section">
@@ -182,8 +187,8 @@
     </section>
 
     <section id="settings">
-        <h2 class="sub-title td:d mt:l">User settings</h1>
-        <p>The use of user settings requires JavaScript.</p>
+        <h2 class="sub-title td:d mt:l">UI settings</h1>
+        <p>The use of UI settings requires JavaScript.</p>
         <div class="Form Form-box mt:m">
             <div class="Form-section">
                 <label for="usr-settings--color-scheme">Color-scheme</label>
@@ -216,20 +221,5 @@
                 >{{ template "icons/save" 16 }} Save settings</button>
             </div>
         </div>
-    </section>
-
-    <section id="styles">
-        <h2 class="sub-title td:d mt:l">Userstyles</h2>
-        {{ if ne (len .Styles) 0 }}
-            <p class="description">{{ len .Styles }} styles in total.</p>
-            {{/* template "partials/debug-styles" . */}}
-            <div class="grid  flex rwrap mx:r mt:m">
-                {{ range .Styles }}
-                    {{ template "partials/style-card" . }}
-                {{ end }}
-            </div>
-        {{ else }}
-            <p class="fg:3"><i>No styles found.</i></p>
-        {{ end }}
     </section>
 </div>

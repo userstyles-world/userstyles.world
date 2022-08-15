@@ -11,20 +11,11 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/storage"
 	"userstyles.world/utils"
 )
 
 func Account(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-
-	styles, err := storage.FindStyleCardsForUsername(u.Username)
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Server error",
-			"User":  u,
-		})
-	}
 
 	user, err := models.FindUserByName(u.Username)
 	if err != nil {
@@ -38,7 +29,6 @@ func Account(c *fiber.Ctx) error {
 		"Title":  "Account",
 		"User":   u,
 		"Params": user,
-		"Styles": styles,
 	})
 }
 
