@@ -19,7 +19,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ .Name }} by {{ .Username }}">
 <meta property="og:description" content="{{ .Description | descMax }}">
-<meta property="og:image" content="{{ printf `https://userstyles.world/api/style/preview/%d.webp` .ID }}">
+<meta property="og:image" content="{{ .Preview }}">
 {{ with $.Url -}}<meta property="og:url" content="{{ printf `https://userstyles.world%s` $.Slug }}">{{ end -}}
 {{ end }}
 <script defer src="/js/main.js?v={{ config "appCommitSHA" }}"></script>

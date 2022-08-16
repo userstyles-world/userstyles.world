@@ -252,9 +252,10 @@ this is normally used as updateURL and installation URL.
 
 ### Get style's preview
 ```
-GET /style/preview/<id>.<jpeg | webp>
+GET /preview/<id>/<version>t?.<jpeg | webp>
 ```
-Gets an optimized jpeg/webp version of the style's preview.
+Gets an optimized jpeg/webp image of the style's preview URL, or a thumbnail if
+`t` is present, where `version` is zero-based image version.
 
 ### List all styles
 ```
@@ -275,7 +276,7 @@ Meant for stylus
         "t": 5,
         "w": 5,
         "an": "vednoc",
-        "sn": "https://userstyles.world/api/style/preview/1.webp"
+        "sn": "https://userstyles.world/preview/1/0t.webp"
     }
 ]
 ```

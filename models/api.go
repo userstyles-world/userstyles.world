@@ -8,7 +8,7 @@ type USoFormat struct {
 	Username       string  `json:"an"`
 	Name           string  `json:"n"`
 	Category       string  `json:"c"`
-	Screenshot     string  `json:"sn"`
+	Preview        string  `json:"sn"`
 	UpdatedAt      int64   `json:"u"`
 	TotalInstalls  int64   `json:"t"`
 	WeeklyInstalls int64   `json:"w"`
@@ -19,9 +19,8 @@ type USoFormat struct {
 type USoStyles []USoFormat
 
 func (s *USoStyles) Query() error {
-	stmt := "styles.id, styles.name, styles.user_id, styles.category, "
+	stmt := "styles.id, styles.name, styles.user_id, styles.category, styles.preview, "
 	stmt += "STRFTIME('%s', styles.updated_at) AS updated_at, "
-	stmt += "PRINTF('https://userstyles.world/api/style/preview/%d.webp', styles.id) AS screenshot, "
 	stmt += "(SELECT username FROM users u WHERE u.id = styles.user_id) AS username, "
 	stmt += "(SELECT ROUND(AVG(rating)*0.6, 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating, "
 	stmt += "(SELECT count(*) FROM stats s WHERE s.style_id = styles.id AND s.install > DATETIME('now', '-7 days')) AS TotalInstalls, "
