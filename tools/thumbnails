@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-set -xe
+set -eu
 
 log() { printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$@"; }
 
@@ -18,7 +18,7 @@ public="$root/data/public"
 
 cd "$images"
 
-batch=10
+batch=8
 count=0
 for i in *.original; do
     count=$(( count + 1 ))

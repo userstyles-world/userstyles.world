@@ -415,7 +415,7 @@ main() {
     fi
 
     # Check if build dependencies are installed.
-    check git go sassc
+    check git go sassc dc
 
     # Go to project's root directory.
     cd "$(git rev-parse --show-toplevel)"
