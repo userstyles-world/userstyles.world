@@ -90,6 +90,6 @@ again:
 	}
 
 	log.Info.Println("Collecting stats history.")
-	database.Conn.Debug().Create(stats)
+	database.Conn.Create(stats)
 	log.Info.Println("Stats history is collected.")
 }

@@ -162,7 +162,6 @@ func FindUserByID(id string, forbid ...string) (*User, error) {
 
 func UpdateUser(u *User) error {
 	err := db().
-		Debug().
 		Model(modelUser).
 		Where("id", u.ID).
 		Updates(u).

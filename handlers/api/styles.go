@@ -181,7 +181,6 @@ func DeleteStyle(c *fiber.Ctx) error {
 
 	styleModel := new(models.Style)
 	err = database.Conn.
-		Debug().
 		Delete(styleModel, "styles.id = ?", sStyleID).
 		Error
 
