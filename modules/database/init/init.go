@@ -1,7 +1,6 @@
 package init
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"time"
@@ -74,10 +73,9 @@ func Initialize() {
 		shouldSeed = true
 	}
 
+	// Run one-time migrations.
 	if _, ok := os.LookupEnv("MAGIC"); ok {
-		log.Info.Println("Started image migration!")
-		migrateImages()
-		log.Info.Println("Finished image migration!")
+		migration()
 	}
 
 	// Migrate tables.
@@ -99,35 +97,6 @@ func Initialize() {
 	if config.DBMigrate {
 		log.Info.Println("Database migration complete.")
 		os.Exit(0)
-	}
-}
-
-func migrateImages() {
-	var err error
-	var style models.Style
-	var db = database.Conn
-
-	log.Info.Println("Adding preview_version column")
-	if !db.Migrator().HasColumn(style, "preview_version") {
-		if err = db.Migrator().AddColumn(style, "preview_version"); err != nil {
-			log.Warn.Fatalln("Failed to add preview_version column:", err)
-		}
-	}
-
-	var styles []struct{ ID, Preview string }
-	log.Info.Println("Get styles with preview images")
-	if err = db.Model(style).Find(&styles, "preview like 'http%'").Error; err != nil {
-		log.Warn.Fatalln("Failed to get styles with preview images:", err)
-	}
-
-	log.Info.Println("Update preview image URLs")
-	for _, s := range styles {
-		s.Preview = fmt.Sprintf("%s/preview/%s/0t.webp", config.BaseURL, s.ID)
-
-		err = db.Model(style).Select("preview").Where("id = ?", s.ID).Updates(s).Error
-		if err != nil {
-			log.Warn.Fatalln("Failed to update preview image URLs:", err)
-		}
 	}
 }
 
