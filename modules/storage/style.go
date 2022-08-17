@@ -13,3 +13,16 @@ func CountStylesForUserID(id uint) (int, error) {
 
 	return i, nil
 }
+
+// FindStyleCode is an optimized query that returns userstyle's source code.
+func FindStyleCode(id int) (string, error) {
+	var code string
+
+	stmt := "SELECT code FROM styles WHERE id = ? AND " + notDeleted
+	tx := database.Conn.Raw(stmt, id).Scan(&code)
+	if err := tx.Error; err != nil {
+		return "", err
+	}
+
+	return code, nil
+}

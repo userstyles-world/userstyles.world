@@ -12,33 +12,36 @@ import (
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 func GetStyleSource(c *fiber.Ctx) error {
-	i, err := c.ParamsInt("id")
+	id, err := c.ParamsInt("id")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "invalid userstyle ID",
 		})
 	}
-	id := strconv.Itoa(i)
 
-	code, found := cache.LRU.Get(id)
+	key := strconv.Itoa(id)
+	val, found := cache.LRU.Get(key)
 	if !found {
-		style, err := models.GetStyleSourceCodeAPI(id)
+		code, err := storage.FindStyleCode(id)
 		if err != nil {
-			return c.JSON(fiber.Map{"data": "style not found"})
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"data": "style not found",
+			})
 		}
 
 		// Override updateURL field to prevent abuse.
-		url := config.BaseURL + "/api/style/" + id + ".user.css"
-		src := usercss.OverrideUpdateURL(style.Code, url)
+		url := config.BaseURL + "/api/style/" + key + ".user.css"
+		code = usercss.OverrideUpdateURL(code, url)
 
 		// Cache the userstyle.
-		cache.LRU.Add(id, src)
+		cache.LRU.Add(key, code)
 
 		// Reassign code var.
-		code = src
+		val = code
 	}
 
 	// Upsert style installs.
@@ -47,22 +50,21 @@ func GetStyleSource(c *fiber.Ctx) error {
 		if err := s.UpsertInstall(id, ip); err != nil {
 			log.Warn.Printf("Failed to upsert install for %s, %s\n", id, err)
 		}
-	}(id, c.IP())
+	}(key, c.IP())
 
 	c.Type("css", "utf-8")
-	return c.SendString(code.(string))
+	return c.SendString(val.(string))
 }
 
 func GetStyleEtag(c *fiber.Ctx) error {
-	i, err := c.ParamsInt("id")
+	id, err := c.ParamsInt("id")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "invalid userstyle ID",
 		})
 	}
-	id := strconv.Itoa(i)
 
-	style, err := models.GetStyleSourceCodeAPI(id)
+	code, err := storage.FindStyleCode(id)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "style not found",
@@ -70,9 +72,9 @@ func GetStyleEtag(c *fiber.Ctx) error {
 	}
 
 	// Follows the format "source code length - MD5 Checksum of source code"
-	etagValue := fmt.Sprintf("\"%v-%v\"", len(style.Code), crc32.ChecksumIEEE([]byte(style.Code)))
+	val := fmt.Sprintf(`%v-%v`, len(code), crc32.ChecksumIEEE([]byte(code)))
 
 	// Set the value for "Etag" header
-	c.Set("etag", etagValue)
+	c.Set("etag", val)
 	return nil
 }
