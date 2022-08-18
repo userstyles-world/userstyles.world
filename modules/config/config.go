@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"path"
+	"strings"
 	"time"
 )
 
@@ -73,7 +74,7 @@ var (
 	AppLinkChatMatrix  = "https://matrix.to/#/#userstyles:matrix.org"
 
 	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
-	AllowedImagesRe = `^https:\/\/(www\.)?(userstyles.world/api|(user-images|raw|gist)\.githubusercontent\.com|github\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)(\?inline=(true|false))?$`
+	AllowedImagesRe = `^https?:\/\/(www\.)?(` + raw(BaseURL) + `|(user-images|raw|gist)\.githubusercontent\.com|github\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)(\?inline=(true|false))?$`
 
 	CachedCodeItems = uint(getEnvInt("CACHED_CODE_ITEMS", 25))
 )
@@ -81,4 +82,10 @@ var (
 // OAuthURL returns the proper callback URL depending on the environment.
 func OAuthURL() string {
 	return BaseURL + "/api/callback/"
+}
+
+// raw tweaks allowed URLs to make them work seamlessly in both environments.
+func raw(s string) string {
+	r := strings.NewReplacer("http://", "", "https://", "")
+	return r.Replace(s)
 }
