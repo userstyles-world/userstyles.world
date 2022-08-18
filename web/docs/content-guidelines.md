@@ -1,3 +1,7 @@
+---
+Title: Kind Content Guidelines
+---
+
 # Kind Content guidelines
 
 Last updated August 7, 2021

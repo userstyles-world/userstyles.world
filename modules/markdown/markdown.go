@@ -6,6 +6,7 @@ import (
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
@@ -26,6 +27,16 @@ var (
 		goldmark.WithRendererOptions(
 			html.WithHardWraps(),
 			html.WithUnsafe(),
+		),
+	)
+	docs = goldmark.New(
+		goldmark.WithExtensions(
+			extension.Footnote,
+			extension.GFM,
+			meta.Meta,
+		),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
 		),
 	)
 	fallback = "<mark>Failed to convert Markdown. Please try again.</mark>"
@@ -51,6 +62,20 @@ func RenderUnsafe(text []byte) string {
 	}
 
 	return bm.Sanitize(s)
+}
+
+func RenderDocs(text []byte) (string, map[string]interface{}) {
+	var buf bytes.Buffer
+	ctx := parser.NewContext()
+	err := docs.Convert([]byte(text), &buf, parser.WithContext(ctx))
+	if err != nil {
+		log.Warn.Print(err)
+		return "", nil
+	}
+
+	m := meta.Get(ctx)
+
+	return buf.String(), m
 }
 
 func convert(text []byte) (string, error) {

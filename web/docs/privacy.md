@@ -1,3 +1,7 @@
+---
+Title: Privacy Policy
+---
+
 # GDPR Privacy Policy of UserStyles.world
 
 Last updated June 14, 2021

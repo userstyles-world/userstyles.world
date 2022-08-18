@@ -1,4 +1,8 @@
-# Cryptographic usages
+---
+Title: Cryptographic usage
+---
+
+# Cryptographic usage
 
 The goal of this document is to explain the usage of cryptographic functions in
 plain English, and avoid the use of too many technical terms.

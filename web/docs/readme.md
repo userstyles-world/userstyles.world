@@ -1,3 +1,7 @@
+---
+Title: Documentation
+---
+
 # Documentation
 
 Here you can find the index for all of the internal documentation.
@@ -9,4 +13,4 @@ Here you can find the index for all of the internal documentation.
 - [Privacy Policy](/docs/privacy "Privacy page")
 - [Content Guidelines](/docs/content-guidelines "Content Guidelines")
 - [Security Policy](/docs/security "Security page")
-- [Cryptographic usages](/docs/crypto "Cryptographic page")
+- [Cryptographic usage](/docs/crypto "Cryptographic page")

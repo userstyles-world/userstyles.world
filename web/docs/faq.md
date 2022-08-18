@@ -1,4 +1,8 @@
-# FAQ
+---
+Title: Frequently Asked Questions
+---
+
+# Frequently Asked Questions
 
 Last updated April 3, 2022
 

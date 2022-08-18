@@ -47,32 +47,26 @@ func GetDocs(c *fiber.Ctx) error {
 		})
 	}
 
-	// TODO: Extract metadata.
-	var title string
-	switch doc {
-	case "":
-		title = "Documentation"
-	case "changelog":
-		title = "Changelog"
-	case "faq":
-		title = "Frequently Asked Questions"
-	case "privacy":
-		title = "Privacy Policy"
-	case "security":
-		title = "Security Policy"
-	case "crypto":
-		title = "Cryptography Usages"
-	case "content-guidelines":
-		title = "Content Guidelines"
+	b, err := io.ReadAll(f)
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Failed to read document",
+			"User":  u,
+		})
 	}
 
-	b, _ := io.ReadAll(f)
-	content := markdown.RenderSafe(b)
+	content, meta := markdown.RenderDocs(b)
+	if len(content) == 0 {
+		return c.Render("err", fiber.Map{
+			"Title": "Failed to render document",
+			"User":  u,
+		})
+	}
 
 	return c.Render("core/docs", fiber.Map{
-		"Title":     title,
+		"Title":     meta["Title"],
 		"User":      u,
-		"content":   content,
+		"Content":   content,
 		"Canonical": "docs",
 	})
 }
