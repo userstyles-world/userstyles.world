@@ -86,11 +86,14 @@ func EditAccount(c *fiber.Ctx) error {
 
 	case "password":
 		current := c.FormValue("current")
-		if err := utils.CompareHashedPassword(user.Password, current); err != nil {
-			return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
-				"Title": "Failed to match current password",
-				"User":  u,
-			})
+		if user.Password != "" {
+			err := utils.CompareHashedPassword(user.Password, current)
+			if err != nil {
+				return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
+					"Title": "Failed to match current password",
+					"User":  u,
+				})
+			}
 		}
 
 		newPassword, confirmPassword := c.FormValue("new_password"), c.FormValue("confirm_password")
@@ -102,13 +105,13 @@ func EditAccount(c *fiber.Ctx) error {
 		}
 
 		user.Password = newPassword
-		if err := utils.Validate().StructPartial(u, "Password"); err != nil {
+		if err := utils.Validate().StructPartial(user, "Password"); err != nil {
 			var validationError validator.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
 				log.Info.Println("Password change error:", validationError)
 			}
 			return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
-				"Title": "Register failed",
+				"Title": "Failed to validate inputs",
 				"User":  u,
 			})
 		}

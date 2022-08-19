@@ -76,8 +76,9 @@
         <form class="Form Form-box mt:m" method="post" action="/account/password">
             <div class="Form-section Form-full">
                 <label for="current-password">Current password</label>
+                <i class="fg:3">Leave empty if you used OAuth to sign up.</i>
                 <input
-                    required pattern="^[\S]{8,32}$"
+                    pattern="^[\S]{8,32}$"
                     type="password" name="current" id="current-password"
                     placeholder="Must have at least 8 characters"
                     title="8–32 characters"
