@@ -323,3 +323,19 @@ tbody tr:nth-child(2n-1):target {
         bottom: unset;
     }
 }
+
+[data-darkreader-scheme='dark'] .mascot {
+    $black: #000 !important;
+    $white: #fff !important;
+    $cyan: #00f6eb !important;
+    $green: #45b559 !important;
+    $yellow: #eecc8a !important;
+    $orange: #e0760a !important;
+
+    g { --darkreader-inline-stroke: #{$black} }
+    [fill='#fff'] { --darkreader-inline-fill: #{$white} }
+    [fill='#00f6eb'] { --darkreader-inline-fill: #{$cyan} }
+    [fill='#45b559'] { --darkreader-inline-fill: #{$green} }
+    [fill='#eecc8a'] { --darkreader-inline-fill: #{$yellow} }
+    [fill='#e0760a'] { --darkreader-inline-fill: #{$orange} }
+}
