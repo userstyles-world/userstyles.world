@@ -9,7 +9,8 @@ import (
 func GetSearchResult(c *fiber.Ctx) error {
 	q := c.Params("query")
 
-	styles, _, err := search.FindStylesByText(q)
+	// TODO: Add support for customizing parameters.
+	styles, _, err := search.FindStylesByText(q, "", 96)
 	if err != nil {
 		return c.JSON(fiber.Map{"data": "no styles found"})
 	}

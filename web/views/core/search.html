@@ -35,7 +35,11 @@
         {{ if .Styles }}
             <div class="search-perf-metrics">
                 <span class="f:b">Metrics of search engine:</span>
-                <span>Hits: {{ .Metrics.Hits }}</span>
+                {{ if gt .Metrics.Hits 96 }}
+                    <span>Showing top 96 of {{ .Metrics.Hits }} hits</span>
+                {{ else }}
+                    <span>Hits: {{ .Metrics.Hits }}</span>
+                {{ end }}
                 <span>Time Spent: {{ Elapsed .Metrics.TimeSpent }}</span>
             </div>
 

@@ -2,7 +2,6 @@ package core
 
 import (
 	"errors"
-	"sort"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -21,7 +20,14 @@ func Search(c *fiber.Ctx) error {
 		})
 	}
 
-	s, metrics, err := search.FindStylesByText(keyword)
+	// TODO: Refactor [probably] using Pagination struct.
+	size := 96
+	kind := c.Query("sort")
+	if kind != "" {
+		size = 500
+	}
+
+	s, metrics, err := search.FindStylesByText(keyword, kind, size)
 	if errors.Is(err, search.ErrSearchNoResults) {
 		return c.
 			Status(fiber.StatusNotFound).
@@ -39,37 +45,12 @@ func Search(c *fiber.Ctx) error {
 			})
 	}
 
-	fv := c.Query("sort")
-
-	var sortFunction func(i, j int) bool
-	switch fv {
-	case "newest":
-		sortFunction = func(i, j int) bool { return s[i].CreatedAt.Unix() > s[j].CreatedAt.Unix() }
-	case "oldest":
-		sortFunction = func(i, j int) bool { return s[i].CreatedAt.Unix() < s[j].CreatedAt.Unix() }
-	case "recentlyupdated":
-		sortFunction = func(i, j int) bool { return s[i].UpdatedAt.Unix() > s[j].UpdatedAt.Unix() }
-	case "leastupdated":
-		sortFunction = func(i, j int) bool { return s[i].UpdatedAt.Unix() < s[j].UpdatedAt.Unix() }
-	case "mostinstalls":
-		sortFunction = func(i, j int) bool { return s[i].Installs > s[j].Installs }
-	case "leastinstalls":
-		sortFunction = func(i, j int) bool { return s[i].Installs < s[j].Installs }
-	case "mostviews":
-		sortFunction = func(i, j int) bool { return s[i].Views > s[j].Views }
-	case "leastviews":
-		sortFunction = func(i, j int) bool { return s[i].Views < s[j].Views }
-	}
-	if sortFunction != nil {
-		sort.Slice(s, sortFunction)
-	}
-
 	return c.Render("core/search", fiber.Map{
 		"Title":     "Search",
 		"User":      u,
 		"Styles":    s,
 		"Keyword":   keyword,
-		"Sort":      fv,
+		"Sort":      kind,
 		"Canonical": "search",
 		"Metrics":   metrics,
 	})

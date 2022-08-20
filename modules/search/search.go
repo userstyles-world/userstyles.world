@@ -30,7 +30,7 @@ type engineMetrics struct {
 
 // FindStylesByText searches for text and returns styles from search index and
 // performance metrics, or an error if it fails to find anything.
-func FindStylesByText(text string) ([]storage.StyleCard, engineMetrics, error) {
+func FindStylesByText(text, kind string, size int) ([]storage.StyleCard, engineMetrics, error) {
 	metrics := engineMetrics{}
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
@@ -39,7 +39,7 @@ func FindStylesByText(text string) ([]storage.StyleCard, engineMetrics, error) {
 	timeStart := time.Now()
 	sanitzedQuery := bleve.NewMatchQuery(text)
 
-	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, 96, 0, false)
+	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, size, 0, true)
 	searchRequest.Fields = []string{"*"}
 
 	sr, err := StyleIndex.Search(searchRequest)
@@ -62,7 +62,7 @@ func FindStylesByText(text string) ([]storage.StyleCard, engineMetrics, error) {
 		return hits
 	}
 
-	res, err := storage.FindStyleCardsForSearch(nums())
+	res, err := storage.FindStyleCardsForSearch(nums(), kind, 96)
 	if err != nil {
 		metrics.Hits = 0
 		return res, metrics, err

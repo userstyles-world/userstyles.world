@@ -56,7 +56,7 @@ func (x StyleCard) StyleURL() string {
 }
 
 // FindStyleCardsForSearch returns style cards for search page.
-func FindStyleCardsForSearch(items []int) ([]StyleCard, error) {
+func FindStyleCardsForSearch(items []int, kind string, size int) ([]StyleCard, error) {
 	var b strings.Builder
 	b.WriteString("SELECT " + selectSearchCards + " ")
 	b.WriteString("FROM styles WHERE id in (")
@@ -68,20 +68,46 @@ func FindStyleCardsForSearch(items []int) ([]StyleCard, error) {
 		}
 	}
 
-	// NOTE: This is a dynamic/custom ordering implementation, because there's
-	// no other way [that I know of] to return results in the order they were
-	// selected.  We might need to decrease the amount (96 ATM) of results that
-	// we return, because it could be too much for Pluto (our VPS) to process.
-	//
-	// We want to keep "ordering by relevance" by default, which is returned by
-	// our search engine, and we'll use sort package for ordering in other ways
-	// for the time being.  In the future, especially if we consider adding
-	// pagination to results, we might want to do it all in here.
-	b.WriteString(") ORDER BY CASE id ")
-	for i, num := range items {
-		b.WriteString("WHEN " + strconv.Itoa(num) + " THEN " + strconv.Itoa(i) + " ")
+	if kind == "" || kind == "default" {
+		// NOTE: This is a dynamic/custom ordering implementation, because there's
+		// no other way [that I know of] to return results in the order they were
+		// selected.  We might need to decrease the amount (96 ATM) of results that
+		// we return, because it could be too much for Pluto (our VPS) to process.
+		//
+		// We want to keep "ordering by relevance" by default, which is returned by
+		// our search engine, and we'll use sort package for ordering in other ways
+		// for the time being.  In the future, especially if we consider adding
+		// pagination to results, we might want to do it all in here.
+		b.WriteString(") ORDER BY CASE id ")
+		for i, num := range items {
+			b.WriteString("WHEN " + strconv.Itoa(num) + " THEN " + strconv.Itoa(i) + " ")
+		}
+		b.WriteString("END")
+	} else {
+		// TODO: Refactor [probably] using Pagination struct.
+		switch kind {
+		case "newest":
+			kind = "styles.created_at DESC"
+		case "oldest":
+			kind = "styles.created_at ASC"
+		case "recentlyupdated":
+			kind = "styles.updated_at DESC"
+		case "leastupdated":
+			kind = "styles.updated_at ASC"
+		case "mostinstalls":
+			kind = "installs DESC"
+		case "leastinstalls":
+			kind = "installs ASC"
+		case "mostviews":
+			kind = "views DESC"
+		case "leastviews":
+			kind = "views ASC"
+		default:
+			kind = "styles.id ASC"
+		}
+
+		b.WriteString(") ORDER BY " + kind + " LIMIT " + strconv.Itoa(size))
 	}
-	b.WriteString("END;")
 
 	var res []StyleCard
 	if err := database.Conn.Raw(b.String()).Scan(&res).Error; err != nil {
