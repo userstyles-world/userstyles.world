@@ -100,6 +100,16 @@ func Initialize() {
 	}
 }
 
+// Close closes the database connection.
+func Close() error {
+	db, err := database.Conn.DB()
+	if err != nil {
+		return err
+	}
+
+	return db.Close()
+}
+
 func generateData(amount int) ([]models.Style, []models.User) {
 	randomData := utils.RandomString(amount * 7 * 4)
 	var styleStructs []models.Style

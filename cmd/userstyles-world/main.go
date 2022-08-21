@@ -1,6 +1,9 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -44,6 +47,7 @@ func main() {
 		ViewsLayout: "layouts/main",
 		ProxyHeader: httputil.ProxyHeader(config.Production),
 		JSONEncoder: utils.JSONEncoder,
+		IdleTimeout: 5 * time.Second,
 	})
 
 	if !config.Production {
@@ -87,5 +91,22 @@ func main() {
 	// Fallback route.
 	app.Use(core.NotFound)
 
-	log.Warn.Fatal(app.Listen(config.Port))
+	go func() {
+		if err := app.Listen(config.Port); err != nil {
+			log.Warn.Fatal(err)
+		}
+	}()
+
+	// Block and listen.
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	_ = <-c
+
+	// Close everything and exit.
+	log.Info.Println("Shutting down...")
+	t := time.Now()
+	_ = app.Shutdown()
+	_ = database.Close()
+	_ = search.StyleIndex.Close()
+	log.Info.Printf("Done in %s.\n", time.Since(t))
 }
