@@ -22,11 +22,10 @@ check() {
     hint() {
         case "$1" in
             air) printf "Install it with 'go install github.com/cosmtrek/air@latest'.\n" ;;
-            curl) printf "Install 'curl' with your package manager.\n" ;;
+            [bd]c) printf "Install 'bc' with your package manager.\n" ;;
             go) printf "Install 'go' with your package manager.\n" ;;
             git) printf "Install 'git' with your package manager.\n" ;;
             sassc) printf "Install 'sassc' with your package manager.\n" ;;
-            unzip) printf "Install 'unzip' with your package manager.\n" ;;
             vips) printf "Install 'vips' with your package manager.\n" ;;
         esac
     }
