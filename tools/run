@@ -88,16 +88,18 @@ build() {
             ;;
         dev)
             log "Building USw for $1 environment."
-            build sass-dev; build ts-dev; build go-dev
+            setup all; build sass-dev; build ts-dev; build go-dev
             ;;
         prod)
             log "Building USw for $1 environment."
-            build sass-prod; build ts-prod; build go-prod
+            setup all; build sass-prod; build ts-prod; build go-prod
             ;;
     esac
 }
 
 setup() {
+    : "Setting BUILD to ${BUILD:=0}."
+
     case "$1" in
         fonts)
             log "Setting up fonts environment."
@@ -109,10 +111,12 @@ setup() {
             build fonts
             ;;
         go)
-            log "Setting up Go environment."
+            if [ "$BUILD" -eq 1 ]; then
+                log "Setting up Go environment."
 
-            # Build initial executable.
-            build go-dev
+                # Build initial executable.
+                build go-dev
+            fi
             ;;
         ts)
             log "Setting up TypeScript environment."
@@ -121,7 +125,7 @@ setup() {
             go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go
 
             # Build initial JS file.
-            build ts-dev
+            if [ "$BUILD" -eq 1 ]; then build ts-dev; fi
             ;;
         sass)
             log "Setting up Sass environment."
@@ -131,7 +135,10 @@ setup() {
             mkdir -p web/static/css
 
             # Build initial CSS file.
-            build sass-dev
+            if [ "$BUILD" -eq 1 ]; then build sass-dev; fi
+            ;;
+        all)
+            setup fonts; setup ts; setup sass
             ;;
     esac
 }
@@ -276,7 +283,7 @@ Commands:
     Prints help for a specific argument (command).
 
   setup
-    Prepares development environment.
+    Prepares development/production environment.
 
   config
     Loads environment variables from a file. (See 'run help config'.)
@@ -292,8 +299,8 @@ Commands:
 
 Examples:
 
-  run setup start
-    Prepares your development environment, then runs built executable.
+  run setup
+    Prepares development/production environment.
 
   run build dev start
     Builds a development executable, then runs it.
@@ -334,11 +341,11 @@ setupCmd() {
     ##   run setup                     - Sets up environment with default vars.
     ##   run config path/to/.env setup - Sets up environment with custom vars.
 
-    : "Setting DATA_DIR to ${DATA_DIR:=data}"
+    : "Setting DATA_DIR to ${DATA_DIR:=data}."
     log "Setting up development environment."
 
     mkdir -p "$DATA_DIR"
-    setup fonts; setup sass; setup ts; setup go
+    BUILD=1 setup all
 
     # Perform database migration and exit.
     DB_DROP=1 DB_MIGRATE=1 startCmd
