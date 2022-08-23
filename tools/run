@@ -276,20 +276,20 @@ Description:
 
 Commands:
 
-  help
-    Prints help overview and exits.
-
-  help argument
-    Prints help for a specific argument (command).
-
-  setup
-    Prepares development/production environment.
+  build argument
+    Builds files based on the argument and exit.  (See 'run help build'.)
 
   config
     Loads environment variables from a file. (See 'run help config'.)
 
-  build argument
-    Builds files based on the argument and exit.  (See 'run help build'.)
+  help
+    Prints full help of this tool.
+
+  help argument
+    Prints help of a specified argument (command). (See 'run help help'.)
+
+  setup
+    Prepares development/production environment.
 
   start
     Starts a built executable depending on the environment.
@@ -319,7 +319,8 @@ Examples:
     if [ $# -ge 1 ]; then
         pattern="${1}Cmd()"
         if ! grep "$pattern" "$0" >/dev/null; then
-            err "Error: Failed to find '$1' command."
+            err "Error: Failed to find '$1' command.  Valid commands are:"
+            err "build, config, help, setup, start, and watch."
             return 1
         fi
 
@@ -438,7 +439,7 @@ main() {
             setup)
                 shift; setupCmd "$@"; took ;;
             start)
-                shift; startCmd "$@" ;;
+                shift; startCmd "$@"; return 0 ;;
             watch)
                 shift; watchCmd "$@"; return 0 ;;
             *)
