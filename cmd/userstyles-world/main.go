@@ -67,7 +67,15 @@ func main() {
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
 	if config.PerformanceMonitor {
-		app.Use(pprof.New())
+		app.Use(pprof.New(pprof.Config{
+			Next: func(c *fiber.Ctx) bool {
+				u, _ := jwtware.User(c)
+				if u.IsAdmin() {
+					return false
+				}
+				return true
+			},
+		}))
 	}
 
 	// Mount routes.
