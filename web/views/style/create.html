@@ -18,8 +18,10 @@
 <div class="wrapper py:l">
     <section class="mt:m ta:c">
         <h1>{{ .Title }}</h1>
-        <p class="fg:3">If your UserCSS userstyle is hosted somewhere else, you can add it via <a href="/import">import page</a>.</p>
-        <p class="fg:2">Please, read and understand our <a href="/docs/content-guidelines">content guidelines</a> before {{ $humanizedMethod }} your userstyle.</p>
+        {{ if ne .Method "edit"  }}
+            <p class="fg:3">If your UserCSS userstyle is hosted somewhere else, you can add it via <a href="/import">import page</a>.</p>
+            <p class="fg:2">Please read and understand our <a href="/docs/content-guidelines">content guidelines</a> before {{ $humanizedMethod }} your userstyle.</p>
+        {{ end }}
     </section>
 
     <section class="alert">
@@ -42,20 +44,20 @@
                 placeholder="e.g. UserStyles.world tweaks">
 
             <label for="description">Description</label>
-            <i class="fg:3" id="description-hint">Brief description of what your userstyle does. Will be used for SEO. Supports Markdown syntax.</i>
+            <i class="fg:3" id="description-hint">Short description of what your userstyle does in plain text. Will be used for SEO and rich embeds.</i>
             <textarea
                 required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
                 type="text" name="description" id="description"
                 aria-describedby="description-hint"
-                placeholder="e.g. Tweaks for UserStyles.world"
+                placeholder="e.g. UI experiments for UserStyles.world."
             >{{ .Styles.Description }}</textarea>
 
             <label for="notes">Notes</label>
-            <i class="fg:3" id="notes-hint">In-depth guides, changelog, extra requirements, etc. Supports Markdown syntax.</i>
+            <i class="fg:3" id="notes-hint">Long description of requirements, changelog, etc. Supports Markdown syntax.</i>
             <textarea
                 type="text" name="notes" id="notes"
                 aria-describedby="notes-hint"
-                placeholder="Userstyle's instructions, release notes, etc."
+                placeholder="e.g. Please raise issues in the GitHub repository."
             >{{ .Styles.Notes }}</textarea>
 
             <label for="homepage">Homepage</label>
@@ -65,7 +67,7 @@
                 type="url" name="homepage" id="homepage"
                 aria-describedby="homepage-hint"
                 value="{{ .Styles.Homepage }}"
-                placeholder="https://github.com/userstyles-world/userstyles.world">
+                placeholder="e.g. https://github.com/userstyles-world/tweaks">
 
             {{- if eq .Method "edit" }}
                 <p>Current image</p>
@@ -95,7 +97,8 @@
             {{ end }}
 
             <label for="previewURL">Preview image URL</label>
-            <i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org. To remove preview image, remove the URL.</i>
+            <i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i><br>
+            <i class="fg:3"><mark>Hint:</mark> To remove preview image, remove the URL from field below.</i>
             <input
                 pattern="{{ config "allowedImagesRe" }}"
                 type="url" name="previewURL" id="previewURL"
@@ -116,23 +119,23 @@
                 type="text" name="license" id="license"
                 aria-describedby="license-hint"
                 value="{{ .Styles.License }}"
-                placeholder="e.g CC Zero">
+                placeholder="e.g. CC Zero">
 
             <label for="category">Category</label>
-            <i class="fg:3" id="category-hint">Website name that your userstyle applies to. E.g.: userstyles, github, gitlab, etc.</i>
+            <i class="fg:3" id="category-hint">Domain name of website that your userstyle applies to.</i>
             <input
                 required
                 type="text" name="category" id="category"
                 aria-describedby="category-hint"
                 value="{{ .Styles.Category }}"
-                placeholder="e.g userstyles">
+                placeholder="e.g. test.userstyles.world -> userstyles">
 
             <label for="code">Source code</label>
             <textarea
                 type="text" name="code" id="code"
                 spellcheck="false"
-                placeholder="{{ printf "* {\n    color: red !important \n}" }}"
-            >{{ with .Styles }}{{ .Code }}{{ else }}{{ BaseCodeTemplate }}{{ end }}</textarea>
+                placeholder="{{ BaseCodeTemplate }}"
+            >{{ with .Styles }}{{ .Code }}{{ end }}</textarea>
 
             {{ if eq .Method "edit" }}
                 <label for="mirrorURL">Mirror source code URL</label>

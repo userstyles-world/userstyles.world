@@ -7,14 +7,14 @@
         {{ with .Profile.DisplayName }}
             <p class="displayname"><span class="minw">Display name</span>{{ . }}</p>
         {{ end }}
-        <p class="joined">
+        <p class="joined flex">
             <span class="minw">Joined</span>
             <time datetime="{{ .Profile.CreatedAt | iso }}">
                 {{ .Profile.CreatedAt | rel }}
             </time>
         </p>
         {{ if .User.IsModOrAdmin }}
-            <p class="updated">
+            <p class="updated flex">
                 <span class="minw">Updated</span>
                 <time datetime="{{ .Profile.UpdatedAt | iso }}">
                     {{ .Profile.UpdatedAt | rel }}

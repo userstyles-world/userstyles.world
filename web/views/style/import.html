@@ -1,8 +1,8 @@
 <div class="wrapper py:l">
     <section class="ta:c">
         <h1>Import userstyle</h1>
-        <p class="fg:2">Please, read and understand our <a href="/docs/content-guidelines">content guidelines</a> before importing your userstyle.</p>
         <i class="fg:3"><a href="https://github.com/vednoc/go-usercss-parser">UserCSS parser</a> will set most of metadata for you, but your input is required for missing fields.</i>
+        <p class="fg:2">Please read and understand our <a href="/docs/content-guidelines">content guidelines</a> before importing your userstyle.</p>
     </section>
 
     <form class="import" method="post" action="/import" enctype="multipart/form-data">
@@ -23,6 +23,7 @@
             placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
         <label for="preview">Upload preview image</label>
+        <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
         <i class="fg:3" id="preview-hint">Only jpg, jpeg, png, avif, and webp formats are allowed.</i>
         <input type="file"
             name="preview" id="preview"
@@ -31,13 +32,14 @@
 
         <label for="category">Category</label>
         <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-        <i class="fg:3" id="category-hint">Website name that your userstyle applies to. E.g.: userstyles, github, gitlab, etc.</i>
+        <i class="fg:3" id="category-hint">Domain name of website that your userstyle applies to.</i>
         <input
             type="text" name="category" id="category"
             aria-describedby="category-hint"
-            placeholder="e.g userstyles">
+            placeholder="e.g. test.userstyles.world -> userstyles">
 
         <div class="ta:l">
+            <p>Mirror options</p>
             <p class="mb:s fg:3" id="mirrorMeta-hint">Will mirror style metadata (name, description, and notes in case of USo-archive).</p>
             <div class="checkbox flex mb:m">
                 <input type="checkbox" name="mirrorMeta" id="mirrorMeta" aria-describedby="mirrorMeta-hint">

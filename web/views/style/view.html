@@ -124,9 +124,9 @@
             <h2 class="td:d">Details</h2>
             <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
             <p><span class="minw">License</span>{{ .Style.License }}</p>
-            <p><span class="minw">Created at</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
-            <p><span class="minw">Updated at</span><time datetime="{{ .Style.UpdatedAt | iso }}">{{ .Style.UpdatedAt | rel }}</time></p>
-            <p><span class="minw">Applies to</span>{{ .Style.Category }}</p>
+            <p><span class="minw">Created</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
+            <p><span class="minw">Updated</span><time datetime="{{ .Style.UpdatedAt | iso }}">{{ .Style.UpdatedAt | rel }}</time></p>
+            <p><span class="minw">Category</span>{{ .Style.Category }}</p>
             <div class="stats mt:m">
                 <h2 class="td:d">Statistics</h2>
                 <p class="mb:s">Learn how we calculate statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
