@@ -42,12 +42,12 @@
 
     <section class="mt:l">
         <div class="header flex mb:m ai:c">
-            {{ if .Slug }}
+            {{ if .URL }}
                 <div class="share flex ai:c mr:m">
                     <span class="mr:s">Share style</span>
                     <span
                         id="share" class="bg:2 input-like"
-                    >{{ printf "%s%s" .BaseURL .Slug }}</span>
+                    >{{ .URL }}</span>
                     <button
                         aria-label="Copy Style URL to clipboard"
                         type="submit"

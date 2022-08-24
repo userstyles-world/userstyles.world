@@ -78,12 +78,11 @@ func GetStylePage(c *fiber.Ctx) error {
 		"User":         u,
 		"Style":        data,
 		"Stats":        stats,
-		"Url":          fmt.Sprintf("https://userstyles.world/style/%d", data.ID),
-		"Slug":         c.Path(),
-		"BaseURL":      c.BaseURL(),
+		"URL":          c.BaseURL() + c.Path(),
 		"DailyHistory": dailyHistory,
 		"TotalHistory": totalHistory,
 		"Reviews":      reviews,
 		"Canonical":    "style/" + id + "/" + slug,
+		"RenderMeta":   true,
 	})
 }
