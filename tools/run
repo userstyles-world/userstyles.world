@@ -195,6 +195,7 @@ buildCmd() {
     ##   run build sass          - Builds Sass files.
     ##   run build sass build ts - Builds Sass then TS files.
     ##   run build dev start     - Builds all files, then runs starts command.
+    ##   run build prod          - Builds all files for production environment.
 
     fail() {
         case "$1" in
@@ -277,30 +278,33 @@ Description:
 Commands:
 
   build argument
-    Builds files based on the argument and exit.  (See 'run help build'.)
+    Builds files based on the specified argument.  (See 'run help build'.)
 
   config
-    Loads environment variables from a file. (See 'run help config'.)
+    Loads environment variables from a file.  (See 'run help config'.)
 
   help
     Prints full help of this tool.
 
   help argument
-    Prints help of a specified argument (command). (See 'run help help'.)
+    Prints help of a specified argument (command).  (See 'run help help'.)
 
   setup
-    Prepares development/production environment.
+    Prepares your development environment.
 
   start
     Starts a built executable depending on the environment.
 
   watch argument
-      Watch for file changes and rebuild files. (See 'run help watch'.)
+      Watches for file changes and rebuild files.  (See 'run help watch'.)
 
 Examples:
 
   run setup
-    Prepares development/production environment.
+    Prepares your development environment.
+
+  run build prod
+    Builds a production executable.
 
   run build dev start
     Builds a development executable, then runs it.
@@ -334,13 +338,13 @@ Examples:
 
 setupCmd() {
     ## Setup command prepares your entire development environment.  It doesn't
-    ## accept any arguments, but you use 'config' (run help config) command to
-    ## load a custom variables.
+    ## accept any arguments, but you can use 'config' command (run help config)
+    ## to load variables from a custom configuration file.
     ##
     ## Usage:
     ##
-    ##   run setup                     - Sets up environment with default vars.
-    ##   run config path/to/.env setup - Sets up environment with custom vars.
+    ##   run setup                     - Sets up a default environment.
+    ##   run config path/to/.env setup - Sets up a custom environment.
 
     : "Setting DATA_DIR to ${DATA_DIR:=data}."
     log "Setting up development environment."
