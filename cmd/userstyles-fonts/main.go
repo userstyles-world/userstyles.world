@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -144,9 +145,11 @@ func extractArchive(asset Asset) error {
 		if font(file.Name) {
 			name := path.Base(file.Name)
 			output := path.Join(distDir, name)
-			fmt.Printf("%s Extracting %q to %q.\n", ts(), name, output)
-			if err := extract(file, output); err != nil {
-				return err
+			if strings.HasPrefix(output, filepath.Clean(output)) {
+				fmt.Printf("%s Extracting %q to %q.\n", ts(), name, output)
+				if err := extract(file, output); err != nil {
+					return err
+				}
 			}
 		}
 	}
