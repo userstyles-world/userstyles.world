@@ -21,11 +21,11 @@
 <meta property="og:url" content="{{ .URL }}">
 <meta property="og:title" content="{{ .Style.Name }} by {{ .Style.Username }}">
 <meta property="og:description" content="{{ .Style.Description | descMax }}">
-<meta property="og:image" content="{{ .Style.Preview | fullImage }}">
+{{ with .Style.Preview }}<meta property="og:image" content="{{ fullImage . }}">{{ end }}
 <meta property="twitter:url" content="{{ .URL }}">
 <meta property="twitter:title" content="{{ .Style.Name }} by {{ .Style.Username }}">
 <meta property="twitter:description" content="{{ .Style.Description | descMax }}">
-<meta property="twitter:image" content="{{ .Style.Preview | fullImage }}">
+{{ with .Style.Preview }}<meta property="twitter:image" content="{{ fullImage . }}">{{ end }}
 <meta property="twitter:card" content="summary_large_image">
 {{ end }}
 <script defer src="/js/main.js?v={{ config "appCommitSHA" }}"></script>
