@@ -16,8 +16,8 @@
                     required
                     pattern="^[a-zA-Z0-9][a-zA-Z0-9-_]{1,30}[a-zA-Z0-9]$"
                     type="text" name="username" id="username"
-                    placeholder="e.g. my-cool-username"
-                    title="3–32 characters, no spaces">
+                    placeholder="username"
+                    title="Must be 3–32 characters, no spaces">
             </div>
 
             <div class="Form-section Form-full">
@@ -25,7 +25,7 @@
                 <input
                     required pattern="{{ config "allowedEmailsRe" }}"
                     type="email" name="email" id="email"
-                    placeholder="e.g. username@example.org"
+                    placeholder="username@example.org"
                     title="Must be an email address">
             </div>
 
@@ -34,8 +34,8 @@
                 <input
                     required pattern="^[\S]{8,32}$"
                     type="password" name="password" id="new-password"
-                    placeholder="Must have at least 8 characters"
-                    title="8–32 characters"
+                    placeholder="password"
+                    title="Must be 8–32 characters"
                     autocomplete="new-password">
             </div>
 
@@ -45,7 +45,7 @@
                     required pattern="^[\S]{8,32}$"
                     type="password" name="confirm" id="confirm-new-password"
                     placeholder="Repeat password"
-                    title="8–32 characters"
+                    title="Must be 8–32 characters"
                     autocomplete="new-password">
             </div>
 
