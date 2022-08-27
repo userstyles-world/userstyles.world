@@ -26,5 +26,7 @@ func Routes(app *fiber.App) {
 	r.Post("/styles/ban/:id", jwtware.Protected, BanPost)
 	r.Get("/styles/review/:id", jwtware.Protected, ReviewGet)
 	r.Post("/styles/review/:id", jwtware.Protected, ReviewPost)
-	r.Static("/preview", config.PublicDir)
+	r.Static("/preview", config.PublicDir, fiber.Static{
+		MaxAge: 2678400, // 1 month
+	})
 }
