@@ -26,10 +26,7 @@
         list-style: none;
         display: inline-flex;
         padding-bottom: 0.5rem;
-    }
 
-    .icon {
-        margin-right: 0.5rem;
-        width: 20px;
+        > svg { margin: 0.25rem 0.5rem 0 0 }
     }
 }

@@ -63,17 +63,17 @@
                     <a
                         href="/styles/ban/{{ .Style.ID }}"
                         class="btn icon"
-                    >{{ template "icons/ban" 16 }} Ban</a>
+                    >{{ template "icons/ban" }} Ban</a>
                 {{ end }}
                 {{ if eq .User.ID .Style.UserID }}
                     <a
                         href="/delete/{{ .Style.ID }}"
                         class="btn icon ml:s"
-                    >{{ template "icons/trash" 16 }} Delete</a>
+                    >{{ template "icons/trash" }} Delete</a>
                     <a
                         href="/edit/{{ .Style.ID }}"
                         class="btn icon ml:s"
-                    >{{ template "icons/edit" 16 }} Edit</a>
+                    >{{ template "icons/edit" }} Edit</a>
                 {{ end }}
                 {{ if .User.IsModOrAdmin }}
                     <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
@@ -89,20 +89,20 @@
                         rel="noopener"
                         href="{{ .Style.Homepage }}"
                         class="btn icon ml:s"
-                    >{{ template "icons/home" 16 }} Homepage</a>
+                    >{{ template "icons/home" }} Homepage</a>
                 {{ end }}
                 <a
                     target="_blank"
                     rel="noopener"
                     href="/api/style/{{ .Style.ID }}.user.css"
                     id="install" class="btn icon primary ml:s"
-                >{{ template "icons/download" 16 }} Install</a>
+                >{{ template "icons/download" }} Install</a>
                 <a
                     target="_blank"
                     rel="noopener"
                     href="https://github.com/openstyles/stylus/#readme"
                     id="stylus" class="btn icon stylus ml:s"
-                >{{ template "icons/brush" 16 }} Get Stylus</a>
+                >{{ template "icons/brush" }} Get Stylus</a>
 
                 {{ if ne .Style.UserID .User.ID }}
                     <a

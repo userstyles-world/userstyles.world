@@ -20,21 +20,21 @@
 
     <div class="card-footer flex jc:b py:m px:m">
         <small class="fg:3 flex ai:c">
-            {{ template "icons/view" "16" }}
+            {{ template "icons/view" }}
             <span
                 class="ml:s"
                 data-tooltip="{{ .Views }} total views"
             >{{ num .Views }} views</span>
         </small>
         <small class="fg:3 flex ai:c ml:s">
-            {{ template "icons/download" "16" }}
+            {{ template "icons/download" }}
             <span
                 class="ml:s"
                 data-tooltip="{{ .Installs }} total installs"
             >{{ num .Installs }} installs</span>
         </small>
         <small class="fg:3 flex ai:c ml:s rating score-{{ .Rating | floor }}">
-            {{ template "icons/star" 16 }}
+            {{ template "icons/star" }}
             <span class="ml:s">
                 {{ with .Rating }}{{ . }}{{ else }}-{{ end }}/5
             </span>
