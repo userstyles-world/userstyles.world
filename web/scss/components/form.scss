@@ -100,3 +100,18 @@
 
     &-full input:not([type='checkbox']) { min-width: 100% }
 }
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    &::before,
+    &::after {
+        content: '';
+        width: 100%;
+        border-top: 1px solid var(--bg-4);
+    }
+
+    span { flex: 1 1 100% }
+}

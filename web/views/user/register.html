@@ -1,13 +1,13 @@
 <div class="wrapper py:l">
     <section class="ta:c">
         <h1>Register</h1>
-        <p>Tip: Logging in uses your e-mail address, not username.</p>
+        <p>Note: Logging in uses your e-mail address, not username.</p>
     </section>
 
     {{ template "partials/alert" . }}
 
     <section class="register limit mx:a">
-        {{ template "partials/btn-oauth" . }}
+        {{ template "partials/btn-oauth" "sign up" }}
 
         <form class="Form Form-box" method="post" action="/register">
             <div class="Form-section Form-full">

@@ -1,5 +1,7 @@
 <div class="social mt:l mx:a">
-    <p class="description mb:m">Join via</p>
+    <div class="divider mt:l mb:l" role="separator">
+        <span>OAuth {{ . }} with</span>
+    </div>
     <div class="btn-group flex">
         <a href="/oauth/github" class="github oauth btn icon">
             {{ template "icons/github" . }} Github
@@ -11,5 +13,7 @@
             {{ template "icons/codeberg" . }} Codeberg
         </a>
     </div>
-    <p class="description mt:l">Or via</p>
+    <div class="divider mt:l mb:l" role="separator">
+        <span>Or {{ . }} with email</span>
+    </div>
 </div>
