@@ -58,9 +58,9 @@ func main() {
 		app.Use(core.HSTSMiddleware)
 		app.Use(core.CSPMiddleware)
 		app.Use(limiter.New(limiter.Config{
-			Max:               350,
-			Expiration:        time.Second * 60,
-			LimiterMiddleware: limiter.SlidingWindow{},
+			Max:               400,
+			Expiration:        time.Minute,
+			LimiterMiddleware: limiter.FixedWindow{},
 		}))
 	}
 	app.Use(compress.New())
