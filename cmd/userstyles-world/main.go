@@ -10,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 
@@ -58,11 +57,6 @@ func main() {
 	if config.Production {
 		app.Use(core.HSTSMiddleware)
 		app.Use(core.CSPMiddleware)
-		app.Use(limiter.New(limiter.Config{
-			Max:               400,
-			Expiration:        time.Minute,
-			LimiterMiddleware: limiter.FixedWindow{},
-		}))
 	}
 	app.Use(compress.New())
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
