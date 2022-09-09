@@ -101,12 +101,8 @@ func LoginPost(c *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  expiration,
 		Secure:   config.Production,
-		HTTPOnly: config.Production,
-		SameSite: fiber.CookieSameSiteStrictMode,
-	}
-	// Fix issues with Vim Vixen in dev environment.
-	if !config.Production {
-		cookie.SameSite = fiber.CookieSameSiteDisabled
+		HTTPOnly: true,
+		SameSite: fiber.CookieSameSiteLaxMode,
 	}
 	c.Cookie(cookie)
 

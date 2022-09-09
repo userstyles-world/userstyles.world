@@ -126,7 +126,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		Expires:  expiration,
 		Secure:   config.Production,
 		HTTPOnly: true,
-		SameSite: "lax",
+		SameSite: fiber.CookieSameSiteLaxMode,
 	})
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
