@@ -75,7 +75,7 @@ func Test404Pages(t *testing.T) {
 		t.Error(err)
 	}
 	if res.StatusCode != fiber.StatusNotFound {
-		t.Error("Expected 404, got ", res.StatusCode)
+		t.Error("Expected 404, got", res.StatusCode)
 	}
 
 	expected := `{"error":"bad endpoint"}`
@@ -85,7 +85,7 @@ func Test404Pages(t *testing.T) {
 		t.Error(err)
 	}
 	if string(body) != expected {
-		t.Error("Expected ", expected, " got ", string(body))
+		t.Error("Expected", expected, "got", string(body))
 	}
 
 	req, err = http.NewRequest("GET", "/notfound", nil)
@@ -97,6 +97,6 @@ func Test404Pages(t *testing.T) {
 		t.Error(err)
 	}
 	if res.StatusCode != fiber.StatusNotFound {
-		t.Error("Expected 404, got ", res.StatusCode)
+		t.Error("Expected 404, got", res.StatusCode)
 	}
 }

@@ -7,7 +7,7 @@ import (
 
 	"github.com/ohler55/ojg/oj"
 
-	"userstyles.world/modules/search"
+	"userstyles.world/modules/storage"
 )
 
 func TestUnsafeString(t *testing.T) {
@@ -73,20 +73,17 @@ func TestJSON(t *testing.T) {
 		{"SimpleTest", testStruct{
 			Name: "abcv",
 		}, []byte(`{"Name":"abcv"}`)},
-		{"TestForMinimalStyle", search.MinimalStyle{
-			Name:        "abcv",
-			ID:          123,
-			CreatedAt:   time.Unix(0, 0),
-			UpdatedAt:   time.Unix(0, 0),
-			Username:    "admin",
-			DisplayName: "Admin",
-			Description: "This is a description",
-			Preview:     "https://example.com/preview.png",
-			Notes:       "This is a note",
-			Views:       99,
-			Installs:    69,
-			Rating:      420,
-		}, []byte(`{"created_at":"1970-01-01T01:00:00+01:00","description":"This is a description","display_name":"Admin","id":123,"installs":69,"name":"abcv","notes":"This is a note","preview":"https://example.com/preview.png","rating":420,"updated_at":"1970-01-01T01:00:00+01:00","username":"admin","views":99}`)},
+		{"TestForMinimalStyle", storage.StyleCard{
+			Name:      "abcv",
+			ID:        123,
+			CreatedAt: time.Unix(0, 0),
+			UpdatedAt: time.Unix(0, 0),
+			Username:  "admin",
+			Preview:   "https://example.com/preview.png",
+			Views:     99,
+			Installs:  69,
+			Rating:    420,
+		}, []byte(`{"created_at":"1970-01-01T01:00:00+01:00","id":123,"installs":69,"name":"abcv","preview":"https://example.com/preview.png","rating":420,"updated_at":"1970-01-01T01:00:00+01:00","username":"admin","views":99}`)},
 	}
 
 	for _, c := range cases {
