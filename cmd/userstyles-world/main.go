@@ -43,7 +43,7 @@ func main() {
 	search.Initialize()
 
 	app := fiber.New(fiber.Config{
-		Views:       templates.New(web.ViewsDir, "views"),
+		Views:       templates.New(web.ViewsDir),
 		ViewsLayout: "layouts/main",
 		ProxyHeader: httputil.ProxyHeader(config.Production),
 		JSONEncoder: utils.JSONEncoder,

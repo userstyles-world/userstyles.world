@@ -50,7 +50,7 @@ func status() sys {
 	}
 }
 
-func New(views http.FileSystem, dir string) *html.Engine {
+func New(views http.FileSystem) *html.Engine {
 	engine := html.NewFileSystem(views, ".html")
 
 	engine.AddFunc("config", func(key string) string {
