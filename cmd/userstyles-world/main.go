@@ -108,7 +108,7 @@ func main() {
 	// Block and listen.
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	_ = <-c
+	<-c
 
 	// Close everything and exit.
 	log.Info.Println("Shutting down...")
