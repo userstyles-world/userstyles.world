@@ -25,6 +25,7 @@ var (
 	DBDrop               = getEnvBool("DB_DROP", false)
 	DBRandomData         = getEnvBool("DB_RANDOM_DATA", false)
 	DBRandomDataAmount   = getEnvInt("DB_RANDOM_DATA_AMOUNT", 100)
+	DBMaxOpenConns       = getEnvInt("DB_MAX_OPEN_CONNS", 10)
 	Salt                 = getEnvInt("SALT", 10)
 	JWTSigningKey        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
 	VerifyJWTSigningKey  = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")

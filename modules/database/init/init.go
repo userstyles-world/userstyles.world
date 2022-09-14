@@ -61,6 +61,14 @@ func Initialize() {
 	database.Conn = conn
 	log.Info.Println("Database successfully connected.")
 
+	db, err := conn.DB()
+	if err != nil {
+		log.Warn.Fatal(err)
+	}
+
+	// GORM doesn't set a maximum of open connections by default.
+	db.SetMaxOpenConns(config.DBMaxOpenConns)
+
 	// Log DB stats.
 	go func() {
 		db, err := database.Conn.DB()
