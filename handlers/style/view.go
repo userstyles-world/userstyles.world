@@ -37,18 +37,15 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 
 	// Upsert style views.
-	go func(id, ip, ua string) {
-		// Ignore bots from fediverse.
-		if strings.Contains(ua, "Mastodon") || strings.Contains(ua, "Pleroma") {
-			log.Info.Printf("Ignored fediverse bot on style %s: %s\n", id, ua)
-			return
-		}
-
+	ua := string(c.Context().UserAgent())
+	if strings.Contains(ua, "Mastodon") || strings.Contains(ua, "Pleroma") {
+		log.Info.Printf("Ignored Fediverse bot on style %q: %s\n", id, ua)
+	} else {
 		s := new(models.Stats)
-		if err := s.UpsertView(id, ip); err != nil {
-			log.Warn.Printf("Failed to upsert views for %v: %s\n", s.StyleID, err)
+		if err := s.UpsertView(id, c.IP()); err != nil {
+			log.Database.Printf("Failed to upsert views for %q: %s\n", id, err)
 		}
-	}(id, c.IP(), string(c.Context().UserAgent()))
+	}
 
 	// Get history data.
 	history, err := models.GetStyleHistory(id)
