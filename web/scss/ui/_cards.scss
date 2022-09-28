@@ -79,13 +79,6 @@
         }
     }
 
-    .thumbnail picture {
-        img {
-            object-position: center;
-            object-fit: contain;
-        }
-    }
-
     &-body,
     &-footer {
         border-top: 1px solid var(--bg-3);
