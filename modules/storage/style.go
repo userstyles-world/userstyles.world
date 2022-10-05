@@ -7,7 +7,7 @@ import (
 	"userstyles.world/modules/database"
 )
 
-var isMirrored = "(styles.mirror_url <> '' or styles.original <> '') and styles.mirror_code = 1"
+var isMirrored = "(styles.mirror_url <> '' OR styles.original <> '') AND (styles.mirror_code = 1 OR styles.mirror_meta = 1)"
 
 func CountStylesForUserID(id uint) (int, error) {
 	var i int
