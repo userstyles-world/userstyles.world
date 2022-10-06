@@ -61,6 +61,20 @@ func Initialize() {
 	database.Conn = conn
 	log.Info.Println("Database successfully connected.")
 
+	// Log DB stats.
+	go func() {
+		db, err := database.Conn.DB()
+		if err != nil {
+			log.Info.Println(err)
+			return
+		}
+
+		for {
+			time.Sleep(time.Minute)
+			log.Info.Printf("%#v\n", db.Stats())
+		}
+	}()
+
 	shouldSeed := false
 	// Generate data for development.
 	if config.DBDrop && !config.Production {
