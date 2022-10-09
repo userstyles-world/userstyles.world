@@ -1,3 +1,4 @@
+// Package update provides functionality for mirroring userstyles.
 package update
 
 import (
@@ -9,14 +10,15 @@ import (
 	"userstyles.world/modules/storage"
 )
 
-func ImportedStyles() {
+// MirrorStyles runs an update check for mirrored userstyles in the background.
+func MirrorStyles() {
 	count, err := storage.CountStylesForMirror()
 	if err != nil {
-		log.Warn.Println("Failed to find imported styles:", err)
+		log.Warn.Println("Failed to count mirrored styles:", err)
 		return
 	}
 
-	log.Info.Printf("Updating %d mirrored styles.\n", count)
+	log.Info.Printf("Checking %d mirrored styles.\n", count)
 
 	var wg sync.WaitGroup
 	action := func(styles []models.Style) error {
@@ -33,9 +35,9 @@ func ImportedStyles() {
 	}
 
 	if err := storage.FindStylesForMirror(action); err != nil {
-		log.Warn.Println("Failed to find imported styles:", err)
+		log.Warn.Println("Failed to find mirrored styles:", err)
 		return
 	}
 
-	log.Info.Println("Mirrored styles have been updated.")
+	log.Info.Printf("Done checking mirrored styles.\n")
 }
