@@ -1,6 +1,7 @@
 package update
 
 import (
+	"sync"
 	"time"
 
 	"userstyles.world/models"
@@ -17,11 +18,16 @@ func ImportedStyles() {
 
 	log.Info.Printf("Updating %d mirrored styles.\n", count)
 
+	var wg sync.WaitGroup
 	action := func(styles []models.Style) error {
+		wg.Add(len(styles))
+
 		for _, style := range styles {
-			time.Sleep(200 * time.Millisecond)
-			go Batch(style)
+			go check(&wg, style)
 		}
+
+		time.Sleep(time.Second)
+		wg.Wait()
 
 		return nil
 	}

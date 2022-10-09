@@ -3,6 +3,7 @@ package update
 import (
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/vednoc/go-usercss-parser"
 
@@ -53,7 +54,9 @@ func getSourceCode(style models.Style) string {
 	return style.Original
 }
 
-func Batch(batch models.Style) {
+func check(wg *sync.WaitGroup, batch models.Style) {
+	defer wg.Done()
+
 	// Select which fields to update.
 	fields := make(map[string]any)
 	fields["id"] = batch.ID
