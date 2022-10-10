@@ -1,5 +1,5 @@
-// Package update provides functionality for mirroring userstyles.
-package update
+// Package mirror provides functionality for mirroring userstyles.
+package mirror
 
 import (
 	"sync"

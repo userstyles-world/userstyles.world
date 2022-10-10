@@ -9,8 +9,8 @@ import (
 	// "userstyles.world/modules/cache"
 	"userstyles.world/modules/database/snapshot"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/mirror"
 	"userstyles.world/modules/sitemap"
-	"userstyles.world/modules/update"
 )
 
 func Initialize() {
@@ -37,7 +37,7 @@ func Initialize() {
 		}
 	*/
 
-	_, err = s.Cron("*/30 * * * *").Do(func() { update.ImportedStyles() })
+	_, err = s.Cron("*/30 * * * *").Do(func() { mirror.MirrorStyles() })
 	if err != nil {
 		log.Warn.Println("Failed to update imported styles:", err.Error())
 	}
