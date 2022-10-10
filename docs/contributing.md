@@ -33,7 +33,7 @@ To compile Sass, you'll need to install [sassc].
 
 To convert images, you'll need to install [libvips].
 
-[vips]: https://github.com/libvips/libvips#install
+[libvips]: https://github.com/libvips/libvips#install
 
 ## Using `run` tool
 
