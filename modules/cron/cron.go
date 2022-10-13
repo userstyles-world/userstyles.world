@@ -37,7 +37,7 @@ func Initialize() {
 		}
 	*/
 
-	_, err = s.Cron("*/30 * * * *").Do(func() { mirror.MirrorStyles() })
+	_, err = s.Cron("4 */4 * * *").Do(func() { mirror.MirrorStyles() })
 	if err != nil {
 		log.Warn.Println("Failed to update imported styles:", err.Error())
 	}

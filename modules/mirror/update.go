@@ -28,7 +28,7 @@ func MirrorStyles() {
 			go check(&wg, style)
 		}
 
-		time.Sleep(time.Second)
+		time.Sleep(5 * time.Second)
 		wg.Wait()
 
 		return nil

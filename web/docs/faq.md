@@ -4,7 +4,7 @@ Title: Frequently Asked Questions
 
 # Frequently Asked Questions
 
-Last updated April 3, 2022
+Last updated October 13, 2022
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
@@ -198,10 +198,10 @@ it in the following:
 
 ### How does mirroring source code work?
 
-Every 30th minute (00:30, 01:00, and so on) we check for style updates. Style
-checking runs in batches of 25 (as of August 27, 2021) and not all at once, so
-it can take up to a few minutes for your userstyle(s) to be processed. The style
-will be updated if the `@version` field doesn't match the one in our database.
+Every 4th minute of every 4 hours (00:04 UTC+0, 04:04, and so on) we check for
+updates. Userstyle checking runs in batches of 25 (as of August 27, 2021), so it
+can take up to a few minutes for your userstyles to be processed. Code will be
+updated if `@version` field doesn't match the one in our database.
 
 If your userstyle isn't being updated, read through [troubleshooting
 steps](#why-is-mirroring-source-code-updates-not-working) first.
