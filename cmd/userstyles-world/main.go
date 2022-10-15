@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 	"time"
 
@@ -73,6 +74,16 @@ func main() {
 				return !u.IsAdmin()
 			},
 		}))
+
+		app.Get("/debug/free", func(c *fiber.Ctx) error {
+			u, _ := jwtware.User(c)
+			if !u.IsAdmin() {
+				return c.Next()
+			}
+
+			debug.FreeOSMemory()
+			return c.Redirect("/debug/pprof")
+		})
 	}
 
 	// Mount routes.
