@@ -30,6 +30,15 @@ var Protected = func(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+var Admin = func(c *fiber.Ctx) error {
+	u, ok := User(c)
+	if !ok || !u.IsAdmin() {
+		return c.Redirect("/login?r=" + url.QueryEscape(c.Path()))
+	}
+
+	return c.Next()
+}
+
 func MapClaim(c *fiber.Ctx) lib.MapClaims {
 	user, ok := c.Locals("user").(*lib.Token)
 	if !ok {
