@@ -15,15 +15,7 @@ import (
 	"userstyles.world/modules/storage"
 )
 
-var tmp = fiber.Map{
-	"data": "Get in touch with us via GitHub, Discord, or Matrix.",
-}
-
 func GetStyleSource(c *fiber.Ctx) error {
-	if len(c.Context().QueryArgs().String()) == 73 {
-		return c.Status(fiber.StatusBadRequest).JSON(tmp)
-	}
-
 	id, err := c.ParamsInt("id")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
