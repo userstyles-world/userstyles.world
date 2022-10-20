@@ -1,11 +1,15 @@
 package core
 
 import (
+	"errors"
+	"io"
+	"net/http"
 	"net/url"
 	"os"
 	"path"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -13,6 +17,22 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
+
+var client = http.Client{
+	Timeout: time.Second * 30,
+	CheckRedirect: func(req *http.Request, via []*http.Request) error {
+		// Max of three redirections.
+		if len(via) >= 3 {
+			return errors.New("*giggles* Mikey Wikey hates you")
+		}
+
+		// Make sure it doesn't redirect to a loopback thingy.
+		if config.Production && utils.IsLoopback(string(req.Host)) {
+			return errors.New("*giggles* Mikey Wikey hates you")
+		}
+		return nil
+	},
+}
 
 func Proxy(c *fiber.Ctx) error {
 	link, id, t := c.Query("link"), c.Query("id"), c.Query("type")
@@ -30,60 +50,55 @@ func Proxy(c *fiber.Ctx) error {
 	if _, err := os.Stat(name); os.IsNotExist(err) {
 		// Create directory.
 		if err := os.MkdirAll(dir, 0o755); err != nil {
-			log.Warn.Printf("Failed to create %v: %s\n", dir, err.Error())
+			log.Warn.Printf("Failed to create %q: %s\n", dir, err.Error())
 			return nil
 		}
 
-		// Download image.
-		a := fiber.AcquireAgent()
-		defer fiber.ReleaseAgent(a)
-
-		var status int
-		var data []byte
-		var errs []error
-
-	getImage:
-		// Set the request URI.
-		a.Request().SetRequestURI(link)
-
-		// Parse the request URI.
-		if err := a.Parse(); err != nil {
-			log.Info.Println("Agent err:", err.Error())
+		// Create new request.
+		req, err := http.NewRequest("GET", link, nil)
+		if err != nil {
+			log.Info.Println("http.NewRequest: %w", err)
 			return nil
 		}
 
 		// Ensure we're not doing a local host request.
-		if utils.IsLoopback(string(a.Request().URI().Host())) {
+		if utils.IsLoopback(string(req.Host)) {
 			log.Info.Println("A local network was requested to be proxied.")
 			return nil
 		}
 
-		// If we don't request to github.com set a max redirect of three.
-		if !strings.Contains(link, "https://github.com/") {
-			a.MaxRedirectsCount(3)
+		// Make the actual request and get the response.
+		res, err := client.Do(req)
+		if err != nil {
+			log.Info.Printf("Failed to get image %q, err: %v\n", link, err)
+			return nil
 		}
+		defer res.Body.Close()
 
-		// Make the actual request and get the status and bytes.
-		status, data, errs = a.Bytes()
-		if len(errs) > 0 {
-			log.Info.Printf("Failed to get image %v, err: %v\n", link, errs)
+		// Make sure the response returned 200 OK.
+		if res.StatusCode != 200 {
+			log.Info.Printf("Failed to get image %q, didn't return 200 OK: %v\n", link, res.Status)
 			return nil
 		}
 
-		// Check after all redirections if the host is still valid.
-		if utils.IsLoopback(string(a.Request().URI().Host())) {
-			log.Info.Println("A local network was requested to be proxied.")
+		// Limit the reading to 33.554432 Megabytes ^-^, btw according to Mikey,
+		// you need to learn bit shitting to understand this magic number.
+		limitedReader := io.LimitReader(res.Body, 1<<25)
+
+		// Create a file(if none exist) and truncate it before writing to, open
+		// it in a write-only manner.
+		resFile, err := os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o600)
+		if err != nil {
+			log.Info.Printf("Failed to create file %q: %v\n", name, err)
 			return nil
 		}
 
-		// HACK: GitHub doesn't set "Location" response header.
-		if strings.Contains(link, "https://github.com/") && status >= 300 && status < 400 {
-			link = extractImage(string(data))
-			goto getImage
-		}
-
-		if err := os.WriteFile(name, data, 0o600); err != nil {
-			log.Info.Println("Failed to write image:", err.Error())
+		// Copy the response's body to the file.
+		_, err = io.Copy(resFile, limitedReader)
+		// Close the file.
+		resFile.Close()
+		if err != nil {
+			log.Info.Printf("Failed to copy: %v\n", err)
 			return nil
 		}
 	}
