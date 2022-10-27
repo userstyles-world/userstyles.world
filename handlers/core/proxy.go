@@ -81,9 +81,12 @@ func Proxy(c *fiber.Ctx) error {
 			return nil
 		}
 
-		// Limit the reading to 33.554432 Megabytes ^-^, btw according to Mikey,
+		// Limit image size to 8.388608 Megabytes ^-^, btw according to Mikey,
 		// you need to learn bit shitting to understand this magic number.
-		limitedReader := io.LimitReader(res.Body, 1<<25)
+		if res.ContentLength > 1<<23 {
+			log.Info.Printf("Big image detected in %s: %q\n", id, link)
+			return c.Redirect("/big-image.svg")
+		}
 
 		// Create a file(if none exist) and truncate it before writing to, open
 		// it in a write-only manner.
@@ -94,7 +97,7 @@ func Proxy(c *fiber.Ctx) error {
 		}
 
 		// Copy the response's body to the file.
-		_, err = io.Copy(resFile, limitedReader)
+		_, err = io.Copy(resFile, res.Body)
 		// Close the file.
 		resFile.Close()
 		if err != nil {
