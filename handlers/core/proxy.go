@@ -119,9 +119,7 @@ func Proxy(c *fiber.Ctx) error {
 		return nil
 	}
 
-	c.Response().SetBodyStream(f, int(stat.Size()))
-
-	return nil
+	return c.SendStream(f, int(stat.Size()))
 }
 
 func extractImage(s string) string {
