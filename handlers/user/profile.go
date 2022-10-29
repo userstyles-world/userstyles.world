@@ -74,6 +74,7 @@ func Profile(c *fiber.Ctx) error {
 		"Styles":    styles,
 		"Count":     count,
 		"Canonical": "user/" + username,
+		"Sort":      p.Sort,
 		"P":         p,
 	})
 }
