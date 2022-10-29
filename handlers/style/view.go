@@ -8,6 +8,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/charts"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils/strutils"
@@ -39,12 +40,9 @@ func GetStylePage(c *fiber.Ctx) error {
 	// Upsert style views.
 	ua := string(c.Context().UserAgent())
 	if strings.Contains(ua, "Mastodon") || strings.Contains(ua, "Pleroma") {
-		log.Info.Printf("Ignored Fediverse bot on style %q: %s\n", id, ua)
+		log.Info.Printf("Ignored Fediverse bot on style %s: %q\n", id, ua)
 	} else {
-		s := new(models.Stats)
-		if err := s.UpsertView(id, c.IP()); err != nil {
-			log.Database.Printf("Failed to upsert views for %q: %s\n", id, err)
-		}
+		cache.ViewStats.Add(c.IP() + " " + id)
 	}
 
 	// Get history data.

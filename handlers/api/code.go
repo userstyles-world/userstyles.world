@@ -8,10 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/vednoc/go-usercss-parser"
 
-	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
-	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
 )
 
@@ -44,11 +42,7 @@ func GetStyleSource(c *fiber.Ctx) error {
 		val = code
 	}
 
-	// Upsert style installs.
-	s := new(models.Stats)
-	if err := s.UpsertInstall(key, c.IP()); err != nil {
-		log.Database.Printf("Failed to upsert installs for %q: %s\n", key, err)
-	}
+	cache.InstallStats.Add(c.IP() + " " + key)
 
 	c.Type("css", "utf-8")
 	return c.SendString(val.(string))

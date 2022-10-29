@@ -105,6 +105,8 @@ func main() {
 	log.Info.Println("Shutting down...")
 	t := time.Now()
 	_ = app.Shutdown()
+	cache.InstallStats.Close()
+	cache.ViewStats.Close()
 	_ = database.Close()
 	_ = search.StyleIndex.Close()
 	log.Info.Printf("Done in %s.\n", time.Since(t))

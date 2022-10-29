@@ -8,16 +8,13 @@ import (
 	"userstyles.world/modules/config"
 )
 
-func CreateHashedRecord(id, ip string) (string, error) {
-	// Merge it here before using, otherwise errors occur.
-	record := ip + " " + id
-
+// CreateHashedRecord generates a unique hash for stats.
+func CreateHashedRecord(key string) (string, error) {
 	// Generate unique hash.
 	h := hmac.New(sha512.New, []byte(config.StatsKey))
-	if _, err := h.Write([]byte(record)); err != nil {
+	if _, err := h.Write([]byte(key)); err != nil {
 		return "", err
 	}
-	s := hex.EncodeToString(h.Sum(nil))
 
-	return s, nil
+	return hex.EncodeToString(h.Sum(nil)), nil
 }

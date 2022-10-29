@@ -2,14 +2,11 @@ package models
 
 import (
 	"database/sql"
-	"strconv"
 	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"userstyles.world/modules/log"
-	"userstyles.world/utils/crypto"
 )
 
 type Stats struct {
@@ -57,73 +54,6 @@ func (DashStats) GetCounts(t string) (q []DashStats, err error) {
 	}
 
 	return q, nil
-}
-
-// CreateRecord prepares style stats for upsert queries.
-func (s *Stats) CreateRecord(field, id, ip string) error {
-	hash, err := crypto.CreateHashedRecord(id, ip)
-	if err != nil {
-		return err
-	}
-
-	styleID, err := strconv.Atoi(id)
-	if err != nil {
-		return err
-	}
-
-	s.StyleID = styleID
-	s.Hash = hash
-
-	switch field {
-	case "install":
-		s.Install = time.Now()
-	case "view":
-		s.View = time.Now()
-	}
-
-	return nil
-}
-
-// UpsertInstall updates or inserts new install date.
-func (s *Stats) UpsertInstall(id, ip string) error {
-	if err := s.CreateRecord("install", id, ip); err != nil {
-		return err
-	}
-
-	t := time.Now()
-	s.Install = t
-
-	return db().
-		Model(modelStats).
-		Clauses(clause.OnConflict{
-			Columns: []clause.Column{{Name: "hash"}},
-			DoUpdates: clause.Assignments(map[string]any{
-				"updated_at": t,
-				"install":    t,
-			}),
-		}).
-		Create(s).Error
-}
-
-// UpsertView updates or inserts new viewed date.
-func (s *Stats) UpsertView(id, ip string) error {
-	if err := s.CreateRecord("view", id, ip); err != nil {
-		return err
-	}
-
-	t := time.Now()
-	s.View = t
-
-	return db().
-		Model(modelStats).
-		Clauses(clause.OnConflict{
-			Columns: []clause.Column{{Name: "hash"}},
-			DoUpdates: clause.Assignments(map[string]any{
-				"updated_at": t,
-				"view":       t,
-			}),
-		}).
-		Create(s).Error
 }
 
 // Delete will remove stats for a given style ID.

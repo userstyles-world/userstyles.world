@@ -20,7 +20,7 @@ func TestCreateHashedRecord(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual, err := CreateHashedRecord(c.id, c.ip)
+		actual, err := CreateHashedRecord(c.ip + " " + c.id)
 		if err != nil {
 			t.Error(err)
 		}

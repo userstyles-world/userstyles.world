@@ -40,6 +40,10 @@ func init() {
 	for _, dir := range dirs {
 		createIfNotExist(dir)
 	}
+
+	// Run install/view stats.
+	InstallStats.Run()
+	ViewStats.Run()
 }
 
 func Initialize() {
