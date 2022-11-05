@@ -18,7 +18,24 @@ const (
 	DataURL    = ArchiveURL + "styles/"
 	StyleURL   = ArchiveURL + "usercss/"
 	PreviewURL = ArchiveURL + "screenshots/"
+
+	cdnURL = "https://cdn.jsdelivr.net/gh/33kk/uso-archive@flomaster/data/"
+	hubURL = "https://raw.githubusercontent.com/33kk/uso-archive/flomaster/data/"
+	orgURL = "https://raw.githubusercontent.com/uso-archive/data/flomaster/data/"
+	oldURL = "https://uso-archive.surge.sh/"
+	newURL = "https://uso.kkx.one/style/"
 )
+
+// IsFromArchive checks whether a userstyle comes from a USo-archive.
+func IsFromArchive(url string) bool {
+	for _, prefix := range [...]string{cdnURL, hubURL, orgURL, newURL, oldURL} {
+		if strings.HasPrefix(url, prefix) {
+			return true
+		}
+	}
+
+	return false
+}
 
 // Data struct contains only the data that we need.
 type Data struct {

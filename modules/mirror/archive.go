@@ -2,7 +2,6 @@ package mirror
 
 import (
 	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/vednoc/go-usercss-parser"
@@ -13,10 +12,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 )
-
-func isArchive(url string) bool {
-	return strings.HasPrefix(url, archive.ArchiveURL)
-}
 
 func setStyleURL(a, b string) string {
 	if a != "" {
@@ -95,7 +90,7 @@ func check(wg *sync.WaitGroup, batch models.Style) {
 	if batch.MirrorMeta {
 		url := setStyleURL(batch.MirrorURL, batch.Original)
 
-		if isArchive(url) {
+		if archive.IsFromArchive(url) {
 			s, err := archive.ImportFromArchive(url, models.APIUser{})
 			if err != nil {
 				log.Warn.Printf("Failed to import %s from archive: %s\n", url, err.Error())
