@@ -8,14 +8,14 @@ import (
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/archive"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
-	"userstyles.world/utils"
 )
 
 func isArchive(url string) bool {
-	return strings.HasPrefix(url, utils.ArchiveURL)
+	return strings.HasPrefix(url, archive.ArchiveURL)
 }
 
 func setStyleURL(a, b string) string {
@@ -96,7 +96,7 @@ func check(wg *sync.WaitGroup, batch models.Style) {
 		url := setStyleURL(batch.MirrorURL, batch.Original)
 
 		if isArchive(url) {
-			s, err := utils.ImportFromArchive(url, models.APIUser{})
+			s, err := archive.ImportFromArchive(url, models.APIUser{})
 			if err != nil {
 				log.Warn.Printf("Failed to import %s from archive: %s\n", url, err.Error())
 				return

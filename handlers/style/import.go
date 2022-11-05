@@ -10,10 +10,10 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/archive"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
-	"userstyles.world/utils"
 )
 
 func ImportGet(c *fiber.Ctx) error {
@@ -39,8 +39,8 @@ func ImportPost(c *fiber.Ctx) error {
 	}
 
 	// Check if userstyle is imported from USo-archive.
-	if strings.HasPrefix(r, utils.ArchiveURL) {
-		style, err := utils.ImportFromArchive(r, *u)
+	if strings.HasPrefix(r, archive.ArchiveURL) {
+		style, err := archive.ImportFromArchive(r, *u)
 		if err != nil {
 			return c.Render("err", fiber.Map{
 				"Title": err,
