@@ -4,10 +4,8 @@ import (
 	"testing"
 
 	"github.com/jarcoal/httpmock"
-	"userstyles.world/models"
-	"userstyles.world/modules/errors"
 
-	libError "errors"
+	"userstyles.world/models"
 )
 
 func TestIsFromArchive(t *testing.T) {
@@ -68,28 +66,28 @@ func TestArchiveImporting(t *testing.T) {
 	}
 }
 
-func TestExtractingID(t *testing.T) {
+func TestExtractID(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		desc     string
-		a        string
-		expected any
+		name, input, expected string
 	}{
-		{"TestCorrectURL", StyleURL + "123.user.css", "123"},
-		{"TestMaybeCorrectURL", StyleURL + "-123.user.css", "-123"},
-		{"TestIncorrectURL", "What_Even-Is  This?!", errors.ErrStyleNotFromUSO},
+		{"valid ID", ArchiveURL + "usercss/1.user.css", "1"},
+		{"invalid ID", ArchiveURL + "usercss/-1.user.css", ""},
+		{"bad input", ArchiveURL + "foo bar baz", ""},
 	}
 
 	for _, c := range cases {
-		actual, err := extractID(c.a)
-		if expecErr, ok := c.expected.(error); ok {
-			if !libError.Is(err, expecErr) {
-				t.Errorf("%s: Expected error %v, got %v", c.desc, expecErr, err)
+		t.Run(c.name, func(t *testing.T) {
+			got, err := extractID(c.input)
+			if err != nil && err != ErrFailedToExtractID {
+				t.Errorf("got: %s\n", err)
+				t.Errorf("exp: %s\n", ErrFailedToExtractID)
 			}
-		} else if actual != c.expected {
-			t.Fatalf("%s: expected: %s got: %s",
-				c.desc, c.expected, actual)
-		}
+			if got != c.expected {
+				t.Errorf("got: %s\n", got)
+				t.Errorf("exp: %s\n", c.expected)
+			}
+		})
 	}
 }

@@ -2,8 +2,10 @@ package archive
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/vednoc/go-usercss-parser"
@@ -24,6 +26,14 @@ const (
 	orgURL = "https://raw.githubusercontent.com/uso-archive/data/flomaster/data/"
 	oldURL = "https://uso-archive.surge.sh/"
 	newURL = "https://uso.kkx.one/style/"
+)
+
+var (
+	// ErrFailedToExtractID returns an error if no ID has been extracted.
+	ErrFailedToExtractID = fmt.Errorf("failed to extract ID")
+
+	// idRe holds a regexp for extracting style IDs.
+	idRe = regexp.MustCompile(`.*?/(\?style[=/])?(\d+)(\.user\.css)?$`)
 )
 
 // IsFromArchive checks whether a userstyle comes from a USo-archive.
@@ -99,16 +109,14 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	return s, nil
 }
 
+// extractID tries to extract ID from a provided URL.
 func extractID(url string) (string, error) {
-	if !strings.HasPrefix(url, ArchiveURL) {
-		return "", errors.ErrStyleNotFromUSO
+	s := idRe.ReplaceAllString(url, "$2")
+	if s == url {
+		return "", ErrFailedToExtractID
 	}
 
-	// Trim everything except style id.
-	url = strings.TrimPrefix(url, StyleURL)
-	url = strings.TrimSuffix(url, ".user.css")
-
-	return url, nil
+	return s, nil
 }
 
 func fetchJSON(id string) ([]byte, error) {
