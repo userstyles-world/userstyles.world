@@ -31,6 +31,64 @@ func TestIsFromArchive(t *testing.T) {
 	}
 }
 
+func TestRewriteURL(t *testing.T) {
+	t.Parallel()
+
+	cases := []struct {
+		name, input, expected string
+	}{
+		{
+			"USw URL",
+			"https://userstyles.world/api/style/1.user.css",
+			"https://userstyles.world/api/style/1.user.css",
+		},
+		{
+			"Bad URL",
+			"https://cdn.jsdelivr.net/gh/33kk/uso-archive@flomaster/data/usercss/-1.user.css",
+			"",
+		},
+		{
+			"CDN URL",
+			"https://cdn.jsdelivr.net/gh/33kk/uso-archive@flomaster/data/usercss/1.user.css",
+			"https://raw.githubusercontent.com/uso-archive/data/flomaster/data/usercss/1.user.css",
+		},
+		{
+			"Hub URL",
+			"https://raw.githubusercontent.com/33kk/uso-archive/flomaster/data/usercss/1.user.css",
+			"https://raw.githubusercontent.com/uso-archive/data/flomaster/data/usercss/1.user.css",
+		},
+		{
+			"Org URL",
+			"https://raw.githubusercontent.com/uso-archive/data/flomaster/data/usercss/1.user.css",
+			"https://raw.githubusercontent.com/uso-archive/data/flomaster/data/usercss/1.user.css",
+		},
+		{
+			"Old URL",
+			"https://uso-archive.surge.sh/?style=1",
+			"https://raw.githubusercontent.com/uso-archive/data/flomaster/data/usercss/1.user.css",
+		},
+		{
+			"New URL",
+			"https://uso.kkx.one/style/1",
+			"https://raw.githubusercontent.com/uso-archive/data/flomaster/data/usercss/1.user.css",
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			got, err := RewriteURL(c.input)
+			if err != nil && err != ErrFailedToExtractID {
+				t.Errorf("got: %s\n", err)
+				t.Errorf("exp: %s\n", ErrFailedToExtractID)
+			}
+			if got != c.expected {
+				t.Errorf("got: %s", got)
+				t.Errorf("exp: %s", c.expected)
+			}
+		})
+	}
+}
+
 func TestArchiveImporting(t *testing.T) {
 	t.Parallel()
 	httpmock.Activate()

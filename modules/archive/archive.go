@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	ArchiveURL = "https://cdn.jsdelivr.net/gh/33kk/uso-archive@flomaster/data/"
+	ArchiveURL = orgURL
 	DataURL    = ArchiveURL + "styles/"
 	StyleURL   = ArchiveURL + "usercss/"
 	PreviewURL = ArchiveURL + "screenshots/"
@@ -45,6 +45,20 @@ func IsFromArchive(url string) bool {
 	}
 
 	return false
+}
+
+// RewriteURL consolidates disparate URLs that point to USo-archive.
+func RewriteURL(url string) (string, error) {
+	if !strings.HasPrefix(url, orgURL) && IsFromArchive(url) {
+		id, err := extractID(url)
+		if err != nil {
+			return "", err
+		}
+
+		return fmt.Sprintf("%s%s.user.css", StyleURL, id), nil
+	}
+
+	return url, nil
 }
 
 // Data struct contains only the data that we need.
