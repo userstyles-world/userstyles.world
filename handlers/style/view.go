@@ -16,7 +16,7 @@ import (
 
 func GetStylePage(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id, name := strings.Clone(c.Params("id")), c.Params("name")
+	id := c.Params("id")
 
 	// Check if style exists.
 	data, err := models.GetStyleByID(id)
@@ -32,15 +32,25 @@ func GetStylePage(c *fiber.Ctx) error {
 	slug := strutils.SlugifyURL(data.Name)
 
 	// Always redirect to correct slugged URL.
-	if name != slug {
+	if c.Params("name") != slug {
 		url := fmt.Sprintf("/style/%s/%s", id, slug)
 		return c.Redirect(url, fiber.StatusSeeOther)
 	}
 
+	args := fiber.Map{
+		"User":       u,
+		"Title":      data.Name,
+		"Style":      data,
+		"URL":        c.BaseURL() + c.Path(),
+		"Canonical":  "style/" + id + "/" + slug,
+		"RenderMeta": true,
+	}
+
 	// Upsert style views.
-	ua := string(c.Context().UserAgent())
-	if strings.Contains(ua, "Mastodon") || strings.Contains(ua, "Pleroma") {
-		log.Info.Printf("Ignored Fediverse bot on style %s: %q\n", id, ua)
+	ua := strings.ToLower(string(c.Context().UserAgent()))
+	if strings.Contains(ua, "bot") {
+		log.Info.Printf("Ignored a bot on style %s: %q\n", id, ua)
+		return c.Render("style/view", args)
 	} else {
 		cache.ViewStats.Add(c.IP() + " " + id)
 	}
@@ -59,25 +69,18 @@ func GetStylePage(c *fiber.Ctx) error {
 			log.Warn.Printf("Failed to render history for style %s: %s\n", id, err.Error())
 		}
 	}
+	args["DailyHistory"] = dailyHistory
+	args["TotalHistory"] = totalHistory
 
 	reviews, err := new(models.Review).FindAllForStyle(id)
 	if err != nil {
 		log.Warn.Printf("Failed to get reviews for style %s: %v\n", id, err.Error())
 	}
+	args["Reviews"] = reviews
 
 	// Get stats.
 	stats := models.GetStyleStatistics(id)
+	args["Stats"] = stats
 
-	return c.Render("style/view", fiber.Map{
-		"Title":        data.Name,
-		"User":         u,
-		"Style":        data,
-		"Stats":        stats,
-		"URL":          c.BaseURL() + c.Path(),
-		"DailyHistory": dailyHistory,
-		"TotalHistory": totalHistory,
-		"Reviews":      reviews,
-		"Canonical":    "style/" + id + "/" + slug,
-		"RenderMeta":   true,
-	})
+	return c.Render("style/view", args)
 }
