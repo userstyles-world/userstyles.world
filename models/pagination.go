@@ -39,12 +39,18 @@ func (p *Pagination) ConvPage(s string) error {
 	return nil
 }
 
-func (p *Pagination) CalcItems(c, i int) {
+func (p *Pagination) CalcItems(total, max int) {
+	if total == 0 {
+		p.Max = 1
+		p.Min = 1
+		return
+	}
+
 	p.Min = 1
 
 	// Calculate max page and remainder.
-	p.Max = c / i
-	p.Rem = c % i
+	p.Max = total / max
+	p.Rem = total % max
 	if p.Rem > 0 {
 		p.Max++
 	}

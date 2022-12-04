@@ -96,5 +96,7 @@
         {{ end }}
     </section>
 
-    {{ with .P }}{{ template "partials/pagination" . }}{{ end }}
+    {{ if ne .P.Min .P.Max }}
+        {{ template "partials/pagination" .P }}
+    {{ end }}
 </div>

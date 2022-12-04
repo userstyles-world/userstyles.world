@@ -49,6 +49,10 @@ func Profile(c *fiber.Ctx) error {
 	p.CalcItems(count, size)
 	p.Sort = c.Query("sort")
 	p.Path = c.Path()
+	if p.OutOfBounds() {
+		return c.Redirect(p.URL(p.Now), 302)
+	}
+
 	styles, err := storage.FindStyleCardsPaginatedForUserID(
 		p.Now, size, p.SortStyles(), profile.ID)
 	if err != nil {
