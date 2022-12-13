@@ -9,7 +9,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/charts"
+	// "userstyles.world/modules/charts"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils/strutils"
 )
@@ -55,6 +55,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		cache.ViewStats.Add(c.IP() + " " + id)
 	}
 
+    /*
 	// Get history data.
 	history, err := models.GetStyleHistory(id)
 	if err != nil {
@@ -71,6 +72,7 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 	args["DailyHistory"] = dailyHistory
 	args["TotalHistory"] = totalHistory
+    */
 
 	reviews, err := new(models.Review).FindAllForStyle(id)
 	if err != nil {
