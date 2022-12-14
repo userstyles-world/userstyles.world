@@ -7,6 +7,7 @@ import (
 	lib "github.com/golang-jwt/jwt"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
 	"userstyles.world/utils"
 )
@@ -31,6 +32,11 @@ var Protected = func(c *fiber.Ctx) error {
 }
 
 var Admin = func(c *fiber.Ctx) error {
+	// Bypass checks if monitor is enabled and request is a local IP address.
+	if config.PerformanceMonitor && utils.IsLoopback(c.IP()) {
+		return c.Next()
+	}
+
 	u, ok := User(c)
 	if !ok || !u.IsAdmin() {
 		return c.Redirect("/login?r=" + url.QueryEscape(c.Path()))
