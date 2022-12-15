@@ -24,3 +24,14 @@ func IsLoopback(addr string) bool {
 	}
 	return true
 }
+
+// IsLocal returns if the address resolves to a local address in production.
+func IsLocal(production bool, addr string) bool {
+	// Because IP addresses are proxied in production, Fiber is returning an
+	// empty string if "X-Real-IP" header is absent.  Since our main use-case
+	// for this is to run `go tool pprof`, we can ignore this check altogether.
+	if production && addr == "" {
+		return true
+	}
+	return IsLoopback(addr)
+}
