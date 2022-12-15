@@ -48,8 +48,8 @@ func LoginPost(c *fiber.Ctx) error {
 		}
 
 		return c.Render("user/login", fiber.Map{
-			"Title":  "Login failed",
-			"Errors": "Failed to login. Make sure your input is correct.",
+			"Title": "Login failed",
+			"Error": "Failed to login. Please provide valid data.",
 		})
 	}
 
