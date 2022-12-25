@@ -2,6 +2,7 @@ package oauthlogin
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"strings"
 
@@ -19,11 +20,13 @@ const (
 )
 
 type OAuthTokenResponse struct {
-	AccesToken string `json:"access_token"`
-	TokenType  string `json:"token_type"`
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
 }
 
 type userResponse struct {
+	ID int `json:"id"`
+
 	// Gitlab returns "username" for the username
 	UserName string `json:"username"`
 	// Github/Gitea-based returns "login" for the username
@@ -35,8 +38,19 @@ type userResponse struct {
 }
 
 type OAuthResponse struct {
-	Email    string
-	Username string
+	Provider    Service
+	ExternalID  int
+	AccessToken string
+	Email       string
+	Username    string
+	RawData     string
+}
+
+func (o *OAuthResponse) normalize(username string) {
+	if username != "" {
+		o.Username = username
+	}
+	o.Username = strings.ToLower(o.Username)
 }
 
 type emailResponseStruct struct {
@@ -169,15 +183,22 @@ func CallbackOAuth(tempCode, state, serviceType string) (OAuthResponse, error) {
 		return OAuthResponse{}, err
 	}
 	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		return OAuthResponse{}, errors.ErrNot200Ok
-	}
-	var responseJSON OAuthTokenResponse
 
-	err = json.NewDecoder(res.Body).Decode(&responseJSON)
+	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
+
+	if res.StatusCode != 200 {
+		return OAuthResponse{}, errors.ErrNot200Ok
+	}
+
+	var responseJSON OAuthTokenResponse
+	err = json.Unmarshal(resBody, &responseJSON)
+	if err != nil {
+		return OAuthResponse{}, err
+	}
+
 	// Move the collecting of information.
 	return getUserInformation(service, responseJSON)
 }
@@ -195,7 +216,7 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 		userInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
 	}
 
-	userInformationReq.Header.Set("Authorization", responseJSON.TokenType+" "+responseJSON.AccesToken)
+	userInformationReq.Header.Set("Authorization", responseJSON.TokenType+" "+responseJSON.AccessToken)
 
 	resUserInformation, err := client.Do(userInformationReq)
 	if err != nil {
@@ -207,25 +228,31 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 	}
 
 	var userResponseJSON userResponse
-	var oauthResponse OAuthResponse
-	err = json.NewDecoder(resUserInformation.Body).Decode(&userResponseJSON)
+	resBody, err := io.ReadAll(resUserInformation.Body)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
 
-	oauthResponse.Username = userResponseJSON.UserName
-	if userResponseJSON.LoginName != "" {
-		oauthResponse.Username = userResponseJSON.LoginName
+	err = json.Unmarshal(resBody, &userResponseJSON)
+	if err != nil {
+		return OAuthResponse{}, err
 	}
-	oauthResponse.Username = strings.ToLower(oauthResponse.Username)
 
-	// Because of gitlab oauth's implementation we already receive the email at this point.
-	// Meaning we don't need to do another request.
+	oauthResponse := OAuthResponse{
+		Provider:    service.getServiceType(),
+		ExternalID:  userResponseJSON.ID,
+		Email:       userResponseJSON.Email,
+		Username:    userResponseJSON.UserName,
+		AccessToken: responseJSON.AccessToken,
+		RawData:     string(resBody),
+	}
+	oauthResponse.normalize(userResponseJSON.LoginName)
+
+	// GitLab returns email address early, so we can return here.
 	if service.getServiceType() == GitlabService {
 		if userResponseJSON.Email == "" {
 			return OAuthResponse{}, errors.ErrPrimaryEmailNotVerified
 		}
-		oauthResponse.Email = userResponseJSON.Email
 		return oauthResponse, nil
 	}
 
@@ -251,7 +278,7 @@ func getUserEmail(service ProviderFunctions, responseJSON OAuthTokenResponse) (s
 		emailInformationReq.Header.Set("Accept", "application/vnd.github.v3+json")
 	}
 
-	emailInformationReq.Header.Set("Authorization", responseJSON.TokenType+" "+responseJSON.AccesToken)
+	emailInformationReq.Header.Set("Authorization", responseJSON.TokenType+" "+responseJSON.AccessToken)
 
 	resEmailInformation, err := client.Do(emailInformationReq)
 	if err != nil {

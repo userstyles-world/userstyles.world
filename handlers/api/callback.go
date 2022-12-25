@@ -1,10 +1,11 @@
 package api
 
 import (
-	"strings"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
@@ -38,7 +39,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	redirectCode, tempCode, state := c.Params("rcode"), c.Query("code"), c.Query("state")
 	if redirectCode == "" || tempCode == "" {
 		log.Info.Println("No redirectCode or tempCode was detected.")
-		// Give them the bad enpoint error.
+		// Give them the bad endpoint error.
 		return c.Next()
 	}
 	var service string
@@ -75,32 +76,9 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	user, err := models.FindUserByNameOrEmail(response.Username, response.Email)
+	user, err := findOrMigrateUser(response)
 	if err != nil {
-		if err.Error() != "User not found." && err.Error() != "record not found" {
-			return c.Next()
-		}
-		user = &models.User{
-			Username:      response.Username,
-			Email:         response.Email,
-			Role:          models.Regular,
-			OAuthProvider: service,
-		}
-		regErr := database.Conn.Create(user)
-
-		if regErr.Error != nil {
-			log.Warn.Printf("Failed to register %s: %s", response.Username, regErr.Error)
-			return c.Status(fiber.StatusInternalServerError).
-				JSON(fiber.Map{
-					"data": "Internal Error.",
-				})
-		}
-	}
-
-	// TODO: Simplify this logic.
-	if (user.OAuthProvider == "none" || user.OAuthProvider != service) &&
-		!strings.EqualFold(getSocialMediaValue(user, service), response.Username) {
-		log.Warn.Println("User detected but the social media value wasn't set of this user.")
+		log.Warn.Printf("Failed to find or migrate %q: %s\n", response.Username, err)
 		return c.Next()
 	}
 
@@ -119,6 +97,10 @@ func CallbackGet(c *fiber.Ctx) error {
 			})
 	}
 
+	if err := user.UpdateLastLogin(); err != nil {
+		log.Database.Printf("Failed to update last_login for %d\n", user.ID)
+	}
+
 	c.Cookie(&fiber.Cookie{
 		Name:     fiber.HeaderAuthorization,
 		Value:    t,
@@ -130,4 +112,49 @@ func CallbackGet(c *fiber.Ctx) error {
 	})
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
+}
+
+func findOrMigrateUser(res oauthlogin.OAuthResponse) (models.User, error) {
+	var eu models.ExternalUser
+	err := database.Conn.
+		Preload("User").Model(eu).
+		Where("provider = ?", string(res.Provider)).
+		Where("external_id = ?", res.ExternalID).
+		First(&eu).Error
+
+	if err == gorm.ErrRecordNotFound {
+		err = database.Conn.First(&eu.User, "username = ?", res.Username).Error
+		if err != nil {
+			return models.User{}, err
+		}
+
+		eu.ExternalID = strconv.Itoa(res.ExternalID)
+		eu.Provider = string(res.Provider)
+		eu.Email = res.Email
+		eu.Username = res.Username
+		eu.ExternalURL = setExternalURL(res.Provider, res.Username)
+		eu.AccessToken = res.AccessToken
+		eu.RawData = res.RawData
+
+		if err = database.Conn.Create(&eu).Error; err != nil {
+			return models.User{}, err
+		}
+	} else if err != nil {
+		return models.User{}, err
+	}
+
+	return eu.User, nil
+}
+
+func setExternalURL(service oauthlogin.Service, username string) string {
+	switch service {
+	case oauthlogin.GithubService:
+		return "https://github.com/" + username
+	case oauthlogin.GitlabService:
+		return "https://gitlab.com/" + username
+	case oauthlogin.CodebergService:
+		return "https://codeberg.org/" + username
+	default:
+		return ""
+	}
 }

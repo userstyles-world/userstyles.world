@@ -14,7 +14,7 @@ func Routes(app *fiber.App) {
 	r.Get("/style/stats/:id/:type?", GetStyleStats)
 	r.Get("/index/:format?", GetStyleIndex)
 	r.Get("/search/:query", GetSearchResult)
-	// r.Get("/callback/:rcode", CallbackGet)
+	r.Get("/callback/:rcode", CallbackGet)
 	r.Get("/user", ProtectedAPI, UserGet)
 	r.Get("/user/:identifier", SpecificUserGet)
 	r.Get("/styles", ProtectedAPI, StylesGet)
