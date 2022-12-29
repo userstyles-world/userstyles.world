@@ -16,19 +16,6 @@ import (
 	"userstyles.world/utils"
 )
 
-func getSocialMediaValue(user *models.User, social string) string {
-	switch social {
-	case "github":
-		return user.Socials.Github
-	case "gitlab":
-		return user.Socials.Gitlab
-	case "codeberg":
-		return user.Socials.Codeberg
-	default:
-		return ""
-	}
-}
-
 var allowedErrosList = []error{
 	errors.ErrPrimaryEmailNotVerified,
 	errors.ErrNoServiceDetected,
