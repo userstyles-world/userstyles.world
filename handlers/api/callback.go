@@ -101,7 +101,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }
 
-func findOrMigrateUser(res oauthlogin.OAuthResponse) (models.User, error) {
+func findOrMigrateUser(res oauthlogin.OAuthResponse) (*models.User, error) {
 	var eu models.ExternalUser
 	err := database.Conn.
 		Preload("User").Model(eu).
@@ -112,7 +112,7 @@ func findOrMigrateUser(res oauthlogin.OAuthResponse) (models.User, error) {
 	if err == gorm.ErrRecordNotFound {
 		err = database.Conn.First(&eu.User, "username = ?", res.Username).Error
 		if err != nil {
-			return models.User{}, err
+			return nil, err
 		}
 
 		eu.ExternalID = strconv.Itoa(res.ExternalID)
@@ -124,13 +124,13 @@ func findOrMigrateUser(res oauthlogin.OAuthResponse) (models.User, error) {
 		eu.RawData = res.RawData
 
 		if err = database.Conn.Create(&eu).Error; err != nil {
-			return models.User{}, err
+			return nil, err
 		}
 	} else if err != nil {
-		return models.User{}, err
+		return nil, err
 	}
 
-	return eu.User, nil
+	return &eu.User, nil
 }
 
 func setExternalURL(service oauthlogin.Service, username string) string {
