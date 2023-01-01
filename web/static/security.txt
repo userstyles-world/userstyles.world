@@ -1,5 +1,5 @@
 Contact: mailto:security@userstyles.world
-Expires: 2021-12-14T23:00:00.000Z
+Expires: 2024-01-01T12:00:00.000Z
 Encryption: https://userstyles.world/security.gpg
 Preferred-Languages: en
 Canonical: https://userstyles.world/security.txt
@@ -7,22 +7,12 @@ Policy: https://userstyles.world/security-policy
 
 -----BEGIN PGP MESSAGE-----
 
-owGbwMvMwMX4wmCF+nPv65WMaxm5kniKU5NLizJLKvVKKkoSGZavds7PK0lMLrFS
-yE3MzCnJt4LJO5QWpxYVl1TmpBbrlecX5aRwuVYUZBalFlspGBkYGeoaGukamoQY
-GVsZGACRnoGBQRSXa15yUWVBSWZ+npVCRklJQbGVvj66MfpwB6QXpHMFFKWmpRYV
-pabo+iTmpZcmpoPMT83jck7My8/LTE7MIcYgoE+4AvJzMpMriVCtWwBWydXJZMzC
-wMjFICumyPJhfkzNJx3t0It1N9pgocXKBAodBi5OAZjIlp38v1kO35d6GqPfz8Hc
-kHH3MoPeNtvCu1tvc3IlZK1X+7mIK1FZ5OlM4439h86UOGR4SotuO3frqNXlT7zb
-LObt4OF16Eg8HCsldjnvZMOPuzwsAgXvrGWyRR6r3Snzj55Y5umStmbHTOclvCyt
-qzxK7/Py876yZV3y6rx+79ZFhwJn1UzVuKEp+5JZue7NxntCHRftciP1bpx6G73p
-at/u2KPtZe8aT3OwO2k9aDBM+ez2xYXZNKvxWUhQ98bpV6PmybMpxNZYpR/ju7Yx
-411Zw8JrlV/aAv+pbryryjZXz1xF58nNw0KtTqmnJl1sTn8f0mNptuif/Ko5T09w
-lBjGnA7iW7j5eGsj/4t+R8vDOlr2WYoM6y3eHWBSexG91o79weMJkupT90lMe3gk
-de3hR0L5K05kz8yak5cQzHlh0tov1w7mT12rfqJ0VsW9SSurKzbIXLB5l/d7b/Xm
-sy+2PbhwvMD5vEjMnGk3l+UZcuwq/+Ag/V8lf9vU79fm7z3a7vAmmKm/KfbCLZtA
-7VeKOvcXlhyMWfDQ985hz68CSt+fHLtz4+4M/jT7Uumc1Cdn+18c/lCx+bbuK3E1
-PV4pkeq9Z9rvBb3d/tFWjMPg4IKzObdXvbj0LcZpUf6Eul8SiqUsFVd69m67r/Oe
-L/jgq56N5ntyckMfzf1ySuiQedR7iwP/Hi3wrLzfVLD+QqT0180qObGP4y8Ky13W
-2egCAA==
-=6wYl
+owGbwMvMwCGme4eHTeq/8SLGtYxcSTzFqcmlRZkllXolFSXJ19/6O+fnlSQml1gp
+5CZm5pTkW8HkHUqLU4uKSypzUov1yvOLclK4XCsKMotSi60UjAyMTHQNDIEoxNDI
+ysAAiPQMDAyiuFzzkosqC0oy8/OsFDJKSgqKrfT10Y3RhzsgvSCdK6AoNS21qCg1
+RdcnMS+9NDEdZH5qHpdzYl5+XmZyYg4xBgF9whWQn5OZXEmEat0CsEqujlIWBjEO
+BlkxRRZ+l0cKRUrvQwObDFfDAouVCRQ4DFycAjCR1dIM/+sZO7+Grou68HXznQWT
+/iWv4/m3NOrQ6XkxMSGSU1+Wfo9lZGiXbuG48sqCT7d7qfD1kGXhqlZCFbMPtKUx
+Zv/88+jdTWYA
+=WgIR
 -----END PGP MESSAGE-----
