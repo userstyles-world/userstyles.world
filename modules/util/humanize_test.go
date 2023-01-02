@@ -7,8 +7,8 @@ var relNumberCases = []struct {
 	input    int
 	expected string
 }{
-	{"hundreds of thousands", 777777, "777.7k"},
-	{"tens of thousands", 42069, "42k"},
+	{"hundreds of thousands", 777777, "777.8k"},
+	{"tens of thousands", 42069, "42.1k"},
 	{"thousands", 1337, "1.3k"},
 	{"hundreds", 420, "420"},
 	{"tens", 42, "42"},
