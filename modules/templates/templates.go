@@ -13,6 +13,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/markdown"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils/strutils"
 )
 
@@ -62,7 +63,7 @@ func New(views http.FileSystem) *html.Engine {
 	engine.AddFunc("comma", humanize.Comma)
 
 	engine.AddFunc("num", func(i int64) string {
-		return strutils.HumanizeNumber(int(i))
+		return util.RelNumber(int(i))
 	})
 
 	engine.AddFunc("proxy", func(src, kind string, id uint) string {
