@@ -6,6 +6,8 @@ import (
 	"unsafe"
 )
 
+const nSmalls = 100 // taken from strconv/itoa.go
+
 var relNumberPool = sync.Pool{
 	New: func() any {
 		buf := make([]byte, 0, 10)
@@ -15,6 +17,10 @@ var relNumberPool = sync.Pool{
 
 // RelNumber returns a relative representation of a number i.
 func RelNumber(i int64) string {
+	if i < nSmalls {
+		return strconv.FormatInt(i, 10)
+	}
+
 	bp := relNumberPool.Get().(*[]byte)
 	defer relNumberPool.Put(bp)
 	b := (*bp)[:0]
