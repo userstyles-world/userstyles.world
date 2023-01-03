@@ -4,7 +4,7 @@ import "testing"
 
 var relNumberCases = []struct {
 	name     string
-	input    int
+	input    int64
 	expected string
 }{
 	{"hundreds of thousands", 777777, "777.8k"},
