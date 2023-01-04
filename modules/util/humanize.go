@@ -27,10 +27,10 @@ func RelNumber(i int64) string {
 
 	switch {
 	case i > 1_000_000:
-		b = strconv.AppendFloat(b, float64(i)/1_000_000, 'f', 1, 64)
+		b = strconv.AppendFloat(b, float64(i)/1_000_000, 'f', 2, 64)
 		b = append(b, 'M')
 	case i >= 1_000:
-		b = strconv.AppendFloat(b, float64(i)/1_000, 'f', 1, 64)
+		b = strconv.AppendFloat(b, float64(i)/1_000, 'f', 2, 64)
 		b = append(b, 'k')
 	default:
 		b = strconv.AppendInt(b, i, 10)
