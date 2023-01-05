@@ -62,9 +62,7 @@ func New(views http.FileSystem) *html.Engine {
 
 	engine.AddFunc("comma", humanize.Comma)
 
-	engine.AddFunc("num", func(i int64) string {
-		return util.RelNumber(i)
-	})
+	engine.AddFunc("num", util.RelNumber)
 
 	engine.AddFunc("proxy", func(src, kind string, id uint) string {
 		return strutils.ProxyResources(src, kind, id)
