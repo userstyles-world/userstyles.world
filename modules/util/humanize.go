@@ -26,7 +26,7 @@ func RelNumber(i int64) string {
 	b := (*bp)[:0]
 
 	switch {
-	case i > 1_000_000:
+	case i >= 1_000_000:
 		b = strconv.AppendFloat(b, float64(i)/1_000_000, 'f', 2, 64)
 		b = append(b, 'M')
 	case i >= 1_000:

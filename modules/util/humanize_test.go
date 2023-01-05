@@ -7,14 +7,15 @@ var relNumberCases = []struct {
 	input    int64
 	expected string
 }{
-	{"hundreds of millions", 777_777_777, "777.78M"},
-	{"tens of millions", 77_777_777, "77.78M"},
-	{"millions", 7_777_777, "7.78M"},
-	{"hundreds of thousands", 777777, "777.78k"},
-	{"tens of thousands", 42069, "42.07k"},
-	{"thousands", 1337, "1.34k"},
-	{"hundreds", 420, "420"},
-	{"tens", 42, "42"},
+	{"100M", 100e6, "100.00M"},
+	{"10M", 10e6, "10.00M"},
+	{"1M", 1e6, "1.00M"},
+	{"100k", 100e3, "100.00k"},
+	{"10k", 42069, "42.07k"},
+	{"1k", 1337, "1.34k"},
+	{"100", 420, "420"},
+	{"10", 42, "42"},
+	{"0", 0, "0"},
 }
 
 func TestRelNumber(t *testing.T) {
