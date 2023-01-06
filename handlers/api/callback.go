@@ -102,21 +102,26 @@ func CallbackGet(c *fiber.Ctx) error {
 }
 
 func findOrMigrateUser(res oauthlogin.OAuthResponse) (*models.User, error) {
+	provider := string(res.Provider)
+
 	var eu models.ExternalUser
 	err := database.Conn.
 		Preload("User").Model(eu).
-		Where("provider = ?", string(res.Provider)).
+		Where("provider = ?", provider).
 		Where("external_id = ?", res.ExternalID).
 		First(&eu).Error
 
 	if err == gorm.ErrRecordNotFound {
-		err = database.Conn.First(&eu.User, "username = ?", res.Username).Error
+		err = database.Conn.
+			Where("o_auth_provider = ?", provider).
+			Where("username = ?", res.Username).
+			First(&eu.User).Error
 		if err != nil {
 			return nil, err
 		}
 
 		eu.ExternalID = strconv.Itoa(res.ExternalID)
-		eu.Provider = string(res.Provider)
+		eu.Provider = provider
 		eu.Email = res.Email
 		eu.Username = res.Username
 		eu.ExternalURL = setExternalURL(res.Provider, res.Username)
