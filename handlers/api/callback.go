@@ -124,7 +124,7 @@ func findOrMigrateUser(res oauthlogin.OAuthResponse) (*models.User, error) {
 		eu.Provider = provider
 		eu.Email = res.Email
 		eu.Username = res.Username
-		eu.ExternalURL = setExternalURL(res.Provider, res.Username)
+		eu.ExternalURL = res.ProfileURL()
 		eu.AccessToken = res.AccessToken
 		eu.RawData = res.RawData
 
@@ -136,17 +136,4 @@ func findOrMigrateUser(res oauthlogin.OAuthResponse) (*models.User, error) {
 	}
 
 	return &eu.User, nil
-}
-
-func setExternalURL(service oauthlogin.Service, username string) string {
-	switch service {
-	case oauthlogin.GithubService:
-		return "https://github.com/" + username
-	case oauthlogin.GitlabService:
-		return "https://gitlab.com/" + username
-	case oauthlogin.CodebergService:
-		return "https://codeberg.org/" + username
-	default:
-		return ""
-	}
 }

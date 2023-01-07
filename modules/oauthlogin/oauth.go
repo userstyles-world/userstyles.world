@@ -53,6 +53,19 @@ func (o *OAuthResponse) normalize(username string) {
 	o.Username = strings.ToLower(o.Username)
 }
 
+func (o *OAuthResponse) ProfileURL() string {
+	switch o.Provider {
+	case GithubService:
+		return "https://github.com/" + o.Username
+	case GitlabService:
+		return "https://gitlab.com/" + o.Username
+	case CodebergService:
+		return "https://codeberg.org/" + o.Username
+	default:
+		return ""
+	}
+}
+
 type emailResponseStruct struct {
 	Email string `json:"email"`
 
