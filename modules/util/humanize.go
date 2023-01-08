@@ -37,7 +37,7 @@ func RelNumber(i int64) string {
 		b = append(b, 'M')
 	case i >= 1e3:
 		b = strconv.AppendFloat(b, float64(i)/1e3, 'f', 2, 64)
-		b = append(b, 'k')
+		b = append(b, 'K')
 	default:
 		b = strconv.AppendInt(b, i, 10)
 	}
