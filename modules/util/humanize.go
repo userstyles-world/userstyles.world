@@ -27,16 +27,16 @@ func RelNumber(i int64) string {
 
 	switch {
 	case i >= 1e12-5e6:
-		b = strconv.AppendFloat(b, float64(i)/1e12, 'f', 2, 64)
+		b = strconv.AppendFloat(b, float64(i)/1e12, 'f', 2, 32)
 		b = append(b, 'T')
 	case i >= 1e9-5e3:
-		b = strconv.AppendFloat(b, float64(i)/1e9, 'f', 2, 64)
+		b = strconv.AppendFloat(b, float64(i)/1e9, 'f', 2, 32)
 		b = append(b, 'B')
 	case i >= 1e6-5:
-		b = strconv.AppendFloat(b, float64(i)/1e6, 'f', 2, 64)
+		b = strconv.AppendFloat(b, float64(i)/1e6, 'f', 2, 32)
 		b = append(b, 'M')
 	case i >= 1e3:
-		b = strconv.AppendFloat(b, float64(i)/1e3, 'f', 2, 64)
+		b = strconv.AppendFloat(b, float64(i)/1e3, 'f', 2, 32)
 		b = append(b, 'K')
 	default:
 		b = strconv.AppendInt(b, i, 10)
