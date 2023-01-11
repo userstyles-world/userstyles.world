@@ -13,7 +13,8 @@ var (
 	linkRe = regexp.MustCompile(`(?mU)src="(http.*)"`)
 )
 
-func SlugifyURL(s string) string {
+// Slug takes in a string s and returns a user- and SEO-friendly URL.
+func Slug(s string) string {
 	// Extract valid characters.
 	parts := slugRe.FindAllString(s, -1)
 

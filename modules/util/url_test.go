@@ -2,7 +2,7 @@ package util
 
 import "testing"
 
-func TestSluggifyURLs(t *testing.T) {
+func TestSlug(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
@@ -19,7 +19,7 @@ func TestSluggifyURLs(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			got := SlugifyURL(c.input)
+			got := Slug(c.input)
 			if got != c.expected {
 				t.Errorf("got: %s\n", got)
 				t.Errorf("exp: %s\n", c.expected)

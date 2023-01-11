@@ -29,7 +29,7 @@ func GetStylePage(c *fiber.Ctx) error {
 
 	// Create slugged URL.
 	// TODO: Refactor after GetStyleByID switches away from APIStyle.
-	slug := util.SlugifyURL(data.Name)
+	slug := util.Slug(data.Name)
 
 	// Always redirect to correct slugged URL.
 	if c.Params("name") != slug {

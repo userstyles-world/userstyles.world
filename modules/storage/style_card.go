@@ -45,9 +45,9 @@ type StyleCard struct {
 // TableName returns which table in database to use with GORM.
 func (StyleCard) TableName() string { return "styles" }
 
-// Slug returns a URL- and SEO-friendly string.
+// Slug returns a user- and SEO-friendly URL.
 func (x StyleCard) Slug() string {
-	return util.SlugifyURL(x.Name)
+	return util.Slug(x.Name)
 }
 
 // StyleURL returns an absolute path to a style.
