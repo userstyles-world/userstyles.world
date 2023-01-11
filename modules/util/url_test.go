@@ -1,31 +1,30 @@
 package util
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestSluggifyURLs(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		desc     string
-		a        string
-		expected string
+		name, input, expected string
 	}{
-		{"TestProperName", "UserStyle Name", "userstyle-name"},
-		{"TestMoreCharacters", "What_Even-Is  This?!", "what-even-is-this"},
-		{"TestExtraCharacters", "(Dark) Something [v1.2.3]", "dark-something-v1-2-3"},
-		{"TextExtraOfEverything", " Please---Get___Some   HELP!!! ", "please-get-some-help"},
-		{"TestTypographicSymbols", "暗い空 Dark Mode", "dark-mode"},
-		{"TestTypographicSymbolsOnly", "暗い空", "default-slug"},
+		{"valid characters", "UserStyle Name", "userstyle-name"},
+		{"invalid characters", "$(@#&($*#@%^#(@)))", "default-slug"},
+		{"more characters", "What_Even-Is  This?!", "what-even-is-this"},
+		{"extra characters", "(Dark) Theme [v1.2.3]", "dark-theme-v1-2-3"},
+		{"many valid characters", "a b c d e f g h i", "a-b-c-d-e-f-g-h-i"},
+		{"mixed typographic symbols", "暗い空 Dark Mode", "dark-mode"},
+		{"only typographic symbols", "暗い空", "default-slug"},
 	}
 
 	for _, c := range cases {
-		actual := SlugifyURL(c.a)
-		if actual != c.expected {
-			t.Fatalf("%s: expected: %s got: %s",
-				c.desc, c.expected, actual)
-		}
+		t.Run(c.name, func(t *testing.T) {
+			got := SlugifyURL(c.input)
+			if got != c.expected {
+				t.Errorf("got: %s\n", got)
+				t.Errorf("exp: %s\n", c.expected)
+			}
+		})
 	}
 }
 
