@@ -11,7 +11,7 @@ import (
 	"userstyles.world/modules/cache"
 	// "userstyles.world/modules/charts"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils/strutils"
+	"userstyles.world/modules/util"
 )
 
 func GetStylePage(c *fiber.Ctx) error {
@@ -29,7 +29,7 @@ func GetStylePage(c *fiber.Ctx) error {
 
 	// Create slugged URL.
 	// TODO: Refactor after GetStyleByID switches away from APIStyle.
-	slug := strutils.SlugifyURL(data.Name)
+	slug := util.SlugifyURL(data.Name)
 
 	// Always redirect to correct slugged URL.
 	if c.Params("name") != slug {

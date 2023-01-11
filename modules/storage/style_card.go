@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"userstyles.world/modules/database"
-	"userstyles.world/utils/strutils"
+	"userstyles.world/modules/util"
 )
 
 const (
@@ -47,7 +47,7 @@ func (StyleCard) TableName() string { return "styles" }
 
 // Slug returns a URL- and SEO-friendly string.
 func (x StyleCard) Slug() string {
-	return strutils.SlugifyURL(x.Name)
+	return util.SlugifyURL(x.Name)
 }
 
 // StyleURL returns an absolute path to a style.
