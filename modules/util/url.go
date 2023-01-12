@@ -6,28 +6,35 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 var (
-	slugRe = regexp.MustCompile(`[a-zA-Z0-9]+`)
 	linkRe = regexp.MustCompile(`(?mU)src="(http.*)"`)
 )
 
 // Slug takes in a string s and returns a user- and SEO-friendly URL.
 func Slug(s string) string {
-	// Extract valid characters.
-	parts := slugRe.FindAllString(s, -1)
+	var b strings.Builder
+	var sep bool
+	for _, c := range s {
+		switch {
+		case (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'):
+			b.WriteRune(unicode.ToLower(c))
+			sep = true
+		case c == ' ' || c == '-' || c == '_' || c == '.':
+			if sep {
+				b.WriteRune('-')
+				sep = false
+			}
+		}
+	}
 
-	// Add default slug for unsupported characters.
-	if len(parts) == 0 {
+	if b.Len() == 0 {
 		return "default-slug"
 	}
 
-	// Join parts and make them lowercase.
-	s = strings.Join(parts, "-")
-	s = strings.ToLower(s)
-
-	return s
+	return b.String()
 }
 
 func QueryUnescape(s string) string {
