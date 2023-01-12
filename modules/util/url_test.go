@@ -2,22 +2,22 @@ package util
 
 import "testing"
 
+var slugCases = []struct {
+	name, input, expected string
+}{
+	{"valid characters", "UserStyle Name", "userstyle-name"},
+	{"invalid characters", "$(@#&($*#@%^#(@)))", "default-slug"},
+	{"more characters", "What_Even-Is  This?!", "what-even-is-this"},
+	{"extra characters", "(Dark) Theme [v1.2.3]", "dark-theme-v1-2-3"},
+	{"many valid characters", "a b c d e f g h i", "a-b-c-d-e-f-g-h-i"},
+	{"mixed typographic symbols", "暗い空 Dark Mode", "dark-mode"},
+	{"only typographic symbols", "暗い空", "default-slug"},
+}
+
 func TestSlug(t *testing.T) {
 	t.Parallel()
 
-	cases := []struct {
-		name, input, expected string
-	}{
-		{"valid characters", "UserStyle Name", "userstyle-name"},
-		{"invalid characters", "$(@#&($*#@%^#(@)))", "default-slug"},
-		{"more characters", "What_Even-Is  This?!", "what-even-is-this"},
-		{"extra characters", "(Dark) Theme [v1.2.3]", "dark-theme-v1-2-3"},
-		{"many valid characters", "a b c d e f g h i", "a-b-c-d-e-f-g-h-i"},
-		{"mixed typographic symbols", "暗い空 Dark Mode", "dark-mode"},
-		{"only typographic symbols", "暗い空", "default-slug"},
-	}
-
-	for _, c := range cases {
+	for _, c := range slugCases {
 		t.Run(c.name, func(t *testing.T) {
 			got := Slug(c.input)
 			if got != c.expected {
@@ -48,5 +48,15 @@ func TestHumanizeNumber(t *testing.T) {
 		if got != c.expected {
 			t.Fatalf("%s: expected: %s got: %s", c.desc, c.expected, got)
 		}
+	}
+}
+
+func BenchmarkSlug(b *testing.B) {
+	for _, c := range slugCases {
+		b.Run(c.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				Slug(c.input)
+			}
+		})
 	}
 }
