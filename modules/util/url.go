@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -35,14 +34,6 @@ func Slug(s string) string {
 	}
 
 	return b.String()
-}
-
-func QueryUnescape(s string) string {
-	s, err := url.QueryUnescape(s)
-	if err != nil {
-		s = err.Error()
-	}
-	return s
 }
 
 func ProxyResources(s, t string, id uint) string {
