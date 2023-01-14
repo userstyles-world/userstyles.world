@@ -4,36 +4,46 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
-	"strings"
+	"sync"
 	"unicode"
+	"unsafe"
 )
 
 var (
-	linkRe = regexp.MustCompile(`(?mU)src="(http.*)"`)
+	linkRe   = regexp.MustCompile(`(?mU)src="(http.*)"`)
+	slugPool = sync.Pool{
+		New: func() any {
+			buf := make([]byte, 0, 256)
+			return &buf
+		},
+	}
 )
 
 // Slug takes in a string s and returns a user- and SEO-friendly URL.
 func Slug(s string) string {
-	var b strings.Builder
+	bp := slugPool.Get().(*[]byte)
+	defer slugPool.Put(bp)
+	b := (*bp)[:0]
+
 	var sep bool
 	for _, c := range s {
 		switch {
 		case (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'):
-			b.WriteRune(unicode.ToLower(c))
+			b = append(b, byte(unicode.ToLower(c)))
 			sep = true
 		case c == ' ' || c == '-' || c == '_' || c == '.':
 			if sep {
-				b.WriteRune('-')
+				b = append(b, '-')
 				sep = false
 			}
 		}
 	}
 
-	if b.Len() == 0 {
+	if len(b) == 0 {
 		return "default-slug"
 	}
 
-	return b.String()
+	return *(*string)(unsafe.Pointer(&b))
 }
 
 func ProxyResources(s, t string, id uint) string {
