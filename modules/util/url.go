@@ -33,11 +33,9 @@ func Slug(s string) string {
 		case (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'):
 			b = append(b, byte(c))
 			sep = true
-		case c == ' ' || c == '-' || c == '_' || c == '.':
-			if sep {
-				b = append(b, '-')
-				sep = false
-			}
+		case (c == ' ' || c == '-' || c == '_' || c == '.') && sep:
+			b = append(b, '-')
+			sep = false
 		}
 	}
 
