@@ -28,26 +28,3 @@ func TestSluggifyURLs(t *testing.T) {
 		}
 	}
 }
-
-func TestHumanizeNumber(t *testing.T) {
-	t.Parallel()
-
-	cases := []struct {
-		desc     string
-		arg      int
-		expected string
-	}{
-		{"Hundreds of thousands", 777777, "777.7k"},
-		{"Tens of thousands", 42069, "42k"},
-		{"Thousands", 1337, "1.3k"},
-		{"Hundreds", 420, "420"},
-		{"Tens", 42, "42"},
-	}
-
-	for _, c := range cases {
-		got := HumanizeNumber(c.arg)
-		if got != c.expected {
-			t.Fatalf("%s: expected: %s got: %s", c.desc, c.expected, got)
-		}
-	}
-}
