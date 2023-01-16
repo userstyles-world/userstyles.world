@@ -1,6 +1,9 @@
 package util
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 var relNumberCases = []struct {
 	name     string
@@ -43,6 +46,31 @@ func BenchmarkRelNumber(b *testing.B) {
 		b.Run(c.name, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				RelNumber(c.input)
+			}
+		})
+	}
+}
+
+var relTimeCases = []struct {
+	name     string
+	input    time.Time
+	expected string
+}{
+	{"now", time.Now(), "just now"},
+	{"seconds", time.Now().Add(-2 * time.Second), "2 seconds ago"},
+	{"minutes", time.Now().Add(-2 * time.Minute), "2 minutes ago"},
+	{"hours", time.Now().Add(-2 * time.Hour), "2 hours ago"},
+}
+
+func TestRelTime(t *testing.T) {
+	t.Parallel()
+
+	for _, c := range relTimeCases {
+		t.Run(c.name, func(t *testing.T) {
+			got := RelTime(c.input)
+			if got != c.expected {
+				t.Errorf("got: %s\n", got)
+				t.Errorf("exp: %s\n", c.expected)
 			}
 		})
 	}

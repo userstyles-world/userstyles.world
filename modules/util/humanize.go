@@ -1,8 +1,10 @@
 package util
 
 import (
+	"fmt"
 	"strconv"
 	"sync"
+	"time"
 	"unsafe"
 )
 
@@ -43,4 +45,30 @@ func RelNumber(i int64) string {
 	}
 
 	return *(*string)(unsafe.Pointer(&b))
+}
+
+// RelTime returns a relative representation of a time t.
+func RelTime(t time.Time) string {
+	var (
+		now     = time.Since(t)
+		hours   = int(now / time.Hour % 60)
+		minutes = int(now / time.Minute % 60)
+		seconds = int(now / time.Second % 60)
+	)
+
+	var s string
+	switch {
+	case hours > 0:
+		s += fmt.Sprintf("%d hours, ", hours)
+	case minutes > 0:
+		s += fmt.Sprintf("%d minutes, ", minutes)
+	case seconds > 0:
+		s += fmt.Sprintf("%d seconds, ", seconds)
+	}
+
+	if s == "" {
+		return "just now"
+	}
+
+	return s[:len(s)-2] + " ago"
 }
