@@ -5,7 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"sync"
-	"unicode"
 	"unsafe"
 )
 
@@ -28,8 +27,11 @@ func Slug(s string) string {
 	var sep bool
 	for _, c := range s {
 		switch {
-		case (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'):
-			b = append(b, byte(unicode.ToLower(c)))
+		case c >= 'A' && c <= 'Z':
+			b = append(b, byte(c|32)) // [:lower:] = [:upper:] | 32
+			sep = true
+		case (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'):
+			b = append(b, byte(c))
 			sep = true
 		case c == ' ' || c == '-' || c == '_' || c == '.':
 			if sep {
