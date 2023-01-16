@@ -3,6 +3,8 @@ package util
 import (
 	"testing"
 	"time"
+
+	"github.com/dustin/go-humanize"
 )
 
 var relNumberCases = []struct {
@@ -71,6 +73,26 @@ func TestRelTime(t *testing.T) {
 			if got != c.expected {
 				t.Errorf("got: %s\n", got)
 				t.Errorf("exp: %s\n", c.expected)
+			}
+		})
+	}
+}
+
+func BenchmarkRelTime(b *testing.B) {
+	for _, c := range relTimeCases {
+		b.Run(c.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				RelTime(c.input)
+			}
+		})
+	}
+}
+
+func BenchmarkHumanizeTime(b *testing.B) {
+	for _, c := range relTimeCases {
+		b.Run(c.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				humanize.Time(c.input)
 			}
 		})
 	}
