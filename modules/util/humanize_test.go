@@ -59,8 +59,11 @@ var relTimeCases = []struct {
 	expected string
 }{
 	{"now", time.Now(), "just now"},
+	{"second", time.Now().Add(-1 * time.Second), "1 second ago"},
 	{"seconds", time.Now().Add(-2 * time.Second), "2 seconds ago"},
+	{"minute", time.Now().Add(-1 * time.Minute), "1 minute ago"},
 	{"minutes", time.Now().Add(-2 * time.Minute), "2 minutes ago"},
+	{"hour", time.Now().Add(-1 * time.Hour), "1 hour ago"},
 	{"hours", time.Now().Add(-2 * time.Hour), "2 hours ago"},
 }
 

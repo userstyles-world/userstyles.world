@@ -47,6 +47,13 @@ func RelNumber(i int64) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
+func plural(i int) string {
+	if i > 1 {
+		return "s"
+	}
+	return ""
+}
+
 // RelTime returns a relative representation of a time t.
 func RelTime(t time.Time) string {
 	var (
@@ -59,11 +66,11 @@ func RelTime(t time.Time) string {
 	var s string
 	switch {
 	case hours > 0:
-		s += fmt.Sprintf("%d hours, ", hours)
+		s += fmt.Sprintf("%d hour%s, ", hours, plural(hours))
 	case minutes > 0:
-		s += fmt.Sprintf("%d minutes, ", minutes)
+		s += fmt.Sprintf("%d minute%s, ", minutes, plural(minutes))
 	case seconds > 0:
-		s += fmt.Sprintf("%d seconds, ", seconds)
+		s += fmt.Sprintf("%d second%s, ", seconds, plural(seconds))
 	}
 
 	if s == "" {
