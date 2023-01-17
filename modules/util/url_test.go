@@ -61,3 +61,56 @@ func BenchmarkSlug(b *testing.B) {
 		})
 	}
 }
+
+var proxyCases = []struct {
+	name     string
+	link     string
+	kind     string
+	id       uint
+	expected string
+}{
+	{
+		"example text",
+		"<h1>Hello, World!<h1>", "", 0,
+		"<h1>Hello, World!<h1>",
+	},
+	{
+		"example image",
+		`<img src="https://example.com/foo.png">`, "style", 1,
+		`<img src="/proxy?link=https://example.com/foo.png&type=style&id=1" loading="lazy">`,
+	},
+	{
+		"oddly formatted example image",
+		`<img  SRC  = " HTTP://EXAMPLE.COM/foo.png  " >`, "profile", 1,
+		`<img  src="/proxy?link=HTTP://EXAMPLE.COM/foo.png&type=profile&id=1" loading="lazy" >`,
+	},
+	{
+		"multiple example image",
+		`<h1>hi</h1><img src="https://example.com/foo.png"><img src="https://example.com/bar.png">`, "style", 1,
+		`<h1>hi</h1><img src="/proxy?link=https://example.com/foo.png&type=style&id=1" loading="lazy"><img src="/proxy?link=https://example.com/bar.png&type=style&id=1" loading="lazy">`,
+	},
+}
+
+func TestProxyResources(t *testing.T) {
+	t.Parallel()
+
+	for _, c := range proxyCases {
+		t.Run(c.name, func(t *testing.T) {
+			got := ProxyResources(c.link, c.kind, c.id)
+			if got != c.expected {
+				t.Errorf("got: %s\n", got)
+				t.Errorf("exp: %s\n", c.expected)
+			}
+		})
+	}
+}
+
+func BenchmarkProxyResources(b *testing.B) {
+	for _, c := range proxyCases {
+		b.Run(c.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				ProxyResources(c.link, c.kind, c.id)
+			}
+		})
+	}
+}

@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	linkRe   = regexp.MustCompile(`(?mU)src="(http.*)"`)
+	linkRe   = regexp.MustCompile(`(?imU)src\s*=\s*['"]\s*(http.*)\s*['"]`)
 	slugPool = sync.Pool{
 		New: func() any {
 			buf := make([]byte, 0, 256)
@@ -46,6 +46,7 @@ func Slug(s string) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
+// ProxyResources takes in external images and stores them locally.
 func ProxyResources(s, t string, id uint) string {
 	sub := fmt.Sprintf(`src="/proxy?link=$1&type=%s&id=%d" loading="lazy"`, t, id)
 	return linkRe.ReplaceAllString(s, sub)
