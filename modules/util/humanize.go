@@ -64,12 +64,13 @@ func RelTime(t time.Time) string {
 	)
 
 	var s string
-	switch {
-	case hours > 0:
+	if hours > 0 {
 		s += fmt.Sprintf("%d hour%s, ", hours, plural(hours))
-	case minutes > 0:
+	}
+	if minutes > 0 {
 		s += fmt.Sprintf("%d minute%s, ", minutes, plural(minutes))
-	case seconds > 0:
+	}
+	if seconds > 0 {
 		s += fmt.Sprintf("%d second%s, ", seconds, plural(seconds))
 	}
 
