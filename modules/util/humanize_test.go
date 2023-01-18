@@ -67,7 +67,7 @@ var relTimeCases = []struct {
 	{"2h", time.Now().Add(-2 * time.Hour), "2 hours ago"},
 	{"1m9s", time.Now().Add(-69 * time.Second), "1 minute, 9 seconds ago"},
 	{"2h1m", time.Now().Add(-121 * time.Minute), "2 hours, 1 minute ago"},
-	{"2h1m9s", time.Now().Add(-2 * time.Hour).Add(-time.Minute).Add(-9 * time.Second), "2 hours, 1 minute, 9 seconds ago"},
+	{"2h46m", time.Now().Add(-9999 * time.Second), "2 hours, 46 minutes ago"},
 }
 
 func TestRelTime(t *testing.T) {

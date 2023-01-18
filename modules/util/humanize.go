@@ -1,8 +1,8 @@
 package util
 
 import (
-	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 	"unsafe"
@@ -54,29 +54,40 @@ func plural(i int) string {
 	return ""
 }
 
+func buildTime(b *strings.Builder, parts *int, count int, dur string) {
+	if *parts != 2 {
+		b.WriteString(strconv.Itoa(count))
+		b.WriteString(dur)
+		b.WriteString(plural(count))
+		b.WriteString(", ")
+		*parts++
+	}
+}
+
 // RelTime returns a relative representation of a time t.
 func RelTime(t time.Time) string {
 	var (
+		b       = strings.Builder{}
 		now     = time.Since(t)
 		hours   = int(now / time.Hour % 60)
 		minutes = int(now / time.Minute % 60)
 		seconds = int(now / time.Second % 60)
 	)
 
-	var s string
+	var i int
 	if hours > 0 {
-		s += fmt.Sprintf("%d hour%s, ", hours, plural(hours))
+		buildTime(&b, &i, hours, " hour")
 	}
 	if minutes > 0 {
-		s += fmt.Sprintf("%d minute%s, ", minutes, plural(minutes))
+		buildTime(&b, &i, minutes, " minute")
 	}
 	if seconds > 0 {
-		s += fmt.Sprintf("%d second%s, ", seconds, plural(seconds))
+		buildTime(&b, &i, seconds, " second")
 	}
 
-	if s == "" {
+	if b.Len() == 0 {
 		return "just now"
 	}
 
-	return s[:len(s)-2] + " ago"
+	return b.String()[:b.Len()-2] + " ago"
 }
