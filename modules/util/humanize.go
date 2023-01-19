@@ -46,8 +46,9 @@ func RelNumber(i int64) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-func buildTime(b []byte, parts *int, count int, dur string) []byte {
-	*parts++
+const maxParts = 2
+
+func buildTime(b []byte, count int, dur string) []byte {
 	b = strconv.AppendInt(b, int64(count), 10)
 	b = append(b, dur...)
 	if count > 1 {
@@ -62,7 +63,6 @@ func buildTime(b []byte, parts *int, count int, dur string) []byte {
 // RelTime returns a relative representation of a time t.
 func RelTime(t time.Time) string {
 	var (
-		parts   = 0
 		b       = []byte{}
 		now     = time.Since(t)
 		hours   = int(now / time.Hour % 60)
@@ -70,14 +70,18 @@ func RelTime(t time.Time) string {
 		seconds = int(now / time.Second % 60)
 	)
 
-	if hours > 0 && parts != 2 {
-		b = buildTime(b, &parts, hours, " hour")
+	parts := 0
+	if hours > 0 && parts != maxParts {
+		b = buildTime(b, hours, " hour")
+		parts++
 	}
-	if minutes > 0 && parts != 2 {
-		b = buildTime(b, &parts, minutes, " minute")
+	if minutes > 0 && parts != maxParts {
+		b = buildTime(b, minutes, " minute")
+		parts++
 	}
-	if seconds > 0 && parts != 2 {
-		b = buildTime(b, &parts, seconds, " second")
+	if seconds > 0 && parts != maxParts {
+		b = buildTime(b, seconds, " second")
+		parts++
 	}
 
 	if len(b) == 0 {
