@@ -2,7 +2,6 @@ package util
 
 import (
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 	"unsafe"
@@ -47,47 +46,44 @@ func RelNumber(i int64) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-func plural(i int) string {
-	if i > 1 {
-		return "s"
-	}
-	return ""
-}
-
-func buildTime(b *strings.Builder, parts *int, count int, dur string) {
+func buildTime(b []byte, parts *int, count int, dur string) []byte {
 	if *parts != 2 {
-		b.WriteString(strconv.Itoa(count))
-		b.WriteString(dur)
-		b.WriteString(plural(count))
-		b.WriteString(", ")
+		b = strconv.AppendInt(b, int64(count), 10)
+		b = append(b, []byte(dur)...)
+		if count > 1 {
+			b = append(b, 's')
+		}
+		b = append(b, []byte(", ")...)
 		*parts++
 	}
+
+	return b
 }
 
 // RelTime returns a relative representation of a time t.
 func RelTime(t time.Time) string {
 	var (
-		b       = strings.Builder{}
+		i       = 0
+		b       = []byte{}
 		now     = time.Since(t)
 		hours   = int(now / time.Hour % 60)
 		minutes = int(now / time.Minute % 60)
 		seconds = int(now / time.Second % 60)
 	)
 
-	var i int
 	if hours > 0 {
-		buildTime(&b, &i, hours, " hour")
+		b = buildTime(b, &i, hours, " hour")
 	}
 	if minutes > 0 {
-		buildTime(&b, &i, minutes, " minute")
+		b = buildTime(b, &i, minutes, " minute")
 	}
 	if seconds > 0 {
-		buildTime(&b, &i, seconds, " second")
+		b = buildTime(b, &i, seconds, " second")
 	}
 
-	if b.Len() == 0 {
+	if len(b) == 0 {
 		return "just now"
 	}
 
-	return b.String()[:b.Len()-2] + " ago"
+	return string(b[:len(b)-2]) + " ago"
 }
