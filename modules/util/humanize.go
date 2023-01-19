@@ -47,14 +47,13 @@ func RelNumber(i int64) string {
 }
 
 func buildTime(b []byte, parts *int, count int, dur string) []byte {
-	if *parts != 2 {
-		b = strconv.AppendInt(b, int64(count), 10)
-		b = append(b, []byte(dur)...)
-		if count > 1 {
-			b = append(b, 's')
-		}
-		b = append(b, []byte(", ")...)
-		*parts++
+	*parts++
+	b = strconv.AppendInt(b, int64(count), 10)
+	b = append(b, dur...)
+	if count > 1 {
+		b = append(b, "s, "...)
+	} else {
+		b = append(b, ", "...)
 	}
 
 	return b
@@ -63,7 +62,7 @@ func buildTime(b []byte, parts *int, count int, dur string) []byte {
 // RelTime returns a relative representation of a time t.
 func RelTime(t time.Time) string {
 	var (
-		i       = 0
+		parts   = 0
 		b       = []byte{}
 		now     = time.Since(t)
 		hours   = int(now / time.Hour % 60)
@@ -71,19 +70,21 @@ func RelTime(t time.Time) string {
 		seconds = int(now / time.Second % 60)
 	)
 
-	if hours > 0 {
-		b = buildTime(b, &i, hours, " hour")
+	if hours > 0 && parts != 2 {
+		b = buildTime(b, &parts, hours, " hour")
 	}
-	if minutes > 0 {
-		b = buildTime(b, &i, minutes, " minute")
+	if minutes > 0 && parts != 2 {
+		b = buildTime(b, &parts, minutes, " minute")
 	}
-	if seconds > 0 {
-		b = buildTime(b, &i, seconds, " second")
+	if seconds > 0 && parts != 2 {
+		b = buildTime(b, &parts, seconds, " second")
 	}
 
 	if len(b) == 0 {
 		return "just now"
 	}
 
-	return string(b[:len(b)-2]) + " ago"
+	b = append(b[:len(b)-2], " ago"...)
+
+	return string(b)
 }
