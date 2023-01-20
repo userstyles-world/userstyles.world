@@ -84,9 +84,7 @@ func New(views http.FileSystem) *html.Engine {
 		return s
 	})
 
-	engine.AddFunc("rel", func(t time.Time) string {
-		return humanize.Time(t)
-	})
+	engine.AddFunc("rel", util.RelTime)
 
 	engine.AddFunc("iso", func(t time.Time) string {
 		return t.Format(time.RFC3339)
