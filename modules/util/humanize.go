@@ -57,6 +57,13 @@ const (
 	year     = 365 * day
 )
 
+var relTimePool = sync.Pool{
+	New: func() any {
+		buf := make([]byte, 0, 30)
+		return &buf
+	},
+}
+
 func buildTime(b []byte, count int, dur string) []byte {
 	b = strconv.AppendInt(b, int64(count), 10)
 	b = append(b, dur...)
@@ -71,7 +78,10 @@ func buildTime(b []byte, count int, dur string) []byte {
 
 // RelTime returns a relative representation of a time t.
 func RelTime(t time.Time) string {
-	b := []byte{}
+	buf := relTimePool.Get().(*[]byte)
+	defer relTimePool.Put(buf)
+	b := (*buf)[:0]
+
 	now := int(time.Since(t))
 	parts := 0
 
@@ -130,5 +140,5 @@ func RelTime(t time.Time) string {
 
 	b = append(b[:len(b)-2], " ago"...)
 
-	return string(b)
+	return *(*string)(unsafe.Pointer(&b))
 }
