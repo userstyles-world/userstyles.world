@@ -48,10 +48,13 @@ func RelNumber(i int64) string {
 
 const (
 	maxParts = 2
-	second   = time.Second
+	second   = 1e9
 	minute   = 60 * second
 	hour     = 60 * minute
 	day      = 24 * hour
+	week     = 7 * day
+	month    = 30 * day
+	year     = 365 * day
 )
 
 func buildTime(b []byte, count int, dur string) []byte {
@@ -68,25 +71,56 @@ func buildTime(b []byte, count int, dur string) []byte {
 
 // RelTime returns a relative representation of a time t.
 func RelTime(t time.Time) string {
-	var (
-		b       = []byte{}
-		now     = time.Since(t)
-		hours   = int(now / hour % 24)
-		minutes = int(now / minute % 60)
-		seconds = int(now / second % 60)
-	)
-
+	b := []byte{}
+	now := int(time.Since(t))
 	parts := 0
+
+	years := now / year
+	if years > 0 {
+		b = buildTime(b, years, " year")
+		now -= years * year
+		parts++
+	}
+
+	months := now / month % 12
+	if months > 0 {
+		b = buildTime(b, months, " month")
+		now -= months * month
+		parts++
+	}
+
+	weeks := now / week % 4
+	if weeks > 0 && parts != maxParts {
+		b = buildTime(b, weeks, " week")
+		now -= weeks * week
+		parts++
+	}
+
+	days := now / day % 30
+	if days > 0 && parts != maxParts {
+		b = buildTime(b, days, " day")
+		now -= days * day
+		parts++
+	}
+
+	hours := now / hour % 24
 	if hours > 0 && parts != maxParts {
 		b = buildTime(b, hours, " hour")
+		now -= hours * hour
 		parts++
 	}
+
+	minutes := now / minute % 60
 	if minutes > 0 && parts != maxParts {
 		b = buildTime(b, minutes, " minute")
+		now -= minutes * minute
 		parts++
 	}
+
+	seconds := now / second % 60
 	if seconds > 0 && parts != maxParts {
 		b = buildTime(b, seconds, " second")
+		now -= seconds * second
 		parts++
 	}
 
