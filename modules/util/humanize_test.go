@@ -59,15 +59,15 @@ var relTimeCases = []struct {
 	expected string
 }{
 	{"now", time.Now(), "just now"},
-	{"1s", time.Now().Add(-1 * time.Second), "1 second ago"},
-	{"2s", time.Now().Add(-2 * time.Second), "2 seconds ago"},
-	{"1m", time.Now().Add(-1 * time.Minute), "1 minute ago"},
-	{"2m", time.Now().Add(-2 * time.Minute), "2 minutes ago"},
-	{"1h", time.Now().Add(-1 * time.Hour), "1 hour ago"},
-	{"2h", time.Now().Add(-2 * time.Hour), "2 hours ago"},
-	{"1m9s", time.Now().Add(-69 * time.Second), "1 minute, 9 seconds ago"},
-	{"2h1m", time.Now().Add(-121 * time.Minute), "2 hours, 1 minute ago"},
-	{"2h46m", time.Now().Add(-9999 * time.Second), "2 hours, 46 minutes ago"},
+	{"1s", time.Now().Add(-1 * second), "1 second ago"},
+	{"2s", time.Now().Add(-2 * second), "2 seconds ago"},
+	{"1m", time.Now().Add(-1 * minute), "1 minute ago"},
+	{"2m", time.Now().Add(-2 * minute), "2 minutes ago"},
+	{"1h", time.Now().Add(-1 * hour), "1 hour ago"},
+	{"2h", time.Now().Add(-2 * hour), "2 hours ago"},
+	{"1m9s", time.Now().Add(-69 * second), "1 minute, 9 seconds ago"},
+	{"2h1m", time.Now().Add(-121 * minute), "2 hours, 1 minute ago"},
+	{"2h46m", time.Now().Add(-9999 * second), "2 hours, 46 minutes ago"},
 }
 
 func TestRelTime(t *testing.T) {

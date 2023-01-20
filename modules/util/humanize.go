@@ -46,7 +46,13 @@ func RelNumber(i int64) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-const maxParts = 2
+const (
+	maxParts = 2
+	second   = time.Second
+	minute   = 60 * second
+	hour     = 60 * minute
+	day      = 24 * hour
+)
 
 func buildTime(b []byte, count int, dur string) []byte {
 	b = strconv.AppendInt(b, int64(count), 10)
@@ -65,9 +71,9 @@ func RelTime(t time.Time) string {
 	var (
 		b       = []byte{}
 		now     = time.Since(t)
-		hours   = int(now / time.Hour % 60)
-		minutes = int(now / time.Minute % 60)
-		seconds = int(now / time.Second % 60)
+		hours   = int(now / hour % 24)
+		minutes = int(now / minute % 60)
+		seconds = int(now / second % 60)
 	)
 
 	parts := 0
