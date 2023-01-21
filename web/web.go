@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/modules/util/httputil"
+	"userstyles.world/modules/util"
 )
 
 var (
@@ -22,17 +22,17 @@ var (
 
 func init() {
 	var err error
-	DocsDir, err = httputil.EmbedFS(files, "web/docs", config.Production)
+	DocsDir, err = util.EmbedFS(files, "web/docs", config.Production)
 	if err != nil {
 		log.Fatalf("Failed to set docs directory: %s\n", err)
 	}
 
-	StaticDir, err = httputil.EmbedFS(files, "web/static", config.Production)
+	StaticDir, err = util.EmbedFS(files, "web/static", config.Production)
 	if err != nil {
 		log.Fatalf("Failed to set static directory: %s\n", err)
 	}
 
-	ViewsDir, err = httputil.EmbedFS(files, "web/views", config.Production)
+	ViewsDir, err = util.EmbedFS(files, "web/views", config.Production)
 	if err != nil {
 		log.Fatalf("Failed to set views directory: %s\n", err)
 	}

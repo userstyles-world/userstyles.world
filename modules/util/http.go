@@ -1,5 +1,4 @@
-// Package httputil provides helper functions for HTTP facilities.
-package httputil
+package util
 
 import (
 	"io/fs"

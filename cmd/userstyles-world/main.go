@@ -26,7 +26,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/templates"
-	"userstyles.world/modules/util/httputil"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 	"userstyles.world/web"
 )
@@ -44,7 +44,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(web.ViewsDir),
 		ViewsLayout: "layouts/main",
-		ProxyHeader: httputil.ProxyHeader(config.Production),
+		ProxyHeader: util.ProxyHeader(config.Production),
 		JSONEncoder: utils.JSONEncoder,
 		IdleTimeout: 5 * time.Second,
 	})
