@@ -7,15 +7,6 @@ import (
 	"path"
 )
 
-// ProxyHeader returns proper IP depending on the environment.
-func ProxyHeader(production bool) string {
-	if production {
-		return "X-Real-IP"
-	}
-
-	return ""
-}
-
 // SubFS returns subtree of the fsys starting from the prefix.
 func SubFS(fsys fs.FS, prefix string) (fs.FS, error) {
 	return fs.Sub(fsys, prefix)
