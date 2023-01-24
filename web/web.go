@@ -3,8 +3,8 @@ package web
 
 import (
 	"embed"
+	"io/fs"
 	"log"
-	"net/http"
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/util"
@@ -15,9 +15,9 @@ var (
 	files embed.FS
 
 	// Directories.
-	DocsDir   http.FileSystem
-	StaticDir http.FileSystem
-	ViewsDir  http.FileSystem
+	DocsDir   fs.FS
+	StaticDir fs.FS
+	ViewsDir  fs.FS
 )
 
 func init() {

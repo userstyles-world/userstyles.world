@@ -1,8 +1,6 @@
 package util
 
 import (
-	"net/http"
-	"os"
 	"testing"
 	"testing/fstest"
 )
@@ -35,19 +33,24 @@ func TestEmbedFS(t *testing.T) {
 	t.Parallel()
 
 	development := false
-	got, err := EmbedFS(fsys, "foo", development)
+	got, err := EmbedFS(fsys, ".", development)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	want := http.FS(os.DirFS("foo"))
-	if got != want {
-		t.Fatalf("Got %#v, expected %#v", got, want)
+	want := []string{"fs.go", "fs_test.go"}
+	if err := fstest.TestFS(got, want...); err != nil {
+		t.Fatal(err)
 	}
 
 	production := true
-	_, err = EmbedFS(fsys, "foo", production)
+	got, err = EmbedFS(fsys, "foo", production)
 	if err != nil {
+		t.Fatal(err)
+	}
+
+	want = []string{"foo.html", "bar.html", "baz.html", "bar/baz.html"}
+	if err := fstest.TestFS(got, want...); err != nil {
 		t.Fatal(err)
 	}
 }

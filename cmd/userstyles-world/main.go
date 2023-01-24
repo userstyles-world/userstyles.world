@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime/debug"
@@ -41,7 +42,7 @@ func main() {
 	search.Initialize()
 
 	app := fiber.New(fiber.Config{
-		Views:       templates.New(web.ViewsDir),
+		Views:       templates.New(http.FS(web.ViewsDir)),
 		ViewsLayout: "layouts/main",
 		ProxyHeader: config.ProxyRealIP,
 		JSONEncoder: utils.JSONEncoder,
@@ -78,7 +79,7 @@ func main() {
 	// Embed static files.
 	app.Use(filesystem.New(filesystem.Config{
 		MaxAge: 2 * int(time.Hour.Seconds()),
-		Root:   web.StaticDir,
+		Root:   http.FS(web.StaticDir),
 	}))
 
 	// TODO: Investigate how to "truly" inline sourcemaps in Sass.
