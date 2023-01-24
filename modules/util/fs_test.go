@@ -6,24 +6,25 @@ import (
 )
 
 var fsys = fstest.MapFS{
-	"foo.html":         {},
-	"bar.html":         {},
-	"baz.html":         {},
-	"foo/foo.html":     {},
-	"foo/bar.html":     {},
-	"foo/baz.html":     {},
-	"foo/bar/baz.html": {},
+	"static/robots.txt":                   {},
+	"static/favicon.ico":                  {},
+	"static/css/main.css":                 {},
+	"static/js/main.js":                   {},
+	"static/fonts/Inter-Bold.woff2":       {},
+	"static/fonts/Inter-Italic.woff2":     {},
+	"static/fonts/Inter-BoldItalic.woff2": {},
+	"static/fonts/Inter-Regular.woff2":    {},
 }
 
 func TestSubFS(t *testing.T) {
 	t.Parallel()
 
-	sub, err := SubFS(fsys, "foo")
+	sub, err := SubFS(fsys, "static")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	want := []string{"foo.html", "bar.html", "baz.html", "bar/baz.html"}
+	want := []string{"favicon.ico", "js/main.js", "css/main.css"}
 	if err := fstest.TestFS(sub, want...); err != nil {
 		t.Fatal(err)
 	}
@@ -39,7 +40,7 @@ func TestEmbedFS(t *testing.T) {
 		expected []string
 	}{
 		{"dev", false, ".", []string{"fs.go", "fs_test.go", "util.go"}},
-		{"prod", true, "foo", []string{"foo.html", "bar.html", "bar/baz.html"}},
+		{"prod", true, "static", []string{"favicon.ico", "js/main.js", "css/main.css"}},
 	}
 
 	for _, c := range cases {
