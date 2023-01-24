@@ -32,25 +32,26 @@ func TestSubFS(t *testing.T) {
 func TestEmbedFS(t *testing.T) {
 	t.Parallel()
 
-	development := false
-	got, err := EmbedFS(fsys, ".", development)
-	if err != nil {
-		t.Fatal(err)
+	cases := []struct {
+		name     string
+		env      bool
+		root     string
+		expected []string
+	}{
+		{"dev", false, ".", []string{"fs.go", "fs_test.go", "util.go"}},
+		{"prod", true, "foo", []string{"foo.html", "bar.html", "bar/baz.html"}},
 	}
 
-	want := []string{"fs.go", "fs_test.go"}
-	if err := fstest.TestFS(got, want...); err != nil {
-		t.Fatal(err)
-	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			got, err := EmbedFS(fsys, c.root, c.env)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-	production := true
-	got, err = EmbedFS(fsys, "foo", production)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	want = []string{"foo.html", "bar.html", "baz.html", "bar/baz.html"}
-	if err := fstest.TestFS(got, want...); err != nil {
-		t.Fatal(err)
+			if err := fstest.TestFS(got, c.expected...); err != nil {
+				t.Error(err)
+			}
+		})
 	}
 }

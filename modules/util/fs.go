@@ -3,19 +3,20 @@ package util
 import (
 	"io/fs"
 	"os"
-	"path"
+	"path/filepath"
 )
 
-// SubFS returns subtree of the fsys starting from the prefix.
-func SubFS(fsys fs.FS, prefix string) (fs.FS, error) {
-	return fs.Sub(fsys, prefix)
+// SubFS returns a new file system starting from directory dir.
+func SubFS(fsys fs.FS, dir string) (fs.FS, error) {
+	return fs.Sub(fsys, dir)
 }
 
-// EmbedFS returns proper http.FileSystem depending on the environment, because
-// we don't want to embed files into the executable during development.
-func EmbedFS(fsys fs.FS, dir string, production bool) (fs.FS, error) {
-	if production {
-		_, base := path.Split(dir)
+// EmbedFS returns a new file system starting from directory dir depending on
+// the environment.  This allows us to have reload for internal files during
+// development, and also embed them into executable in production.
+func EmbedFS(fsys fs.FS, dir string, embed bool) (fs.FS, error) {
+	if embed {
+		_, base := filepath.Split(dir)
 		return SubFS(fsys, base)
 	}
 
