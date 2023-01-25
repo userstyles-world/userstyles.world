@@ -13,6 +13,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/markdown"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils/strutils"
 )
 
@@ -61,9 +62,7 @@ func New(views http.FileSystem) *html.Engine {
 
 	engine.AddFunc("comma", humanize.Comma)
 
-	engine.AddFunc("num", func(i int64) string {
-		return strutils.HumanizeNumber(int(i))
-	})
+	engine.AddFunc("num", util.RelNumber)
 
 	engine.AddFunc("proxy", func(src, kind string, id uint) string {
 		return strutils.ProxyResources(src, kind, id)
@@ -85,9 +84,7 @@ func New(views http.FileSystem) *html.Engine {
 		return s
 	})
 
-	engine.AddFunc("rel", func(t time.Time) string {
-		return humanize.Time(t)
-	})
+	engine.AddFunc("rel", util.RelTime)
 
 	engine.AddFunc("iso", func(t time.Time) string {
 		return t.Format(time.RFC3339)
