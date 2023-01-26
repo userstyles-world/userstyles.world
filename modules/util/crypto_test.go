@@ -4,23 +4,20 @@ import (
 	"testing"
 )
 
+var hashCases = []struct {
+	name, id, ip, expected string
+}{
+	{"foobar", "foo", "bar", "4c7512b2468ccab5d8e3cfc3ee7ec0c76f154c1d145c23f716748fd3d6789e0b2283b46fcbcc660134a54a8e71d5171fc16df69b6c64896639eb4c9f49cf035c"},
+	{"real IP", "1", "192.168.1.1", "befd488b1e46e011eeeb0078cb7f6f10792068e5105bcf98ab0e2a7ed31c3863695b84ed23dc672c10dad4c815b37d418bfc3640a1a47eddcdde0c352f472f00"},
+	{"no IP", "1", "", "b7d09939dd47d20d5460ca664cc08919f8c89bfca3233ea2bdfadfa32efde6bad2e4261f6f0542171bc4e958add12d29605f2d97a901006592a34ce8a5a0cd42"},
+	{"no ID", "", "192.168.1.1", "1778721963e12865be624b66e70103c14cbb1c2ccc494a990927edb89f67eb58232ac8bad231c75192643808b75a6d86228b5b03da2743af748c0cc1be68aa9f"},
+}
+
 func TestHashIP(t *testing.T) {
 	t.Parallel()
 
-	cases := []struct {
-		name     string
-		id       string
-		ip       string
-		expected string
-	}{
-		{"TestNormalCase", "test", "test", "4942c2726e0c6ad350c2ecebc1ef37e74d6802567c7b51df0c08968a00f4dd8df541baf0495eb2127a53aca81755f3ec3e3434db49ad326dd7b607809a564acf"},
-		{"TestRealIP", "Secrecy", "192.168.1.1", "cb18a873a9195e00320830f11739227df9b4d6a9462c58a1b3298a17297dc431b4880c57375d22a58a6149e3586a90e63075603c02c55db6ae3459039312ae3e"},
-		{"TestEmptyIP", "Secrecy", "", "12f996268829112ef8f87e7b6e0dc65b8e64642f13a134f49740c7769062ecc259cc740c7cb7e7f827e202d347dbf4dd88d55b5d495e1bf7006b808c692a68bd"},
-		{"TestEmptyID", "", "192.168.1.1", "1778721963e12865be624b66e70103c14cbb1c2ccc494a990927edb89f67eb58232ac8bad231c75192643808b75a6d86228b5b03da2743af748c0cc1be68aa9f"},
-	}
-
-	for _, c := range cases {
-		actual, err := CreateHashedRecord(c.ip + " " + c.id)
+	for _, c := range hashCases {
+		actual, err := HashIP(c.ip + " " + c.id)
 		if err != nil {
 			t.Error(err)
 		}
@@ -28,5 +25,15 @@ func TestHashIP(t *testing.T) {
 			t.Fatalf("%s: expected: %s got: %s",
 				c.name, c.expected, actual)
 		}
+	}
+}
+
+func BenchmarkHashIP(b *testing.B) {
+	for _, c := range hashCases {
+		b.Run(c.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				_, _ = HashIP(c.ip + " " + c.id)
+			}
+		})
 	}
 }
