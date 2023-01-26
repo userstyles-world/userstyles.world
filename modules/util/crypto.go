@@ -1,4 +1,4 @@
-package crypto
+package util
 
 import (
 	"crypto/hmac"
@@ -8,9 +8,8 @@ import (
 	"userstyles.world/modules/config"
 )
 
-// CreateHashedRecord generates a unique hash for stats.
-func CreateHashedRecord(key string) (string, error) {
-	// Generate unique hash.
+// HashIP generates a unique hash for stats.
+func HashIP(key string) (string, error) {
 	h := hmac.New(sha512.New, []byte(config.StatsKey))
 	if _, err := h.Write([]byte(key)); err != nil {
 		return "", err

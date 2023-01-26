@@ -1,10 +1,10 @@
-package crypto
+package util
 
 import (
 	"testing"
 )
 
-func TestCreateHashedRecord(t *testing.T) {
+func TestHashIP(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
