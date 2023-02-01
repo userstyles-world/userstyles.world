@@ -14,7 +14,6 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/markdown"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils/strutils"
 )
 
 var appConfig = map[string]string{
@@ -65,7 +64,7 @@ func New(views http.FileSystem) *html.Engine {
 	engine.AddFunc("num", util.RelNumber)
 
 	engine.AddFunc("proxy", func(src, kind string, id uint) string {
-		return strutils.ProxyResources(src, kind, id)
+		return util.ProxyResources(src, kind, id)
 	})
 
 	engine.AddFunc("MarkdownSafe", func(text string) string {

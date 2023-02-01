@@ -7,7 +7,7 @@ import (
 
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils/crypto"
+	"userstyles.world/modules/util"
 )
 
 // InstallStats stores stats for installs.
@@ -105,7 +105,7 @@ func (s *stats) Add(key string) {
 
 	_, found := s.m[key]
 	if !found {
-		val, err := crypto.CreateHashedRecord(key)
+		val, err := util.HashIP(key)
 		if err != nil {
 			log.Info.Printf("Failed to create hash for %q: %s\n", key, err)
 			return

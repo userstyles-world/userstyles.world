@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime/debug"
@@ -26,7 +27,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/templates"
-	"userstyles.world/modules/util/httputil"
 	"userstyles.world/utils"
 	"userstyles.world/web"
 )
@@ -42,9 +42,9 @@ func main() {
 	search.Initialize()
 
 	app := fiber.New(fiber.Config{
-		Views:       templates.New(web.ViewsDir),
+		Views:       templates.New(http.FS(web.ViewsDir)),
 		ViewsLayout: "layouts/main",
-		ProxyHeader: httputil.ProxyHeader(config.Production),
+		ProxyHeader: config.ProxyRealIP,
 		JSONEncoder: utils.JSONEncoder,
 		IdleTimeout: 5 * time.Second,
 	})
@@ -79,7 +79,7 @@ func main() {
 	// Embed static files.
 	app.Use(filesystem.New(filesystem.Config{
 		MaxAge: 2 * int(time.Hour.Seconds()),
-		Root:   web.StaticDir,
+		Root:   http.FS(web.StaticDir),
 	}))
 
 	// TODO: Investigate how to "truly" inline sourcemaps in Sass.

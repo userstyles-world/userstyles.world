@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"userstyles.world/modules/database"
-	"userstyles.world/utils/strutils"
+	"userstyles.world/modules/util"
 )
 
 const (
@@ -45,9 +45,9 @@ type StyleCard struct {
 // TableName returns which table in database to use with GORM.
 func (StyleCard) TableName() string { return "styles" }
 
-// Slug returns a URL- and SEO-friendly string.
+// Slug returns a user- and SEO-friendly URL.
 func (x StyleCard) Slug() string {
-	return strutils.SlugifyURL(x.Name)
+	return util.Slug(x.Name)
 }
 
 // StyleURL returns an absolute path to a style.
