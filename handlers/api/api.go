@@ -8,6 +8,7 @@ import (
 // Routes provides routes for Fiber's router.
 func Routes(app *fiber.App) {
 	r := app.Group("/api", ParseAPIJWT)
+	r.Get("/health", GetHealth)
 	r.Head("/style/:id.user.css", GetStyleEtag)
 	r.Get("/style/:id.user.css", GetStyleSource)
 	r.Get("/style/:id", GetStyleDetails)

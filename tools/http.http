@@ -17,3 +17,6 @@ GET :url/api/style/1.user.css
 
 # Bad endpoint.
 GET :url/api/404
+
+# Health endpoint.
+GET :url/api/health
