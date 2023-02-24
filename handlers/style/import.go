@@ -115,7 +115,7 @@ func ImportPost(c *fiber.Ctx) error {
 
 	// Check preview image.
 	file, _ := c.FormFile("preview")
-	preview := c.FormValue("previewURL")
+	preview := c.FormValue("previewURL", s.Preview)
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
 	if file != nil || preview != "" {
 		if err := images.Generate(file, styleID, "0", "", preview); err != nil {
