@@ -1,6 +1,7 @@
 package mirror
 
 import (
+	"fmt"
 	"strconv"
 	"sync"
 
@@ -9,6 +10,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/archive"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 )
@@ -81,7 +83,8 @@ func check(wg *sync.WaitGroup, batch models.Style) {
 		}
 		if uc.Version != old.Version {
 			cache.LRU.Remove(strconv.Itoa(int(batch.ID)))
-			fields["code"] = uc.SourceCode
+			url := fmt.Sprintf("%s/api/style/%d.user.css", config.BaseURL, batch.ID)
+			fields["code"] = usercss.OverrideUpdateURL(uc.SourceCode, url)
 			updateReady = true
 		}
 	}

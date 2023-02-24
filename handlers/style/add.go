@@ -112,6 +112,12 @@ func CreatePost(c *fiber.Ctx) error {
 		})
 	}
 
+	url := fmt.Sprintf("%s/api/style/%d.user.css", config.BaseURL, s.ID)
+	uc.OverrideUpdateURL(url)
+	if s.UpdateColumn("code", uc.SourceCode); err != nil {
+		log.Database.Printf("Failed to update code for %d: %s\n", s.ID, err)
+	}
+
 	// Check preview image.
 	file, _ := c.FormFile("preview")
 	preview := c.FormValue("previewURL")

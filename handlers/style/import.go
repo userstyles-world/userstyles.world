@@ -11,6 +11,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/archive"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
@@ -40,7 +41,8 @@ func ImportPost(c *fiber.Ctx) error {
 
 	// Check if userstyle is imported from USo-archive.
 	if archive.IsFromArchive(r) {
-		style, err := archive.ImportFromArchive(r, *u)
+		var err error
+		r, err = archive.RewriteURL(r)
 		if err != nil {
 			return c.Render("err", fiber.Map{
 				"Title": err,
@@ -48,8 +50,13 @@ func ImportPost(c *fiber.Ctx) error {
 			})
 		}
 
-		// Move style content to outer scope.
-		s = style
+		s, err = archive.ImportFromArchive(r, *u)
+		if err != nil {
+			return c.Render("err", fiber.Map{
+				"Title": err,
+				"User":  u,
+			})
+		}
 	} else {
 		// Get userstyle.
 		uc := new(usercss.UserCSS)
@@ -98,6 +105,12 @@ func ImportPost(c *fiber.Ctx) error {
 			"Title": "Internal server error.",
 			"User":  u,
 		})
+	}
+
+	url := fmt.Sprintf("%s/api/style/%d.user.css", config.BaseURL, s.ID)
+	s.Code = usercss.OverrideUpdateURL(s.Code, url)
+	if s.UpdateColumn("code", s.Code); err != nil {
+		log.Database.Printf("Failed to update code for %d: %s\n", s.ID, err)
 	}
 
 	// Check preview image.
