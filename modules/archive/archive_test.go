@@ -64,7 +64,7 @@ func TestRewriteURL(t *testing.T) {
 		},
 		{
 			"Old URL",
-			"https://uso-archive.surge.sh/?style=1",
+			"https://uso-archive.surge.sh/?page=1&style=1",
 			"https://raw.githubusercontent.com/uso-archive/data/flomaster/data/usercss/1.user.css",
 		},
 		{

@@ -33,7 +33,7 @@ var (
 	ErrFailedToExtractID = fmt.Errorf("failed to extract ID")
 
 	// idRe holds a regexp for extracting style IDs.
-	idRe = regexp.MustCompile(`.*?/(\?style[=/])?(\d+)(\.user\.css)?$`)
+	idRe = regexp.MustCompile(`.*?/(\?(?:page=\d+\&)style[=/])?(\d+)(\.user\.css)?$`)
 )
 
 // IsFromArchive checks whether a userstyle comes from a USo-archive.
