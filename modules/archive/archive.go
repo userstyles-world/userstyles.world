@@ -61,8 +61,8 @@ func RewriteURL(url string) (string, error) {
 	return url, nil
 }
 
-// Data struct contains only the data that we need.
-type Data struct {
+// data holds userstyle fields that we need.
+type data struct {
 	Info struct {
 		Description    string
 		AdditionalInfo string
@@ -78,19 +78,19 @@ type Data struct {
 func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	id, err := extractID(url)
 	if err != nil {
-		log.Info.Println("Failed to extract style id:", err.Error())
-		return nil, errors.ErrFailedProcessData
+		log.Info.Printf("Failed to extract ID from %q: %s\n", url, err)
+		return nil, ErrFailedToExtractID
 	}
 
-	data, err := fetchJSON(id)
+	res, err := fetchJSON(id)
 	if err != nil {
-		log.Info.Println("Failed to fetch style JSON:", err.Error())
+		log.Info.Printf("Failed to fetch data for %s: %s\n", id, err)
 		return nil, errors.ErrFailedFetch
 	}
 
-	res, err := unmarshalJSON(data)
+	data, err := unmarshalJSON(res)
 	if err != nil {
-		log.Info.Println("Failed to unmarshal style JSON:", err.Error())
+		log.Info.Printf("Failed to unmarshal style %s: %s\n", id, err)
 		return nil, errors.ErrFailedProcessData
 	}
 
@@ -98,25 +98,26 @@ func ImportFromArchive(url string, u models.APIUser) (*models.Style, error) {
 	uc := new(usercss.UserCSS)
 	source := StyleURL + id + ".user.css"
 	if err = uc.ParseURL(source); err != nil {
-		log.Info.Printf("Failed to parse style from URL %v: %v\n", source, err)
+		log.Info.Printf("Failed to parse style for %s: %s\n", source, err)
 		return nil, errors.ErrFailedFetch
 	}
 
 	s := &models.Style{
 		UserID:      u.ID,
 		Name:        uc.Name,
-		Description: res.Info.Description,
-		Notes:       res.Info.AdditionalInfo,
+		Description: data.Info.Description,
+		Notes:       data.Info.AdditionalInfo,
 		Code:        uc.SourceCode,
 		License:     uc.License,
-		Preview:     PreviewURL + res.Screenshots.Main.Name,
+		Preview:     PreviewURL + data.Screenshots.Main.Name,
 		Homepage:    uc.HomepageURL,
-		Category:    res.Info.Category,
+		Category:    data.Info.Category,
 		Original:    url,
 	}
 
 	// Disallow GIF format.
 	if strings.HasSuffix(s.Preview, ".gif") {
+		log.Info.Printf("Removed GIF image for style %s\n", id)
 		s.Preview = ""
 	}
 
@@ -134,18 +135,14 @@ func extractID(url string) (string, error) {
 }
 
 func fetchJSON(id string) ([]byte, error) {
-	url := DataURL + id + ".json"
-
-	req, err := http.Get(url)
+	req, err := http.Get(DataURL + id + ".json")
 	if err != nil {
-		log.Warn.Println("Error fetching style URL:", err.Error())
 		return nil, err
 	}
 	defer req.Body.Close()
 
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
-		log.Info.Println("Error reading body:", err.Error())
 		return nil, err
 	}
 
@@ -157,13 +154,11 @@ func fetchJSON(id string) ([]byte, error) {
 	return body, nil
 }
 
-func unmarshalJSON(raw []byte) (Data, error) {
-	data := Data{}
-	err := json.Unmarshal(raw, &data)
-	if err != nil {
-		log.Info.Println("Failed to unmarshal style JSON:", err.Error())
-		return data, err
+func unmarshalJSON(raw []byte) (*data, error) {
+	var data data
+	if err := json.Unmarshal(raw, &data); err != nil {
+		return nil, err
 	}
 
-	return data, nil
+	return &data, nil
 }
