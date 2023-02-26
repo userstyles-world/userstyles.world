@@ -2,21 +2,17 @@ package mirror
 
 import (
 	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/archive"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
-
-func isArchive(url string) bool {
-	return strings.HasPrefix(url, utils.ArchiveURL)
-}
 
 func setStyleURL(a, b string) string {
 	if a != "" {
@@ -57,6 +53,10 @@ func getSourceCode(style models.Style) string {
 func check(wg *sync.WaitGroup, batch models.Style) {
 	defer wg.Done()
 
+	if batch.ID != 5917 {
+		return
+	}
+
 	// Select which fields to update.
 	fields := make(map[string]any)
 	fields["id"] = batch.ID
@@ -86,7 +86,7 @@ func check(wg *sync.WaitGroup, batch models.Style) {
 		}
 		if uc.Version != old.Version {
 			cache.LRU.Remove(strconv.Itoa(int(batch.ID)))
-			fields["code"] = uc.SourceCode
+			fields["code"] = util.RemoveUpdateURL(uc.SourceCode)
 			updateReady = true
 		}
 	}
@@ -95,8 +95,8 @@ func check(wg *sync.WaitGroup, batch models.Style) {
 	if batch.MirrorMeta {
 		url := setStyleURL(batch.MirrorURL, batch.Original)
 
-		if isArchive(url) {
-			s, err := utils.ImportFromArchive(url, models.APIUser{})
+		if archive.IsFromArchive(url) {
+			s, err := archive.ImportFromArchive(url, models.APIUser{})
 			if err != nil {
 				log.Warn.Printf("Failed to import %s from archive: %s\n", url, err.Error())
 				return

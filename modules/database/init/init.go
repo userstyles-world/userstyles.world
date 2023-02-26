@@ -3,6 +3,7 @@ package init
 import (
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	"gorm.io/driver/sqlite"
@@ -10,9 +11,11 @@ import (
 	"gorm.io/gorm/logger"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/archive"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -98,6 +101,7 @@ func Initialize() {
 	// Run one-time migrations.
 	if _, ok := os.LookupEnv("MAGIC"); ok {
 		migration()
+		migrateCode(conn)
 	}
 
 	// Migrate tables.
@@ -289,4 +293,51 @@ func seed() {
 	for i := range logs {
 		database.Conn.Create(&logs[i])
 	}
+}
+
+func migrateCode(db *gorm.DB) {
+	log.Database.Println("Migration started.")
+	var i int
+	var ss []models.Style
+	err := db.FindInBatches(&ss, 50, func(tx *gorm.DB, batch int) error {
+		for _, s := range ss {
+
+			fields := make(map[string]any)
+			if archive.IsFromArchive(s.Original) {
+				val, err := archive.RewriteURL(s.Original)
+				if err != nil {
+					log.Info.Printf("Failed to rewrite %q for %d: %s\n", s.Original, s.ID, err)
+					return err
+				}
+				fields["original"] = val
+			}
+
+			if archive.IsFromArchive(s.MirrorURL) {
+				val, err := archive.RewriteURL(s.MirrorURL)
+				if err != nil {
+					log.Info.Printf("Failed to rewrite %q for %d: %s\n", s.MirrorURL, s.ID, err)
+					return err
+				}
+				fields["mirror_url"] = val
+			}
+
+			if strings.Contains(s.Code, "@updateURL") {
+				fields["code"] = util.RemoveUpdateURL(s.Code)
+			}
+
+			tx := db.Table("styles").Where("id = ?", s.ID).Updates(fields)
+			if err := tx.Error; err != nil {
+				log.Database.Printf("Failed to update %d: %s\n", s.ID, err)
+				return err
+			}
+			i++
+		}
+		return nil
+	}).Error
+	if err != nil {
+		log.Database.Fatalf("Well, something went wrong: %s\n", err)
+	}
+
+	log.Database.Println("Migration completed.")
+	os.Exit(0)
 }

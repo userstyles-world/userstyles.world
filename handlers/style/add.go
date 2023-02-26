@@ -16,6 +16,7 @@ import (
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -102,6 +103,8 @@ func CreatePost(c *fiber.Ctx) error {
 			"User":  u,
 		})
 	}
+
+	s.Code = util.RemoveUpdateURL(s.Code)
 
 	s, err = models.CreateStyle(s)
 	if err != nil {

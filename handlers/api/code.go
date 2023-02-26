@@ -6,10 +6,8 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/config"
 	"userstyles.world/modules/storage"
 )
 
@@ -22,30 +20,22 @@ func GetStyleSource(c *fiber.Ctx) error {
 	}
 
 	key := strconv.Itoa(id)
-	val, found := cache.LRU.Get(key)
+	code, found := cache.LRU.Get(key)
 	if !found {
-		code, err := storage.FindStyleCode(id)
+		code, err = storage.FindStyleCode(id)
 		if err != nil {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"data": "style not found",
 			})
 		}
 
-		// Override updateURL field to prevent abuse.
-		url := config.BaseURL + "/api/style/" + key + ".user.css"
-		code = usercss.OverrideUpdateURL(code, url)
-
-		// Cache the userstyle.
 		cache.LRU.Add(key, code)
-
-		// Reassign code var.
-		val = code
 	}
 
 	cache.InstallStats.Add(c.IP() + " " + key)
 
 	c.Type("css", "utf-8")
-	return c.SendString(val.(string))
+	return c.SendString(code.(string))
 }
 
 func GetStyleEtag(c *fiber.Ctx) error {

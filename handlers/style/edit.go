@@ -13,6 +13,7 @@ import (
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
+	"userstyles.world/modules/util"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -92,8 +93,7 @@ func EditPost(c *fiber.Ctx) error {
 	}
 
 	var uc usercss.UserCSS
-	s.Code = c.FormValue("code")
-	if err := uc.Parse(s.Code); err != nil {
+	if err := uc.Parse(c.FormValue("code")); err != nil {
 		args["Error"] = err
 		return c.Render("style/create", args)
 	}
@@ -101,6 +101,8 @@ func EditPost(c *fiber.Ctx) error {
 		args["Errors"] = errs
 		return c.Render("style/create", args)
 	}
+
+	s.Code = util.RemoveUpdateURL(uc.SourceCode)
 
 	// Update the other fields with new data.
 	s.Description = strings.TrimSpace(c.FormValue("description"))

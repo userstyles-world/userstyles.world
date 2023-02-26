@@ -14,6 +14,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/storage"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -253,6 +254,8 @@ func NewStyle(c *fiber.Ctx) error {
 				"data": "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)",
 			})
 	}
+
+	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
 	// Prevent adding multiples of the same style.
 	err = models.CheckDuplicateStyle(&postStyle)

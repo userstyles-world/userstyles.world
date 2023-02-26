@@ -10,10 +10,11 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/archive"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 func ImportGet(c *fiber.Ctx) error {
@@ -39,8 +40,9 @@ func ImportPost(c *fiber.Ctx) error {
 	}
 
 	// Check if userstyle is imported from USo-archive.
-	if strings.HasPrefix(r, utils.ArchiveURL) {
-		style, err := utils.ImportFromArchive(r, *u)
+	if archive.IsFromArchive(r) {
+		var err error
+		r, err = archive.RewriteURL(r)
 		if err != nil {
 			return c.Render("err", fiber.Map{
 				"Title": err,
@@ -48,8 +50,13 @@ func ImportPost(c *fiber.Ctx) error {
 			})
 		}
 
-		// Move style content to outer scope.
-		s = style
+		s, err = archive.ImportFromArchive(r, *u)
+		if err != nil {
+			return c.Render("err", fiber.Map{
+				"Title": err,
+				"User":  u,
+			})
+		}
 	} else {
 		// Get userstyle.
 		uc := new(usercss.UserCSS)
@@ -91,6 +98,8 @@ func ImportPost(c *fiber.Ctx) error {
 		})
 	}
 
+	s.Code = util.RemoveUpdateURL(s.Code)
+
 	s, err = models.CreateStyle(s)
 	if err != nil {
 		log.Warn.Println("Failed to import style from URL:", err.Error())
@@ -102,7 +111,7 @@ func ImportPost(c *fiber.Ctx) error {
 
 	// Check preview image.
 	file, _ := c.FormFile("preview")
-	preview := c.FormValue("previewURL")
+	preview := c.FormValue("previewURL", s.Preview)
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
 	if file != nil || preview != "" {
 		if err := images.Generate(file, styleID, "0", "", preview); err != nil {
