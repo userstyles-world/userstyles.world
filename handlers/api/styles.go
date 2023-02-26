@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,12 +9,12 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/storage"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -256,6 +255,8 @@ func NewStyle(c *fiber.Ctx) error {
 			})
 	}
 
+	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
+
 	// Prevent adding multiples of the same style.
 	err = models.CheckDuplicateStyle(&postStyle)
 	if err != nil {
@@ -271,12 +272,6 @@ func NewStyle(c *fiber.Ctx) error {
 			JSON(fiber.Map{
 				"data": "Error: Couldn't save style",
 			})
-	}
-
-	url := fmt.Sprintf("%s/api/style/%d.user.css", config.BaseURL, s.ID)
-	uc.OverrideUpdateURL(url)
-	if s.UpdateColumn("code", uc.SourceCode); err != nil {
-		log.Database.Printf("Failed to update code for %d: %s\n", s.ID, err)
 	}
 
 	// Check preview image.

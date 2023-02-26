@@ -1,7 +1,6 @@
 package style
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -11,10 +10,10 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/config"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
+	"userstyles.world/modules/util"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -103,9 +102,7 @@ func EditPost(c *fiber.Ctx) error {
 		return c.Render("style/create", args)
 	}
 
-	url := fmt.Sprintf("%s/api/style/%d.user.css", config.BaseURL, s.ID)
-	uc.OverrideUpdateURL(url)
-	s.Code = uc.SourceCode
+	s.Code = util.RemoveUpdateURL(uc.SourceCode)
 
 	// Update the other fields with new data.
 	s.Description = strings.TrimSpace(c.FormValue("description"))

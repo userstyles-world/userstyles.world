@@ -16,6 +16,7 @@ import (
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -103,6 +104,8 @@ func CreatePost(c *fiber.Ctx) error {
 		})
 	}
 
+	s.Code = util.RemoveUpdateURL(s.Code)
+
 	s, err = models.CreateStyle(s)
 	if err != nil {
 		log.Warn.Println("Failed to create style:", err.Error())
@@ -110,12 +113,6 @@ func CreatePost(c *fiber.Ctx) error {
 			"Title": "Internal server error.",
 			"User":  u,
 		})
-	}
-
-	url := fmt.Sprintf("%s/api/style/%d.user.css", config.BaseURL, s.ID)
-	uc.OverrideUpdateURL(url)
-	if s.UpdateColumn("code", uc.SourceCode); err != nil {
-		log.Database.Printf("Failed to update code for %d: %s\n", s.ID, err)
 	}
 
 	// Check preview image.
