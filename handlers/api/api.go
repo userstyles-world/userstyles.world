@@ -5,12 +5,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Routes provides routes for Fiber's router.
-func Routes(app *fiber.App) {
-	r := app.Group("/api", ParseAPIJWT)
+// FastRoutes provides auth-less routes for Fiber's router.
+func FastRoutes(app *fiber.App) {
+	r := app.Group("/api")
 	r.Get("/health", GetHealth)
 	r.Head("/style/:id.user.css", GetStyleEtag)
 	r.Get("/style/:id.user.css", GetStyleSource)
+}
+
+// Routes provides routes for Fiber's router.
+func Routes(app *fiber.App) {
+	r := app.Group("/api", ParseAPIJWT)
 	r.Get("/style/:id", GetStyleDetails)
 	r.Get("/style/stats/:id/:type?", GetStyleStats)
 	r.Get("/index/:format?", GetStyleIndex)
