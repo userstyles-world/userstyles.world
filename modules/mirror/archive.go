@@ -53,10 +53,6 @@ func getSourceCode(style models.Style) string {
 func check(wg *sync.WaitGroup, batch models.Style) {
 	defer wg.Done()
 
-	if batch.ID != 5917 {
-		return
-	}
-
 	// Select which fields to update.
 	fields := make(map[string]any)
 	fields["id"] = batch.ID
