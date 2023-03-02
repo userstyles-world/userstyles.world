@@ -11,6 +11,7 @@ require (
 	github.com/evanw/esbuild v0.15.11
 	github.com/go-co-op/gocron v1.17.0
 	github.com/go-playground/validator/v10 v10.11.1
+	github.com/gofiber/adaptor/v2 v2.1.32
 	github.com/gofiber/fiber/v2 v2.42.0
 	github.com/gofiber/template v1.7.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
@@ -18,6 +19,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/ohler55/ojg v1.14.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/prometheus/client_golang v1.4.0
 	github.com/userstyles-world/go-chart/v2 v2.5.2
 	github.com/valyala/bytebufferpool v1.0.0
 	github.com/vednoc/go-usercss-parser v0.10.0
@@ -32,6 +34,7 @@ require (
 	github.com/RoaringBitmap/roaring v1.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bits-and-blooms/bitset v1.2.2 // indirect
 	github.com/blevesearch/bleve_index_api v1.0.1 // indirect
 	github.com/blevesearch/go-porterstemmer v1.0.3 // indirect
@@ -47,6 +50,7 @@ require (
 	github.com/blevesearch/zapx/v13 v13.3.3 // indirect
 	github.com/blevesearch/zapx/v14 v14.3.3 // indirect
 	github.com/blevesearch/zapx/v15 v15.3.3 // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
@@ -62,8 +66,12 @@ require (
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mattn/go-sqlite3 v1.14.15 // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
+	github.com/prometheus/client_model v0.2.0 // indirect
+	github.com/prometheus/common v0.9.1 // indirect
+	github.com/prometheus/procfs v0.0.8 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
