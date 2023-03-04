@@ -12,36 +12,21 @@ import (
 )
 
 func getUSoIndex(c *fiber.Ctx) error {
-Convert:
-	cached, found := cache.Store.Get("index")
+	index, found := cache.Store.Get("index")
 	if !found {
-		styles, err := storage.GetStyleCompactIndex()
+		var err error
+		index, err = storage.GetStyleCompactIndex()
 		if err != nil {
-			log.Warn.Println("Failed to get styles for USo-formatted index:", err.Error())
-			return c.JSON(fiber.Map{
-				"data": "styles not found",
-			})
-		}
-
-		// Save to disk and read it to avoid converting between types.
-		if err := cache.SaveToDisk(cache.CachedIndex, styles); err != nil {
-			log.Warn.Println("Failed to cache USo-formatted index:", err)
-			goto Convert
-		}
-		b, err := os.ReadFile(cache.CachedIndex)
-		if err != nil {
-			log.Warn.Println("Failed to read uso-format.json:", err)
-			goto Convert
+			log.Warn.Printf("Failed to get compact index: %s\n", err)
+			return c.JSON(fiber.Map{"data": "index not found"})
 		}
 
 		// Set cache for index endpoint.
-		cache.Store.Set("index", b, 0)
-
-		goto Convert
+		cache.Store.Set("index", index, 0)
 	}
 
 	c.Set("Content-Type", "application/json")
-	return c.Send(cached.([]byte))
+	return c.Send(index.([]byte))
 }
 
 func getFullIndex(c *fiber.Ctx) error {
