@@ -110,6 +110,7 @@ func main() {
 	_ = app.Shutdown()
 	cache.InstallStats.Close()
 	cache.ViewStats.Close()
+	cache.SaveStore()
 	_ = database.Close()
 	_ = search.StyleIndex.Close()
 	log.Info.Printf("Done in %s.\n", time.Since(t))

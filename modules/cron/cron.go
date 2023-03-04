@@ -7,10 +7,12 @@ import (
 
 	// "userstyles.world/models"
 	// "userstyles.world/modules/cache"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/database/snapshot"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/mirror"
 	"userstyles.world/modules/sitemap"
+	"userstyles.world/modules/storage"
 )
 
 func Initialize() {
@@ -50,5 +52,17 @@ func Initialize() {
 	})
 	if err != nil {
 		log.Warn.Println("Failed to update sitemap:", err.Error())
+	}
+
+	_, err = s.Every("15m").Do(func() {
+		index, err := storage.GetStyleCompactIndex()
+		if err != nil {
+			log.Warn.Printf("Failed to get compact index: %s\n", err)
+			return
+		}
+		cache.Store.Set("index", index, 0)
+	})
+	if err != nil {
+		log.Warn.Println("Failed to set compact index job:", err)
 	}
 }

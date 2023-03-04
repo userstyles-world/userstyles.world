@@ -1,8 +1,6 @@
 package api
 
 import (
-	"os"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/models"

@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"encoding/gob"
 	"os"
 	"path"
 	"time"
@@ -10,12 +11,13 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 var (
-	CachedIndex = path.Join(config.CacheDir, "uso-format.json")
-	Store       = cache.New(10*time.Minute, time.Minute)
-	LRU         = caching.CreateLRUCache(config.CachedCodeItems)
+	CacheFile = path.Join(config.CacheDir, "cache")
+	Store     = cache.New(cache.NoExpiration, 5*time.Minute)
+	LRU       = caching.CreateLRUCache(config.CachedCodeItems)
 )
 
 func init() {
@@ -46,15 +48,18 @@ func init() {
 }
 
 func Initialize() {
-	b, err := os.ReadFile(CachedIndex)
-	if err != nil {
-		log.Warn.Println("Failed to read uso-format.json:", err)
-		return
-	}
+	gob.Register([]storage.StyleCard{})
 
-	Store.Set("index", b, 0)
+	if err := Store.LoadFile(CacheFile); err != nil {
+		log.Warn.Println("Failed to read cache:", err)
+	}
+	log.Info.Println("Loaded cache from disk.")
 }
 
-func SaveToDisk(f string, data []byte) error {
-	return os.WriteFile(f, data, 0o600)
+// SaveStore saves the state of in-memory cache to disk.
+func SaveStore() {
+	if err := Store.SaveFile(CacheFile); err != nil {
+		log.Warn.Println("Failed to save cache:", err)
+	}
+	log.Info.Println("Saved cache to disk.")
 }
