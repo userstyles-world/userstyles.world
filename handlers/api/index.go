@@ -2,7 +2,6 @@ package api
 
 import (
 	"os"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -11,27 +10,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
 )
-
-func fixCategory(cat string) string {
-	if cat == "unset" {
-		return "global"
-	}
-	cat = strings.ToLower(cat)
-
-	if strings.HasSuffix(cat, ".com") || strings.HasSuffix(cat, ".org") {
-		cat = strings.TrimSuffix(cat, ".com")
-		cat = strings.TrimSuffix(cat, ".org")
-		// Remove any subdomain
-		// web.whatsapp -> whatsapp
-		if strings.Count(cat, ".") >= 1 {
-			cat = strings.Split(cat, ".")[1]
-		}
-	} else if strings.Count(cat, ".") >= 2 {
-		cat = strings.Join(strings.Split(cat, ".")[1:], ".")
-	}
-
-	return cat
-}
 
 func getUSoIndex(c *fiber.Ctx) error {
 Convert:
@@ -45,15 +23,8 @@ Convert:
 			})
 		}
 
-		// TODO: Normalize categories on add/import/edit pages.
-		for _, style := range styles {
-			style.Category = fixCategory(style.Category)
-		}
-
 		// Save to disk and read it to avoid converting between types.
-		if err := cache.SaveToDisk(cache.CachedIndex, fiber.Map{
-			"data": styles,
-		}); err != nil {
+		if err := cache.SaveToDisk(cache.CachedIndex, styles); err != nil {
 			log.Warn.Println("Failed to cache USo-formatted index:", err)
 			goto Convert
 		}

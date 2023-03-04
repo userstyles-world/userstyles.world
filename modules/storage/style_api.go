@@ -1,7 +1,9 @@
 package storage
 
 import (
+	"encoding/json"
 	"strings"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -36,21 +38,38 @@ type StyleCompact struct {
 // TableName returns which table in database to use with GORM.
 func (StyleCompact) TableName() string { return "styles" }
 
-// GetStyleCompactIndex returns a compact JSON for our integration with Stylus.
-func GetStyleCompactIndex() ([]StyleCompact, error) {
-	var styles, batch []StyleCompact
-	action := func(*gorm.DB, int) error {
-		styles = append(styles, batch...)
+// GetStyleCompactIndex returns a compact index for our integration with Stylus.
+func GetStyleCompactIndex() ([]byte, error) {
+	buf := make([]byte, 0, 2e6)
+	buf = append(buf, `{"data":`...)
+
+	var styles []StyleCompact
+	action := func(tx *gorm.DB, batch int) error {
+		b, err := json.Marshal(&styles)
+		if err != nil {
+			return err
+		}
+
+		if batch == 1 {
+			buf = append(buf, b[0:len(b)-1]...)
+		} else {
+			buf = append(buf, ',')
+			buf = append(buf, b[1:len(b)-1]...)
+		}
+
+		time.Sleep(100 * time.Millisecond)
 		return nil
 	}
 
 	err := database.Conn.
 		Select(selectCompactIndex).
 		Where(notDeleted).
-		FindInBatches(&batch, 250, action).Error
+		FindInBatches(&styles, 100, action).Error
 	if err != nil {
 		return nil, errors.ErrStylesNotFound
 	}
 
-	return styles, nil
+	buf = append(buf, `]}`...)
+
+	return buf, nil
 }

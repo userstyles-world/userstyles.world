@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"encoding/json"
 	"os"
 	"path"
 	"time"
@@ -56,12 +55,6 @@ func Initialize() {
 	Store.Set("index", b, 0)
 }
 
-func SaveToDisk(f string, data any) error {
-	b, err := json.Marshal(data)
-	if err != nil {
-		log.Warn.Println("Failed to marshal JSON:", err)
-		return err
-	}
-
-	return os.WriteFile(f, b, 0o600)
+func SaveToDisk(f string, data []byte) error {
+	return os.WriteFile(f, data, 0o600)
 }
