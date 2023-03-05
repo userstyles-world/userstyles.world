@@ -80,7 +80,7 @@ require (
 	github.com/valyala/fasthttp v1.44.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
-	golang.org/x/image v0.0.0-20220413100746-70e8d0d3baa9 // indirect
+	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
