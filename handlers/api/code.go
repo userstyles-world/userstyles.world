@@ -19,23 +19,17 @@ func GetStyleSource(c *fiber.Ctx) error {
 		})
 	}
 
-	key := strconv.Itoa(id)
-	code, found := cache.LRU.Get(key)
-	if !found {
-		code, err = storage.FindStyleCode(id)
-		if err != nil {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"data": "style not found",
-			})
-		}
-
-		cache.LRU.Add(key, code)
+	code, err := storage.FindStyleCode(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"data": "style not found",
+		})
 	}
 
-	cache.InstallStats.Add(c.IP() + " " + key)
+	cache.InstallStats.Add(c.IP() + " " + strconv.Itoa(id))
 
 	c.Type("css", "utf-8")
-	return c.SendString(code.(string))
+	return c.SendString(code)
 }
 
 func GetStyleEtag(c *fiber.Ctx) error {
