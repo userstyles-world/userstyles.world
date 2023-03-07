@@ -8,6 +8,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/plugin/prometheus"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
@@ -48,6 +49,12 @@ func connect() (*gorm.DB, error) {
 		return nil, err
 	}
 
+	conn.Use(prometheus.New(prometheus.Config{
+		DBName:          "userstyles",
+		RefreshInterval: 15,
+		StartServer:     false,
+	}))
+
 	return conn, nil
 }
 
@@ -68,20 +75,6 @@ func Initialize() {
 
 	// GORM doesn't set a maximum of open connections by default.
 	db.SetMaxOpenConns(config.DBMaxOpenConns)
-
-	// Log DB stats.
-	go func() {
-		db, err := database.Conn.DB()
-		if err != nil {
-			log.Info.Println(err)
-			return
-		}
-
-		for {
-			time.Sleep(time.Minute)
-			log.Info.Printf("%#v\n", db.Stats())
-		}
-	}()
 
 	shouldSeed := false
 	// Generate data for development.
