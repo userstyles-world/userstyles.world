@@ -1,7 +1,8 @@
 package api
 
 import (
-	"strconv"
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -63,16 +64,17 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	user, err := findOrMigrateUser(response)
+	user, err := flow(response)
 	if err != nil {
-		log.Warn.Printf("Failed to find or migrate %q: %s\n", response.Username, err)
-		return c.Next()
+		log.Warn.Printf("User %q failed to sign in: %s\n", response.Username, err)
+		msg := "Please contact us and provide this timestamp: " + time.Now().Format(time.RFC3339)
+		return c.Render("err", fiber.Map{"Title": msg})
 	}
 
 	expiration := time.Now().Add(time.Hour * 24 * 14)
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
-		SetClaim("name", user.Username).
+		SetClaim("name", strings.ToLower(user.Username)).
 		SetClaim("role", user.Role).
 		SetExpiration(expiration).
 		GetSignedString(nil)
@@ -101,37 +103,71 @@ func CallbackGet(c *fiber.Ctx) error {
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }
 
-func findOrMigrateUser(res oauthlogin.OAuthResponse) (*models.User, error) {
-	provider := string(res.Provider)
-
+func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 	var eu models.ExternalUser
-	err := database.Conn.
-		Preload("User").Model(eu).
-		Where("provider = ?", provider).
-		Where("external_id = ?", res.ExternalID).
-		First(&eu).Error
 
-	if err == gorm.ErrRecordNotFound {
-		err = database.Conn.
-			Where("o_auth_provider = ?", provider).
-			Where("username = ?", res.Username).
-			First(&eu.User).Error
+	// Check if external user exists.
+	err := database.Conn.Debug().
+		Model(eu).Preload("User").
+		First(&eu, "provider = ? AND external_id = ?", o.Provider, o.ExternalID).Error
+
+	switch {
+	case err == gorm.ErrRecordNotFound:
+		// Check if user exists.
+		err := database.Conn.Debug().
+			First(&eu.User, "username = ? COLLATE NOCASE AND o_auth_provider = ?", o.Username, o.Provider).Error
 		if err != nil {
-			return nil, err
+			eu = models.ExternalUser{
+				ExternalID:  o.ExternalID,
+				Provider:    string(o.Provider),
+				Email:       o.Email,
+				Username:    o.Username,
+				ExternalURL: o.ProfileURL(),
+				AccessToken: o.AccessToken,
+				RawData:     o.RawData,
+				User: models.User{
+					Email:         strings.ToLower(o.Email),
+					Username:      strings.ToLower(o.Username),
+					OAuthProvider: string(o.Provider),
+				},
+			}
+
+			var count int64
+			err := database.Conn.Debug().
+				Model(eu.User).
+				Where("username = ? OR email = ?", eu.Username, eu.Email).
+				Count(&count).
+				Error
+			if err != nil || count > 0 {
+				return nil, fmt.Errorf("user already exists")
+			}
+
+			if err := database.Conn.Debug().Create(&eu).Error; err != nil {
+				return nil, err
+			}
+
+			return &eu.User, nil
+		} else {
+			// NOTE: This overrides existing values.
+			eu = models.ExternalUser{
+				User:        eu.User,
+				UserID:      eu.User.ID,
+				ExternalID:  o.ExternalID,
+				Provider:    string(o.Provider),
+				Email:       strings.ToLower(o.Email),
+				Username:    strings.ToLower(o.Username),
+				ExternalURL: o.ProfileURL(),
+				AccessToken: o.AccessToken,
+				RawData:     o.RawData,
+			}
+			if err := database.Conn.Debug().Create(&eu).Error; err != nil {
+				return nil, err
+			}
+
+			return &eu.User, nil
 		}
 
-		eu.ExternalID = strconv.Itoa(res.ExternalID)
-		eu.Provider = provider
-		eu.Email = res.Email
-		eu.Username = res.Username
-		eu.ExternalURL = res.ProfileURL()
-		eu.AccessToken = res.AccessToken
-		eu.RawData = res.RawData
-
-		if err = database.Conn.Create(&eu).Error; err != nil {
-			return nil, err
-		}
-	} else if err != nil {
+	case err != nil:
 		return nil, err
 	}
 

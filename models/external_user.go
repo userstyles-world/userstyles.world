@@ -8,18 +8,19 @@ import (
 
 // ExternalUser contains external user information from OAuth providers.
 type ExternalUser struct {
+	ID          uint `gorm:"primarykey"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
-	ExternalID  string         `gorm:"primaryKey"`
-	UserID      uint           `gorm:"primaryKey"`
+	ExternalID  string         `gorm:"index:idx_external_users_user_id,unique"`
+	UserID      uint           `gorm:"index:idx_external_users_user_id,unique"`
 	User        User
 	Provider    string
-	Email       string
-	Username    string
+	Email       string `gorm:"email;type:TEXT COLLATE NOCASE"`
+	Username    string `gorm:"username;type:TEXT COLLATE NOCASE"`
 	ExternalURL string
 	AccessToken string
-	RawData     string
+	RawData     string `gorm:"-" json:"-"`
 }
 
 // TableName returns a table to be used with GORM.

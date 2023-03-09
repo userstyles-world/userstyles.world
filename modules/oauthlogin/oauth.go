@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"userstyles.world/modules/config"
@@ -25,7 +26,7 @@ type OAuthTokenResponse struct {
 }
 
 type userResponse struct {
-	ID int `json:"id"`
+	ID int `json:"id"` // TODO: Set to a string in the rewrite.
 
 	// Gitlab returns "username" for the username
 	UserName string `json:"username"`
@@ -39,7 +40,7 @@ type userResponse struct {
 
 type OAuthResponse struct {
 	Provider    Service
-	ExternalID  int
+	ExternalID  string
 	AccessToken string
 	Email       string
 	Username    string
@@ -253,7 +254,7 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 
 	oauthResponse := OAuthResponse{
 		Provider:    service.getServiceType(),
-		ExternalID:  userResponseJSON.ID,
+		ExternalID:  strconv.Itoa(userResponseJSON.ID),
 		Email:       userResponseJSON.Email,
 		Username:    userResponseJSON.UserName,
 		AccessToken: responseJSON.AccessToken,
