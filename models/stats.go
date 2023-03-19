@@ -115,7 +115,8 @@ func GetStyleStatistics(id string) StyleStats {
 SELECT id,
 	(SELECT count(*) FROM stats s WHERE style_id = @id AND view > 0) TotalViews,
 	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0) TotalInstalls,
-	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0 AND created_at > @week) WeeklyInstalls
+	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0 AND created_at > @week) WeeklyInstalls,
+	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0 AND created_at < @week AND install > @week) WeeklyUpdates
 FROM stats
 WHERE id = @id
 	`
