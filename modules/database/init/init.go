@@ -29,6 +29,7 @@ var tables = []struct {
 	{"logs", &models.Log{}},
 	{"reviews", &models.Review{}},
 	{"notifications", &models.Notification{}},
+	{"external_users", &models.ExternalUser{}},
 }
 
 func connect() (*gorm.DB, error) {

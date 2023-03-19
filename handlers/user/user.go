@@ -14,7 +14,7 @@ func Routes(app *fiber.App) {
 	r.Post("/login", LoginPost)
 	r.Get("/register", RegisterGet)
 	r.Post("/register", RegisterPost)
-	// r.Get("/oauth/:type", AuthLoginGet)
+	r.Get("/oauth/:type", AuthLoginGet)
 	r.Get("/verify/:key", VerifyGet)
 	r.Get("/recover", RecoverGet)
 	r.Post("/recover", RecoverPost)

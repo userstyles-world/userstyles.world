@@ -1,10 +1,12 @@
 package api
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
@@ -14,19 +16,6 @@ import (
 	"userstyles.world/modules/oauthlogin"
 	"userstyles.world/utils"
 )
-
-func getSocialMediaValue(user *models.User, social string) string {
-	switch social {
-	case "github":
-		return user.Socials.Github
-	case "gitlab":
-		return user.Socials.Gitlab
-	case "codeberg":
-		return user.Socials.Codeberg
-	default:
-		return ""
-	}
-}
 
 var allowedErrosList = []error{
 	errors.ErrPrimaryEmailNotVerified,
@@ -38,7 +27,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	redirectCode, tempCode, state := c.Params("rcode"), c.Query("code"), c.Query("state")
 	if redirectCode == "" || tempCode == "" {
 		log.Info.Println("No redirectCode or tempCode was detected.")
-		// Give them the bad enpoint error.
+		// Give them the bad endpoint error.
 		return c.Next()
 	}
 	var service string
@@ -75,39 +64,17 @@ func CallbackGet(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	user, err := models.FindUserByNameOrEmail(response.Username, response.Email)
+	user, err := flow(response)
 	if err != nil {
-		if err.Error() != "User not found." && err.Error() != "record not found" {
-			return c.Next()
-		}
-		user = &models.User{
-			Username:      response.Username,
-			Email:         response.Email,
-			Role:          models.Regular,
-			OAuthProvider: service,
-		}
-		regErr := database.Conn.Create(user)
-
-		if regErr.Error != nil {
-			log.Warn.Printf("Failed to register %s: %s", response.Username, regErr.Error)
-			return c.Status(fiber.StatusInternalServerError).
-				JSON(fiber.Map{
-					"data": "Internal Error.",
-				})
-		}
-	}
-
-	// TODO: Simplify this logic.
-	if (user.OAuthProvider == "none" || user.OAuthProvider != service) &&
-		!strings.EqualFold(getSocialMediaValue(user, service), response.Username) {
-		log.Warn.Println("User detected but the social media value wasn't set of this user.")
-		return c.Next()
+		log.Warn.Printf("User %q failed to sign in: %s\n", response.Username, err)
+		msg := "Please contact us and provide this timestamp: " + time.Now().Format(time.RFC3339)
+		return c.Render("err", fiber.Map{"Title": msg})
 	}
 
 	expiration := time.Now().Add(time.Hour * 24 * 14)
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
-		SetClaim("name", user.Username).
+		SetClaim("name", strings.ToLower(user.Username)).
 		SetClaim("role", user.Role).
 		SetExpiration(expiration).
 		GetSignedString(nil)
@@ -117,6 +84,10 @@ func CallbackGet(c *fiber.Ctx) error {
 			JSON(fiber.Map{
 				"data": "Internal Error.",
 			})
+	}
+
+	if err := user.UpdateLastLogin(); err != nil {
+		log.Database.Printf("Failed to update last_login for %d\n", user.ID)
 	}
 
 	c.Cookie(&fiber.Cookie{
@@ -130,4 +101,75 @@ func CallbackGet(c *fiber.Ctx) error {
 	})
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
+}
+
+func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
+	var eu models.ExternalUser
+
+	// Check if external user exists.
+	err := database.Conn.Debug().
+		Model(eu).Preload("User").
+		First(&eu, "provider = ? AND external_id = ?", o.Provider, o.ExternalID).Error
+
+	switch {
+	case err == gorm.ErrRecordNotFound:
+		// Check if user exists.
+		err := database.Conn.Debug().
+			First(&eu.User, "username = ? COLLATE NOCASE AND o_auth_provider = ?", o.Username, o.Provider).Error
+		if err != nil {
+			eu = models.ExternalUser{
+				ExternalID:  o.ExternalID,
+				Provider:    string(o.Provider),
+				Email:       o.Email,
+				Username:    o.Username,
+				ExternalURL: o.ProfileURL(),
+				AccessToken: o.AccessToken,
+				RawData:     o.RawData,
+				User: models.User{
+					Email:         strings.ToLower(o.Email),
+					Username:      strings.ToLower(o.Username),
+					OAuthProvider: string(o.Provider),
+				},
+			}
+
+			var count int64
+			err := database.Conn.Debug().
+				Model(eu.User).
+				Where("username = ? OR email = ?", eu.Username, eu.Email).
+				Count(&count).
+				Error
+			if err != nil || count > 0 {
+				return nil, fmt.Errorf("user already exists")
+			}
+
+			if err := database.Conn.Debug().Create(&eu).Error; err != nil {
+				return nil, err
+			}
+
+			return &eu.User, nil
+		} else {
+			// NOTE: This overrides existing values.
+			eu = models.ExternalUser{
+				User:        eu.User,
+				UserID:      eu.User.ID,
+				ExternalID:  o.ExternalID,
+				Provider:    string(o.Provider),
+				Email:       strings.ToLower(o.Email),
+				Username:    strings.ToLower(o.Username),
+				ExternalURL: o.ProfileURL(),
+				AccessToken: o.AccessToken,
+				RawData:     o.RawData,
+			}
+			if err := database.Conn.Debug().Create(&eu).Error; err != nil {
+				return nil, err
+			}
+
+			return &eu.User, nil
+		}
+
+	case err != nil:
+		return nil, err
+	}
+
+	return &eu.User, nil
 }
