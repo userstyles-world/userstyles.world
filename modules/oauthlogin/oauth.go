@@ -12,6 +12,9 @@ import (
 	"userstyles.world/utils"
 )
 
+// Maximum 1 MiB,
+const maxAuthBody = 1024 * 1024
+
 type Service string
 
 const (
@@ -198,7 +201,7 @@ func CallbackOAuth(tempCode, state, serviceType string) (OAuthResponse, error) {
 	}
 	defer res.Body.Close()
 
-	resBody, err := io.ReadAll(res.Body)
+	resBody, err := io.ReadAll(io.LimitReader(res.Body, maxAuthBody))
 	if err != nil {
 		return OAuthResponse{}, err
 	}
@@ -242,7 +245,7 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 	}
 
 	var userResponseJSON userResponse
-	resBody, err := io.ReadAll(resUserInformation.Body)
+	resBody, err := io.ReadAll(io.LimitReader(resUserInformation.Body, maxAuthBody))
 	if err != nil {
 		return OAuthResponse{}, err
 	}
