@@ -24,20 +24,20 @@ type SocialMedia struct {
 }
 
 type User struct {
-	gorm.Model `json:"-"`
+	gorm.Model        `json:"-"`
+	Username          string    `gorm:"unique;not null" validate:"required,username,min=3,max=32"`
+	Email             string    `gorm:"unique" validate:"required,email"`
+	OAuthProvider     string    `gorm:"default:none"`
+	Password          string    `validate:"required,min=8,max=32"`
+	Biography         string    `validate:"min=0,max=512"`
+	DisplayName       string    `validate:"displayName,min=3,max=32"`
+	Role              Role      `gorm:"default:0"`
+	LastLogin         time.Time `gorm:"default:null"`
+	LastPasswordReset time.Time `gorm:"default:null"`
+	// Will be saved under the user struct
+	AuthorizedOAuth StringList `gorm:"type:text(255)"`
 	// The values within SocialMedia struct
 	Socials SocialMedia `gorm:"embedded"`
-	// Will be saved under the user struct
-	AuthorizedOAuth   StringList `gorm:"type:varchar(255)"`
-	Username          string     `gorm:"unique;not null" validate:"required,username,min=3,max=32"`
-	Email             string     `gorm:"unique" validate:"required,email"`
-	OAuthProvider     string     `gorm:"default:none"`
-	Password          string     `validate:"required,min=8,max=32"`
-	Biography         string     `validate:"min=0,max=512"`
-	DisplayName       string     `validate:"displayName,min=3,max=32"`
-	Role              Role       `gorm:"default=0"`
-	LastLogin         time.Time
-	LastPasswordReset time.Time
 }
 
 type APIUser struct {

@@ -91,7 +91,8 @@ func Initialize() {
 
 	// Run one-time migrations.
 	if _, ok := os.LookupEnv("MAGIC"); ok {
-		migration()
+		runMigration(conn)
+		os.Exit(0)
 	}
 
 	// Migrate tables.
