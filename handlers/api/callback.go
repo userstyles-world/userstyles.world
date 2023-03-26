@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -74,7 +73,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	expiration := time.Now().Add(time.Hour * 24 * 14)
 	t, err := utils.NewJWTToken().
 		SetClaim("id", user.ID).
-		SetClaim("name", strings.ToLower(user.Username)).
+		SetClaim("name", user.Username).
 		SetClaim("role", user.Role).
 		SetExpiration(expiration).
 		GetSignedString(nil)
@@ -115,7 +114,7 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 	case err == gorm.ErrRecordNotFound:
 		// Check if user exists.
 		err := database.Conn.Debug().
-			First(&eu.User, "username = ? COLLATE NOCASE AND o_auth_provider = ?", o.Username, o.Provider).Error
+			First(&eu.User, "username = ? AND o_auth_provider = ?", o.Username, o.Provider).Error
 		if err != nil {
 			eu = models.ExternalUser{
 				ExternalID:  o.ExternalID,
@@ -126,8 +125,8 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				AccessToken: o.AccessToken,
 				RawData:     o.RawData,
 				User: models.User{
-					Email:         strings.ToLower(o.Email),
-					Username:      strings.ToLower(o.Username),
+					Email:         o.Email,
+					Username:      o.Username,
 					OAuthProvider: string(o.Provider),
 				},
 			}
@@ -157,8 +156,8 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				UserID:      eu.User.ID,
 				ExternalID:  o.ExternalID,
 				Provider:    string(o.Provider),
-				Email:       strings.ToLower(o.Email),
-				Username:    strings.ToLower(o.Username),
+				Email:       o.Email,
+				Username:    o.Username,
 				ExternalURL: o.ProfileURL(),
 				AccessToken: o.AccessToken,
 				RawData:     o.RawData,

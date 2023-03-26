@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -57,7 +56,7 @@ func RegisterPost(c *fiber.Ctx) error {
 	}
 
 	token, err := utils.NewJWTToken().
-		SetClaim("username", strings.ToLower(u.Username)).
+		SetClaim("username", u.Username).
 		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).
 		SetExpiration(time.Now().Add(time.Hour * 2)).

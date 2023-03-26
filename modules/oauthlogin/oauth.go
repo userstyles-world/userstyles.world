@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
@@ -54,7 +53,6 @@ func (o *OAuthResponse) normalize(username string) {
 	if username != "" {
 		o.Username = username
 	}
-	o.Username = strings.ToLower(o.Username)
 }
 
 func (o *OAuthResponse) ProfileURL() string {

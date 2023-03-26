@@ -1,8 +1,6 @@
 package user
 
 import (
-	"strings"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -25,7 +23,7 @@ func Profile(c *fiber.Ctx) error {
 
 	// Always redirect to correct URL.
 	if username != profile.Username {
-		return c.Redirect("/user/"+strings.ToLower(username), fiber.StatusSeeOther)
+		return c.Redirect("/user/"+profile.Username, fiber.StatusSeeOther)
 	}
 
 	var p models.Pagination

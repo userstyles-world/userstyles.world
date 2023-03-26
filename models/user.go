@@ -1,7 +1,6 @@
 package models
 
 import (
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -25,8 +24,8 @@ type SocialMedia struct {
 
 type User struct {
 	gorm.Model        `json:"-"`
-	Username          string    `gorm:"unique;not null" validate:"required,username,min=3,max=32"`
-	Email             string    `gorm:"unique" validate:"required,email"`
+	Username          string    `gorm:"type:text COLLATE NOCASE;unique;not null" validate:"required,username,min=3,max=32"`
+	Email             string    `gorm:"type:text COLLATE NOCASE;unique;not null" validate:"required,email"`
 	OAuthProvider     string    `gorm:"default:none"`
 	Password          string    `validate:"required,min=8,max=32"`
 	Biography         string    `validate:"min=0,max=512"`
@@ -107,7 +106,7 @@ func FindUserByName(name string) (*User, error) {
 	user := new(User)
 
 	err := db().
-		Where("username = ?", strings.ToLower(name)).
+		Where("username = ?", name).
 		First(&user).
 		Error
 	if err != nil {
@@ -125,7 +124,7 @@ func FindUserByNameOrEmail(name, email string) (*User, error) {
 	user := new(User)
 
 	err := db().
-		Where("username = ? or email = ?", strings.ToLower(name), email).
+		Where("username = ? OR email = ?", name, email).
 		First(&user).
 		Error
 	if err != nil {
