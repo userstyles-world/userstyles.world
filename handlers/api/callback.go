@@ -138,8 +138,11 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				Where("username = ? OR email = ?", eu.Username, eu.Email).
 				Count(&count).
 				Error
-			if err != nil || count > 0 {
-				return nil, fmt.Errorf("user already exists")
+			if err != nil {
+				return nil, err
+			}
+			if count > 0 {
+				return nil, fmt.Errorf("user %s already exists", eu.Username)
 			}
 
 			if err := database.Conn.Debug().Create(&eu).Error; err != nil {
