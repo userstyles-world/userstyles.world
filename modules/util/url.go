@@ -43,6 +43,11 @@ func Slug(s string) string {
 		return "default-slug"
 	}
 
+	// Trim trailing dash.
+	if b[len(b)-1] == '-' {
+		b = b[:len(b)-1]
+	}
+
 	return *(*string)(unsafe.Pointer(&b))
 }
 

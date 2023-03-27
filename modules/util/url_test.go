@@ -11,7 +11,8 @@ var slugCases = []struct {
 	{"extra characters", "(Dark) Theme [v1.2.3]", "dark-theme-v1-2-3"},
 	{"uppercase characters", "MY USERSTYLE NAME", "my-userstyle-name"},
 	{"many valid characters", "a b c d e f g h i", "a-b-c-d-e-f-g-h-i"},
-	{"mixed typographic symbols", "暗い空 Dark Mode", "dark-mode"},
+	{"first typographic symbols", "暗い空 Dark Mode", "dark-mode"},
+	{"first valid characters", "Dark Mode 暗い空", "dark-mode"},
 	{"only typographic symbols", "暗い空", "default-slug"},
 }
 
