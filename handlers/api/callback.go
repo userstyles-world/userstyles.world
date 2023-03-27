@@ -148,6 +148,8 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				return nil, err
 			}
 
+			log.Info.Printf("Migrated user id=%d username=%s", eu.User.ID, eu.User.Username)
+
 			return &eu.User, nil
 		} else {
 			// NOTE: This overrides existing values.
@@ -166,12 +168,16 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				return nil, err
 			}
 
+			log.Info.Printf("Created user id=%d username=%s", eu.User.ID, eu.User.Username)
+
 			return &eu.User, nil
 		}
 
 	case err != nil:
 		return nil, err
 	}
+
+	log.Info.Printf("Logged in user id=%d username=%s", eu.User.ID, eu.User.Username)
 
 	return &eu.User, nil
 }
