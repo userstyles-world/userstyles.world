@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+  # Run manually.
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '^1.20'
+
+    - name: Install dependencies
+      run: go mod download
+
+    - name: Run formatter
+      run: go fmt ./... && git diff --exit-code
+
+    - name: Run linter
+      run: go vet ./...
+
+    - name: Run tests
+      run: go test ./...
