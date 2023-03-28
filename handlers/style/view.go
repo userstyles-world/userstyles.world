@@ -55,24 +55,24 @@ func GetStylePage(c *fiber.Ctx) error {
 		cache.ViewStats.Add(c.IP() + " " + id)
 	}
 
-    /*
-	// Get history data.
-	history, err := models.GetStyleHistory(id)
-	if err != nil {
-		log.Warn.Printf("Failed to get stats for style %s: %s", id, err.Error())
-	}
-
-	// Render graphs.
-	var dailyHistory, totalHistory string
-	if len(history) > 2 {
-		dailyHistory, totalHistory, err = charts.GetStatsHistory(history)
+	/*
+		// Get history data.
+		history, err := models.GetStyleHistory(id)
 		if err != nil {
-			log.Warn.Printf("Failed to render history for style %s: %s\n", id, err.Error())
+			log.Warn.Printf("Failed to get stats for style %s: %s", id, err.Error())
 		}
-	}
-	args["DailyHistory"] = dailyHistory
-	args["TotalHistory"] = totalHistory
-    */
+
+		// Render graphs.
+		var dailyHistory, totalHistory string
+		if len(history) > 2 {
+			dailyHistory, totalHistory, err = charts.GetStatsHistory(history)
+			if err != nil {
+				log.Warn.Printf("Failed to render history for style %s: %s\n", id, err.Error())
+			}
+		}
+		args["DailyHistory"] = dailyHistory
+		args["TotalHistory"] = totalHistory
+	*/
 
 	reviews, err := new(models.Review).FindAllForStyle(id)
 	if err != nil {

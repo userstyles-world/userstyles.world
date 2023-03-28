@@ -50,7 +50,7 @@ func sealText(text string, aead cipher.AEAD, nonceScrambling *config.ScrambleSet
 }
 
 // scrambleNonce into string takes a nonce and a text
-// And it will insert `bytesPerInsert`` bits of the nonce every `step` bytes.
+// And it will insert `bytesPerInsert` bits of the nonce every `step` bytes.
 // And it will paste the "rest" nonce if the text isn't big enough.
 func scrambleNonce(nonce, text []byte, step, bytesPerInsert int) []byte {
 	// Copy the text into encodedText.
