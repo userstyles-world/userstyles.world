@@ -1,6 +1,6 @@
 module userstyles.world
 
-go 1.19
+go 1.20
 
 require (
 	codeberg.org/Gusted/algorithms-go v0.0.0-20220313110144-790a1aadd877
