@@ -76,14 +76,14 @@ func TestJSON(t *testing.T) {
 		{"TestForMinimalStyle", storage.StyleCard{
 			Name:      "abcv",
 			ID:        123,
-			CreatedAt: time.Unix(0, 0),
-			UpdatedAt: time.Unix(0, 0),
+			CreatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
+			UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
 			Username:  "admin",
 			Preview:   "https://example.com/preview.png",
 			Views:     99,
 			Installs:  69,
 			Rating:    420,
-		}, []byte(`{"created_at":"1970-01-01T01:00:00+01:00","id":123,"installs":69,"name":"abcv","preview":"https://example.com/preview.png","rating":420,"updated_at":"1970-01-01T01:00:00+01:00","username":"admin","views":99}`)},
+		}, []byte(`{"created_at":"1970-01-01T01:00:00Z","id":123,"installs":69,"name":"abcv","preview":"https://example.com/preview.png","rating":420,"updated_at":"1970-01-01T01:00:00Z","username":"admin","views":99}`)},
 	}
 
 	for _, c := range cases {
@@ -92,8 +92,8 @@ func TestJSON(t *testing.T) {
 			t.Fatalf("%s: %s", c.desc, err)
 		}
 		if !bytes.Equal(actual, c.expected) {
-			t.Fatalf("%s: expected: %s got: %s",
-				c.desc, c.expected, actual)
+			t.Errorf("exp: %s", c.expected)
+			t.Errorf("got: %s", actual)
 		}
 	}
 }
