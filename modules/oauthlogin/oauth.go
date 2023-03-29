@@ -2,7 +2,6 @@ package oauthlogin
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 	"strconv"
 
@@ -10,9 +9,6 @@ import (
 	"userstyles.world/modules/errors"
 	"userstyles.world/utils"
 )
-
-// Maximum 1 MiB,
-const maxAuthBody = 1024 * 1024
 
 type Service string
 
@@ -198,18 +194,12 @@ func CallbackOAuth(tempCode, state, serviceType string) (OAuthResponse, error) {
 		return OAuthResponse{}, err
 	}
 	defer res.Body.Close()
-
-	resBody, err := io.ReadAll(io.LimitReader(res.Body, maxAuthBody))
-	if err != nil {
-		return OAuthResponse{}, err
-	}
-
 	if res.StatusCode != 200 {
 		return OAuthResponse{}, errors.ErrNot200Ok
 	}
 
 	var responseJSON OAuthTokenResponse
-	err = json.Unmarshal(resBody, &responseJSON)
+	err = json.NewDecoder(res.Body).Decode(&responseJSON)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
@@ -243,12 +233,7 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 	}
 
 	var userResponseJSON userResponse
-	resBody, err := io.ReadAll(io.LimitReader(resUserInformation.Body, maxAuthBody))
-	if err != nil {
-		return OAuthResponse{}, err
-	}
-
-	err = json.Unmarshal(resBody, &userResponseJSON)
+	err = json.NewDecoder(resUserInformation.Body).Decode(&userResponseJSON)
 	if err != nil {
 		return OAuthResponse{}, err
 	}
@@ -259,7 +244,6 @@ func getUserInformation(service ProviderFunctions, responseJSON OAuthTokenRespon
 		Email:       userResponseJSON.Email,
 		Username:    userResponseJSON.UserName,
 		AccessToken: responseJSON.AccessToken,
-		RawData:     string(resBody),
 	}
 	oauthResponse.normalize(userResponseJSON.LoginName)
 

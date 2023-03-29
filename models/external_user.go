@@ -20,7 +20,6 @@ type ExternalUser struct {
 	Username    string `gorm:"username;type:TEXT COLLATE NOCASE"`
 	ExternalURL string
 	AccessToken string
-	RawData     string `gorm:"-" json:"-"`
 }
 
 // TableName returns a table to be used with GORM.

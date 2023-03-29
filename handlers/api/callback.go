@@ -123,7 +123,6 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				Username:    o.Username,
 				ExternalURL: o.ProfileURL(),
 				AccessToken: o.AccessToken,
-				RawData:     o.RawData,
 				User: models.User{
 					Email:         o.Email,
 					Username:      o.Username,
@@ -162,7 +161,6 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				Username:    o.Username,
 				ExternalURL: o.ProfileURL(),
 				AccessToken: o.AccessToken,
-				RawData:     o.RawData,
 			}
 			if err := database.Conn.Debug().Create(&eu).Error; err != nil {
 				return nil, err
