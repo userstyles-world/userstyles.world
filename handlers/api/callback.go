@@ -147,7 +147,7 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				return nil, err
 			}
 
-			log.Info.Printf("Migrated user id=%d username=%s", eu.User.ID, eu.User.Username)
+			log.Info.Printf("kind=signup id=%d username=%s", eu.User.ID, eu.User.Username)
 
 			return &eu.User, nil
 		} else {
@@ -166,7 +166,7 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				return nil, err
 			}
 
-			log.Info.Printf("Created user id=%d username=%s", eu.User.ID, eu.User.Username)
+			log.Info.Printf("kind=migration id=%d username=%s", eu.User.ID, eu.User.Username)
 
 			return &eu.User, nil
 		}
@@ -175,7 +175,7 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 		return nil, err
 	}
 
-	log.Info.Printf("Logged in user id=%d username=%s", eu.User.ID, eu.User.Username)
+	log.Info.Printf("kind=signin id=%d username=%s", eu.User.ID, eu.User.Username)
 
 	return &eu.User, nil
 }
