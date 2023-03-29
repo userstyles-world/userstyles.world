@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -130,17 +131,25 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 				},
 			}
 
-			var count int64
-			err := database.Conn.Debug().
-				Model(eu.User).
-				Where("username = ? OR email = ?", eu.Username, eu.Email).
-				Count(&count).
-				Error
+			var u models.User
+			err := database.Conn.Debug().Where("email = ?", eu.Email).Find(&u).Error
 			if err != nil {
 				return nil, err
 			}
-			if count > 0 {
-				return nil, fmt.Errorf("user %s already exists", eu.Username)
+
+			// Fail on duplicate emails.
+			if u.ID > 0 {
+				return nil, fmt.Errorf("email %s already exists", eu.Email)
+			}
+
+			err = database.Conn.Debug().Where("username = ?", eu.Username).Find(&u).Error
+			if err != nil {
+				return nil, err
+			}
+
+			// Workaround for duplicate usernames.
+			if u.ID > 0 {
+				eu.User.Username = fmt.Sprintf("%s-%d", eu.User.Username, randInt(9999))
 			}
 
 			if err := database.Conn.Debug().Create(&eu).Error; err != nil {
@@ -178,4 +187,9 @@ func flow(o oauthlogin.OAuthResponse) (*models.User, error) {
 	log.Info.Printf("kind=signin id=%d username=%s", eu.User.ID, eu.User.Username)
 
 	return &eu.User, nil
+}
+
+func randInt(i int) int {
+	rand.NewSource(time.Now().UnixNano())
+	return rand.Intn(i) + 1
 }
