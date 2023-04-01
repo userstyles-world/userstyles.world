@@ -74,6 +74,13 @@
                         href="/edit/{{ .Style.ID }}"
                         class="btn icon ml:s"
                     >{{ template "icons/edit" }} Edit</a>
+                    {{ if or .Style.MirrorCode .Style.MirrorMeta }}
+                        <a
+                            href="/mirror/{{ .Style.ID }}"
+                            class="btn icon ml:s"
+                            data-tooltip="Mirror your userstyle. You can do this once per hour."
+                        >{{ template "icons/refresh" }} Mirror</a>
+                    {{ end }}
                 {{ end }}
                 {{ if .User.IsModOrAdmin }}
                     <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">

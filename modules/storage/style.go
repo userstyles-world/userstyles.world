@@ -56,3 +56,14 @@ func FindStylesForMirror(action func([]models.Style) error) error {
 			return action(styles)
 		}).Error
 }
+
+// FindStyleForMirror returns a style with enabled mirroring or an error.
+func FindStyleForMirror(id int) (models.Style, error) {
+	var s models.Style
+	err := database.Conn.Where(isMirrored).First(&s, "id = ?", id).Error
+	if err != nil {
+		return models.Style{}, err
+	}
+
+	return s, nil
+}

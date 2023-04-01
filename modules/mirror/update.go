@@ -25,7 +25,7 @@ func MirrorStyles() {
 		wg.Add(len(styles))
 
 		for _, style := range styles {
-			go check(&wg, style)
+			go mirrorWG(&wg, style)
 		}
 
 		time.Sleep(5 * time.Second)
@@ -40,4 +40,9 @@ func MirrorStyles() {
 	}
 
 	log.Info.Printf("Done checking mirrored styles.\n")
+}
+
+func MirrorStyle(s models.Style) {
+	// TODO: Refactor to add error checking and logging.
+	mirror(s)
 }

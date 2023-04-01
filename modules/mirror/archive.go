@@ -50,9 +50,12 @@ func getSourceCode(style models.Style) string {
 	return style.Original
 }
 
-func check(wg *sync.WaitGroup, batch models.Style) {
-	defer wg.Done()
+func mirrorWG(wg *sync.WaitGroup, s models.Style) {
+	mirror(s)
+	wg.Done()
+}
 
+func mirror(batch models.Style) {
 	// Select which fields to update.
 	fields := make(map[string]any)
 	fields["id"] = batch.ID
