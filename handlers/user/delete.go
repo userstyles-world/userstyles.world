@@ -1,8 +1,6 @@
 package user
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -22,19 +20,12 @@ func DeleteGet(c *fiber.Ctx) error {
 		return c.Render("err", m)
 	}
 
-	user, err := models.FindUserByID(strconv.Itoa(id))
-	if err != nil {
-		m["Title"] = "User doesn't exist"
-		return c.Render("err", m)
-	}
-
-	if u.ID != user.ID {
+	if u.ID != uint(id) {
 		m["Title"] = "You can't delete other users"
 		return c.Render("err", m)
 	}
 
 	m["Title"] = "Delete account"
-	m["Params"] = user
 
 	return c.Render("user/delete", m)
 }
@@ -49,41 +40,35 @@ func DeletePost(c *fiber.Ctx) error {
 		return c.Render("err", m)
 	}
 
-	user, err := models.FindUserByID(strconv.Itoa(id))
-	if err != nil {
-		m["Title"] = "User doesn't exist"
-		return c.Render("err", m)
-	}
-
-	if u.ID != user.ID {
+	if u.ID != uint(id) {
 		m["Title"] = "You can't delete other users"
 		return c.Render("err", m)
 	}
 
 	// Delete from database.
 	err = database.Conn.Transaction(func(tx *gorm.DB) error {
-		if err = tx.Debug().Delete(&models.User{}, "id = ?", user.ID).Error; err != nil {
+		if err = tx.Debug().Delete(&models.User{}, "id = ?", id).Error; err != nil {
 			return err
 		}
 
 		// TODO: Remove after introducing cascading deletes.
-		if err = tx.Debug().Delete(&models.Style{}, "user_id = ?", user.ID).Error; err != nil {
+		if err = tx.Debug().Delete(&models.Style{}, "user_id = ?", id).Error; err != nil {
 			return err
 		}
-		if err = tx.Debug().Delete(&models.Review{}, "user_id = ?", user.ID).Error; err != nil {
+		if err = tx.Debug().Delete(&models.Review{}, "user_id = ?", id).Error; err != nil {
 			return err
 		}
-		if err = tx.Debug().Delete(&models.Notification{}, "user_id = ?", user.ID).Error; err != nil {
+		if err = tx.Debug().Delete(&models.Notification{}, "user_id = ?", id).Error; err != nil {
 			return err
 		}
-		if err = tx.Debug().Delete(&models.ExternalUser{}, "user_id = ?", user.ID).Error; err != nil {
+		if err = tx.Debug().Delete(&models.ExternalUser{}, "user_id = ?", id).Error; err != nil {
 			return err
 		}
 
 		return nil
 	})
 	if err != nil {
-		log.Database.Printf("Failed to delete %s: %s\n", user.Username, err)
+		log.Database.Printf("Failed to delete %q: %s\n", u.Username, err)
 		m["Title"] = "Failed to delete you account. Please try again"
 		return c.Render("err", m)
 	}
