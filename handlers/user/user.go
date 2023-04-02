@@ -27,4 +27,6 @@ func Routes(app *fiber.App) {
 	r.Post("/account/:form", jwtware.Protected, EditAccount)
 	r.Get("/user/ban/:id", jwtware.Protected, Ban)
 	r.Post("/user/ban/:id", jwtware.Protected, ConfirmBan)
+	r.Get("/user/delete/:id", jwtware.Protected, DeleteGet)
+	r.Post("/user/delete/:id", jwtware.Protected, DeletePost)
 }

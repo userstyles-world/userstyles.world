@@ -223,4 +223,12 @@
             </div>
         </div>
     </section>
+
+    <section id="actions">
+        <h2 class="sub-title td:d mt:l">Actions</h2>
+        <a
+            style="display: inline-flex"
+            class="btn icon" href="/user/delete/{{ .Params.ID }}"
+        >{{ template "icons/trash" }} Delete account</a>
+    </section>
 </div>
