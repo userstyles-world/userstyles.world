@@ -111,6 +111,6 @@ func (s *stats) Add(key string) {
 			return
 		}
 
-		s.m[key] = val
+		s.m[key] = strings.Clone(val)
 	}
 }
