@@ -78,7 +78,7 @@ func EditPost(c *fiber.Ctx) error {
 	file, _ := c.FormFile("preview")
 	version := strconv.Itoa(s.PreviewVersion + 1)
 	preview := strings.TrimSpace(c.FormValue("previewURL"))
-	if file != nil || preview != s.Preview {
+	if file != nil || (preview != s.Preview && preview != "") {
 		if err := images.Generate(file, id, version, s.Preview, preview); err != nil {
 			log.Warn.Println("Error:", err)
 		} else {
@@ -87,8 +87,7 @@ func EditPost(c *fiber.Ctx) error {
 		}
 	} else if preview == "" {
 		// TODO: Figure out a better UI/UX for this functionality.  ATM, one has
-		// to set "Preview image URL" field to be empty or upload an image that
-		// can't be processed in order for it to be unset in the database.
+		// to set "Preview image URL" field to be empty in order to remove it.
 		s.Preview = ""
 	}
 
