@@ -12,10 +12,12 @@
         {{ template "partials/alert" . }}
         <form class="form-wrapper" method="post" action="/styles/review/{{ .ID }}">
             <label for="alert">Notice ⚠</label>
-            <p class="mt:s pb:m">As spam prevention, you're limited to only one review per style every single week. Please proofread your comment since we don't yet have an edit page yet.</p>
+            <p class="mt:s pb:m">As spam prevention, you're limited to only one review per style every single week. Please proofread your comment since we don't have an edit page yet.</p>
+
             <label for="rating">Rating</label>
-            <input required type="number" name="rating" id="rating" min="1" max="5" inputmode="numeric"
-                value="{{ .Rating }}" placeholder="Choose a rating on a scale from 1 to 5">
+            <i class="fg:3">Set to 0 if you don't want to give a rating. Keep in mind that websites change all the time and negative reviews won't be motivating for authors to update their userstyles.</i>
+            <input required type="number" name="rating" id="rating" min="0" max="5" inputmode="numeric"
+                value="{{ .Rating }}" placeholder="Choose a rating on a scale from 0 to 5">
 
             <label for="comment">Comment</label>
             <i class="fg:3" id="comment-hint">Please avoid reporting bugs and/or feature requests here.</i>

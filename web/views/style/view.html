@@ -200,7 +200,7 @@
             <div class="Box mt:m" id="id-{{ .ID }}">
                 <div class="Box-header">
                     <a class="username" href="/user/{{ .User.Username }}"><b>{{ .User.Username }}</b></a>
-                    reviewed and gave {{ .Rating }}/5 ⭐
+                    reviewed {{ with .Rating }} and rated {{ . }}/5 ⭐ {{ end }}
                     <a class="datetime" href="#id-{{ .ID }}">
                         <time datetime="{{ .CreatedAt | iso }}">
                             {{ .CreatedAt | rel }}

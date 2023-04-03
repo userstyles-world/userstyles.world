@@ -14,7 +14,7 @@ import (
 const (
 	selectWeeklyInstalls = "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.install > DATETIME('now', '-7 days') AND s.created_at > DATETIME('now', '-7 days')) AS WeeklyInstalls"
 	selectTotalInstalls  = "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.install > 0) AS TotalInstalls"
-	selectUSoRatings     = "(SELECT ROUND(AVG(rating)*0.6, 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS Rating"
+	selectUSoRatings     = "(SELECT ROUND(AVG(rating)*0.6, 1) FROM reviews r WHERE r.style_id = styles.id AND rating > 0 AND r.deleted_at IS NULL) AS Rating"
 )
 
 var (
