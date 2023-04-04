@@ -4,8 +4,9 @@
         {{ template "partials/head" . }}
     </head>
     <body>
+        <a href="#content">Skip to content</a>
         {{ template "partials/nav" . }}
-        <main>{{ embed }}</main>
+        <main id="content">{{ embed }}</main>
         {{ template "partials/footer" . }}
     </body>
 </html>
