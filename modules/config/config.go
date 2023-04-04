@@ -71,8 +71,9 @@ var (
 	AppUptime       = time.Now()
 	AppPageMaxItems = 36
 
-	AppLinkChatDiscord = "https://discord.gg/P5zra4nFS2"
-	AppLinkChatMatrix  = "https://matrix.to/#/#userstyles:matrix.org"
+	AppLinkChatDiscord    = "https://discord.gg/P5zra4nFS2"
+	AppLinkChatMatrix     = "https://matrix.to/#/#userstyles:matrix.org"
+	AppLinkOpenCollective = "https://opencollective.com/userstyles"
 
 	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
 	AllowedImagesRe = `^https?:\/\/(www\.)?(` + raw(BaseURL) + `|(user-images|raw|gist)\.githubusercontent\.com|github\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)(\?inline=(true|false))?$`

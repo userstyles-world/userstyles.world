@@ -13,6 +13,8 @@ func GetLinkedSite(c *fiber.Ctx) error {
 		return c.Redirect(config.AppLinkChatDiscord, fiber.StatusSeeOther)
 	case "matrix":
 		return c.Redirect(config.AppLinkChatMatrix, fiber.StatusSeeOther)
+	case "opencollective":
+		return c.Redirect(config.AppLinkOpenCollective, fiber.StatusSeeOther)
 	case "source":
 		return c.Redirect(config.AppSourceCode, fiber.StatusSeeOther)
 	default:
