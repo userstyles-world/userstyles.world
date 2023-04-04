@@ -339,3 +339,20 @@ tbody tr:nth-child(2n-1):target {
     [fill='#eecc8a'] { --darkreader-inline-fill: #{$yellow} }
     [fill='#e0760a'] { --darkreader-inline-fill: #{$orange} }
 }
+
+a[href='#content'] {
+    z-index: 999;
+    position: absolute;
+
+    &:focus {
+        top: 0;
+        height: 65px;
+        padding: 0 1rem;
+        line-height: 65px;
+        background-color: var(--bg-3);
+    }
+
+    &:not(:focus) {
+        left: -100vw;
+    }
+}
