@@ -64,6 +64,11 @@
                         href="/styles/ban/{{ .Style.ID }}"
                         class="btn icon"
                     >{{ template "icons/ban" }} Ban</a>
+                    <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
+                        <button class="btn icon ml:s" type="submit"
+                        data-tooltip='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
+                        >{{ template "icons/star" }} Promote</button>
+                    </form>
                 {{ end }}
                 {{ if eq .User.ID .Style.UserID }}
                     <a
@@ -81,14 +86,6 @@
                             data-tooltip="Mirror your userstyle. You can do this once per hour."
                         >{{ template "icons/refresh" }} Mirror</a>
                     {{ end }}
-                {{ end }}
-                {{ if .User.IsModOrAdmin }}
-                    <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
-                        <button class="btn ml:s" type="submit"
-                        data-tooltip='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
-                        >
-                        🌟</button>
-                    </form>
                 {{ end }}
                 {{ if .Style.Homepage }}
                     <a
