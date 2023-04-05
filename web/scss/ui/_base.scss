@@ -129,9 +129,11 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     }
 }
 
+.danger { color: var(--dg) }
+
 // TODO: Refactor as an "alert" component later.
 .err {
-    $red: lighten(red, 20);
+    $red: $dg-dark;
     margin: 1rem auto;
     padding: 1rem;
     color: $red;
@@ -143,7 +145,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     p:last-child { margin-bottom: 0 }
 
     [data-color-scheme="light"] & {
-        $red: lighten(red, 0);
+        $red: $dg-light;
         color: $red;
         border-left: var(--br-3) solid transparentize($red, 0.5);
         background-color: transparentize($red, 0.9);

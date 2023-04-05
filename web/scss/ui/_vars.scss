@@ -3,12 +3,14 @@ $bg-dark:  #1a1a1a;
 $fg-dark:  #dddddd;
 $ac-dark:  #679CD0;
 $st-dark:  #27fffb;
+$dg-dark: lighten(red, 20);
 
 // Light mode colors.
 $bg-light: #eeeeee;
 $fg-light: #101010;
 $ac-light: #0b459b;
 $st-light: darken(#66edd9, 60%);
+$dg-light: lighten(red, 0);
 
 $mode: (
     "dark": (
@@ -32,6 +34,7 @@ $mode: (
         "st-3": darken($st-dark, 30%),
         "st-4": darken($st-dark, 40%),
         "st-5": darken($st-dark, 50%),
+        "dg": $dg-dark,
         "sh-m": "0 4px 12px -2px #0006, 0 6px 4px -4px #0002",
     ),
     "light": (
@@ -56,6 +59,7 @@ $mode: (
         "st-4": lighten($st-light, 24%),
         "st-5": lighten($st-light, 48%),
         "bg-t": transparentize($bg-light, 0.2),
+        "dg": $dg-light,
         "sh-m": "0 4px 16px -4px #0004, 0 4px 4px -4px #0001",
     ),
 );
