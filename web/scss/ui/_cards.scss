@@ -99,6 +99,14 @@
 }
 
 .grid {
+    &.grid-2 {
+        .col {
+            flex-basis: calc(100% / 2 - 1rem);
+            @media screen and (max-width: 664px) { flex-basis: 100% }
+            h3 { margin: 0 }
+        }
+    }
+
     @media screen and (max-width: 1280px) {
         .col { flex-basis: calc(100% / 3 - 1rem) }
     }
