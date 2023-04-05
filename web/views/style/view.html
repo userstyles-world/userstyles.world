@@ -68,7 +68,7 @@
                 {{ if eq .User.ID .Style.UserID }}
                     <a
                         href="/delete/{{ .Style.ID }}"
-                        class="btn icon ml:s"
+                        class="btn icon ml:s danger"
                     >{{ template "icons/trash" }} Delete</a>
                     <a
                         href="/edit/{{ .Style.ID }}"
