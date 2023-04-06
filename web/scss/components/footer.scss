@@ -4,7 +4,7 @@
     border-top: 1px solid var(--bg-4);
     background-color: var(--bg-2);
 
-    @media screen and (max-width: 960px) {
+    @media screen and (max-width: 959.98px) {
         &-wrapper { flex-direction: column }
         &-list:not(:last-child) { margin-bottom: 2rem }
     }
