@@ -22,7 +22,7 @@ func Routes(app *fiber.App) {
 	r.Get("/edit/:id", jwtware.Protected, EditGet)
 	r.Post("/edit/:id", jwtware.Protected, EditPost)
 	r.Get("/mirror/:id", jwtware.Protected, Mirror)
-	r.Post("/style/:id/promote", jwtware.Protected, Promote)
+	r.Get("/styles/promote/:id", jwtware.Protected, Promote)
 	r.Get("/styles/ban/:id", jwtware.Protected, BanGet)
 	r.Post("/styles/ban/:id", jwtware.Protected, BanPost)
 	r.Get("/styles/review/:id", jwtware.Protected, ReviewGet)

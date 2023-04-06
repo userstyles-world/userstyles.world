@@ -64,10 +64,11 @@
                         href="/styles/ban/{{ .Style.ID }}"
                         class="btn icon"
                     >{{ template "icons/ban" }} Ban</a>
-                    <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
-                        <button class="btn icon" type="submit"
-                        data-tooltip='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
-                        >{{ template "icons/star" }} Promote</button>
+                    <a
+                        class="btn icon"
+                        href="/styles/promote/{{ .Style.ID }}"
+                        data-tooltip='Promote/demote this style to/from featured styles.'
+                        >{{ template "icons/star" }} {{ with .Style.Featured }}Demote{{ else }}Promote{{ end }}</a>
                     </form>
                 {{ end }}
                 {{ if eq .User.ID .Style.UserID }}
