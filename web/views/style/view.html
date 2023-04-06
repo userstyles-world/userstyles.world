@@ -58,14 +58,14 @@
                 </div>
             {{ end }}
 
-            <span class="actions flex ml:a">
+            <div class="actions flex ml:a">
                 {{ if .User.IsModOrAdmin }}
                     <a
                         href="/styles/ban/{{ .Style.ID }}"
                         class="btn icon"
                     >{{ template "icons/ban" }} Ban</a>
                     <form class="unset" method="post" action="/style/{{ .Style.ID }}/promote">
-                        <button class="btn icon ml:s" type="submit"
+                        <button class="btn icon" type="submit"
                         data-tooltip='Promote this style. The style will then be featured on the home page. If this style has already been promoted it will be removed as being promoted.'
                         >{{ template "icons/star" }} Promote</button>
                     </form>
@@ -73,16 +73,16 @@
                 {{ if eq .User.ID .Style.UserID }}
                     <a
                         href="/delete/{{ .Style.ID }}"
-                        class="btn icon ml:s danger"
+                        class="btn icon danger"
                     >{{ template "icons/trash" }} Delete</a>
                     <a
                         href="/edit/{{ .Style.ID }}"
-                        class="btn icon ml:s"
+                        class="btn icon"
                     >{{ template "icons/edit" }} Edit</a>
                     {{ if or .Style.MirrorCode .Style.MirrorMeta }}
                         <a
                             href="/mirror/{{ .Style.ID }}"
-                            class="btn icon ml:s"
+                            class="btn icon"
                             data-tooltip="Mirror your userstyle. You can do this once per hour."
                         >{{ template "icons/refresh" }} Mirror</a>
                     {{ end }}
@@ -92,25 +92,25 @@
                         target="_blank"
                         rel="noopener"
                         href="{{ .Style.Homepage }}"
-                        class="btn icon ml:s"
+                        class="btn icon"
                     >{{ template "icons/home" }} Homepage</a>
                 {{ end }}
                 <a
                     target="_blank"
                     rel="noopener"
                     href="/api/style/{{ .Style.ID }}.user.css"
-                    id="install" class="btn icon primary ml:s"
+                    id="install" class="btn icon primary"
                 >{{ template "icons/download" }} Install</a>
                 <a
                     target="_blank"
                     rel="noopener"
                     href="https://github.com/openstyles/stylus/#readme"
-                    id="stylus" class="btn icon stylus ml:s"
+                    id="stylus" class="btn icon stylus"
                 >{{ template "icons/brush" }} Get Stylus</a>
 
                 {{ if ne .Style.UserID .User.ID }}
                     <a
-                        id="write-review" class="btn icon write-review ml:s"
+                        id="write-review" class="btn icon write-review"
                         {{ if not .User.ID }}
                             disabled
                             data-tooltip="An account is required in order to review userstyles."
@@ -121,7 +121,7 @@
                         {{ end }}
                     >Write a review</a>
                 {{ end }}
-            </span>
+            </div>
         </div>
 
         <div class="details">
