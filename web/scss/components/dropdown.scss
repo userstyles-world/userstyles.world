@@ -12,6 +12,13 @@
         &.btn > svg { margin: 0 }
     }
 
+    &-divider {
+        height: 1px;
+        margin-left: -0.125rem;
+        width: calc(100% + 0.25rem);
+        background-color: var(--bg-4);
+    }
+
     ul {
         z-index: 99;
         display: none;

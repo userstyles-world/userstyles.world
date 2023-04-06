@@ -59,15 +59,16 @@
                         <ul>
                             <li>
                                 <a
-                                    class="danger"
-                                    href="/styles/ban/{{ .Style.ID }}"
-                                >{{ template "icons/ban" }} Ban</a>
-                            </li>
-                            <li>
-                                <a
                                     href="/styles/promote/{{ .Style.ID }}"
                                     data-tooltip='Promote/demote this style to/from featured styles.'
                                 >{{ template "icons/star" }} {{ with .Style.Featured }}Demote{{ else }}Promote{{ end }}</a>
+                            </li>
+                            <li class="Dropdown-divider" role="separator"></li>
+                            <li>
+                                <a
+                                    class="danger"
+                                    href="/styles/ban/{{ .Style.ID }}"
+                                >{{ template "icons/ban" }} Ban</a>
                             </li>
                         </ul>
                     </div>
@@ -77,8 +78,6 @@
                     <div class="Dropdown">
                         <button class="btn icon">Options {{ template "icons/chevron-down" }}</button>
                         <ul>
-                            <li><a href="/delete/{{ .Style.ID }}" class="danger">{{ template "icons/trash" }} Delete</a></li>
-                            <li><a href="/edit/{{ .Style.ID }}">{{ template "icons/edit" }} Edit</a></li>
                             {{ if or .Style.MirrorCode .Style.MirrorMeta }}
                                 <li>
                                     <a
@@ -87,9 +86,16 @@
                                     >{{ template "icons/refresh" }} Mirror</a>
                                 </li>
                             {{ end }}
+                            <li class="Dropdown-divider" role="separator"></li>
+                            <li><a href="/delete/{{ .Style.ID }}" class="danger">{{ template "icons/trash" }} Delete</a></li>
                         </ul>
                     </div>
                 {{ end }}
+
+                <a
+                    class="btn icon"
+                    href="/edit/{{ .Style.ID }}"
+                >{{ template "icons/edit" }} Edit</a>
 
                 {{ if .Style.Homepage }}
                     <a
