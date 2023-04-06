@@ -32,8 +32,11 @@ func Search(c *fiber.Ctx) error {
 		return c.
 			Status(fiber.StatusNotFound).
 			Render("core/search", fiber.Map{
-				"Title": "No results found",
-				"Error": "No results found for <b>" + keyword + "</b>.",
+				"Title":   "No results found",
+				"User":    u,
+				"Keyword": keyword,
+				"Sort":    kind,
+				"Error":   "No results found for <b>" + keyword + "</b>.",
 			})
 	} else if err != nil {
 		return c.
