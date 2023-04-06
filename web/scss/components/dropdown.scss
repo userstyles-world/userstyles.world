@@ -1,0 +1,65 @@
+.Dropdown {
+    position: relative;
+
+    &:hover, &:focus-within {
+        > ul { display: flex }
+    }
+
+    > button {
+        gap: 0.5rem;
+
+        // TODO: Remove during button refactor.
+        &.btn > svg { margin: 0 }
+    }
+
+    ul {
+        z-index: 99;
+        display: none;
+        position: absolute;
+        top: auto;
+        left: 0;
+        flex-direction: column;
+        background-color: var(--bg-2);
+        border: 1px solid var(--bg-3);
+        border-radius: var(--br-3);
+        white-space: nowrap;
+        min-width: 10rem;
+        max-width: 20rem;
+        list-style: none;
+        padding: 0.125rem;
+        margin-top: 0.5rem;
+
+        // Extend hover area.
+        &::before {
+            z-index: -1;
+            content: '';
+            position: absolute;
+            height: 1rem;
+            top: -10px;
+            right: 0;
+            left: 0;
+        }
+
+        li {
+            a {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                color: var(--fg-1);
+                border-radius: calc(var(--br-3) - 2px);
+
+                &.danger { color: var(--dg) }
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 0.125rem;
+            }
+
+            &:hover a {
+                text-decoration: none;
+                background-color: var(--bg-3);
+            }
+        }
+    }
+}

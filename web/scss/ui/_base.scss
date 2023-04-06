@@ -179,7 +179,6 @@ label[for="remember"] {
 }
 
 .share {
-    flex-flow: row wrap;
     #share {
         min-width: 100px;
         max-width: 300px;
@@ -190,10 +189,7 @@ label[for="remember"] {
         text-overflow: ellipsis;
     }
     @media screen and (max-width: 560px) {
-        > span {
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
+        > span { width: 100% }
     }
 }
 

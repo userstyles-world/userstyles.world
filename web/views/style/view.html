@@ -42,52 +42,55 @@
 
     <section class="mt:l">
         <div class="header flex mb:m ai:c">
-            {{ if .URL }}
-                <div class="share flex ai:c mr:m">
-                    <span class="mr:s">Share style</span>
-                    <span
-                        id="share" class="bg:2 input-like"
-                    >{{ .URL }}</span>
-                    <button
-                        aria-label="Copy Style URL to clipboard"
-                        type="submit"
-                        data-tooltip="Style URL has been copied to your clipboard."
-                        id="btn-share" class="btn iflex ml:s ai:c">
-                        {{- template "icons/copy" -}}
-                    </button>
-                </div>
-            {{ end }}
+            <div class="share flex ai:c mr:m">
+                <span id="share" class="bg:2 input-like">{{ .URL }}</span>
+                <button
+                    aria-label="Copy Style URL to clipboard"
+                    data-tooltip="Style URL has been copied to your clipboard."
+                    id="btn-share" class="btn icon iflex ai:c">
+                    {{ template "icons/copy" }} Copy
+                </button>
+            </div>
 
             <div class="actions flex ml:a">
                 {{ if .User.IsModOrAdmin }}
-                    <a
-                        href="/styles/ban/{{ .Style.ID }}"
-                        class="btn icon"
-                    >{{ template "icons/ban" }} Ban</a>
-                    <a
-                        class="btn icon"
-                        href="/styles/promote/{{ .Style.ID }}"
-                        data-tooltip='Promote/demote this style to/from featured styles.'
-                        >{{ template "icons/star" }} {{ with .Style.Featured }}Demote{{ else }}Promote{{ end }}</a>
-                    </form>
+                    <div class="Dropdown">
+                        <button class='btn icon'>Actions {{ template "icons/chevron-down" }}</button>
+                        <ul>
+                            <li>
+                                <a
+                                    class="danger"
+                                    href="/styles/ban/{{ .Style.ID }}"
+                                >{{ template "icons/ban" }} Ban</a>
+                            </li>
+                            <li>
+                                <a
+                                    href="/styles/promote/{{ .Style.ID }}"
+                                    data-tooltip='Promote/demote this style to/from featured styles.'
+                                >{{ template "icons/star" }} {{ with .Style.Featured }}Demote{{ else }}Promote{{ end }}</a>
+                            </li>
+                        </ul>
+                    </div>
                 {{ end }}
+
                 {{ if eq .User.ID .Style.UserID }}
-                    <a
-                        href="/delete/{{ .Style.ID }}"
-                        class="btn icon danger"
-                    >{{ template "icons/trash" }} Delete</a>
-                    <a
-                        href="/edit/{{ .Style.ID }}"
-                        class="btn icon"
-                    >{{ template "icons/edit" }} Edit</a>
-                    {{ if or .Style.MirrorCode .Style.MirrorMeta }}
-                        <a
-                            href="/mirror/{{ .Style.ID }}"
-                            class="btn icon"
-                            data-tooltip="Mirror your userstyle. You can do this once per hour."
-                        >{{ template "icons/refresh" }} Mirror</a>
-                    {{ end }}
+                    <div class="Dropdown">
+                        <button class="btn icon">Options {{ template "icons/chevron-down" }}</button>
+                        <ul>
+                            <li><a href="/delete/{{ .Style.ID }}" class="danger">{{ template "icons/trash" }} Delete</a></li>
+                            <li><a href="/edit/{{ .Style.ID }}">{{ template "icons/edit" }} Edit</a></li>
+                            {{ if or .Style.MirrorCode .Style.MirrorMeta }}
+                                <li>
+                                    <a
+                                        href="/mirror/{{ .Style.ID }}"
+                                        data-tooltip="Mirror your userstyle. You can do this once per hour."
+                                    >{{ template "icons/refresh" }} Mirror</a>
+                                </li>
+                            {{ end }}
+                        </ul>
+                    </div>
                 {{ end }}
+
                 {{ if .Style.Homepage }}
                     <a
                         target="_blank"
