@@ -18,7 +18,7 @@ const handleSourceCode = (sourceCode: string) => {
 
 const onMessage = (ev: MessageEvent<any>) => {
     const {type, data} = ev.data;
-    if (!data || !type) {
+    if (!type) {
         return;
     }
     switch (type) {
@@ -27,7 +27,7 @@ const onMessage = (ev: MessageEvent<any>) => {
             el && el.remove();
         }
         case 'usw-fill-new-style': {
-            if ('/api/oauth/style/new' !== location.pathname) {
+            if (!data || '/api/oauth/style/new' !== location.pathname) {
                 return;
             }
             fillInformationOnForm('name', data['name']);
