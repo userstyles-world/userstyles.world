@@ -176,12 +176,12 @@ func seed() {
 			Username:  "moderator",
 			Email:     "moderator@usw.local",
 			Biography: "I'm a moderator.",
-			Password:  utils.GenerateHashedPassword("moderator"),
+			Password:  utils.GenerateHashedPassword("moderator123"),
 		},
 		{
 			Username: "regular",
 			Email:    "regular@usw.local",
-			Password: utils.GenerateHashedPassword("regular"),
+			Password: utils.GenerateHashedPassword("regular123"),
 		},
 	}
 
