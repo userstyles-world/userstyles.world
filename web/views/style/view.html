@@ -1,5 +1,17 @@
-<div class="wrapper py:l">
-    <section class="preview">
+    <!-- TODO: Remove when rewriting layout. -->
+    <style type="text/css">
+        main { flex-direction: column }
+        main > section {
+            max-width: var(--layout-max-width) !important;
+            margin: 0 auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+        main > section:first-of-type { margin-top: 2rem }
+        main > section:last-of-type { margin-bottom: 2rem }
+    </style>
+
+    <section id="preview">
         <h1 class="mb:m">{{ .Style.Name -}}
             <span class="fg:4"> by {{ .Style.Username }}</span>
         </h1>
@@ -134,7 +146,7 @@
             </div>
         </div>
 
-        <div class="details">
+        <section id="details">
             <h2 class="td:d">Details</h2>
             <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
             <p><span class="minw">License</span>{{ .Style.License }}</p>
@@ -149,23 +161,25 @@
                 <p class="weekly-installs"><span class="minw">Weekly installs</span>{{ .Stats.WeeklyInstalls }}</p>
                 <p class="weekly-updates"><span class="minw">Weekly updates</span>{{ .Stats.WeeklyUpdates }}</p>
             </div>
-            <div class="mt:m">
-                <h2 class="td:d">Description</h2>
-                {{ if .Style.Description }}
-                    <div class="md">{{ proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID | unescape }}</div>
-                {{ else }}
-                    <i>Userstyle doesn't have description.</i>
-                {{ end }}
-            </div>
-            <div class="mt:m">
-                <h2 class="td:d">Notes</h2>
-                {{ if .Style.Notes }}
-                    <div class="md">{{ proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID | unescape }}</div>
-                {{ else }}
-                    <i>Userstyle doesn't have notes.</i>
-                {{ end }}
-            </div>
-        </div>
+        </section>
+
+        <section id="description">
+            <h2 class="td:d">Description</h2>
+            {{ if .Style.Description }}
+                <article class="md">{{ proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
+            {{ else }}
+                <i>Userstyle doesn't have description.</i>
+            {{ end }}
+        </section>
+
+        <section id="notes">
+            <h2 class="td:d">Notes</h2>
+            {{ if .Style.Notes }}
+                <article class="md">{{ proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
+            {{ else }}
+                <i>Userstyle doesn't have notes.</i>
+            {{ end }}
+        </section>
 
         {{/*
         <section class="history">
@@ -183,8 +197,8 @@
         </section>
         */}}
 
-        <div class="code mt:l">
-            <h2 class="mt:0 mb:m td:d">Source code</h2>
+        <section id="code">
+            <h2 class="td:d">Source code</h2>
             {{ $code := "" }}
             {{ if .Style.TruncateCode }}
                 <mark class="mb:s">Source code has over 100k characters, so we truncated it. You can inspect the full source code on install link.</mark>
@@ -195,7 +209,7 @@
             <div class="Style-source">
                 <pre><code>{{ $code }}</code></pre>
             </div>
-        </div>
+        </section>
     </section>
 
     <section class="reviews">
@@ -223,4 +237,3 @@
             <i>No reviews yet.</i>
         {{ end }}
     </section>
-</div>

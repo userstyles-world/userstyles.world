@@ -1,4 +1,15 @@
-<div class="wrapper py:l">
+    <style type="text/css">
+        main { flex-direction: column }
+        main > section {
+            max-width: var(--layout-max-width) !important;
+            margin: 0 auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+        main > section:first-of-type { margin-top: 2rem }
+        main > section:last-of-type { margin-bottom: 2rem }
+    </style>
+
     <section class="welcome">
         <h1 class="title mb:m">{{ .Profile.Name }}'s profile</h1>
         <p class="id"><span class="minw">ID</span>{{ .Profile.ID }}</p>
@@ -22,13 +33,13 @@
             </p>
         {{ end }}
         <h2 class="sub-title td:d mt:l">Biography</h2>
-        <div class="md">
+        <article class="md">
             {{ if .Profile.Biography }}
                 {{ proxy (.Profile.Biography | MarkdownUnsafe) "profile" .Profile.ID | unescape }}
             {{ else }}
                 <p class="fg:3"><i>Biography isn't set.</i></p>
             {{ end }}
-        </div>
+        </article>
     </section>
 
     <section class="socials mt:l">
@@ -99,4 +110,3 @@
     {{ if ne .P.Min .P.Max }}
         {{ template "partials/pagination" .P }}
     {{ end }}
-</div>

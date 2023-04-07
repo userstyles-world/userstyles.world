@@ -1,6 +1,14 @@
-<div class="wrapper py:l">
-    <style type="text/css" media="screen">
+    <style type="text/css">
         .err.limit { max-width: unset }
+        main { flex-direction: column }
+        main > section {
+            max-width: var(--layout-max-width) !important;
+            margin: 0 auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+        main > section:first-of-type { margin-top: 2rem }
+        main > section:last-of-type { margin-bottom: 2rem }
     </style>
 
     {{ template "partials/alert" . }}
@@ -116,7 +124,7 @@
 
     <section id="bio">
         <h2 class="sub-title td:d mt:l">Biography</h2>
-        <div class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</div>
+        <article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
         <form class="Form Form-box mt:m" method="post" action="/account/bio">
             <label for="biography">Set your biography</label>
             <i class="fg:3" id="biography-hint">Supports Markdown syntax.</i>
@@ -231,4 +239,3 @@
             class="btn icon danger" href="/user/delete/{{ .Params.ID }}"
         >{{ template "icons/trash" }} Delete account</a>
     </section>
-</div>
