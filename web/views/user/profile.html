@@ -32,7 +32,7 @@
                 </time>
             </p>
         {{ end }}
-        <h2 class="sub-title td:d mt:l">Biography</h2>
+        <h2 class="td:d">Biography</h2>
         <article class="md">
             {{ if .Profile.Biography }}
                 {{ proxy (.Profile.Biography | MarkdownUnsafe) "profile" .Profile.ID | unescape }}
@@ -42,8 +42,8 @@
         </article>
     </section>
 
-    <section class="socials mt:l">
-        <h2 class="sub-title td:d">Links</h2>
+    <section class="socials">
+        <h2 class="td:d">Links</h2>
         {{- if not .Profile.HasSocials -}}
             <p class="fg:3"><i>Links aren't set.</i></p>
         {{- end -}}
@@ -75,8 +75,8 @@
         </div>
     </section>
 
-    <section class="styles mt:l">
-        <h2 class="sub-title td:d">Userstyles</h2>
+    <section class="styles">
+        <h2 class="td:d">Userstyles</h2>
 
         {{ if .Styles }}
             <div class="flex ai:c">

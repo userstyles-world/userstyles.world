@@ -26,7 +26,7 @@
     </section>
 
     <section id="info">
-        <h2 class="sub-title td:d mt:l">Information</h2>
+        <h2 class="td:d">Information</h2>
         <p><span class="minw">ID</span>{{ .Params.ID }}</p>
         <p><span class="minw">Role</span>{{ .Params.RoleString }}</p>
         <p><span class="minw">Username</span>{{ .Params.Username }}</p>
@@ -59,7 +59,7 @@
     </section>
 
     <section id="name">
-        <h2 class="sub-title td:d mt:l">Display name</h2>
+        <h2 class="td:d">Display name</h2>
         <p>If set, display name will be used instead of username.</p>
         <form class="Form Form-box mt:m" method="post" action="/account/name">
             <div class="Form-section Form-max">
@@ -79,7 +79,7 @@
     </section>
 
     <section id="password">
-        <h2 class="sub-title td:d mt:l">Password</h2>
+        <h2 class="td:d">Password</h2>
         <p>Change your password for manual login.</p>
         <form class="Form Form-box mt:m" method="post" action="/account/password">
             <div class="Form-section Form-full">
@@ -123,7 +123,7 @@
     </section>
 
     <section id="bio">
-        <h2 class="sub-title td:d mt:l">Biography</h2>
+        <h2 class="td:d">Biography</h2>
         <article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
         <form class="Form Form-box mt:m" method="post" action="/account/bio">
             <label for="biography">Set your biography</label>
@@ -145,7 +145,7 @@
     </section>
 
     <section id="socials">
-        <h2 class="sub-title td:d mt:l">Links</h2>
+        <h2 class="td:d">Links</h2>
         <p>You can login via OAuth if you have an account on platforms listed below.</p>
         <form class="Form Form-box mt:m" method="post" action="/account/socials">
             <div class="Form-section">
@@ -196,7 +196,7 @@
     </section>
 
     <section id="settings">
-        <h2 class="sub-title td:d mt:l">UI settings</h1>
+        <h2 class="td:d">UI settings</h1>
         <p>The use of UI settings requires JavaScript.</p>
         <div class="Form Form-box mt:m">
             <div class="Form-section">
@@ -233,7 +233,7 @@
     </section>
 
     <section id="actions">
-        <h2 class="sub-title td:d mt:l">Actions</h2>
+        <h2 class="td:d">Actions</h2>
         <a
             style="display: inline-flex"
             class="btn icon danger" href="/user/delete/{{ .Params.ID }}"
