@@ -90,12 +90,12 @@
                             <li><a href="/delete/{{ .Style.ID }}" class="danger">{{ template "icons/trash" }} Delete</a></li>
                         </ul>
                     </div>
-                {{ end }}
-
-                <a
+                    
+                    <a
                     class="btn icon"
                     href="/edit/{{ .Style.ID }}"
-                >{{ template "icons/edit" }} Edit</a>
+                    >{{ template "icons/edit" }} Edit</a>
+                {{ end }}
 
                 {{ if .Style.Homepage }}
                     <a
