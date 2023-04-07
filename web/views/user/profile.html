@@ -10,7 +10,7 @@
         main > section:last-of-type { margin-bottom: 2rem }
     </style>
 
-    <section class="welcome">
+    <section id="details">
         <h1 class="title mb:m">{{ .Profile.Name }}'s profile</h1>
         <p class="id"><span class="minw">ID</span>{{ .Profile.ID }}</p>
         <p class="role"><span class="minw">Role</span>{{ .Profile.RoleString }}</p>
@@ -32,6 +32,9 @@
                 </time>
             </p>
         {{ end }}
+    </section>
+
+    <section id="biography">
         <h2 class="td:d">Biography</h2>
         <article class="md">
             {{ if .Profile.Biography }}

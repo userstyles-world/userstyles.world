@@ -38,3 +38,14 @@
         max-width: 100%;
     }
 }
+
+#description .md {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+#notes .md,
+#biography .md {
+    max-height: 480px;
+    overflow-y: scroll;
+}

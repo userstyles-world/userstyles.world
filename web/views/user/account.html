@@ -122,7 +122,7 @@
         </form>
     </section>
 
-    <section id="bio">
+    <section id="biography">
         <h2 class="td:d">Biography</h2>
         <article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
         <form class="Form Form-box mt:m" method="post" action="/account/bio">
