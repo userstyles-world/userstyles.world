@@ -26,12 +26,14 @@
 
     input,
     textarea {
-        font-size: 0.875rem;
         background-color: var(--bg-2);
     }
 
     // Hack for checkboxes must not have minimum width.
-    input:not([type='checkbox']) { min-width: 240px }
+    input:not([type='checkbox']) {
+        padding: 0.5rem 0.75rem;
+        min-width: 240px;
+    }
 
     label {
         display: flex;
@@ -71,7 +73,7 @@
     }
 
     &-select {
-        padding: 0.5rem 1.8rem 0.5rem 0.8rem;
+        padding: 0.5rem 0.75rem;
         font-size: inherit;
         min-width: 240px;
         min-height: 42px;

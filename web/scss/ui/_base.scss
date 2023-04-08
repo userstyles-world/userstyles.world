@@ -40,7 +40,7 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     $y: border-color 0.15s ease-in-out;
     $z: background-color 0.15s ease-in-out;
     $s: box-shadow 0.15s ease-in-out;
-    padding: 0.5rem 0.8rem;
+    padding: 0.5rem 0.75rem;
     border-radius: var(--br-3);
     transition: $x, $y, $z, $s;
     text-decoration: none;
