@@ -11,7 +11,7 @@
 
         .Form-section { margin-right: 1rem }
 
-        @media screen and (max-width: 840px) {
+        @media screen and (max-width: 878.8px) {
             flex-direction: column;
 
             .Form-section {
@@ -20,7 +20,10 @@
                 label { margin-bottom: 0.5rem }
             }
 
-            .Form-row { align-items: unset }
+            .Form-row {
+                align-items: unset;
+                &.ml\:a { margin-left: unset }
+            }
         }
     }
 
