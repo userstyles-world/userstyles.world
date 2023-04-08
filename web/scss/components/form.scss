@@ -71,11 +71,11 @@
     }
 
     &-select {
-        padding: 0.4rem 1.5rem 0.4rem 0.25rem;
-        font-size: 0.875rem;
+        padding: 0.5rem 1.8rem 0.5rem 0.8rem;
+        font-size: inherit;
         min-width: 240px;
         min-height: 42px;
-        line-height: 1.9;
+        line-height: inherit;
         color: var(--fg-1);
         border: 1px solid var(--bg-4);
         background-color: var(--bg-2);
@@ -91,7 +91,7 @@
         }
 
         + svg {
-            margin: 0 0.5rem 0 -1.5rem;
+            margin: 0 0.8rem 0 -1.8rem;
             pointer-events: none;
         }
     }
