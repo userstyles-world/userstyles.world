@@ -89,6 +89,9 @@ func OAuthURL() string {
 
 // raw tweaks allowed URLs to make them work seamlessly in both environments.
 func raw(s string) string {
+	if !Production {
+		s += "|userstyles.world"
+	}
 	r := strings.NewReplacer("http://", "", "https://", "")
 	return r.Replace(s)
 }
