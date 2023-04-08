@@ -92,10 +92,12 @@
                         {{ template "partials/form-sort" . }}
                     </div>
                     <div class="Form-control">
-                        <button
-                            type="submit"
-                            class="btn icon primary"
-                        >{{ template "icons/search" }} Sort</button>
+                        <noscript>
+                            <button
+                                type="submit"
+                                class="btn icon primary"
+                            >{{ template "icons/search" }} Sort</button>
+                        </noscript>
                     </div>
                 </form>
             </div>
