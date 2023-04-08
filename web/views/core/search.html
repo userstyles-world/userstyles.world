@@ -18,15 +18,15 @@
                 </div>
             </div>
 
-            <div class="Form-section Form-row">
-                {{ template "partials/form-sort" . }}
-            </div>
-
-            <div class="Form-control">
+            <div class="Form-section Form-control">
                 <button
                     type="submit"
                     class="btn icon primary"
                 >{{ template "icons/search" }} Search</button>
+            </div>
+
+            <div class="Form-section Form-row">
+                {{ template "partials/form-sort" . }}
             </div>
         </form>
     </section>
