@@ -9,7 +9,7 @@
     &-inline {
         display: flex;
 
-        .Form-section { margin-right: 1rem }
+        .Form-section:not(:last-child) { margin-right: 1rem }
 
         @media screen and (max-width: 878.8px) {
             flex-direction: column;

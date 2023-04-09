@@ -88,21 +88,11 @@
                     class="Form Form-inline jc:c ml:a"
                     method="get" action="/user/{{ .Profile.Username }}">
                     <input type="text" name="page" value="1" hidden>
-                    <div class="Form-section Form-row">
-                        {{ template "partials/form-sort" . }}
-                    </div>
-                    <div class="Form-control">
-                        <noscript>
-                            <button
-                                type="submit"
-                                class="btn icon primary"
-                            >{{ template "icons/search" }} Sort</button>
-                        </noscript>
-                    </div>
+                    {{ template "partials/form-sort" . }}
                 </form>
             </div>
             {{/* template "partials/debug-styles" . */}}
-            <div class="grid  flex rwrap mx:r mt:m">
+            <div class="grid flex rwrap mx:r mt:m">
                 {{ range .Styles }}
                     {{ template "partials/style-card" . }}
                 {{ end }}

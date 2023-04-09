@@ -7,17 +7,7 @@
     <section class="mt:l">
         <form class="Form Form-inline jc:c" method="get" action="/explore">
             <input type="text" name="page" value="1" hidden>
-            <div class="Form-section Form-row">
-                {{ template "partials/form-sort" . }}
-            </div>
-            <div class="Form-control">
-                <noscript>
-                    <button
-                        type="submit"
-                        class="btn icon primary"
-                    >{{ template "icons/search" }} Sort</button>
-                </noscript>
-            </div>
+            {{ template "partials/form-sort" . }}
         </form>
 
         {{ if gt (len .Styles) 1 }}
