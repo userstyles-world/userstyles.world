@@ -55,11 +55,8 @@ func main() {
 
 	api.FastRoutes(app)
 
-	if config.Production {
-		app.Use(core.HSTSMiddleware)
-		app.Use(core.CSPMiddleware)
-	}
-
+	app.Use(core.HSTSMiddleware)
+	app.Use(core.CSPMiddleware)
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
 	if config.PerformanceMonitor {
