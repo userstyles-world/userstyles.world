@@ -69,7 +69,7 @@ var relTimeCases = []struct {
 	{"2d", time.Now().Add(-2 * day), "2 days ago"},
 	{"1w", time.Now().Add(-1 * week), "1 week ago"},
 	{"2w", time.Now().Add(-2 * week), "2 weeks ago"},
-	{"1mo", time.Now().Add(-30 * day), "1 month ago"},
+	{"1mo", time.Now().Add(-month), "1 month ago"},
 	{"2mo", time.Now().Add(-2 * month), "2 months ago"},
 	{"1y", time.Now().Add(-1 * year), "1 year ago"},
 	{"2y", time.Now().Add(-2 * year), "2 years ago"},
@@ -78,11 +78,13 @@ var relTimeCases = []struct {
 	{"2h46m", time.Now().Add(-9999 * second), "2 hours, 46 minutes ago"},
 	{"6d22h", time.Now().Add(-9999 * minute), "6 days, 22 hours ago"},
 	{"1w3d", time.Now().Add(-10 * day), "1 week, 3 days ago"},
-	{"1m2d", time.Now().Add(-32 * day), "1 month, 2 days ago"},
+	{"4w2d", time.Now().Add(-30 * day), "4 weeks, 2 days ago"},
+	{"1m1d", time.Now().Add(-32 * day), "1 month, 1 day ago"},
 	{"3m1w", time.Now().Add(-99 * day), "3 months, 1 week ago"},
-	{"1y1d", time.Now().Add(-366 * day), "1 year, 1 day ago"},
+	{"1y18h", time.Now().Add(-366 * day), "1 year, 18 hours ago"},
 	{"3y5w", time.Now().Add(-42 * month), "3 years, 5 months ago"},
-	{"34y6w", time.Now().Add(-420 * month), "34 years, 6 months ago"},
+	{"34y11mo", time.Now().Add(-420 * month), "34 years, 11 months ago"},
+	{"11mo4w", time.Now().Add(-52 * week), "11 months, 4 weeks ago"},
 }
 
 func TestRelTime(t *testing.T) {

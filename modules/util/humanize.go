@@ -53,8 +53,8 @@ const (
 	hour     = 60 * minute
 	day      = 24 * hour
 	week     = 7 * day
-	month    = 30 * day
-	year     = 365 * day
+	month    = 2629746 * second  // 30.436875 days on average
+	year     = 31557600 * second // 365.2425 days on average
 )
 
 var relTimePool = sync.Pool{
@@ -92,42 +92,42 @@ func RelTime(t time.Time) string {
 		parts++
 	}
 
-	months := now / month % 12
+	months := now / month
 	if months > 0 {
 		b = buildTime(b, months, " month")
 		now -= months * month
 		parts++
 	}
 
-	weeks := now / week % 4
+	weeks := now / week
 	if weeks > 0 && parts != maxParts {
 		b = buildTime(b, weeks, " week")
 		now -= weeks * week
 		parts++
 	}
 
-	days := now / day % 30
+	days := now / day
 	if days > 0 && parts != maxParts {
 		b = buildTime(b, days, " day")
 		now -= days * day
 		parts++
 	}
 
-	hours := now / hour % 24
+	hours := now / hour
 	if hours > 0 && parts != maxParts {
 		b = buildTime(b, hours, " hour")
 		now -= hours * hour
 		parts++
 	}
 
-	minutes := now / minute % 60
+	minutes := now / minute
 	if minutes > 0 && parts != maxParts {
 		b = buildTime(b, minutes, " minute")
 		now -= minutes * minute
 		parts++
 	}
 
-	seconds := now / second % 60
+	seconds := now / second
 	if seconds > 0 && parts != maxParts {
 		b = buildTime(b, seconds, " second")
 		now -= seconds * second
