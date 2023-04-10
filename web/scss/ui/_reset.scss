@@ -13,6 +13,7 @@ html {
         line-height: 1.5;
         font-family: var(--font-sans), var(--font-emoji);
 
+        // TODO: Remove after refactoring layout.
         > * > .wrapper {
             width: 100%;
             margin: auto;
@@ -23,7 +24,19 @@ html {
 
         > main {
             display: flex;
+            flex-direction: column;
             min-height: calc(100vh - 130px);
+            margin: 0 auto;
+
+            > * {
+                width: 100%;
+                margin: 0 auto;
+                padding: 0 1rem;
+                max-width: var(--layout-max-width);
+
+                &:first-child { margin-top: 2rem }
+                &:last-child { margin-bottom: 2rem }
+            }
 
             @media screen and (max-width: 1400px) {
                 @at-root main > .wrapper { overflow-x: hidden }

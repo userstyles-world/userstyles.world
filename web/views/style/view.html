@@ -1,238 +1,226 @@
-    <!-- TODO: Remove when rewriting layout. -->
-    <style type="text/css">
-        main { flex-direction: column }
-        main > section {
-            max-width: var(--layout-max-width) !important;
-            margin: 0 auto;
-            padding: 0 1rem;
-            width: 100%;
-        }
-        main > section:first-of-type { margin-top: 2rem }
-        main > section:last-of-type { margin-bottom: 2rem }
-    </style>
+<section id="preview">
+	<h1 class="mb:m">{{ .Style.Name }}
+		<span class="fg:4"> by {{ .Style.Username }}</span>
+	</h1>
 
-    <section id="preview">
-        <h1 class="mb:m">{{ .Style.Name -}}
-            <span class="fg:4"> by {{ .Style.Username }}</span>
-        </h1>
+	{{ if .Style.CompareMirrorURL }}
+		<p class="mb:m md">
+			Imported and mirrored from <code>{{ .Style.Original }}</code>
+		</p>
+	{{ else }}
+		{{ if .Style.Original }}
+			<p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
+		{{ end }}
+		{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
+			<p class="mb:m md">Mirrored from <code>{{ .Style.MirrorURL }}</code></p>
+		{{ end }}
+	{{ end }}
 
-        {{ if .Style.CompareMirrorURL }}
-            <p class="mb:m md">
-                Imported and mirrored from <code>{{ .Style.Original }}</code>
-            </p>
-        {{ else }}
-            {{ if .Style.Original }}
-                <p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
-            {{ end }}
-            {{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
-                <p class="mb:m md">Mirrored from <code>{{ .Style.MirrorURL }}</code></p>
-            {{ end }}
-        {{ end }}
-        <div class="card">
-            <div class="screenshot">
-                {{ if .Style.Preview }}
-                    {{ $img := .Style.Preview | fullImage }}
-                    <picture class="blurred" aria-hidden="true">
-                        <source srcset="{{ $img }}" type="image/webp">
-                        <img src="{{ $img }}" loading="lazy">
-                    </picture>
-                    <picture>
-                        <source srcset="{{ $img }}" type="image/webp">
-                        <img
-                            loading="lazy"
-                            src="{{ $img | toJPEG }}"
-                            alt="{{ .Style.Name }} screenshot" >
-                    </picture>
-                {{ else }}
-                    <picture class="no-screenshot flex jc:c ai:c">
-                        {{ template "partials/no-screenshot" }}
-                    </picture>
-                {{ end }}
-            </div>
-        </div>
-    </section>
+	<div class="card">
+		<div class="screenshot">
+			{{ if .Style.Preview }}
+				{{ $img := .Style.Preview | fullImage }}
+				<picture class="blurred" aria-hidden="true">
+					<source srcset="{{ $img }}" type="image/webp">
+					<img src="{{ $img }}" loading="lazy">
+				</picture>
+				<picture>
+					<source srcset="{{ $img }}" type="image/webp">
+					<img
+						loading="lazy"
+						src="{{ $img | toJPEG }}"
+						alt="{{ .Style.Name }} screenshot" >
+				</picture>
+			{{ else }}
+				<picture class="no-screenshot flex jc:c ai:c">
+					{{ template "partials/no-screenshot" }}
+				</picture>
+			{{ end }}
+		</div>
+	</div>
+</section>
 
-        <section class="header flex mt:m ai:c">
-            <div class="share flex ai:c mr:m">
-                <span id="share" class="bg:2 input-like">{{ .URL }}</span>
-                <button
-                    aria-label="Copy Style URL to clipboard"
-                    data-tooltip="Style URL has been copied to your clipboard."
-                    id="btn-share" class="btn icon iflex ai:c">
-                    {{ template "icons/copy" }} Copy
-                </button>
-            </div>
+<section class="header flex mt:m ai:c">
+	<div class="share flex ai:c mr:m">
+		<span id="share" class="bg:2 input-like">{{ .URL }}</span>
+		<button
+			aria-label="Copy Style URL to clipboard"
+			data-tooltip="Style URL has been copied to your clipboard."
+			id="btn-share" class="btn icon iflex ai:c">
+			{{ template "icons/copy" }} Copy
+		</button>
+	</div>
 
-            <div class="actions flex ml:a">
-                {{ if .User.IsModOrAdmin }}
-                    <div class="Dropdown">
-                        <button class='btn icon'>Actions {{ template "icons/chevron-down" }}</button>
-                        <ul>
-                            <li>
-                                <a
-                                    href="/styles/promote/{{ .Style.ID }}"
-                                    data-tooltip='Promote/demote this style to/from featured styles.'
-                                >{{ template "icons/star" }} {{ with .Style.Featured }}Demote{{ else }}Promote{{ end }}</a>
-                            </li>
-                            <li class="Dropdown-divider" role="separator"></li>
-                            <li>
-                                <a
-                                    class="danger"
-                                    href="/styles/ban/{{ .Style.ID }}"
-                                >{{ template "icons/ban" }} Ban</a>
-                            </li>
-                        </ul>
-                    </div>
-                {{ end }}
+	<div class="actions flex ml:a">
+		{{ if .User.IsModOrAdmin }}
+			<div class="Dropdown">
+				<button class='btn icon'>Actions {{ template "icons/chevron-down" }}</button>
+				<ul>
+					<li>
+						<a
+							href="/styles/promote/{{ .Style.ID }}"
+							data-tooltip='Promote/demote this style to/from featured styles.'
+						>{{ template "icons/star" }} {{ with .Style.Featured }}Demote{{ else }}Promote{{ end }}</a>
+					</li>
+					<li class="Dropdown-divider" role="separator"></li>
+					<li>
+						<a
+							class="danger"
+							href="/styles/ban/{{ .Style.ID }}"
+						>{{ template "icons/ban" }} Ban</a>
+					</li>
+				</ul>
+			</div>
+		{{ end }}
 
-                {{ if eq .User.ID .Style.UserID }}
-                    <div class="Dropdown">
-                        <button class="btn icon">Options {{ template "icons/chevron-down" }}</button>
-                        <ul>
-                            {{ if or .Style.MirrorCode .Style.MirrorMeta }}
-                                <li>
-                                    <a
-                                        href="/mirror/{{ .Style.ID }}"
-                                        data-tooltip="Mirror your userstyle. You can do this once per hour."
-                                    >{{ template "icons/refresh" }} Mirror</a>
-                                </li>
-                            {{ end }}
-                            <li class="Dropdown-divider" role="separator"></li>
-                            <li><a href="/delete/{{ .Style.ID }}" class="danger">{{ template "icons/trash" }} Delete</a></li>
-                        </ul>
-                    </div>
-                    
-                    <a
-                        class="btn icon"
-                        href="/edit/{{ .Style.ID }}"
-                        >{{ template "icons/edit" }} Edit</a>
-                {{ end }}
+		{{ if eq .User.ID .Style.UserID }}
+			<div class="Dropdown">
+				<button class="btn icon">Options {{ template "icons/chevron-down" }}</button>
+				<ul>
+					{{ if or .Style.MirrorCode .Style.MirrorMeta }}
+						<li>
+							<a
+								href="/mirror/{{ .Style.ID }}"
+								data-tooltip="Mirror your userstyle. You can do this once per hour."
+							>{{ template "icons/refresh" }} Mirror</a>
+						</li>
+					{{ end }}
+					<li class="Dropdown-divider" role="separator"></li>
+					<li><a href="/delete/{{ .Style.ID }}" class="danger">{{ template "icons/trash" }} Delete</a></li>
+				</ul>
+			</div>
 
-                {{ if .Style.Homepage }}
-                    <a
-                        target="_blank"
-                        rel="noopener"
-                        href="{{ .Style.Homepage }}"
-                        class="btn icon"
-                    >{{ template "icons/home" }} Homepage</a>
-                {{ end }}
-                <a
-                    target="_blank"
-                    rel="noopener"
-                    href="/api/style/{{ .Style.ID }}.user.css"
-                    id="install" class="btn icon primary"
-                >{{ template "icons/download" }} Install</a>
-                <a
-                    target="_blank"
-                    rel="noopener"
-                    href="https://github.com/openstyles/stylus/#readme"
-                    id="stylus" class="btn icon stylus"
-                >{{ template "icons/brush" }} Get Stylus</a>
+			<a
+				class="btn icon"
+				href="/edit/{{ .Style.ID }}"
+				>{{ template "icons/edit" }} Edit</a>
+		{{ end }}
 
-                {{ if ne .Style.UserID .User.ID }}
-                    <a
-                        id="write-review" class="btn icon write-review"
-                        {{ if not .User.ID }}
-                            disabled
-                            data-tooltip="An account is required in order to review userstyles."
-                        {{ else }}
-                            target="_blank"
-                            rel="noopener"
-                            href="/styles/review/{{ $.Style.ID }}"
-                        {{ end }}
-                    >Write a review</a>
-                {{ end }}
-            </div>
-        </section>
+		{{ if .Style.Homepage }}
+			<a
+				target="_blank"
+				rel="noopener"
+				href="{{ .Style.Homepage }}"
+				class="btn icon"
+			>{{ template "icons/home" }} Homepage</a>
+		{{ end }}
+		<a
+			target="_blank"
+			rel="noopener"
+			href="/api/style/{{ .Style.ID }}.user.css"
+			id="install" class="btn icon primary"
+		>{{ template "icons/download" }} Install</a>
+		<a
+			target="_blank"
+			rel="noopener"
+			href="https://github.com/openstyles/stylus/#readme"
+			id="stylus" class="btn icon stylus"
+		>{{ template "icons/brush" }} Get Stylus</a>
 
-        <section id="details">
-            <h2 class="td:d">Details</h2>
-            <p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
-            <p><span class="minw">License</span>{{ .Style.License }}</p>
-            <p><span class="minw">Created</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
-            <p><span class="minw">Updated</span><time datetime="{{ .Style.UpdatedAt | iso }}">{{ .Style.UpdatedAt | rel }}</time></p>
-            <p><span class="minw">Category</span>{{ .Style.Category }}</p>
-        </section>
+		{{ if ne .Style.UserID .User.ID }}
+			<a
+				id="write-review" class="btn icon write-review"
+				{{ if not .User.ID }}
+					disabled
+					data-tooltip="An account is required in order to review userstyles."
+				{{ else }}
+					target="_blank"
+					rel="noopener"
+					href="/styles/review/{{ $.Style.ID }}"
+				{{ end }}
+			>Write a review</a>
+		{{ end }}
+	</div>
+</section>
 
-        <section id="stats">
-            <h2 class="td:d">Statistics</h2>
-            <p class="mb:s">Learn how we calculate statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
-            <p class="total-views"><span class="minw">Total views</span>{{ .Stats.TotalViews }}</p>
-            <p class="total-installs"><span class="minw">Total installs</span>{{ .Stats.TotalInstalls }}</p>
-            <p class="weekly-installs"><span class="minw">Weekly installs</span>{{ .Stats.WeeklyInstalls }}</p>
-            <p class="weekly-updates"><span class="minw">Weekly updates</span>{{ .Stats.WeeklyUpdates }}</p>
-        </section>
+<section id="details">
+	<h2 class="td:d">Details</h2>
+	<p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
+	<p><span class="minw">License</span>{{ .Style.License }}</p>
+	<p><span class="minw">Created</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
+	<p><span class="minw">Updated</span><time datetime="{{ .Style.UpdatedAt | iso }}">{{ .Style.UpdatedAt | rel }}</time></p>
+	<p><span class="minw">Category</span>{{ .Style.Category }}</p>
+</section>
 
-        <section id="description">
-            <h2 class="td:d">Description</h2>
-            {{ if .Style.Description }}
-                <article class="md">{{ proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
-            {{ else }}
-                <i>Userstyle doesn't have description.</i>
-            {{ end }}
-        </section>
+<section id="stats">
+	<h2 class="td:d">Statistics</h2>
+	<p class="mb:s">Learn how we calculate statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
+	<p class="total-views"><span class="minw">Total views</span>{{ .Stats.TotalViews }}</p>
+	<p class="total-installs"><span class="minw">Total installs</span>{{ .Stats.TotalInstalls }}</p>
+	<p class="weekly-installs"><span class="minw">Weekly installs</span>{{ .Stats.WeeklyInstalls }}</p>
+	<p class="weekly-updates"><span class="minw">Weekly updates</span>{{ .Stats.WeeklyUpdates }}</p>
+</section>
 
-        <section id="notes">
-            <h2 class="td:d">Notes</h2>
-            {{ if .Style.Notes }}
-                <article class="md">{{ proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
-            {{ else }}
-                <i>Userstyle doesn't have notes.</i>
-            {{ end }}
-        </section>
+<section id="description">
+	<h2 class="td:d">Description</h2>
+	{{ if .Style.Description }}
+		<article class="md">{{ proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
+	{{ else }}
+		<i>Userstyle doesn't have description.</i>
+	{{ end }}
+</section>
 
-        {{/*
-        <section class="history">
-            <h2 class="td:d">History</h2>
-            <p>Daily snapshots of <a href="/docs/faq#how-do-view-install-update-statistics-work">style statistics</a>.</p>
-            {{ if not (or .DailyHistory .TotalHistory) }}
-                <i>No style history. Come back in a couple of days.</i>
-            {{ end }}
-            {{ with .DailyHistory }}
-                <div class="chart daily mt:m">{{ . | unescape }}</div>
-            {{ end }}
-            {{ with .TotalHistory }}
-                <div class="chart total mt:m">{{ . | unescape }}</div>
-            {{ end }}
-        </section>
-        */}}
+<section id="notes">
+	<h2 class="td:d">Notes</h2>
+	{{ if .Style.Notes }}
+		<article class="md">{{ proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
+	{{ else }}
+		<i>Userstyle doesn't have notes.</i>
+	{{ end }}
+</section>
 
-        <section id="code">
-            <h2 class="td:d">Source code</h2>
-            {{ $code := "" }}
-            {{ if .Style.TruncateCode }}
-                <mark class="mb:s">Source code has over 100k characters, so we truncated it. You can inspect the full source code on install link.</mark>
-                {{ $code = printf "%.100000s..." .Style.Code }}
-            {{ else }}
-                {{ $code = printf "%s" .Style.Code }}
-            {{ end }}
-            <div class="Style-source">
-                <pre><code>{{ $code }}</code></pre>
-            </div>
-        </section>
+{{/*
+<section class="history">
+	<h2 class="td:d">History</h2>
+	<p>Daily snapshots of <a href="/docs/faq#how-do-view-install-update-statistics-work">style statistics</a>.</p>
+	{{ if not (or .DailyHistory .TotalHistory) }}
+		<i>No style history. Come back in a couple of days.</i>
+	{{ end }}
+	{{ with .DailyHistory }}
+		<div class="chart daily mt:m">{{ . | unescape }}</div>
+	{{ end }}
+	{{ with .TotalHistory }}
+		<div class="chart total mt:m">{{ . | unescape }}</div>
+	{{ end }}
+</section>
+*/}}
 
-    <section id="reviews">
-        <h2 class="td:d">Reviews</h2>
-        {{ if and (.User.ID) (ne .Style.UserID .User.ID) }}
-            <a href="/styles/review/{{ $.Style.ID }}">Add your review</a>
-        {{ end }}
-        {{ range .Reviews }}
-            <div class="Box mt:m" id="id-{{ .ID }}">
-                <div class="Box-header">
-                    <a class="username" href="/user/{{ .User.Username }}"><b>{{ .User.Username }}</b></a>
-                    reviewed {{ with .Rating }} and rated {{ . }}/5 ⭐ {{ end }}
-                    <a class="datetime" href="#id-{{ .ID }}">
-                        <time datetime="{{ .CreatedAt | iso }}">
-                            {{ .CreatedAt | rel }}
-                        </time>
-                    </a>
-                </div>
+<section id="code">
+	<h2 class="td:d">Source code</h2>
+	{{ $code := "" }}
+	{{ if .Style.TruncateCode }}
+		<mark class="mb:s">Source code has over 100k characters, so we truncated it. You can inspect the full source code on install link.</mark>
+		{{ $code = printf "%.100000s..." .Style.Code }}
+	{{ else }}
+		{{ $code = printf "%s" .Style.Code }}
+	{{ end }}
+	<div class="Style-source">
+		<pre><code>{{ $code }}</code></pre>
+	</div>
+</section>
 
-                {{ with.Comment }}
-                    <div class="Box-body mt:m">{{ . }}</div>
-                {{ end }}
-            </div>
-        {{ else }}
-            <i>No reviews yet.</i>
-        {{ end }}
-    </section>
+<section id="reviews">
+	<h2 class="td:d">Reviews</h2>
+	{{ if and (.User.ID) (ne .Style.UserID .User.ID) }}
+		<a href="/styles/review/{{ $.Style.ID }}">Add your review</a>
+	{{ end }}
+	{{ range .Reviews }}
+		<div class="Box mt:m" id="id-{{ .ID }}">
+			<div class="Box-header">
+				<a class="username" href="/user/{{ .User.Username }}"><b>{{ .User.Username }}</b></a>
+				reviewed {{ with .Rating }} and rated {{ . }}/5 ⭐ {{ end }}
+				<a class="datetime" href="#id-{{ .ID }}">
+					<time datetime="{{ .CreatedAt | iso }}">
+						{{ .CreatedAt | rel }}
+					</time>
+				</a>
+			</div>
+
+			{{ with.Comment }}
+				<div class="Box-body mt:m">{{ . }}</div>
+			{{ end }}
+		</div>
+	{{ else }}
+		<i>No reviews yet.</i>
+	{{ end }}
+</section>

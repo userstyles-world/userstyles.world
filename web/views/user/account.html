@@ -1,241 +1,229 @@
-    <style type="text/css">
-        .err.limit { max-width: unset }
-        main { flex-direction: column }
-        main > section {
-            max-width: var(--layout-max-width) !important;
-            margin: 0 auto;
-            padding: 0 1rem;
-            width: 100%;
-        }
-        main > section:first-of-type { margin-top: 2rem }
-        main > section:last-of-type { margin-bottom: 2rem }
-    </style>
+{{ template "partials/alert" . }}
 
-    {{ template "partials/alert" . }}
-    <section id="welcome">
-        <h1 class="title mb:m">Hi, {{ .Params.Name }}!</h1>
-        <p>This is your dashboard. More features will be added soon!</p>
-        <p>
-            Since this is an early iteration, feedback would be
-            really helpful! If you're a userstyle author,
-            don't hesitate to reach out and let us know what
-            you'd like to see on this platform. You can do so
-            via <a href="{{ config "appSourceCode" }}">GitHub</a>
-            or via <a href="mailto:feedback@userstyles.world">e-mail</a>.
-        </p>
-    </section>
+<section id="welcome">
+	<h1 class="title mb:m">Hi, {{ .Params.Name }}!</h1>
+	<p>This is your dashboard. More features will be added soon!</p>
+	<p>
+		Since this is an early iteration, feedback would be
+		really helpful! If you're a userstyle author,
+		don't hesitate to reach out and let us know what
+		you'd like to see on this platform. You can do so
+		via <a href="{{ config "appSourceCode" }}">GitHub</a>
+		or via <a href="mailto:feedback@userstyles.world">e-mail</a>.
+	</p>
+</section>
 
-    <section id="details">
-        <h2 class="td:d">Details</h2>
-        <p><span class="minw">ID</span>{{ .Params.ID }}</p>
-        <p><span class="minw">Role</span>{{ .Params.RoleString }}</p>
-        <p><span class="minw">Username</span>{{ .Params.Username }}</p>
-        {{ with .Params.DisplayName }}
-            <p><span class="minw">Display name</span>{{ . }}</p>
-        {{ end }}
-        {{ with .Params.Email }}
-            <p><span class="minw">Email</span>{{ . }}</p>
-        {{ end }}
-        <p class="joined flex">
-            <span class="minw">Joined</span>
-            <time datetime="{{ .Params.CreatedAt | iso }}">
-                {{ .Params.CreatedAt | rel }}
-            </time>
-        </p>
-        <p class="updated flex">
-            <span class="minw">Updated</span>
-            <time datetime="{{ .Params.UpdatedAt | iso }}">
-                {{ .Params.UpdatedAt | rel }}
-            </time>
-        </p>
-        {{ if not (eq .Params.LastLogin.String "0001-01-01 00:00:00 +0000 UTC") }}
-            <p class="lastlogin flex">
-                <span class="minw">Last login</span>
-                <time datetime="{{ .Params.LastLogin | iso }}">
-                    {{ .Params.LastLogin | rel }}
-                </time>
-            </p>
-        {{ end }}
-    </section>
+<section id="details">
+	<h2 class="td:d">Details</h2>
+	<p><span class="minw">ID</span>{{ .Params.ID }}</p>
+	<p><span class="minw">Role</span>{{ .Params.RoleString }}</p>
+	<p><span class="minw">Username</span>{{ .Params.Username }}</p>
+	{{ with .Params.DisplayName }}
+		<p><span class="minw">Display name</span>{{ . }}</p>
+	{{ end }}
+	{{ with .Params.Email }}
+		<p><span class="minw">Email</span>{{ . }}</p>
+	{{ end }}
+	<p class="joined flex">
+		<span class="minw">Joined</span>
+		<time datetime="{{ .Params.CreatedAt | iso }}">
+			{{ .Params.CreatedAt | rel }}
+		</time>
+	</p>
+	<p class="updated flex">
+		<span class="minw">Updated</span>
+		<time datetime="{{ .Params.UpdatedAt | iso }}">
+			{{ .Params.UpdatedAt | rel }}
+		</time>
+	</p>
+	{{ if not (eq .Params.LastLogin.String "0001-01-01 00:00:00 +0000 UTC") }}
+		<p class="lastlogin flex">
+			<span class="minw">Last login</span>
+			<time datetime="{{ .Params.LastLogin | iso }}">
+				{{ .Params.LastLogin | rel }}
+			</time>
+		</p>
+	{{ end }}
+</section>
 
-    <section id="name">
-        <h2 class="td:d">Display name</h2>
-        <p>If set, display name will be used instead of username.</p>
-        <form class="Form Form-box mt:m" method="post" action="/account/name">
-            <div class="Form-section Form-max">
-                <label for="displayName">Set your display name</label>
-                <input
-                    type="text" name="name" id="displayName"
-                    pattern="^[a-zA-Z0-9-_ ]{3,32}$"
-                    value="{{ .Params.DisplayName }}">
-            </div>
-            <div class="Form-control">
-                <button
-                    type="submit"
-                    class="btn icon primary"
-                >{{ template "icons/save" }} Save</button>
-            </div>
-        </form>
-    </section>
+<section id="name">
+	<h2 class="td:d">Display name</h2>
+	<p>If set, display name will be used instead of username.</p>
+	<form class="Form Form-box mt:m" method="post" action="/account/name">
+		<div class="Form-section Form-max">
+			<label for="displayName">Set your display name</label>
+			<input
+				type="text" name="name" id="displayName"
+				pattern="^[a-zA-Z0-9-_ ]{3,32}$"
+				value="{{ .Params.DisplayName }}">
+		</div>
+		<div class="Form-control">
+			<button
+				type="submit"
+				class="btn icon primary"
+			>{{ template "icons/save" }} Save</button>
+		</div>
+	</form>
+</section>
 
-    <section id="password">
-        <h2 class="td:d">Password</h2>
-        <p>Change your password for manual login.</p>
-        <form class="Form Form-box mt:m" method="post" action="/account/password">
-            <div class="Form-section Form-full">
-                <label for="current-password">Current password</label>
-                <i class="fg:3">Leave empty if you used OAuth to sign up.</i>
-                <input
-                    pattern="^[\S]{8,32}$"
-                    type="password" name="current" id="current-password"
-                    placeholder="Must have at least 8 characters"
-                    title="8–32 characters"
-                    autocomplete="current-password">
-            </div>
+<section id="password">
+	<h2 class="td:d">Password</h2>
+	<p>Change your password for manual login.</p>
+	<form class="Form Form-box mt:m" method="post" action="/account/password">
+		<div class="Form-section Form-full">
+			<label for="current-password">Current password</label>
+			<i class="fg:3">Leave empty if you used OAuth to sign up.</i>
+			<input
+				pattern="^[\S]{8,32}$"
+				type="password" name="current" id="current-password"
+				placeholder="Must have at least 8 characters"
+				title="8–32 characters"
+				autocomplete="current-password">
+		</div>
 
-            <div class="Form-section Form-full">
-                <label for="new-password">New password</label>
-                <input
-                    required pattern="^[\S]{8,32}$"
-                    type="password" name="new_password" id="new-password"
-                    placeholder="Must have at least 8 characters"
-                    title="8–32 characters"
-                    autocomplete="new-password">
-            </div>
+		<div class="Form-section Form-full">
+			<label for="new-password">New password</label>
+			<input
+				required pattern="^[\S]{8,32}$"
+				type="password" name="new_password" id="new-password"
+				placeholder="Must have at least 8 characters"
+				title="8–32 characters"
+				autocomplete="new-password">
+		</div>
 
-            <div class="Form-section Form-full">
-                <label for="confirm-new-password">Confirm new password</label>
-                <input
-                    required pattern="^[\S]{8,32}$"
-                    type="password" name="confirm_password" id="confirm-new-password"
-                    placeholder="Repeat password"
-                    title="8–32 characters"
-                    autocomplete="new-password">
-            </div>
+		<div class="Form-section Form-full">
+			<label for="confirm-new-password">Confirm new password</label>
+			<input
+				required pattern="^[\S]{8,32}$"
+				type="password" name="confirm_password" id="confirm-new-password"
+				placeholder="Repeat password"
+				title="8–32 characters"
+				autocomplete="new-password">
+		</div>
 
-            <div class="Form-control">
-                <button
-                    type="submit"
-                    class="btn icon primary"
-                >{{ template "icons/save" }} Save</button>
-            </div>
-        </form>
-    </section>
+		<div class="Form-control">
+			<button
+				type="submit"
+				class="btn icon primary"
+			>{{ template "icons/save" }} Save</button>
+		</div>
+	</form>
+</section>
 
-    <section id="biography">
-        <h2 class="td:d">Biography</h2>
-        <article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
-        <form class="Form Form-box mt:m" method="post" action="/account/bio">
-            <label for="biography">Set your biography</label>
-            <i class="fg:3" id="biography-hint">Supports Markdown syntax.</i>
-            <textarea
-                pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
-                type="text" name="bio" id="biography"
-                placeholder="e.g. I'd often make styles."
-                aria-describedby="biography-hint">
-                {{- .Params.Biography -}}
-            </textarea>
-            <div class="Form-control">
-                <button
-                    type="submit"
-                    class="btn icon primary"
-                >{{ template "icons/save" }} Save</button>
-            </div>
-        </form>
-    </section>
+<section id="biography">
+	<h2 class="td:d">Biography</h2>
+	<article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
+	<form class="Form Form-box mt:m" method="post" action="/account/bio">
+		<label for="biography">Set your biography</label>
+		<i class="fg:3" id="biography-hint">Supports Markdown syntax.</i>
+		<textarea
+			pattern="^[a-zA-Z0-9!@#$%-_ ]{1,512}$"
+			type="text" name="bio" id="biography"
+			placeholder="e.g. I'd often make styles."
+			aria-describedby="biography-hint">
+			{{- .Params.Biography -}}
+		</textarea>
+		<div class="Form-control">
+			<button
+				type="submit"
+				class="btn icon primary"
+			>{{ template "icons/save" }} Save</button>
+		</div>
+	</form>
+</section>
 
-    <section id="links">
-        <h2 class="td:d">Links</h2>
-        <p>You can login via OAuth if you have an account on platforms listed below.</p>
-        <form class="Form Form-box mt:m" method="post" action="/account/socials">
-            <div class="Form-section">
-                <label class="icon github" for="github">
-                    {{- template "icons/github" . -}}
-                    GitHub
-                </label>
-                <input
-                    pattern="^[a-zA-Z0-9._-]{0,39}$"
-                    type="text" name="github" id="github"
-                    placeholder="Your username"
-                    value="{{ .Params.Socials.Github }}">
-            </div>
+<section id="links">
+	<h2 class="td:d">Links</h2>
+	<p>You can login via OAuth if you have an account on platforms listed below.</p>
+	<form class="Form Form-box mt:m" method="post" action="/account/socials">
+		<div class="Form-section">
+			<label class="icon github" for="github">
+				{{- template "icons/github" . -}}
+				GitHub
+			</label>
+			<input
+				pattern="^[a-zA-Z0-9._-]{0,39}$"
+				type="text" name="github" id="github"
+				placeholder="Your username"
+				value="{{ .Params.Socials.Github }}">
+		</div>
 
-            <div class="Form-section">
-                <label class="icon gitlab" for="gitlab">
-                    {{- template "icons/gitlab" . -}}
-                    GitLab
-                </label>
-                <input
-                    pattern="^[a-zA-Z0-9._-]{0,255}$"
-                    type="text" name="gitlab" id="gitlab"
-                    placeholder="Your username"
-                    value="{{ .Params.Socials.Gitlab }}">
-                </input>
-            </div>
+		<div class="Form-section">
+			<label class="icon gitlab" for="gitlab">
+				{{- template "icons/gitlab" . -}}
+				GitLab
+			</label>
+			<input
+				pattern="^[a-zA-Z0-9._-]{0,255}$"
+				type="text" name="gitlab" id="gitlab"
+				placeholder="Your username"
+				value="{{ .Params.Socials.Gitlab }}">
+			</input>
+		</div>
 
-            <div class="Form-section">
-                <label class="icon codeberg" for="codeberg">
-                    {{- template "icons/codeberg" . -}}
-                    Codeberg
-                </label>
-                <input
-                    pattern="^[a-zA-Z0-9._-]{0,40}$"
-                    type="text" name="codeberg" id="codeberg"
-                    placeholder="Your username"
-                    value="{{ .Params.Socials.Codeberg }}">
-                </input>
-            </div>
+		<div class="Form-section">
+			<label class="icon codeberg" for="codeberg">
+				{{- template "icons/codeberg" . -}}
+				Codeberg
+			</label>
+			<input
+				pattern="^[a-zA-Z0-9._-]{0,40}$"
+				type="text" name="codeberg" id="codeberg"
+				placeholder="Your username"
+				value="{{ .Params.Socials.Codeberg }}">
+			</input>
+		</div>
 
-            <div class="Form-control">
-                <button
-                    type="submit"
-                    class="btn icon primary"
-                >{{ template "icons/save" }} Save</button>
-            </div>
-        </form>
-    </section>
+		<div class="Form-control">
+			<button
+				type="submit"
+				class="btn icon primary"
+			>{{ template "icons/save" }} Save</button>
+		</div>
+	</form>
+</section>
 
-    <section id="settings">
-        <h2 class="td:d">Settings</h2>
-        <p>The use of UI settings requires JavaScript.</p>
-        <div class="Form Form-box mt:m">
-            <div class="Form-section">
-                <label for="usr-settings--color-scheme">Color-scheme</label>
-                <div class="Form-row">
-                    <select class="Form-select" id="usr-settings--color-scheme" title="Set website color scheme">
-                        <option value="follow-system">Follow system theme</option>
-                        <option value="dark">Dark mode</option>
-                        <option value="light">Light mode</option>
-                    </select>
-                    {{ template "icons/chevrons-up-down" }}
-                </div>
-            </div>
+<section id="settings">
+	<h2 class="td:d">Settings</h2>
+	<p>The use of UI settings requires JavaScript.</p>
+	<div class="Form Form-box mt:m">
+		<div class="Form-section">
+			<label for="usr-settings--color-scheme">Color-scheme</label>
+			<div class="Form-row">
+				<select class="Form-select" id="usr-settings--color-scheme" title="Set website color scheme">
+					<option value="follow-system">Follow system theme</option>
+					<option value="dark">Dark mode</option>
+					<option value="light">Light mode</option>
+				</select>
+				{{ template "icons/chevrons-up-down" }}
+			</div>
+		</div>
 
-            <div class="Form-section">
-                <label for="usr-settings--entries-behavior">Censored entries</label>
-                <div class="Form-row">
-                    <select class="Form-select" id="usr-settings--entries-behavior" title="Set website censored entries behavior">
-                        <option value="hover">Hover to see</option>
-                        <option value="click">Click to see</option>
-                        <option value="no-hide">Don't hide</option>
-                    </select>
-                    {{ template "icons/chevrons-up-down" }}
-                </div>
-            </div>
+		<div class="Form-section">
+			<label for="usr-settings--entries-behavior">Censored entries</label>
+			<div class="Form-row">
+				<select class="Form-select" id="usr-settings--entries-behavior" title="Set website censored entries behavior">
+					<option value="hover">Hover to see</option>
+					<option value="click">Click to see</option>
+					<option value="no-hide">Don't hide</option>
+				</select>
+				{{ template "icons/chevrons-up-down" }}
+			</div>
+		</div>
 
-            <div class="Form-control">
-                <button
-                    id="usr-settings--save"
-                    class="btn icon primary"
-                >{{ template "icons/save" }} Save settings</button>
-            </div>
-        </div>
-    </section>
+		<div class="Form-control">
+			<button
+				id="usr-settings--save"
+				class="btn icon primary"
+			>{{ template "icons/save" }} Save settings</button>
+		</div>
+	</div>
+</section>
 
-    <section id="actions">
-        <h2 class="td:d">Actions</h2>
-        <a
-            style="display: inline-flex"
-            class="btn icon danger" href="/user/delete/{{ .Params.ID }}"
-        >{{ template "icons/trash" }} Delete account</a>
-    </section>
+<section id="actions">
+	<h2 class="td:d">Actions</h2>
+	<a
+		style="display: inline-flex"
+		class="btn icon danger" href="/user/delete/{{ .Params.ID }}"
+	>{{ template "icons/trash" }} Delete account</a>
+</section>

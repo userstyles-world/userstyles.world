@@ -1,107 +1,94 @@
-    <style type="text/css">
-        main { flex-direction: column }
-        main > section {
-            max-width: var(--layout-max-width) !important;
-            margin: 0 auto;
-            padding: 0 1rem;
-            width: 100%;
-        }
-        main > section:first-of-type { margin-top: 2rem }
-        main > section:last-of-type { margin-bottom: 2rem }
-    </style>
+<section id="details">
+	<h1 class="title mb:m">{{ .Profile.Name }}'s profile</h1>
+	<p class="id"><span class="minw">ID</span>{{ .Profile.ID }}</p>
+	<p class="role"><span class="minw">Role</span>{{ .Profile.RoleString }}</p>
+	<p class="username"><span class="minw">Username</span>{{ .Profile.Username }}</p>
+	{{ with .Profile.DisplayName }}
+		<p class="displayname"><span class="minw">Display name</span>{{ . }}</p>
+	{{ end }}
+	<p class="joined flex">
+		<span class="minw">Joined</span>
+		<time datetime="{{ .Profile.CreatedAt | iso }}">
+			{{ .Profile.CreatedAt | rel }}
+		</time>
+	</p>
+	{{ if .User.IsModOrAdmin }}
+		<p class="updated flex">
+			<span class="minw">Updated</span>
+			<time datetime="{{ .Profile.UpdatedAt | iso }}">
+				{{ .Profile.UpdatedAt | rel }}
+			</time>
+		</p>
+	{{ end }}
+</section>
 
-    <section id="details">
-        <h1 class="title mb:m">{{ .Profile.Name }}'s profile</h1>
-        <p class="id"><span class="minw">ID</span>{{ .Profile.ID }}</p>
-        <p class="role"><span class="minw">Role</span>{{ .Profile.RoleString }}</p>
-        <p class="username"><span class="minw">Username</span>{{ .Profile.Username }}</p>
-        {{ with .Profile.DisplayName }}
-            <p class="displayname"><span class="minw">Display name</span>{{ . }}</p>
-        {{ end }}
-        <p class="joined flex">
-            <span class="minw">Joined</span>
-            <time datetime="{{ .Profile.CreatedAt | iso }}">
-                {{ .Profile.CreatedAt | rel }}
-            </time>
-        </p>
-        {{ if .User.IsModOrAdmin }}
-            <p class="updated flex">
-                <span class="minw">Updated</span>
-                <time datetime="{{ .Profile.UpdatedAt | iso }}">
-                    {{ .Profile.UpdatedAt | rel }}
-                </time>
-            </p>
-        {{ end }}
-    </section>
+<section id="biography">
+	<h2 class="td:d">Biography</h2>
+	<article class="md">
+		{{ if .Profile.Biography }}
+			{{ proxy (.Profile.Biography | MarkdownUnsafe) "profile" .Profile.ID | unescape }}
+		{{ else }}
+			<p class="fg:3"><i>Biography isn't set.</i></p>
+		{{ end }}
+	</article>
+</section>
 
-    <section id="biography">
-        <h2 class="td:d">Biography</h2>
-        <article class="md">
-            {{ if .Profile.Biography }}
-                {{ proxy (.Profile.Biography | MarkdownUnsafe) "profile" .Profile.ID | unescape }}
-            {{ else }}
-                <p class="fg:3"><i>Biography isn't set.</i></p>
-            {{ end }}
-        </article>
-    </section>
+<section id="links">
+	<h2 class="td:d">Links</h2>
+	{{ if not .Profile.HasSocials }}
+		<p class="fg:3"><i>Links aren't set.</i></p>
+	{{ end }}
+	<div class="flex">
+		{{ with .Profile.Socials.Github }}
+			<a
+				class="github btn icon mr:m"
+				target="_blank" rel="noopener"
+				href="https://github.com/{{ . }}">
+				{{ template "icons/github" }}{{ . }}
+			</a>
+		{{ end }}
+		{{ with .Profile.Socials.Gitlab }}
+			<a
+				class="gitlab btn icon mr:m"
+				target="_blank" rel="noopener"
+				href="https://gitlab.com/{{ . }}">
+				{{ template "icons/gitlab" }}{{ . }}
+			</a>
+		{{ end }}
+		{{ with .Profile.Socials.Codeberg }}
+			<a
+				class="codeberg btn icon mr:m"
+				target="_blank" rel="noopener"
+				href="https://codeberg.org/{{ . }}">
+				{{ template "icons/codeberg" }}{{ . }}
+			</a>
+		{{ end }}
+	</div>
+</section>
 
-    <section id="links">
-        <h2 class="td:d">Links</h2>
-        {{- if not .Profile.HasSocials -}}
-            <p class="fg:3"><i>Links aren't set.</i></p>
-        {{- end -}}
-        <div class="flex">
-            {{ with .Profile.Socials.Github }}
-                <a
-                    class="github btn icon mr:m"
-                    target="_blank" rel="noopener"
-                    href="https://github.com/{{ . }}">
-                    {{ template "icons/github" }}{{ . }}
-                </a>
-            {{ end }}
-            {{ with .Profile.Socials.Gitlab }}
-                <a
-                    class="gitlab btn icon mr:m"
-                    target="_blank" rel="noopener"
-                    href="https://gitlab.com/{{ . }}">
-                    {{ template "icons/gitlab" }}{{ . }}
-                </a>
-            {{ end }}
-            {{ with .Profile.Socials.Codeberg }}
-                <a
-                    class="codeberg btn icon mr:m"
-                    target="_blank" rel="noopener"
-                    href="https://codeberg.org/{{ . }}">
-                    {{ template "icons/codeberg" }}{{ . }}
-                </a>
-            {{ end }}
-        </div>
-    </section>
+<section id="styles">
+	<h2 class="td:d">Userstyles</h2>
 
-    <section id="styles">
-        <h2 class="td:d">Userstyles</h2>
+	{{ if .Styles }}
+		<div class="flex ai:c">
+			<p class="count">{{ .Count }} styles in total.</p>
+			<form
+				class="Form Form-inline jc:c ml:a"
+				method="get" action="/user/{{ .Profile.Username }}">
+				<input type="text" name="page" value="1" hidden>
+				{{ template "partials/form-sort" . }}
+			</form>
+		</div>
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range .Styles }}
+				{{ template "partials/style-card" . }}
+			{{ end }}
+		</div>
+	{{ else }}
+		<p class="fg:3"><i>No styles found.</i></p>
+	{{ end }}
+</section>
 
-        {{ if .Styles }}
-            <div class="flex ai:c">
-                <p class="count">{{ .Count }} styles in total.</p>
-                <form
-                    class="Form Form-inline jc:c ml:a"
-                    method="get" action="/user/{{ .Profile.Username }}">
-                    <input type="text" name="page" value="1" hidden>
-                    {{ template "partials/form-sort" . }}
-                </form>
-            </div>
-            {{/* template "partials/debug-styles" . */}}
-            <div class="grid flex rwrap mx:r mt:m">
-                {{ range .Styles }}
-                    {{ template "partials/style-card" . }}
-                {{ end }}
-            </div>
-        {{ else }}
-            <p class="fg:3"><i>No styles found.</i></p>
-        {{ end }}
-    </section>
-
-    {{ if ne .P.Min .P.Max }}
-        {{ template "partials/pagination" .P }}
-    {{ end }}
+{{ if ne .P.Min .P.Max }}
+	{{ template "partials/pagination" .P }}
+{{ end }}
