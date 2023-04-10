@@ -49,6 +49,9 @@ func GenerateFromURL(id, version, url string) error {
 		log.Warn.Printf("Failed to fetch %q for %s: %s\n", url, id, err)
 		return err
 	}
+	if req.StatusCode != 200 {
+		return fmt.Errorf("got %d status code", req.StatusCode)
+	}
 	defer req.Body.Close()
 
 	data, err := io.ReadAll(req.Body)
