@@ -1,53 +1,51 @@
-<div class="wrapper py:l">
-    <section class="ta:c">
-        <h1>Log in</h1>
-        <p>Note: Logging in using usernames is disabled.</p>
-    </section>
+<section class="ta:c">
+	<h1>Log in</h1>
+	<p>Note: Logging in using usernames is disabled.</p>
+</section>
 
-    {{ template "partials/alert" . }}
+{{ template "partials/alert" . }}
 
-    <section class="login limit mx:a">
-        {{ template "partials/btn-oauth" "sign in" }}
+<section class="login limit mx:a">
+	{{ template "partials/btn-oauth" "sign in" }}
 
-        <form class="Form Form-box" method="post" action="/login{{- .Redirect -}}">
-            <div class="Form-section Form-full">
-                <label for="email">Email address</label>
-                <input
-                    required pattern="{{ config "allowedEmailsRe" }}"
-                    type="email" name="email" id="email"
-                    title="Must be an email address"
-                    placeholder="username@example.org"
-                    autocomplete="username">
-            </div>
+	<form class="Form Form-box" method="post" action="/login{{- .Redirect -}}">
+		<div class="Form-section Form-full">
+			<label for="email">Email address</label>
+			<input
+				required pattern="{{ config "allowedEmailsRe" }}"
+				type="email" name="email" id="email"
+				title="Must be an email address"
+				placeholder="username@example.org"
+				autocomplete="username">
+		</div>
 
-            <div class="Form-section Form-full">
-                <label for="password">Password</label>
-                <input
-                    required pattern="^[\S]{8,32}$"
-                    type="password" name="password" id="password"
-                    title="Minimum 8 characters"
-                    placeholder="password"
-                    autocomplete="current-password">
-            </div>
+		<div class="Form-section Form-full">
+			<label for="password">Password</label>
+			<input
+				required pattern="^[\S]{8,32}$"
+				type="password" name="password" id="password"
+				title="Minimum 8 characters"
+				placeholder="password"
+				autocomplete="current-password">
+		</div>
 
-            <div class="Form-section">
-                <div class="Form-checkbox">
-                    <input type="checkbox" name="remember" id="remember">
-                    {{ template "partials/checkboxes" }}
-                    <label for="remember">Keep me logged in (for up to 3 months)</label>
-                </div>
-            </div>
+		<div class="Form-section">
+			<div class="Form-checkbox">
+				<input type="checkbox" name="remember" id="remember">
+				{{ template "partials/checkboxes" }}
+				<label for="remember">Keep me logged in (for up to 3 months)</label>
+			</div>
+		</div>
 
-            <div class="Form-control Form-row">
-                <button class="btn icon primary" type="submit">
-                    {{ template "icons/sign-in" }} Sign in
-                </button>
-                <a class="ml:a" href="/recover">Forgot your password?</a>
-            </div>
-        </form>
+		<div class="Form-control Form-row">
+			<button class="btn icon primary" type="submit">
+				{{ template "icons/sign-in" }} Sign in
+			</button>
+			<a class="ml:a" href="/recover">Forgot your password?</a>
+		</div>
+	</form>
 
-        <p class="form-tip ta:c">
-            <i class="fg:3">Don't have an account? Continue to <a href="/register">register page</a>.</i>
-        </p>
-    </section>
-</div>
+	<p class="form-tip ta:c">
+		<i class="fg:3">Don't have an account? Continue to <a href="/register">register page</a>.</i>
+	</p>
+</section>

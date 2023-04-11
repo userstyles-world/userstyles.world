@@ -1,28 +1,26 @@
-<div class="wrapper py:l">
-    <section class="ta:c">
-        <h1>Reset password</h1>
-    </section>
+<section class="ta:c">
+	<h1>Reset password</h1>
+</section>
 
-    {{ template "partials/alert" . }}
+{{ template "partials/alert" . }}
 
-    <section class="limit mx:a">
-        <form class="Form Form-box" method="post" action="/recover">
-            <div class="Form-section Form-full">
-                <label for="email">Enter your email address</label>
-                <input
-                    required pattern="{{ config "allowedEmailsRe" }}"
-                    type="email" name="email" id="email"
-                    placeholder="e.g. username@example.org"
-                    title="Must be an email address">
-            </div>
+<section class="limit mx:a">
+	<form class="Form Form-box" method="post" action="/recover">
+		<div class="Form-section Form-full">
+			<label for="email">Enter your email address</label>
+			<input
+				required pattern="{{ config "allowedEmailsRe" }}"
+				type="email" name="email" id="email"
+				placeholder="e.g. username@example.org"
+				title="Must be an email address">
+		</div>
 
-            <div class="Form-control">
-                <button class="btn primary" type="submit">Send mail</button>
-            </div>
-        </form>
+		<div class="Form-control">
+			<button class="btn primary" type="submit">Send mail</button>
+		</div>
+	</form>
 
-        <p class="form-tip ta:c">
-            Don't have an account? Continue to <a href="/register">register page</a>.
-        </p>
-    </section>
-</div>
+	<p class="form-tip ta:c">
+		Don't have an account? Continue to <a href="/register">register page</a>.
+	</p>
+</section>

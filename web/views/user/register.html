@@ -1,63 +1,61 @@
-<div class="wrapper py:l">
-    <section class="ta:c">
-        <h1>Register</h1>
-        <p>Note: Logging in uses your e-mail address, not username.</p>
-    </section>
+<section class="ta:c">
+	<h1>Register</h1>
+	<p>Note: Logging in uses your e-mail address, not username.</p>
+</section>
 
-    {{ template "partials/alert" . }}
+{{ template "partials/alert" . }}
 
-    <section class="register limit mx:a">
-        {{ template "partials/btn-oauth" "sign up" }}
+<section class="register limit mx:a">
+	{{ template "partials/btn-oauth" "sign up" }}
 
-        <form class="Form Form-box" method="post" action="/register">
-            <div class="Form-section Form-full">
-                <label for="username">Username</label>
-                <input
-                    required
-                    pattern="^[a-zA-Z0-9][a-zA-Z0-9-_]{1,30}[a-zA-Z0-9]$"
-                    type="text" name="username" id="username"
-                    placeholder="username"
-                    title="Must be 3–32 characters, no spaces">
-            </div>
+	<form class="Form Form-box" method="post" action="/register">
+		<div class="Form-section Form-full">
+			<label for="username">Username</label>
+			<input
+				required
+				pattern="^[a-zA-Z0-9][a-zA-Z0-9-_]{1,30}[a-zA-Z0-9]$"
+				type="text" name="username" id="username"
+				placeholder="username"
+				title="Must be 3–32 characters, no spaces">
+		</div>
 
-            <div class="Form-section Form-full">
-                <label for="email">Email address</label>
-                <input
-                    required pattern="{{ config "allowedEmailsRe" }}"
-                    type="email" name="email" id="email"
-                    placeholder="username@example.org"
-                    title="Must be an email address">
-            </div>
+		<div class="Form-section Form-full">
+			<label for="email">Email address</label>
+			<input
+				required pattern="{{ config "allowedEmailsRe" }}"
+				type="email" name="email" id="email"
+				placeholder="username@example.org"
+				title="Must be an email address">
+		</div>
 
-            <div class="Form-section Form-full">
-                <label for="new-password">Password</label>
-                <input
-                    required pattern="^[\S]{8,32}$"
-                    type="password" name="password" id="new-password"
-                    placeholder="password"
-                    title="Must be 8–32 characters"
-                    autocomplete="new-password">
-            </div>
+		<div class="Form-section Form-full">
+			<label for="new-password">Password</label>
+			<input
+				required pattern="^[\S]{8,32}$"
+				type="password" name="password" id="new-password"
+				placeholder="password"
+				title="Must be 8–32 characters"
+				autocomplete="new-password">
+		</div>
 
-            <div class="Form-section Form-full">
-                <label for="confirm-new-password">Confirm password</label>
-                <input
-                    required pattern="^[\S]{8,32}$"
-                    type="password" name="confirm" id="confirm-new-password"
-                    placeholder="Repeat password"
-                    title="Must be 8–32 characters"
-                    autocomplete="new-password">
-            </div>
+		<div class="Form-section Form-full">
+			<label for="confirm-new-password">Confirm password</label>
+			<input
+				required pattern="^[\S]{8,32}$"
+				type="password" name="confirm" id="confirm-new-password"
+				placeholder="Repeat password"
+				title="Must be 8–32 characters"
+				autocomplete="new-password">
+		</div>
 
-            <div class="Form-control">
-                <button class="btn icon primary" type="submit">
-                    {{ template "icons/sign-in" }} Register
-                </button>
-            </div>
-        </form>
+		<div class="Form-control">
+			<button class="btn icon primary" type="submit">
+				{{ template "icons/sign-in" }} Register
+			</button>
+		</div>
+	</form>
 
-        <p class="form-tip ta:c">
-            <i class="fg:3">Already have an account? Continue to <a href="/login">log in page</a>.</i>
-        </p>
-    </section>
-</div>
+	<p class="form-tip ta:c">
+		<i class="fg:3">Already have an account? Continue to <a href="/login">log in page</a>.</i>
+	</p>
+</section>
