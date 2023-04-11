@@ -102,7 +102,7 @@ func RegisterPost(c *fiber.Ctx) error {
 	}
 
 	return c.Render("user/email-sent", fiber.Map{
-		"Title":  "Email verifcation",
-		"Reason": "Verification link has been sent to your e-mail address.",
+		"Title":  "Email verification sent",
+		"Reason": "Verification link has been sent to your e-mail address. Your account will be created when you visit the verification link.",
 	})
 }
