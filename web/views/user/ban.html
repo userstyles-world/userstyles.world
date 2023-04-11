@@ -3,24 +3,32 @@
 	<p>This action is irreversible.</p>
 </section>
 
-<section class="limit mt:l mx:a">
+<section class="limit">
 	<form class="form-wrapper" method="post" action="/user/ban/{{ .Params.ID }}">
-		<label class="mb:m f:b">Are you sure you want to ban user "{{ .Params.Name }}"?</label>
-		<br>
+		<label class="mb:m f:b">Ban user "{{ .Params.Username }}"</label>
+
 		<label for="reason">Reason for ban</label>
-		<i class="fg:3" id="reason-hint">Be aware that this reason will be made public along with this action.</i>
+		<i class="fg:3" id="reason-hint">
+			The reason will be made public along with this action.
+		</i>
+
 		<input
 			required
 			type="text" name="reason" id="reason"
 			aria-describedby="reason-hint"
 			placeholder="Your reason to ban this person">
-			<div class="checkbox flex">
-				<input type="checkbox" name="censor" id="censor" aria-describedby="censor-hint">
-				{{ template "partials/checkboxes" }}
-				<label class="ml:s" for="censor">Censor style's information</label>
-			</div>
-			<i class="fg:3" id="censor-hint">This will censor the style's information with a spoiler, use this if the style has an innapropiate name.</i>
-			<div class="mt:m">
+
+		<div class="checkbox flex">
+			<input type="checkbox" name="censor" id="censor" aria-describedby="censor-hint">
+			{{ template "partials/checkboxes" }}
+			<label for="censor">Censor style's information</label>
+		</div>
+		<i class="fg:3" id="censor-hint">
+			This will censor the style's information with a spoiler, use this if
+			the style has an innapropiate name.
+		</i>
+
+		<div class="mt:m">
 			<button class="btn primary mr:s" type="submit">Confirm</button>
 			<a class="fg:1" href="/dashboard">Cancel</a>
 		</div>

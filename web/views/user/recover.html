@@ -1,10 +1,11 @@
 <section class="ta:c">
 	<h1>Reset password</h1>
+	<p>For OAuth users, use OAuth's email address to recover your account.</p>
 </section>
 
 {{ template "partials/alert" . }}
 
-<section class="limit mx:a">
+<section class="limit">
 	<form class="Form Form-box" method="post" action="/recover">
 		<div class="Form-section Form-full">
 			<label for="email">Enter your email address</label>
@@ -21,6 +22,6 @@
 	</form>
 
 	<p class="form-tip ta:c">
-		Don't have an account? Continue to <a href="/register">register page</a>.
+		<i class="fg:3">Don't have an account? Continue to <a href="/register">register page</a>.</i>
 	</p>
 </section>

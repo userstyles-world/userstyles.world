@@ -5,7 +5,7 @@
 
 {{ template "partials/alert" . }}
 
-<section class="login limit mx:a">
+<section class="login limit">
 	{{ template "partials/btn-oauth" "sign in" }}
 
 	<form class="Form Form-box" method="post" action="/login{{- .Redirect -}}">
