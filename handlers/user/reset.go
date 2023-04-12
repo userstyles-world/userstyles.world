@@ -66,12 +66,20 @@ func ResetPost(c *fiber.Ctx) error {
 		"Error:": "Key was not found",
 	})
 
-	password, key := c.FormValue("password"), c.Params("key")
-
 	// Using unified Errors, won't give possible attackers any information.
 	// If the process went good.
+	key := c.Params("key")
 	if key == "" {
 		return renderError
+	}
+
+	newPassword, confirmPassword := c.FormValue("new_password"), c.FormValue("confirm_password")
+	if newPassword != confirmPassword {
+		return c.Status(fiber.StatusBadRequest).Render("user/reset-password", fiber.Map{
+			"Title": "Passwords don't match",
+			"Error": "Passwords don't match.",
+			"Key":   key,
+		})
 	}
 
 	unSealedText, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
@@ -98,7 +106,19 @@ func ResetPost(c *fiber.Ctx) error {
 	}
 
 	t := new(models.User)
-	user.Password = utils.GenerateHashedPassword(password)
+	user.Password = newPassword
+	if err := utils.Validate().StructPartial(user, "Password"); err != nil {
+		var validationError validator.ValidationErrors
+		if ok := errors.As(err, &validationError); ok {
+			log.Info.Println("Password change error:", validationError)
+		}
+		return c.Status(fiber.StatusForbidden).Render("user/reset-password", fiber.Map{
+			"Title":  "Failed to validate inputs",
+			"Errors": validationError,
+			"Key":    key,
+		})
+	}
+	user.Password = utils.GenerateHashedPassword(newPassword)
 
 	err = database.Conn.
 		Model(t).
