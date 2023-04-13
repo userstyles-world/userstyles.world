@@ -1,164 +1,161 @@
-<div class="wrapper py:l">
-    <style type="text/css" media="screen">
-        table {
-            width: 100%;
-            padding: 1rem;
-            border-spacing: 0;
-            border-radius: var(--br-2);
-            background-color: var(--bg-2);
-        }
-        table thead {
-            top: 0;
-            position: sticky;
-            text-align: left;
-            background-color: var(--bg-2);
-        }
-        table tr > * { padding: 0.5rem; font-feature-settings: 'tnum' 1 }
-        table tr { box-shadow: 0 1px var(--bg-3) }
-        .overview > p { font-size: 1.5rem }
-        .overview > p > span { font-size: 1rem }
-        .ac\:1 { color: var(--ac-1) }
-    </style>
+<style type="text/css" media="screen">
+	table {
+		width: 100%;
+		padding: 1rem;
+		border-spacing: 0;
+		border-radius: var(--br-2);
+		background-color: var(--bg-2);
+	}
+	table thead {
+		top: 0;
+		position: sticky;
+		text-align: left;
+		background-color: var(--bg-2);
+	}
+	table tr > * { padding: 0.5rem; font-feature-settings: 'tnum' 1 }
+	table tr { box-shadow: 0 1px var(--bg-3) }
+	.overview > p { font-size: 1.5rem }
+	.overview > p > span { font-size: 1rem }
+	.ac\:1 { color: var(--ac-1) }
+</style>
 
-    <section class="mt:m ta:c">
-        <h1>Dashboard</h1>
-        <p class="fg:3">WIP functionality to help with moderation.</p>
-    </section>
+<section class="mt:m ta:c">
+	<h1>Dashboard</h1>
+	<p class="fg:3">WIP functionality to help with moderation.</p>
+</section>
 
-    {{ if .System }}
-    <section class="overview">
-        <h2 class="td:d">Overview</h2>
-        {{ with .LatestUser }}
-            <p>
-                {{ $.TotalUsers }} total users
-                <span><a href="/dashboard?data=users">({{ .Count }} today)</a></span>
-            </p>
-        {{ end }}
-        {{ with .LatestStyle }}
-            <p>
-                {{ $.TotalStyles }} total styles
-                <span><a href="/dashboard?data=styles">({{ .Count }} today)</a></span>
-            </p>
-        {{ end }}
-        {{ with .System }}
-            <table>
-                <tbody>
-                    <tr><td><b class="ac:1">General statistics</b></td><td></td></tr>
-                    <tr><td>Uptime</td><td>{{ .Uptime }}</td></tr>
-                    <tr><td>Current goroutines</td><td>{{ .GoRoutines }}</td></tr>
-                    <tr><td>Allocated memory</td><td>{{ .MemAllocated }}</td></tr>
-                    <tr><td>Total allocated memory</td><td>{{ .MemTotal }}</td></tr>
-                    <tr><td>Memory obtained</td><td>{{ .MemSys }}</td></tr>
-                    <tr><td>Pointer lookup times</td><td>{{ .Lookups }}</td></tr>
-                    <tr><td>Memory allocations</td><td>{{ .MemMallocs }}</td></tr>
-                    <tr><td>Memory frees</td><td>{{ .MemFrees }}</td></tr>
+{{ if .System }}
+	<section class="overview">
+		<h2 class="td:d">Overview</h2>
+		{{ with .LatestUser }}
+			<p>
+				{{ $.TotalUsers }} total users
+				<span><a href="/dashboard?data=users">({{ .Count }} today)</a></span>
+			</p>
+		{{ end }}
+		{{ with .LatestStyle }}
+			<p>
+				{{ $.TotalStyles }} total styles
+				<span><a href="/dashboard?data=styles">({{ .Count }} today)</a></span>
+			</p>
+		{{ end }}
+		{{ with .System }}
+			<table>
+				<tbody>
+					<tr><td><b class="ac:1">General statistics</b></td><td></td></tr>
+					<tr><td>Uptime</td><td>{{ .Uptime }}</td></tr>
+					<tr><td>Current goroutines</td><td>{{ .GoRoutines }}</td></tr>
+					<tr><td>Allocated memory</td><td>{{ .MemAllocated }}</td></tr>
+					<tr><td>Total allocated memory</td><td>{{ .MemTotal }}</td></tr>
+					<tr><td>Memory obtained</td><td>{{ .MemSys }}</td></tr>
+					<tr><td>Pointer lookup times</td><td>{{ .Lookups }}</td></tr>
+					<tr><td>Memory allocations</td><td>{{ .MemMallocs }}</td></tr>
+					<tr><td>Memory frees</td><td>{{ .MemFrees }}</td></tr>
 
-                    <tr><td><b class="ac:1">Main allocation heap statistics</b></td><td></td></tr>
-                    <tr><td>Current heap usage</td><td>{{ .HeapAlloc }}</td></tr>
-                    <tr><td>Heap memory obtained</td><td>{{ .HeapSys }}</td></tr>
-                    <tr><td>Heap memory idle</td><td>{{ .HeapIdle }}</td></tr>
-                    <tr><td>Heap memory in use</td><td>{{ .HeapInuse }}</td></tr>
-                    <tr><td>Heap memory released</td><td>{{ .HeapReleased }}</td></tr>
-                    <tr><td>Heap objects</td><td>{{ .HeapObjects }}</td></tr>
+					<tr><td><b class="ac:1">Main allocation heap statistics</b></td><td></td></tr>
+					<tr><td>Current heap usage</td><td>{{ .HeapAlloc }}</td></tr>
+					<tr><td>Heap memory obtained</td><td>{{ .HeapSys }}</td></tr>
+					<tr><td>Heap memory idle</td><td>{{ .HeapIdle }}</td></tr>
+					<tr><td>Heap memory in use</td><td>{{ .HeapInuse }}</td></tr>
+					<tr><td>Heap memory released</td><td>{{ .HeapReleased }}</td></tr>
+					<tr><td>Heap objects</td><td>{{ .HeapObjects }}</td></tr>
 
-                    <tr><td><b class="ac:1">Low-level fixed-size structure allocator statistics</b></td><td></td></tr>
-                    <tr><td>Bootstrap stack usage</td><td>{{ .StackInuse }}</td></tr>
-                    <tr><td>Stack memory obtained</td><td>{{ .StackSys }}</td></tr>
-                    <tr><td>MSpan structures usage</td><td>{{ .MSpanInuse }}</td></tr>
-                    <tr><td>MSpan structures obtained</td><td>{{ .MSpanSys }}</td></tr>
-                    <tr><td>MCache structures usage</td><td>{{ .MCacheInuse }}</td></tr>
-                    <tr><td>MCache structures obtained</td><td>{{ .MCacheSys }}</td></tr>
-                    <tr><td>Profiling bucket hash table obtained</td><td>{{ .BuckHashSys }}</td></tr>
-                    <tr><td>GC metadata obtained</td><td>{{ .GCSys }}</td></tr>
-                    <tr><td>Other system allocation obtained</td><td>{{ .OtherSys }}</td></tr>
+					<tr><td><b class="ac:1">Low-level fixed-size structure allocator statistics</b></td><td></td></tr>
+					<tr><td>Bootstrap stack usage</td><td>{{ .StackInuse }}</td></tr>
+					<tr><td>Stack memory obtained</td><td>{{ .StackSys }}</td></tr>
+					<tr><td>MSpan structures usage</td><td>{{ .MSpanInuse }}</td></tr>
+					<tr><td>MSpan structures obtained</td><td>{{ .MSpanSys }}</td></tr>
+					<tr><td>MCache structures usage</td><td>{{ .MCacheInuse }}</td></tr>
+					<tr><td>MCache structures obtained</td><td>{{ .MCacheSys }}</td></tr>
+					<tr><td>Profiling bucket hash table obtained</td><td>{{ .BuckHashSys }}</td></tr>
+					<tr><td>GC metadata obtained</td><td>{{ .GCSys }}</td></tr>
+					<tr><td>Other system allocation obtained</td><td>{{ .OtherSys }}</td></tr>
 
-                    <tr><td><b class="ac:1">Garbage collector statistics</b></td><td></td></tr>
-                    <tr><td>Next GC recycle</td><td>{{ .NextGC }}</td></tr>
-                    <tr><td>Since last GC time</td><td>{{ .LastGC }}</td></tr>
-                    <tr><td>Total GC pause</td><td>{{ .PauseTotalNs }}</td></tr>
-                    <tr><td>Last GC pause</td><td>{{ .PauseNs }}</td></tr>
-                    <tr><td>GC times</td><td>{{ .NumGC }}</td></tr>
-                </tbody>
-            </table>
-        {{ end }}
-    </section>
-    {{ end }}
+					<tr><td><b class="ac:1">Garbage collector statistics</b></td><td></td></tr>
+					<tr><td>Next GC recycle</td><td>{{ .NextGC }}</td></tr>
+					<tr><td>Since last GC time</td><td>{{ .LastGC }}</td></tr>
+					<tr><td>Total GC pause</td><td>{{ .PauseTotalNs }}</td></tr>
+					<tr><td>Last GC pause</td><td>{{ .PauseNs }}</td></tr>
+					<tr><td>GC times</td><td>{{ .NumGC }}</td></tr>
+				</tbody>
+			</table>
+		{{ end }}
+	</section>
+{{ end }}
 
-    {{ if or .DailyHistory .TotalHiistory .UserHistory .StyleHistory }}
-    <section class="history">
-        <h2 class="td:d">History</h2>
-        <p>Learn more about style statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
-        {{ if not (or .DailyHistory .TotalHistory) }}
-            <i>No style history. Come back in a couple of days.</i>
-        {{ end }}
-        {{ with .DailyHistory }}
-            <div class="chart stats daily mt:m">{{ . | unescape }}</div>
-        {{ end }}
-        {{ with .TotalHistory }}
-            <div class="chart stats total mt:m">{{ . | unescape }}</div>
-        {{ end }}
-        {{ with .UserHistory }}
-            <div class="chart users mt:m">{{ . | unescape }}</div>
-        {{ end }}
-        {{ with .StyleHistory }}
-            <div class="chart styles mt:m">{{ . | unescape }}</div>
-        {{ end }}
-    </section>
-    {{ end }}
+{{ if or .DailyHistory .TotalHiistory .UserHistory .StyleHistory }}
+	<section class="history">
+		<h2 class="td:d">History</h2>
+		<p>Learn more about style statistics <a href="/docs/faq#how-do-view-install-update-statistics-work">in the FAQ</a>.</p>
+		{{ if not (or .DailyHistory .TotalHistory) }}
+			<i>No style history. Come back in a couple of days.</i>
+		{{ end }}
+		{{ with .DailyHistory }}
+			<div class="chart stats daily mt:m">{{ . | unescape }}</div>
+		{{ end }}
+		{{ with .TotalHistory }}
+			<div class="chart stats total mt:m">{{ . | unescape }}</div>
+		{{ end }}
+		{{ with .UserHistory }}
+			<div class="chart users mt:m">{{ . | unescape }}</div>
+		{{ end }}
+		{{ with .StyleHistory }}
+			<div class="chart styles mt:m">{{ . | unescape }}</div>
+		{{ end }}
+	</section>
+{{ end }}
 
-    {{ if .RenderUsers }}
-        <section class="users u-TableScrollX">
-            <h2 class="td:d">Users</h2>
-            <p class="fg:3 mb:m">{{ with .Users }}{{ len . }} users in total.{{ end }}</p>
-            {{ if .Users }}
-            <table>
-                <thead>
-                    <th>ID</th>
-                    <th>Created at</th>
-                    <th>Username</th>
-                    <th>Display name</th>
-                    {{ if $.User.IsAdmin }}<th>Email</th>{{ end }}
-                    <th>OAuth provider</th>
-                    {{ if $.User.IsModOrAdmin }}<th>Actions</th>{{ end }}
-                </thead>
-                <tbody>
-                    {{ range .Users }}
-                        <tr>
-                            <td>{{ .ID }}</td>
-                            <td class="u-TableMin">
-                                <time datetime="{{ .CreatedAt | iso }}">
-                                    {{ .CreatedAt | rel }}
-                                </time>
-                            </td>
-                            <td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
-                            <td>{{ .DisplayName }}</td>
-                            {{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}
-                            <td>{{ .OAuthProvider }}</td>
-                            {{ if $.User.IsModOrAdmin }}<td><a href="/user/ban/{{ .ID }}">Ban</a></td>{{ end }}
-                        </tr>
-                    {{ end }}
-                </tbody>
-            </table>
-            {{ else }}
-                <p class="fg:3">No users found.</p>
-            {{ end }}
-        </section>
-    {{ end }}
+{{ if .RenderUsers }}
+	<section class="users u-TableScrollX">
+		<h2 class="td:d">Users</h2>
+		<p class="fg:3 mb:m">{{ with .Users }}{{ len . }} users in total.{{ end }}</p>
+		{{ if .Users }}
+		<table>
+			<thead>
+				<th>ID</th>
+				<th>Created at</th>
+				<th>Username</th>
+				<th>Display name</th>
+				{{ if $.User.IsAdmin }}<th>Email</th>{{ end }}
+				<th>OAuth provider</th>
+				{{ if $.User.IsModOrAdmin }}<th>Actions</th>{{ end }}
+			</thead>
+			<tbody>
+				{{ range .Users }}
+					<tr>
+						<td>{{ .ID }}</td>
+						<td class="u-TableMin">
+							<time datetime="{{ .CreatedAt | iso }}">
+								{{ .CreatedAt | rel }}
+							</time>
+						</td>
+						<td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
+						<td>{{ .DisplayName }}</td>
+						{{ if $.User.IsAdmin }}<td>{{ .Email }}</td>{{ end }}
+						<td>{{ .OAuthProvider }}</td>
+						{{ if $.User.IsModOrAdmin }}<td><a href="/user/ban/{{ .ID }}">Ban</a></td>{{ end }}
+					</tr>
+				{{ end }}
+			</tbody>
+		</table>
+		{{ else }}
+			<p class="fg:3">No users found.</p>
+		{{ end }}
+	</section>
+{{ end }}
 
-    {{ if .RenderStyles }}
-        <section class="styles mt:l">
-            <h2 class="td:d">Styles</h2>
-            <p class="fg:3 mb:m">{{ with .Styles }}{{ len . }} styles in total.{{ end }}</p>
-            {{/* template "partials/debug-styles" . */}}
-            {{ if .Styles }}
-            <div class="grid flex rwrap mx:r mt:m">
-                {{ range .Styles }}
-                    {{ template "partials/style-card" . }}
-                {{ end }}
-            </div>
-            {{ else }}
-                <p class="fg:3">No styles found.</p>
-            {{ end }}
-        </section>
-    {{ end }}
-</div>
+{{ if .RenderStyles }}
+	<section class="styles mt:l">
+		<h2 class="td:d">Styles</h2>
+		<p class="fg:3 mb:m">{{ with .Styles }}{{ len . }} styles in total.{{ end }}</p>
+		{{ if .Styles }}
+			<div class="grid flex rwrap mx:r mt:m">
+				{{ range .Styles }}
+					{{ template "partials/style-card" . }}
+				{{ end }}
+			</div>
+		{{ else }}
+			<p class="fg:3">No styles found.</p>
+		{{ end }}
+	</section>
+{{ end }}

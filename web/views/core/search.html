@@ -1,58 +1,54 @@
+<section class="header flex f-col ta:c">
+	<h1>Search</h1>
+	<p>Sorted from most to least relevant results by default.</p>
+</section>
 
-<div class="wrapper py:l">
-    <section class="header flex f-col ta:c">
-        <h1>Search</h1>
-        <p>Sorted from most to least relevant results by default.</p>
-    </section>
+<section class="mt:l">
+	<form class="Form Form-inline jc:c" method="get" action="/search">
+		<div class="Form-section Form-row">
+			<label for="q">Search keyword</label>
+			<div class="Form-row">
+				<input
+					type="search" name="q" id="q"
+					value="{{ .Keyword }}"
+					required pattern=".+"
+					placeholder="e.g. dark">
+			</div>
+		</div>
 
-    <section class="mt:l">
-        <form class="Form Form-inline jc:c" method="get" action="/search">
-            <div class="Form-section Form-row">
-                <label for="q">Search keyword</label>
-                <div class="Form-row">
-                    <input
-                        type="search" name="q" id="q"
-                        value="{{ .Keyword }}"
-                        required pattern=".+"
-                        placeholder="e.g. dark">
-                </div>
-            </div>
+		<div class="Form-section Form-control">
+			<button
+				type="submit"
+				class="btn icon primary"
+			>{{ template "icons/search" }} Search</button>
+		</div>
 
-            <div class="Form-section Form-control">
-                <button
-                    type="submit"
-                    class="btn icon primary"
-                >{{ template "icons/search" }} Search</button>
-            </div>
+		{{ template "partials/form-sort" . }}
+	</form>
+</section>
 
-            {{ template "partials/form-sort" . }}
-        </form>
-    </section>
+<section class="mt:l">
+	{{ if .Styles }}
+		<div class="search-perf-metrics">
+			<span class="f:b">Metrics of search engine:</span>
+			{{ if gt .Metrics.Hits 96 }}
+				<span>Showing top 96 of {{ .Metrics.Hits }} hits</span>
+			{{ else }}
+				<span>Hits: {{ .Metrics.Hits }}</span>
+			{{ end }}
+			<span>Time Spent: {{ Elapsed .Metrics.TimeSpent }}</span>
+		</div>
 
-    <section class="mt:l">
-        {{ if .Styles }}
-            <div class="search-perf-metrics">
-                <span class="f:b">Metrics of search engine:</span>
-                {{ if gt .Metrics.Hits 96 }}
-                    <span>Showing top 96 of {{ .Metrics.Hits }} hits</span>
-                {{ else }}
-                    <span>Hits: {{ .Metrics.Hits }}</span>
-                {{ end }}
-                <span>Time Spent: {{ Elapsed .Metrics.TimeSpent }}</span>
-            </div>
-
-            {{/* template "partials/debug-styles" . */}}
-            <div class="grid flex rwrap mx:r mt:m">
-                {{ range .Styles }}
-                    {{ template "partials/style-card" . }}
-                {{ end }}
-            </div>
-        {{ else if .Error }}
-            <div role="alert" class="err">{{ .Error | unescape }}</div>
-        {{ else }}
-            <div class="ta:c">
-                <p>Please try searching for something.</p>
-            </div>
-        {{ end }}
-    </section>
-</div>
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range .Styles }}
+				{{ template "partials/style-card" . }}
+			{{ end }}
+		</div>
+	{{ else if .Error }}
+		<div role="alert" class="err">{{ .Error | unescape }}</div>
+	{{ else }}
+		<div class="ta:c">
+			<p>Please try searching for something.</p>
+		</div>
+	{{ end }}
+</section>

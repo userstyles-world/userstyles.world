@@ -1,26 +1,23 @@
-<div class="wrapper py:l">
-    <section class="mt:m ta:c">
-        <h1>Explore</h1>
-        <p class="fg:3">Browse all available userstyles.</p>
-    </section>
+<section class="ta:c">
+	<h1>Explore</h1>
+	<p class="fg:3">Browse all available userstyles.</p>
+</section>
 
-    <section class="mt:l">
-        <form class="Form Form-inline jc:c" method="get" action="/explore">
-            <input type="text" name="page" value="1" hidden>
-            {{ template "partials/form-sort" . }}
-        </form>
+<section>
+	<form class="Form Form-inline jc:c" method="get" action="/explore">
+		<input type="text" name="page" value="1" hidden>
+		{{ template "partials/form-sort" . }}
+	</form>
 
-        {{ if gt (len .Styles) 1 }}
-            {{/* template "partials/debug-styles" . */}}
-            <div class="grid flex rwrap mx:r mt:m">
-                {{ range .Styles }}
-                    {{ template "partials/style-card" . }}
-                {{ end }}
-            </div>
-        {{ else }}
-            <p class="ta:c">No userstyles found.</p>
-        {{ end }}
-    </section>
+	{{ if gt (len .Styles) 1 }}
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range .Styles }}
+				{{ template "partials/style-card" . }}
+			{{ end }}
+		</div>
+	{{ else }}
+		<p class="ta:c">No userstyles found.</p>
+	{{ end }}
+</section>
 
-    {{ with .P }}{{ template "partials/pagination" . }}{{ end }}
-</div>
+{{ with .P }}{{ template "partials/pagination" . }}{{ end }}

@@ -1,132 +1,130 @@
-<div class="wrapper py:l">
-    {{ if not .User.ID }}
-        <section class="Hero md flex f-col ta:c">
-            <div class="mascot">{{ template "partials/mascot" }}</div>
-            <h1>{{ config "appName" }}</h1>
-            <p>Free and open-source, community-driven platform for sharing and browsing UserCSS userstyles, and a replacement for <code>UserStyles.org</code>, made by the userstyles community.</p>
-            <span class="flex mt:m">
-                <a class="btn icon primary mx:s" href="/explore">
-                    {{ template "icons/compass" }} Explore userstyles
-                </a>
-                <a class="btn icon mx:s" href="/register">
-                    {{ template "icons/sign-in" }} Create an account
-                </a>
-            </span>
-        </section>
+{{ if not .User.ID }}
+	<section class="Hero md flex f-col ta:c">
+		<div class="mascot">{{ template "partials/mascot" }}</div>
+		<h1>{{ config "appName" }}</h1>
+		<p>Free and open-source, community-driven platform for sharing and browsing UserCSS userstyles, and a replacement for <code>UserStyles.org</code>, made by the userstyles community.</p>
+		<span class="flex mt:m">
+			<a class="btn icon primary mx:s" href="/explore">
+				{{ template "icons/compass" }} Explore userstyles
+			</a>
+			<a class="btn icon mx:s" href="/register">
+				{{ template "icons/sign-in" }} Create an account
+			</a>
+		</span>
+	</section>
 
-        <section class="mt:l" id="features">
-            <hgroup class="ta:c">
-                <h2>Features</h2>
-                <p>What sets us apart from other platforms.</p>
-            </hgroup>
+	<section class="mt:l" id="features">
+		<hgroup class="ta:c">
+			<h2>Features</h2>
+			<p>What sets us apart from other platforms.</p>
+		</hgroup>
 
-            <div class="grid grid-2 flex rwrap mt:m">
-                <div class="card col gap p:m">
-                    <h3>Privacy-first</h3>
-                    <p>We don't track you, and we won't sell, share, and/or mine your data.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>Tracker-free</h3>
-                    <p>We won't let others track you either: no ads, no CDNs, and no Cloudflare.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>Community-driven</h3>
-                    <p>Made as a joint effort between userstyle authors and users.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>User-friendly</h3>
-                    <p>Built with accessibility and usability in mind from the start.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>Easy to get started</h3>
-                    <p>Takes a couple of minutes to sign up and upload your first userstyle.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>Mirror userstyles</h3>
-                    <p>Sync your userstyles from other places, including <a href="https://uso.kkx.one">USo-archive</a>.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>Stylus integration</h3>
-                    <p>Publish and/or push updates for your userstyles with a few clicks.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>No vendor lock-in</h3>
-                    <p>Powered by self-contained UserCSS format, host your userstyles anywhere.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>Lightweight and fast</h3>
-                    <p>We care about performance and aim to be as fast as possible.</p>
-                </div>
-                <div class="card col gap p:m">
-                    <h3>Free/Libre Software</h3>
-                    <p>Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL version 3</a>, the most protective copyleft license.</p>
-                </div>
-            </div>
-        </section>
+		<div class="grid grid-2 flex rwrap mt:m">
+			<div class="card col gap p:m">
+				<h3>Privacy-first</h3>
+				<p>We don't track you, and we won't sell, share, and/or mine your data.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>Tracker-free</h3>
+				<p>We won't let others track you either: no ads, no CDNs, and no Cloudflare.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>Community-driven</h3>
+				<p>Made as a joint effort between userstyle authors and users.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>User-friendly</h3>
+				<p>Built with accessibility and usability in mind from the start.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>Easy to get started</h3>
+				<p>Takes a couple of minutes to sign up and upload your first userstyle.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>Mirror userstyles</h3>
+				<p>Sync your userstyles from other places, including <a href="https://uso.kkx.one">USo-archive</a>.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>Stylus integration</h3>
+				<p>Publish and/or push updates for your userstyles with a few clicks.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>No vendor lock-in</h3>
+				<p>Powered by self-contained UserCSS format, host your userstyles anywhere.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>Lightweight and fast</h3>
+				<p>We care about performance and aim to be as fast as possible.</p>
+			</div>
+			<div class="card col gap p:m">
+				<h3>Free/Libre Software</h3>
+				<p>Licensed under <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL version 3</a>, the most protective copyleft license.</p>
+			</div>
+		</div>
+	</section>
 
-        {{/*
-        <section class="Hero Hero-half">
-            <div class="ta:c">
-                <h2>Statistics</h2>
-                <p class="fg:2 mb:l mx:a mb:m">Combined statistics for UserStyles.world platform.</p>
-            </div>
+	{{/*
+	<section class="Hero Hero-half">
+		<div class="ta:c">
+			<h2>Statistics</h2>
+			<p class="fg:2 mb:l mx:a mb:m">Combined statistics for UserStyles.world platform.</p>
+		</div>
 
-            <div class="Table Half ml:a mr:a">
-                <div class="TableHead">
-                    <div class="TableRow">
-                        <div class="TableCell"></div>
-                        <div class="TableCell">Today</div>
-                        <div class="TableCell">This week</div>
-                        <div class="TableCell">In total</div>
-                    </div>
-                </div>
-                <div class="TableBody">
-                    <div class="TableRow">
-                        <div class="TableCell">Users</div>
-                        <div class="TableCell">{{ comma .Stats.DailyUsers }}</div>
-                        <div class="TableCell">{{ comma .Stats.WeeklyUsers }}</div>
-                        <div class="TableCell">{{ comma .Stats.TotalUsers }}</div>
-                    </div>
-                    <div class="TableRow">
-                        <div class="TableCell">Styles</div>
-                        <div class="TableCell">{{ comma .Stats.DailyStyles }}</div>
-                        <div class="TableCell">{{ comma .Stats.WeeklyStyles }}</div>
-                        <div class="TableCell">{{ comma .Stats.TotalStyles }}</div>
-                    </div>
-                    <div class="TableRow">
-                        <div class="TableCell">Views</div>
-                        <div class="TableCell">{{ comma .Stats.DailyViews }}</div>
-                        <div class="TableCell">{{ comma .Stats.WeeklyViews }}</div>
-                        <div class="TableCell">{{ comma .Stats.TotalViews }}</div>
-                    </div>
-                    <div class="TableRow">
-                        <div class="TableCell">Installs</div>
-                        <div class="TableCell">{{ comma .Stats.DailyInstalls }}</div>
-                        <div class="TableCell">{{ comma .Stats.WeeklyInstalls }}</div>
-                        <div class="TableCell">{{ comma .Stats.TotalInstalls }}</div>
-                    </div>
-                    <div class="TableRow">
-                        <div class="TableCell">Updates</div>
-                        <div class="TableCell">{{ comma .Stats.DailyUpdates }}</div>
-                        <div class="TableCell">{{ comma .Stats.WeeklyUpdates }}</div>
-                        <div class="TableCell">∞</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    */}}
-    {{ end }}
-    {{ if and (.Styles) (ge (len .Styles) 1) }}
-        <section class="Hero mt:l">
-            <h2 class="ta:c">Featured userstyles</h2>
-            <p class="ta:c mb:l fg:2">See more styles on <a href="/explore">Explore</a> page.</p>
-            {{/* template "partials/debug-styles" . */}}
-            <div class="grid flex rwrap mx:r mt:m">
-                {{ range .Styles }}
-                    {{ template "partials/style-card" . }}
-                {{ end }}
-            </div>
-            <p class="Box ta:c mt:l mb:m">Find more styles on <a href="/explore">Explore</a> page.</p>
-        </section>
-    {{ end }}
-</div>
+		<div class="Table Half ml:a mr:a">
+			<div class="TableHead">
+				<div class="TableRow">
+					<div class="TableCell"></div>
+					<div class="TableCell">Today</div>
+					<div class="TableCell">This week</div>
+					<div class="TableCell">In total</div>
+				</div>
+			</div>
+			<div class="TableBody">
+				<div class="TableRow">
+					<div class="TableCell">Users</div>
+					<div class="TableCell">{{ comma .Stats.DailyUsers }}</div>
+					<div class="TableCell">{{ comma .Stats.WeeklyUsers }}</div>
+					<div class="TableCell">{{ comma .Stats.TotalUsers }}</div>
+				</div>
+				<div class="TableRow">
+					<div class="TableCell">Styles</div>
+					<div class="TableCell">{{ comma .Stats.DailyStyles }}</div>
+					<div class="TableCell">{{ comma .Stats.WeeklyStyles }}</div>
+					<div class="TableCell">{{ comma .Stats.TotalStyles }}</div>
+				</div>
+				<div class="TableRow">
+					<div class="TableCell">Views</div>
+					<div class="TableCell">{{ comma .Stats.DailyViews }}</div>
+					<div class="TableCell">{{ comma .Stats.WeeklyViews }}</div>
+					<div class="TableCell">{{ comma .Stats.TotalViews }}</div>
+				</div>
+				<div class="TableRow">
+					<div class="TableCell">Installs</div>
+					<div class="TableCell">{{ comma .Stats.DailyInstalls }}</div>
+					<div class="TableCell">{{ comma .Stats.WeeklyInstalls }}</div>
+					<div class="TableCell">{{ comma .Stats.TotalInstalls }}</div>
+				</div>
+				<div class="TableRow">
+					<div class="TableCell">Updates</div>
+					<div class="TableCell">{{ comma .Stats.DailyUpdates }}</div>
+					<div class="TableCell">{{ comma .Stats.WeeklyUpdates }}</div>
+					<div class="TableCell">∞</div>
+				</div>
+			</div>
+		</div>
+	</section>
+*/}}
+{{ end }}
+
+{{ if and (.Styles) (ge (len .Styles) 1) }}
+	<section class="mt:l">
+		<h2 class="ta:c">Featured userstyles</h2>
+		<p class="ta:c mb:l fg:2">See more styles on <a href="/explore">Explore</a> page.</p>
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range .Styles }}
+				{{ template "partials/style-card" . }}
+			{{ end }}
+		</div>
+		<p class="Box ta:c mt:l mb:m">Find more styles on <a href="/explore">Explore</a> page.</p>
+	</section>
+{{ end }}
