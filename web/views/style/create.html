@@ -15,168 +15,165 @@
     {{ $humanizedMethod = "adding" }}
 {{ end }}
 
-<div class="wrapper py:l">
-    <section class="mt:m ta:c">
-        <h1>{{ .Title }}</h1>
-        {{ if ne .Method "edit"  }}
-            <p class="fg:3">If your UserCSS userstyle is hosted somewhere else, you can add it via <a href="/import">import page</a>.</p>
-            <p class="fg:2">Please read and understand our <a href="/docs/content-guidelines">content guidelines</a> before {{ $humanizedMethod }} your userstyle.</p>
-        {{ end }}
-    </section>
+<section class="mt:m ta:c">
+	<h1>{{ .Title }}</h1>
+	{{ if ne .Method "edit" }}
+		<p class="fg:2">If your UserCSS userstyle is hosted somewhere else, you can add it via <a href="/import">import page</a>.</p>
+		<p class="fg:2">Please read and understand our <a href="/docs/content-guidelines">content guidelines</a> before {{ $humanizedMethod }} your userstyle.</p>
+	{{ end }}
+</section>
 
-    <section class="alert">
-        <style type="text/css">
-            .alert {
-                max-width: var(--form-max-width);
-                margin: 0 auto;
-            }
-            .alert > .limit { max-width: 100% }
-        </style>
-        {{ template "partials/alert" . }}
-    </section>
+<section class="alert">
+	<style type="text/css">
+		.alert {
+			max-width: var(--form-max-width);
+			margin: 0 auto;
+			padding: 0;
+		}
+		.alert > .limit { max-width: 100% }
+	</style>
+	{{ template "partials/alert" . }}
+</section>
 
-    <section class="">
-        <form class="{{ $method }}" method="post" action="/{{ $method }}" enctype="multipart/form-data">
-            <label for="name">Name</label>
-            <input
-                required pattern=".+"
-                type="text" name="name" id="name" value="{{ .Styles.Name }}"
-                placeholder="e.g. UserStyles.world tweaks">
+<form class="{{ $method }}" method="post" action="/{{ $method }}" enctype="multipart/form-data">
+	<label for="name">Name</label>
+	<input
+		required pattern=".+"
+		type="text" name="name" id="name" value="{{ .Styles.Name }}"
+		placeholder="e.g. UserStyles.world tweaks">
 
-            <label for="description">Description</label>
-            <i class="fg:3" id="description-hint">Short description of what your userstyle does in plain text. Will be used for SEO and rich embeds.</i>
-            <textarea
-                required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
-                type="text" name="description" id="description"
-                aria-describedby="description-hint"
-                placeholder="e.g. UI experiments for UserStyles.world."
-            >{{ .Styles.Description }}</textarea>
+	<label for="description">Description</label>
+	<i class="fg:3" id="description-hint">Short description of what your userstyle does in plain text. Will be used for SEO and rich embeds.</i>
+	<textarea
+		required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
+		type="text" name="description" id="description"
+		aria-describedby="description-hint"
+		placeholder="e.g. UI experiments for UserStyles.world."
+	>{{ .Styles.Description }}</textarea>
 
-            <label for="notes">Notes</label>
-            <i class="fg:3" id="notes-hint">Long description of requirements, changelog, etc. Supports Markdown syntax.</i>
-            <textarea
-                type="text" name="notes" id="notes"
-                aria-describedby="notes-hint"
-                placeholder="e.g. Please raise issues in the GitHub repository."
-            >{{ .Styles.Notes }}</textarea>
+	<label for="notes">Notes</label>
+	<i class="fg:3" id="notes-hint">Long description of requirements, changelog, etc. Supports Markdown syntax.</i>
+	<textarea
+		type="text" name="notes" id="notes"
+		aria-describedby="notes-hint"
+		placeholder="e.g. Please raise issues in the GitHub repository."
+	>{{ .Styles.Notes }}</textarea>
 
-            <label for="homepage">Homepage</label>
-            <i class="fg:3" id="homepage-hint">Link to userstyle's homepage, bug tracker, etc.</i>
-            <input
-                pattern="^https?:\/\/.*$"
-                type="url" name="homepage" id="homepage"
-                aria-describedby="homepage-hint"
-                value="{{ .Styles.Homepage }}"
-                placeholder="e.g. https://github.com/userstyles-world/tweaks">
+	<label for="homepage">Homepage</label>
+	<i class="fg:3" id="homepage-hint">Link to userstyle's homepage, bug tracker, etc.</i>
+	<input
+		pattern="^https?:\/\/.*$"
+		type="url" name="homepage" id="homepage"
+		aria-describedby="homepage-hint"
+		value="{{ .Styles.Homepage }}"
+		placeholder="e.g. https://github.com/userstyles-world/tweaks">
 
-            {{- if eq .Method "edit" }}
-                <p>Current image</p>
-                <i class="fg:3">To change it, set a new preview URL or upload a new image.</i>
-                <div class="card mt:s mb:m">
-                    <div class="screenshot">
-                        {{ if .Styles.Preview }}
-                            {{ $img := .Styles.Preview | fullImage }}
-                            <picture class="blurred" aria-hidden="true">
-                                <source srcset="{{ $img }}" type="image/webp">
-                                <img src="{{ $img }}" loading="lazy">
-                            </picture>
-                            <picture>
-                                <source srcset="{{ $img }}" type="image/webp">
-                                <img
-                                    loading="lazy"
-                                    src="{{ $img | toJPEG }}"
-                                    alt="{{ .Style.Name }} screenshot" >
-                            </picture>
-                        {{ else }}
-                            <picture class="no-screenshot flex jc:c ai:c">
-                                {{ template "partials/no-screenshot" .Styles }}
-                            </picture>
-                        {{ end }}
-                    </div>
-                </div>
-            {{ end }}
+	{{- if eq .Method "edit" }}
+		<p>Current image</p>
+		<i class="fg:3">To change it, set a new preview URL or upload a new image.</i>
+		<div class="card mt:s mb:m">
+			<div class="screenshot">
+				{{ if .Styles.Preview }}
+					{{ $img := .Styles.Preview | fullImage }}
+					<picture class="blurred" aria-hidden="true">
+						<source srcset="{{ $img }}" type="image/webp">
+						<img src="{{ $img }}" loading="lazy">
+					</picture>
+					<picture>
+						<source srcset="{{ $img }}" type="image/webp">
+						<img
+							loading="lazy"
+							src="{{ $img | toJPEG }}"
+							alt="{{ .Style.Name }} screenshot" >
+					</picture>
+				{{ else }}
+					<picture class="no-screenshot flex jc:c ai:c">
+						{{ template "partials/no-screenshot" .Styles }}
+					</picture>
+				{{ end }}
+			</div>
+		</div>
+	{{ end }}
 
-            <label for="previewURL">Preview image URL</label>
-            <i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i><br>
-            <i class="fg:3"><mark>Hint:</mark> To remove preview image, remove the URL from field below.</i>
-            <input
-                pattern="{{ config "allowedImagesRe" }}"
-                type="url" name="previewURL" id="previewURL"
-                aria-describedby="previewURL-hint"
-                value="{{ .Styles.Preview }}"
-                placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
+	<label for="previewURL">Preview image URL</label>
+	<i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i><br>
+	<i class="fg:3"><mark>Hint:</mark> To remove preview image, remove the URL from field below.</i>
+	<input
+		pattern="{{ config "allowedImagesRe" }}"
+		type="url" name="previewURL" id="previewURL"
+		aria-describedby="previewURL-hint"
+		value="{{ .Styles.Preview }}"
+		placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
-            <label for="preview">Upload preview image</label>
-            <i class="fg:3" id="preview-hint">Only jpg, jpeg, png, avif, and webp formats are allowed.</i>
-            <input type="file"
-                name="preview" id="preview"
-                aria-describedby="preview-hint"
-                accept="image/jpeg,image/png,image/webp,image/avif">
+	<label for="preview">Upload preview image</label>
+	<i class="fg:3" id="preview-hint">Only jpg, jpeg, png, avif, and webp formats are allowed.</i>
+	<input type="file"
+		name="preview" id="preview"
+		aria-describedby="preview-hint"
+		accept="image/jpeg,image/png,image/webp,image/avif">
 
-            <label for="license">License</label>
-            <i class="fg:3" id="license-hint">If left empty, the style will use <a href="https://choosealicense.com/no-permission/">No License</a> by default.</i>
-            <input
-                type="text" name="license" id="license"
-                aria-describedby="license-hint"
-                value="{{ .Styles.License }}"
-                placeholder="e.g. CC Zero">
+	<label for="license">License</label>
+	<i class="fg:3" id="license-hint">If left empty, the style will use <a href="https://choosealicense.com/no-permission/">No License</a> by default.</i>
+	<input
+		type="text" name="license" id="license"
+		aria-describedby="license-hint"
+		value="{{ .Styles.License }}"
+		placeholder="e.g. CC Zero">
 
-            <label for="category">Category</label>
-            <i class="fg:3" id="category-hint">Domain name of website that your userstyle applies to.</i>
-            <input
-                required
-                type="text" name="category" id="category"
-                aria-describedby="category-hint"
-                value="{{ .Styles.Category }}"
-                placeholder="e.g. test.userstyles.world -> userstyles">
+	<label for="category">Category</label>
+	<i class="fg:3" id="category-hint">Domain name of website that your userstyle applies to.</i>
+	<input
+		required
+		type="text" name="category" id="category"
+		aria-describedby="category-hint"
+		value="{{ .Styles.Category }}"
+		placeholder="e.g. test.userstyles.world -> userstyles">
 
-            <label for="code">Source code</label>
-            <textarea
-                type="text" name="code" id="code"
-                spellcheck="false"
-                placeholder="{{ BaseCodeTemplate }}"
-            >{{ with .Styles }}{{ .Code }}{{ end }}</textarea>
+	<label for="code">Source code</label>
+	<textarea
+		type="text" name="code" id="code"
+		spellcheck="false"
+		placeholder="{{ BaseCodeTemplate }}"
+	>{{ with .Styles }}{{ .Code }}{{ end }}</textarea>
 
-            {{ if eq .Method "edit" }}
-                <label for="mirrorURL">Mirror source code URL</label>
-                <i class="fg:3" id="mirrorURL-hint">If your style was imported, this takes priority over original URL.</i>
-                <input
-                    type="url" name="mirrorURL" value="{{ .Styles.MirrorURL }}"
-                    aria-describedby="mirrorURL-hint"
-                    pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
-                    placeholder="Path to external userstyle's install URL">
+	{{ if eq .Method "edit" }}
+		<label for="mirrorURL">Mirror source code URL</label>
+		<i class="fg:3" id="mirrorURL-hint">If your style was imported, this takes priority over original URL.</i>
+		<input
+			type="url" name="mirrorURL" value="{{ .Styles.MirrorURL }}"
+			aria-describedby="mirrorURL-hint"
+			pattern="^https?:\/\/.*\.user\.(css|styl|less)$"
+			placeholder="Path to external userstyle's install URL">
 
-                <div class="ta:l">
-                    {{- $mirrorMeta := "" -}}
-                    {{- if .Styles.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
-                    <p class="mb:s fg:3" id="mirrorMeta-hint">Will mirror style metadata (name, description, and notes in case of USo-archive).</p>
-                    <div class="checkbox iflex mb:m">
-                        <input type="checkbox" name="mirrorMeta" id="mirrorMeta" aria-describedby="mirrorMeta-hint" {{ $mirrorMeta }}>
-                        {{ template "partials/checkboxes" }}
-                        <label for="mirrorMeta">Mirror style metadata</label>
-                    </div>
-                </div>
+		<div class="ta:l">
+			{{- $mirrorMeta := "" -}}
+			{{- if .Styles.MirrorMeta -}}{{- $mirrorMeta = "checked" -}}{{- end -}}
+			<p class="mb:s fg:3" id="mirrorMeta-hint">Will mirror style metadata (name, description, and notes in case of USo-archive).</p>
+			<div class="checkbox iflex mb:m">
+				<input type="checkbox" name="mirrorMeta" id="mirrorMeta" aria-describedby="mirrorMeta-hint" {{ $mirrorMeta }}>
+				{{ template "partials/checkboxes" }}
+				<label for="mirrorMeta">Mirror style metadata</label>
+			</div>
+		</div>
 
-                <div class="ta:l">
-                    <p class="mb:s fg:3" id="mirrorCode-hint">Check <a href="/docs/faq#why-is-mirroring-source-code-updates-not-working">troubleshooting steps</a> if you run into issues.</p>
-                    {{- $mirrorCode := "" -}}
-                    {{- if .Styles.MirrorCode -}}{{- $mirrorCode = "checked" -}}{{- end -}}
-                    <div class="checkbox iflex mb:m">
-                        <input type="checkbox" name="mirrorCode" id="mirrorCode" aria-describedby="mirrorCode-hint" {{ $mirrorCode }}>
-                        {{ template "partials/checkboxes" }}
-                        <label for="mirrorCode">
-                            Mirror source code updates
-                            <a
-                                data-tooltip="Read how mirroring source code works"
-                                href="/docs/faq#how-does-mirroring-source-code-work">
-                                {{ template "icons/info" }}
-                            </a>
-                        </label>
-                    </div>
-                </div>
-            {{ end }}
+		<div class="ta:l">
+			<p class="mb:s fg:3" id="mirrorCode-hint">Check <a href="/docs/faq#why-is-mirroring-source-code-updates-not-working">troubleshooting steps</a> if you run into issues.</p>
+			{{- $mirrorCode := "" -}}
+			{{- if .Styles.MirrorCode -}}{{- $mirrorCode = "checked" -}}{{- end -}}
+			<div class="checkbox iflex mb:m">
+				<input type="checkbox" name="mirrorCode" id="mirrorCode" aria-describedby="mirrorCode-hint" {{ $mirrorCode }}>
+				{{ template "partials/checkboxes" }}
+				<label for="mirrorCode">
+					Mirror source code updates
+					<a
+						data-tooltip="Read how mirroring source code works"
+						href="/docs/faq#how-does-mirroring-source-code-work">
+						{{ template "icons/info" }}
+					</a>
+				</label>
+			</div>
+		</div>
+	{{ end }}
 
-            <button class="btn icon primary" type="submit" >{{ template "icons/save" }} {{ $btn }}</button>
-        </form>
-    </section>
-</div>
+	<button class="btn icon primary" type="submit" >{{ template "icons/save" }} {{ $btn }}</button>
+</form>

@@ -1,28 +1,29 @@
-<div class="wrapper py:l">
-    <section class="ta:c">
-        <h1>{{ .Title }}</h1>
-        <p>This action is irreversible.</p>
-    </section>
-    <section class="limit mt:l mx:a">
-        <form class="form-wrapper" method="post" action="/styles/ban/{{ .Style.ID }}">
-            <label class="mb:m f:b">Are you sure you want to ban "{{ .Style.Name }}"?</label>
-            <br>
-            <label for="reason">Reason for ban</label>
-            <i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
-            <input
-                required
-                type="text" name="reason"
-                placeholder="Your reason to ban this style">
-            <div class="checkbox flex">
-                <input type="checkbox" name="censor">
-                {{ template "partials/checkboxes" }}
-                <label class="ml:s" for="censor">Censor style's information</label>
-            </div>
-            <i class="fg:3">This will censor the style's information with a spoiler, use this if the style has an innapropiate name.</i>
-            <div class="mt:m">
-                <button class="btn primary mr:s" type="submit">Confirm</button>
-                <a class="fg:1" href="/style/{{ .Style.ID }}">Cancel</a>
-            </div>
-        </form>
-    </section>
-</div>
+<section class="ta:c">
+	<h1>{{ .Title }}</h1>
+	<p>This action is irreversible.</p>
+</section>
+
+<section class="limit">
+	<form class="form-wrapper" method="post" action="/styles/ban/{{ .Style.ID }}">
+		<label class="mb:m f:b">Are you sure you want to ban "{{ .Style.Name }}"?</label>
+
+		<label for="reason">Reason for ban</label>
+		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
+		<input
+			required
+			type="text" name="reason"
+			placeholder="Your reason to ban this style">
+
+		<div class="checkbox flex">
+			<input type="checkbox" name="censor">
+			{{ template "partials/checkboxes" }}
+			<label class="ml:s" for="censor">Censor style's information</label>
+		</div>
+		<i class="fg:3">This will censor the style's information with a spoiler, use this if the style has an innapropiate name.</i>
+
+		<div class="mt:m">
+			<button class="btn primary mr:s" type="submit">Confirm</button>
+			<a class="fg:1" href="/style/{{ .Style.ID }}">Cancel</a>
+		</div>
+	</form>
+</section>

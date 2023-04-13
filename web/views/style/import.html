@@ -1,66 +1,64 @@
-<div class="wrapper py:l">
-    <section class="ta:c">
-        <h1>Import userstyle</h1>
-        <i class="fg:3"><a href="https://github.com/vednoc/go-usercss-parser">UserCSS parser</a> will set most of metadata for you, but your input is required for missing fields.</i>
-        <p class="fg:2">Please read and understand our <a href="/docs/content-guidelines">content guidelines</a> before importing your userstyle.</p>
-    </section>
+<section class="ta:c">
+	<h1>Import userstyle</h1>
+	<i class="fg:2"><a href="https://github.com/vednoc/go-usercss-parser">UserCSS parser</a> will set most of metadata for you, but your input is required for missing fields.</i>
+	<p class="fg:2">Please read and understand our <a href="/docs/content-guidelines">content guidelines</a> before importing your userstyle.</p>
+</section>
 
-    <form class="import" method="post" action="/import" enctype="multipart/form-data">
-        <label for="import">Import URL</label>
-        <i class="fg:3">For UserStyles.org users, find your userstyle in <a href="https://uso.kkx.one"><span data-tooltip="USo-archive is a mirror of the userstyles.org website.">USo-archive</span></a>. On old browsers, use the <a href="https://uso-archive.surge.sh">old version</a>.</i>
-        <input
-            type="url" name="import" id="import"
-            required pattern="^https?:\/\/((uso-archive\.surge\.sh|uso\.kkx\.one)\/.+|.+\.user\.(css|styl|less))$"
-            placeholder="Path to external userstyle's install URL">
+<form class="import" method="post" action="/import" enctype="multipart/form-data">
+	<label for="import">Import URL</label>
+	<i class="fg:3">For UserStyles.org users, find your userstyle in <a href="https://uso.kkx.one"><span data-tooltip="USo-archive is a mirror of the userstyles.org website.">USo-archive</span></a>. On old browsers, use the <a href="https://uso-archive.surge.sh">old version</a>.</i>
+	<input
+		type="url" name="import" id="import"
+		required pattern="^https?:\/\/((uso-archive\.surge\.sh|uso\.kkx\.one)\/.+|.+\.user\.(css|styl|less))$"
+		placeholder="Path to external userstyle's install URL">
 
-        <label for="previewURL">Preview image URL</label>
-        <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-        <i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
-        <input
-            type="url" name="previewURL" id="preview"
-            aria-describedby="previewURL-hint"
-            pattern="{{ config "allowedImagesRe" }}"
-            placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
+	<label for="previewURL">Preview image URL</label>
+	<i class="fg:3">Skip this step if importing from USo-archive.</i><br>
+	<i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
+	<input
+		type="url" name="previewURL" id="preview"
+		aria-describedby="previewURL-hint"
+		pattern="{{ config "allowedImagesRe" }}"
+		placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
-        <label for="preview">Upload preview image</label>
-        <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-        <i class="fg:3" id="preview-hint">Only jpg, jpeg, png, avif, and webp formats are allowed.</i>
-        <input type="file"
-            name="preview" id="preview"
-            aria-describedby="preview-hint"
-            accept="image/jpeg,image/png,image/webp,image/avif">
+	<label for="preview">Upload preview image</label>
+	<i class="fg:3">Skip this step if importing from USo-archive.</i><br>
+	<i class="fg:3" id="preview-hint">Only jpg, jpeg, png, avif, and webp formats are allowed.</i>
+	<input type="file"
+		name="preview" id="preview"
+		aria-describedby="preview-hint"
+		accept="image/jpeg,image/png,image/webp,image/avif">
 
-        <label for="category">Category</label>
-        <i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-        <i class="fg:3" id="category-hint">Domain name of website that your userstyle applies to.</i>
-        <input
-            type="text" name="category" id="category"
-            aria-describedby="category-hint"
-            placeholder="e.g. test.userstyles.world -> userstyles">
+	<label for="category">Category</label>
+	<i class="fg:3">Skip this step if importing from USo-archive.</i><br>
+	<i class="fg:3" id="category-hint">Domain name of website that your userstyle applies to.</i>
+	<input
+		type="text" name="category" id="category"
+		aria-describedby="category-hint"
+		placeholder="e.g. test.userstyles.world -> userstyles">
 
-        <div class="ta:l">
-            <p>Mirror options</p>
-            <p class="mb:s fg:3" id="mirrorMeta-hint">Will mirror style metadata (name, description, and notes in case of USo-archive).</p>
-            <div class="checkbox flex mb:m">
-                <input type="checkbox" name="mirrorMeta" id="mirrorMeta" aria-describedby="mirrorMeta-hint">
-                {{ template "partials/checkboxes" }}
-                <label for="mirrorMeta">Mirror style metadata</label>
-            </div>
-            <p class="mb:s fg:3" id="mirrorCode-hint">Available to all imported styles. You can set a custom mirror URL later. <a href="/docs/faq#why-is-mirroring-source-code-updates-not-working">Need help?</a></p>
-            <div class="checkbox flex mb:m">
-                <input type="checkbox" name="mirrorCode" id="mirrorCode" aria-describedby="mirrorCode-hint">
-                {{ template "partials/checkboxes" }}
-                <label for="mirrorCode">
-                    Mirror source code updates
-                    <a
-                        data-tooltip="Read how mirroring source code works"
-                        href="/docs/faq#how-does-mirroring-source-code-work">
-                        {{ template "icons/info" }}
-                    </a>
-                </label>
-            </div>
-        </div>
+	<div class="ta:l">
+		<p>Mirror options</p>
+		<p class="mb:s fg:3" id="mirrorMeta-hint">Will mirror style metadata (name, description, and notes in case of USo-archive).</p>
+		<div class="checkbox flex mb:m">
+			<input type="checkbox" name="mirrorMeta" id="mirrorMeta" aria-describedby="mirrorMeta-hint">
+			{{ template "partials/checkboxes" }}
+			<label for="mirrorMeta">Mirror style metadata</label>
+		</div>
+		<p class="mb:s fg:3" id="mirrorCode-hint">Available to all imported styles. You can set a custom mirror URL later. <a href="/docs/faq#why-is-mirroring-source-code-updates-not-working">Need help?</a></p>
+		<div class="checkbox flex mb:m">
+			<input type="checkbox" name="mirrorCode" id="mirrorCode" aria-describedby="mirrorCode-hint">
+			{{ template "partials/checkboxes" }}
+			<label for="mirrorCode">
+				Mirror source code updates
+				<a
+					data-tooltip="Read how mirroring source code works"
+					href="/docs/faq#how-does-mirroring-source-code-work">
+					{{ template "icons/info" }}
+				</a>
+			</label>
+		</div>
+	</div>
 
-        <button class="btn icon primary" type="submit">{{ template "icons/save" }} Import userstyle</button>
-    </form>
-</div>
+	<button class="btn icon primary" type="submit">{{ template "icons/save" }} Import userstyle</button>
+</form>
