@@ -37,14 +37,21 @@ table {
         th {
             padding: 0.5rem 0.75rem;
             background-color: var(--bg-3);
+        }
 
-            &:first-child { border-radius: calc(var(--br-3) - 1px) 0 0 0 }
-            &:last-child { border-radius: 0 calc(var(--br-3) - 1px) 0 0 }
+        &:first-of-type {
+            th:first-child { border-radius: calc(var(--br-3) - 1px) 0 0 0 }
+            th:last-child { border-radius: 0 calc(var(--br-3) - 1px) 0 0 }
+        }
+
+        &:not(:first-of-type) {
+            th { border-top: 1px solid var(--bg-4) }
         }
     }
 
     tbody tr td {
         padding: 0.5rem 0.75rem;
+        font-feature-settings: 'tnum' 1;
         border-top: 1px solid var(--bg-4);
     }
 }
