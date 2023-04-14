@@ -1,13 +1,13 @@
 {{ if .Preview }}
-    <picture>
-        <source srcset="{{ .Preview }}" type="image/webp">
-        <img
-            loading="lazy"
-            src="{{ .Preview | toJPEG }}"
-            alt="{{ .Name }} screenshot" >
-    </picture>
+	<picture>
+		<source srcset="{{ .Preview }}" type="image/webp">
+		<img
+			loading="lazy"
+			src="{{ .Preview | toJPEG }}"
+			alt="{{ .Name }} screenshot" >
+	</picture>
 {{ else }}
-    <picture class="no-screenshot flex jc:c ai:c">
-        {{ template "icons/image_off" }}
-    </picture>
+	<picture class="no-screenshot flex jc:c ai:c">
+		{{ template "icons/image_off" }}
+	</picture>
 {{ end }}

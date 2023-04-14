@@ -1,61 +1,60 @@
-
 {{ if .User.IsModOrAdmin }}
-    <nav
-        class="system"
-        style="background: var(--bg-1); border-bottom: 1px solid var(--bg-3)">
-        <div class="wrapper flex px:m">
-            <ul class="List List-unstyled List-row py:m">
-                <li>Uptime: {{ sys.Uptime }}</li>
-                <li>GoRoutines: {{ sys.GoRoutines }}</li>
-                <li>NumGC: {{ sys.NumGC }}</li>
-                <li>LastGC: {{ sys.LastGC }}</li>
-                <li>AverageGC: {{ sys.AverageGC }}</li>
-                <li class="ml:a"><a href="/dashboard">Dashboard</a></li>
-            </ul>
-        </div>
-    </nav>
+	<nav
+		class="system"
+		style="background: var(--bg-1); border-bottom: 1px solid var(--bg-3)">
+		<div class="wrapper flex px:m">
+			<ul class="List List-unstyled List-row py:m">
+				<li>Uptime: {{ sys.Uptime }}</li>
+				<li>GoRoutines: {{ sys.GoRoutines }}</li>
+				<li>NumGC: {{ sys.NumGC }}</li>
+				<li>LastGC: {{ sys.LastGC }}</li>
+				<li>AverageGC: {{ sys.AverageGC }}</li>
+				<li class="ml:a"><a href="/dashboard">Dashboard</a></li>
+			</ul>
+		</div>
+	</nav>
 {{ end }}
 <nav class="navbar">
-    <div class="wrapper flex px:m">
-        <a class="left py:m ai:c" href="/">
-            {{- template "partials/mascot" -}}
-            <span class="name">{{ config "appName" }}</span>
-        </a>
+	<div class="wrapper flex px:m">
+		<a class="left py:m ai:c" href="/">
+			{{- template "partials/mascot" -}}
+			<span class="name">{{ config "appName" }}</span>
+		</a>
 
-        <input class="menu-btn" type="checkbox" id="menu-btn" title="Menu">
-        <label class="menu-icon" for="menu-btn"><span class="i"></span></label>
+		<input class="menu-btn" type="checkbox" id="menu-btn" title="Menu">
+		<label class="menu-icon" for="menu-btn"><span class="i"></span></label>
 
-        <ul class="menu py:m">
-            <li>
-                <form class="search" method="get" action="/search">
-                    <input
-                        type="search" name="q"
-                        required pattern=".+"
-                        placeholder="Search userstyles…">
-                    <button
-                        type="submit"
-                        class="icon flex ai:c"
-                        aria-label="Search button"
-                    >{{ template "icons/search" }}</button>
-                </form>
-            </li>
-            {{ if .User.Username }}
-                <li><a href="/add">Add</a></li>
-                <li><a href="/import">Import</a></li>
-            {{ end }}
-            <li><a href="/explore">Explore</a></li>
-            <li><a href="/modlog">Mod Log</a></li>
-            {{ if .User.Username }}
-                {{ if .User.IsAdmin }}
-                    <li><a href="/monitor">Monitor</a></li>
-                {{ end }}
-                <li><a href="/user/{{ .User.Username }}">Profile</a></li>
-                <li><a href="/account">Settings</a></li>
-                <li><a href="/logout">Logout</a></li>
-            {{ else }}
-                <li><a href="/register">Register</a></li>
-                <li><a href="/login">Sign in</a></li>
-            {{ end }}
-        </ul>
-    </div>
+		<ul class="menu py:m">
+			<li>
+				<form class="search" method="get" action="/search">
+					<input
+						type="search" name="q"
+						required pattern=".+"
+						placeholder="Search userstyles…">
+					<button
+						type="submit"
+						class="icon flex ai:c"
+						aria-label="Search button"
+					>{{ template "icons/search" }}</button>
+				</form>
+			</li>
+			{{ if .User.Username }}
+				<li><a href="/add">Add</a></li>
+				<li><a href="/import">Import</a></li>
+			{{ end }}
+			<li><a href="/explore">Explore</a></li>
+			<li><a href="/modlog">Mod Log</a></li>
+			{{ if .User.Username }}
+				{{ if .User.IsAdmin }}
+					<li><a href="/monitor">Monitor</a></li>
+				{{ end }}
+				<li><a href="/user/{{ .User.Username }}">Profile</a></li>
+				<li><a href="/account">Settings</a></li>
+				<li><a href="/logout">Logout</a></li>
+			{{ else }}
+				<li><a href="/register">Register</a></li>
+				<li><a href="/login">Sign in</a></li>
+			{{ end }}
+		</ul>
+	</div>
 </nav>

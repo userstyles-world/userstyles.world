@@ -1,43 +1,43 @@
 <div class="card col gap">
-    <a href="{{ .StyleURL }}"
-        class="card-header thumbnail"
-        aria-label="{{ .Name }} screenshot">
-        {{ template "partials/preview-image" . }}
-    </a>
+	<a href="{{ .StyleURL }}"
+		class="card-header thumbnail"
+		aria-label="{{ .Name }} screenshot">
+		{{ template "partials/preview-image" . }}
+	</a>
 
-    <div class="card-body f:col p:m">
-        <small class="fg:3" style="margin-bottom: 0.125rem">
-            <span>Updated</span>
-            <time datetime="{{ .UpdatedAt | iso }}">
-                {{ .UpdatedAt | rel }}
-            </time>
-        </small>
-        <a class="name fg:1 f:h3 f:b" href="{{ .StyleURL }}">{{ .Name }}</a>
-        <span class="author fg:4">
-            by <a class="fg:2" href="/user/{{ .Username }}">{{ .Username }}</a>
-        </span>
-    </div>
+	<div class="card-body f:col p:m">
+		<small class="fg:3" style="margin-bottom: 0.125rem">
+			<span>Updated</span>
+			<time datetime="{{ .UpdatedAt | iso }}">
+				{{ .UpdatedAt | rel }}
+			</time>
+		</small>
+		<a class="name fg:1 f:h3 f:b" href="{{ .StyleURL }}">{{ .Name }}</a>
+		<span class="author fg:4">
+			by <a class="fg:2" href="/user/{{ .Username }}">{{ .Username }}</a>
+		</span>
+	</div>
 
-    <div class="card-footer flex jc:b py:m px:m">
-        <small class="fg:3 flex ai:c">
-            {{ template "icons/view" }}
-            <span
-                class="ml:s"
-                data-tooltip="{{ .Views }} total views"
-            >{{ num .Views }} views</span>
-        </small>
-        <small class="fg:3 flex ai:c ml:s">
-            {{ template "icons/download" }}
-            <span
-                class="ml:s"
-                data-tooltip="{{ .Installs }} total installs"
-            >{{ num .Installs }} installs</span>
-        </small>
-        <small class="fg:3 flex ai:c ml:s rating score-{{ .Rating | floor }}">
-            {{ template "icons/star" }}
-            <span class="ml:s">
-                {{ with .Rating }}{{ . }}{{ else }}-{{ end }}/5
-            </span>
-        </small>
-    </div>
+	<div class="card-footer flex jc:b py:m px:m">
+		<small class="fg:3 flex ai:c">
+			{{ template "icons/view" }}
+			<span
+				class="ml:s"
+				data-tooltip="{{ .Views }} total views"
+			>{{ num .Views }} views</span>
+		</small>
+		<small class="fg:3 flex ai:c ml:s">
+			{{ template "icons/download" }}
+			<span
+				class="ml:s"
+				data-tooltip="{{ .Installs }} total installs"
+			>{{ num .Installs }} installs</span>
+		</small>
+		<small class="fg:3 flex ai:c ml:s rating score-{{ .Rating | floor }}">
+			{{ template "icons/star" }}
+			<span class="ml:s">
+				{{ with .Rating }}{{ . }}{{ else }}-{{ end }}/5
+			</span>
+		</small>
+	</div>
 </div>

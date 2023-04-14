@@ -1,20 +1,20 @@
 {{ if or .Error .Errors }}
-    <div role="alert" class="err limit">
-        {{ with .Error }}
-            <p>{{ . }}</p>
-        {{ end }}
+	<div role="alert" class="err limit">
+		{{ with .Error }}
+			<p>{{ . }}</p>
+		{{ end }}
 
-        {{ with .Errors }}
-            <p>Validation failed!</p>
-            <ul>
-                {{ range . }}
-                    {{ if eq (printf "%T" .) "usercss.Error" }}
-                        <li>{{ .Code }}</li>
-                    {{ else }}
-                        <li>{{ . }}</li>
-                    {{ end }}
-                {{ end }}
-            </ul>
-        {{ end }}
-    </div>
+		{{ with .Errors }}
+			<p>Validation failed!</p>
+			<ul>
+				{{ range . }}
+					{{ if eq (printf "%T" .) "usercss.Error" }}
+						<li>{{ .Code }}</li>
+					{{ else }}
+						<li>{{ . }}</li>
+					{{ end }}
+				{{ end }}
+			</ul>
+		{{ end }}
+	</div>
 {{ end }}
