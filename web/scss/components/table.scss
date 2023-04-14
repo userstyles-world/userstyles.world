@@ -22,3 +22,29 @@
         padding: 0.5rem;
     }
 }
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-radius: var(--br-3);
+    background-color: var(--bg-2);
+    border: 1px solid var(--bg-4);
+
+    thead {
+        text-align: left;
+        color: var(--fg-2);
+
+        th {
+            padding: 0.5rem 0.75rem;
+            background-color: var(--bg-3);
+
+            &:first-child { border-radius: calc(var(--br-3) - 1px) 0 0 0 }
+            &:last-child { border-radius: 0 calc(var(--br-3) - 1px) 0 0 }
+        }
+    }
+
+    tbody tr td {
+        padding: 0.5rem 0.75rem;
+        border-top: 1px solid var(--bg-4);
+    }
+}

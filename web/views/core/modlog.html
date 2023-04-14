@@ -1,22 +1,3 @@
-<style type="text/css" media="screen">
-	table {
-		width: 100%;
-		padding: 1rem;
-		border-spacing: 0;
-		border-radius: var(--br-2);
-		background-color: var(--bg-2);
-	}
-	table thead {
-		top: 0;
-		z-index: 1337;
-		position: sticky;
-		text-align: left;
-		background-color: var(--bg-2);
-	}
-	table tr > * { padding: 0.5rem }
-	table tr { box-shadow: 0 1px var(--bg-3) }
-</style>
-
 <section class="mt:m ta:c">
 	<h1>Read-only mod log</h1>
 	<p class="fg:3">As a way to be more transparent, this page lists all of the mod actions.</p>
@@ -27,60 +8,56 @@
 	<h2 class="td:d">Banned users</h2>
 	<p class="fg:3 mb:m">{{ len .BannedUsers }} banned users in total.</p>
 
-	{{ if ge (len .BannedUsers) 1 }}
-		<table>
-			<thead>
-				<th>Moderator</th>
-				<th class="u-TableNum">Date and time</th>
-				<th>Banned user</th>
-				<th>Reason</th>
-			</thead>
-			<tbody>
-				{{ range .BannedUsers }}
-					<tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
-						<td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
-						<td class="u-TableMin">
-							<a href="#id-{{ .ID }}">
-								<time datetime="{{ .CreatedAt | iso }}">{{ .CreatedAt | rel }}</time>
-							</a>
-						</td>
-						<td class="u-Truncate">{{ .TargetUserName }}</td>
-						<td class="u-Truncate M">{{ .Reason }}</td>
-					</tr>
-				{{ end }}
-			</tbody>
-		</table>
-	{{ end }}
+	<table>
+		<thead>
+			<th>Moderator</th>
+			<th class="u-TableNum">Date and time</th>
+			<th>Banned user</th>
+			<th>Reason</th>
+		</thead>
+		<tbody>
+			{{ range .BannedUsers }}
+				<tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
+					<td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
+					<td class="u-TableMin">
+						<a href="#id-{{ .ID }}">
+							<time datetime="{{ .CreatedAt | iso }}">{{ .CreatedAt | rel }}</time>
+						</a>
+					</td>
+					<td class="u-Truncate">{{ .TargetUserName }}</td>
+					<td class="u-Truncate M">{{ .Reason }}</td>
+				</tr>
+			{{ end }}
+		</tbody>
+	</table>
 </section>
 
 <section class="styles u-TableScrollX">
 	<h2 class="td:d">Removed styles</h2>
 	<p class="fg:3 mb:m">{{ len .RemovedStyles }} removed styles in total.</p>
 
-	{{ if ge (len .RemovedStyles) 1 }}
-		<table>
-			<thead>
-				<th>Moderator</th>
-				<th class="u-TableNum">Date and time</th>
-				<th>Removed style</th>
-				<th>Owner of removed style</th>
-				<th>Reason</th>
-			</thead>
-			<tbody>
-				{{ range .RemovedStyles }}
-					<tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
-						<td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
-						<td class="u-TableMin">
-							<a href="#id-{{ .ID }}">
-								<time datetime="{{ .CreatedAt | iso }}">{{ .CreatedAt | rel }}</time>
-							</a>
-						</td>
-						<td class="u-Truncate">{{ .TargetData }}</td>
-						<td><a href="/user/{{ .TargetUserName }}">{{ .TargetUserName }}</a></td>
-						<td class="u-Truncate M">{{ .Reason }}</td>
-					</tr>
-				{{ end }}
-			</tbody>
-		</table>
-	{{ end }}
+	<table>
+		<thead>
+			<th>Moderator</th>
+			<th class="u-TableNum">Date and time</th>
+			<th>Removed style</th>
+			<th>Owner of removed style</th>
+			<th>Reason</th>
+		</thead>
+		<tbody>
+			{{ range .RemovedStyles }}
+				<tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
+					<td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
+					<td class="u-TableMin">
+						<a href="#id-{{ .ID }}">
+							<time datetime="{{ .CreatedAt | iso }}">{{ .CreatedAt | rel }}</time>
+						</a>
+					</td>
+					<td class="u-Truncate">{{ .TargetData }}</td>
+					<td><a href="/user/{{ .TargetUserName }}">{{ .TargetUserName }}</a></td>
+					<td class="u-Truncate M">{{ .Reason }}</td>
+				</tr>
+			{{ end }}
+		</tbody>
+	</table>
 </section>
