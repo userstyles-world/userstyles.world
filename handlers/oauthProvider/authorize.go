@@ -104,7 +104,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 		arguments["Scope_"+v] = true
 	}
 
-	return c.Render("authorize", arguments)
+	return c.Render("oauth/authorize", arguments)
 }
 
 func AuthPost(c *fiber.Ctx) error {

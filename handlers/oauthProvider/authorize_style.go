@@ -71,7 +71,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 		arguments["Scope_"+v] = true
 	}
 
-	return c.Render("authorize_style", arguments)
+	return c.Render("oauth/link", arguments)
 }
 
 func OAuthStylePost(c *fiber.Ctx) error {

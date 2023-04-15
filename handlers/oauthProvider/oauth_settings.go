@@ -63,9 +63,9 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 			for _, v := range oauth.Scopes {
 				arguments["Scope_"+v] = true
 			}
-			return c.Render("oauth_settings", arguments)
+			return c.Render("oauth/settings", arguments)
 		}
-		return c.Render("oauth_settings", fiber.Map{
+		return c.Render("oauth/settings", fiber.Map{
 			"Title":  "OAuth Settings",
 			"User":   u,
 			"OAuths": nil,
@@ -84,9 +84,9 @@ func OAuthSettingsGet(c *fiber.Ctx) error {
 		for _, v := range oauth.Scopes {
 			arguments["Scope_"+v] = true
 		}
-		return c.Render("oauth_settings", arguments)
+		return c.Render("oauth/settings", arguments)
 	}
-	return c.Render("oauth_settings", fiber.Map{
+	return c.Render("oauth/settings", fiber.Map{
 		"Title":  "OAuth Settings",
 		"User":   u,
 		"OAuths": oauths,
@@ -125,7 +125,7 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 			arguments["Scope_"+v] = true
 		}
 		return c.Status(500).
-			Render("oauth_settings", arguments)
+			Render("oauth/settings", arguments)
 	}
 
 	var err error
@@ -147,5 +147,5 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	}
 
 	oauthID := strconv.FormatUint(uint64(dbOAuth.ID), 10)
-	return c.Redirect("/oauth_settings/"+oauthID, fiber.StatusSeeOther)
+	return c.Redirect("/oauth/settings/"+oauthID, fiber.StatusSeeOther)
 }

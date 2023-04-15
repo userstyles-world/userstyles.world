@@ -1,0 +1,88 @@
+{{- $btn := "" -}}
+{{- $method := "" -}}
+
+{{- if eq .Method 0 -}}
+    {{ $method = "settings" }}
+    {{ $btn = "Add OAuth Application" }}
+{{ else }}
+    {{ $method = printf "settings/%d" .OAuth.ID }}
+    {{ $btn = "Save changes" }}
+{{ end }}
+
+<section class="ta:c">
+	<h1>{{ .Title }}</h1>
+	<p class="fg:3">Add OAuth application</p>
+</section>
+
+<section class="alert">
+	<style type="text/css">
+		.alert > .limit { max-width: 100% }
+		.styles { max-width: var(--form-max-width) }
+	</style>
+	{{ template "partials/alert" . }}
+</section>
+
+{{ if .OAuth }}
+	<section class="form-wrapper">
+		<h2 class="sub-title td:d">Confidential information</h2>
+		<p class="long-text">Client ID: {{ .OAuth.ClientID }} </p>
+		<p class="long-text">Client secret: {{ .OAuth.ClientSecret }}</p>
+	</section>
+{{ end }}
+
+<section class="">
+	<form class="{{ $method }}" method="post" action="/{{ $method }}">
+		<label for="name">Name</label>
+		<input
+			required pattern="^[a-zA-Z0-9!@#$%-_ ]{1,64}$"
+			type="text" name="name" id="name" value="{{ .OAuth.Name }}"
+			placeholder="e.g. UserCSS Manager">
+
+		<label for="description">Description</label>
+		<i class="fg:3" id="description-hint">Supports Markdown syntax.</i>
+		<textarea
+			required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
+			type="text" name="description" id="description"
+			placeholder="Allow integration between the extension and Userstyles.world"
+			aria-describedby="description-hint"
+		>{{ .OAuth.Description }}</textarea>
+
+		<p class="mb:s">Scopes</p>
+		<div class="checkbox flex mb:s">
+			<input type="checkbox" name="user" id="user"
+				{{ if .Scope_user }}checked{{ end }}
+			>
+			{{ template "partials/checkboxes" }}
+			<label class="ml:s" for="user">User</label>
+		</div>
+		<div class="checkbox flex mb:m">
+			<input type="checkbox" name="style" id="style"
+				{{ if .Scope_style }}checked{{ end }}
+			>
+			{{ template "partials/checkboxes" }}
+			<label class="ml:s" for="style">Style</label>
+		</div>
+
+		<label for="redirect-uri">Redirect URI</label>
+		<input
+			required pattern="^(https?:\/\/)([a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\.[a-z]{2,6}|localhost)\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)$"
+			type="url" name="redirect_uri" id="redirect-uri" value="{{ .OAuth.RedirectURI }}"
+			placeholder="e.g. http://localhost:8080/api/callback">
+
+		<button class="flex btn primary" type="submit">{{ $btn }}</button>
+	</form>
+</section>
+
+<section class="styles mt:l ml:a mr:a">
+	<h2 class="sub-title td:d">OAuths applications</h2>
+	{{ if ne (len .OAuths) 0 }}
+		<p class="description">{{ len .OAuths }} styles in total.</p>
+		<div class="grid  flex rwrap mx:r mt:m">
+			{{ range .OAuths }}
+				{{ template "partials/oauth-card" . }}
+			{{ end }}
+		</div>
+	{{ else }}
+		<p class="fg:3"><i>No OAuths found.</i></p>
+	{{ end }}
+</section>
