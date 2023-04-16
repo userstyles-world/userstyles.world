@@ -51,7 +51,7 @@ func status() sys {
 }
 
 func New(views http.FileSystem) *html.Engine {
-	engine := html.NewFileSystem(views, ".html")
+	engine := html.NewFileSystem(views, ".tpl")
 
 	engine.AddFunc("config", func(key string) string {
 		return appConfig[key]
