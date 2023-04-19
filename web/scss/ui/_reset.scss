@@ -36,6 +36,10 @@ html {
 
                 &:first-child { margin-top: 2rem }
                 &:last-child { margin-bottom: 2rem }
+                &:first-child:last-child {
+                    margin-top: auto;
+                    margin-bottom: auto;
+                }
             }
 
             @media screen and (max-width: 1400px) {
