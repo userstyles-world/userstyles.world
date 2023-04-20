@@ -13,8 +13,8 @@ import (
 func GetExplore(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	var p models.Pagination
-	if err := p.ConvPage(c.Query("page")); err != nil {
+	page, err := models.IsValidPage(c.Query("page"))
+	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Invalid page size",
 			"User":  u,
@@ -30,16 +30,14 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	// Set pagination.
-	size := config.AppPageMaxItems
-	p.CalcItems(int(styleCount), size)
-	p.Sort = c.Query("sort")
-	p.Path = c.Path()
+	p := models.NewPagination(page, c.Query("sort"), c.Path())
+	p.CalcItems(int(styleCount))
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}
 
 	// Query for [sorted] styles.
-	s, err := storage.FindStyleCardsPaginated(p.Now, size, p.SortStyles())
+	s, err := storage.FindStyleCardsPaginated(p.Now, config.AppPageMaxItems, p.SortStyles())
 	if err != nil {
 		log.Warn.Println("Failed to get paginated styles:", err.Error())
 		return c.Render("err", fiber.Map{

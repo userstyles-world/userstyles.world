@@ -26,8 +26,8 @@ func Profile(c *fiber.Ctx) error {
 		return c.Redirect("/user/"+profile.Username, fiber.StatusSeeOther)
 	}
 
-	var p models.Pagination
-	if err := p.ConvPage(c.Query("page")); err != nil {
+	page, err := models.IsValidPage(c.Query("page"))
+	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Invalid page size",
 			"User":  u,
@@ -44,9 +44,8 @@ func Profile(c *fiber.Ctx) error {
 
 	// Set pagination.
 	size := config.AppPageMaxItems
-	p.CalcItems(count, size)
-	p.Sort = c.Query("sort")
-	p.Path = c.Path()
+	p := models.NewPagination(page, c.Query("sort"), c.Path())
+	p.CalcItems(count)
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}

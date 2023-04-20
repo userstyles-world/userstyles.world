@@ -3,6 +3,8 @@ package models
 import (
 	"fmt"
 	"strconv"
+
+	"userstyles.world/modules/config"
 )
 
 type Pagination struct {
@@ -15,8 +17,17 @@ type Pagination struct {
 	Next2 int
 	Next3 int
 	Max   int
-	Sort  string
 	Path  string
+	Sort  string
+}
+
+// NewPagination is a convenience function that initializes pagination struct.
+func NewPagination(page int, sort, path string) Pagination {
+	return Pagination{
+		Now:  page,
+		Path: path,
+		Sort: sort,
+	}
 }
 
 // URL generates a dynamic path from available items.
@@ -28,21 +39,17 @@ func (p Pagination) URL(page int) string {
 	return s
 }
 
-func (p *Pagination) ConvPage(s string) error {
-	if s != "" {
-		i, err := strconv.Atoi(s)
-		if err != nil {
-			return err
-		}
-		p.Now = i
-	} else {
-		p.Now = 1
+// IsValidPage checks whether a passed parameter is a valid number.
+func IsValidPage(s string) (int, error) {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, err
 	}
 
-	return nil
+	return i, err
 }
 
-func (p *Pagination) CalcItems(total, max int) {
+func (p *Pagination) CalcItems(total int) {
 	if total == 0 {
 		p.Max = 1
 		p.Min = 1
@@ -52,8 +59,8 @@ func (p *Pagination) CalcItems(total, max int) {
 	p.Min = 1
 
 	// Calculate max page and remainder.
-	p.Max = total / max
-	if total%max > 0 {
+	p.Max = total / config.AppPageMaxItems
+	if total%config.AppPageMaxItems > 0 {
 		p.Max++
 	}
 
