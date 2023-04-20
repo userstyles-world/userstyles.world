@@ -44,8 +44,7 @@ func Profile(c *fiber.Ctx) error {
 
 	// Set pagination.
 	size := config.AppPageMaxItems
-	p := models.NewPagination(page, c.Query("sort"), c.Path())
-	p.CalcItems(count)
+	p := models.NewPagination(page, count, c.Query("sort"), c.Path())
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}

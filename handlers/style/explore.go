@@ -21,7 +21,7 @@ func GetExplore(c *fiber.Ctx) error {
 		})
 	}
 
-	styleCount, err := models.GetStyleCount()
+	count, err := models.GetStyleCount()
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to count userstyles",
@@ -30,8 +30,7 @@ func GetExplore(c *fiber.Ctx) error {
 	}
 
 	// Set pagination.
-	p := models.NewPagination(page, c.Query("sort"), c.Path())
-	p.CalcItems(int(styleCount))
+	p := models.NewPagination(page, count, c.Query("sort"), c.Path())
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}

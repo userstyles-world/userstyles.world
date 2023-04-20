@@ -8,7 +8,6 @@ import (
 )
 
 type Pagination struct {
-	Min   int
 	Prev3 int
 	Prev2 int
 	Prev1 int
@@ -22,12 +21,16 @@ type Pagination struct {
 }
 
 // NewPagination is a convenience function that initializes pagination struct.
-func NewPagination(page int, sort, path string) Pagination {
-	return Pagination{
+func NewPagination(page, total int, sort, path string) Pagination {
+	p := Pagination{
 		Now:  page,
 		Path: path,
 		Sort: sort,
 	}
+
+	p.calcItems(total)
+
+	return p
 }
 
 // URL generates a dynamic path from available items.
@@ -41,6 +44,10 @@ func (p Pagination) URL(page int) string {
 
 // IsValidPage checks whether a passed parameter is a valid number.
 func IsValidPage(s string) (int, error) {
+	if s == "" {
+		return 0, nil
+	}
+
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		return 0, err
@@ -49,14 +56,16 @@ func IsValidPage(s string) (int, error) {
 	return i, err
 }
 
-func (p *Pagination) CalcItems(total int) {
-	if total == 0 {
-		p.Max = 1
-		p.Min = 1
-		return
+// calcItems calculates values for pagination fields.
+func (p *Pagination) calcItems(total int) {
+	if p.Now < 1 {
+		p.Now = 1
 	}
 
-	p.Min = 1
+	if total == 0 {
+		p.Max = 1
+		return
+	}
 
 	// Calculate max page and remainder.
 	p.Max = total / config.AppPageMaxItems
@@ -73,6 +82,7 @@ func (p *Pagination) CalcItems(total int) {
 	p.Next3 = p.Now + 3
 }
 
+// OutOfBounds checks whether current page exceeds the bounds.
 func (p *Pagination) OutOfBounds() bool {
 	// Display last page if requested page is greater than max page.
 	if p.Now > p.Max {
