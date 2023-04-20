@@ -89,6 +89,6 @@
 	{{ end }}
 </section>
 
-{{ if ne .P.Min .P.Max }}
+{{ if gt .P.Max 1 }}
 	{{ template "partials/pagination" .P }}
 {{ end }}

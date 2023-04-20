@@ -20,4 +20,6 @@
 	{{ end }}
 </section>
 
-{{ with .P }}{{ template "partials/pagination" . }}{{ end }}
+{{ if gt .P.Max 1 }}
+	{{ template "partials/pagination" .P }}
+{{ end }}
