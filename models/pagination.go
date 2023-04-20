@@ -7,7 +7,10 @@ import (
 	"userstyles.world/modules/config"
 )
 
+// Pagination is a field-aligned struct optimized for pagination.
 type Pagination struct {
+	Path  string
+	Sort  string
 	Prev3 int
 	Prev2 int
 	Prev1 int
@@ -16,8 +19,6 @@ type Pagination struct {
 	Next2 int
 	Next3 int
 	Max   int
-	Path  string
-	Sort  string
 }
 
 // NewPagination is a convenience function that initializes pagination struct.
