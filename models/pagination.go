@@ -6,14 +6,17 @@ import (
 )
 
 type Pagination struct {
-	Min  int
-	Prev int
-	Now  int
-	Next int
-	Max  int
-	Rem  int
-	Sort string
-	Path string
+	Min   int
+	Prev3 int
+	Prev2 int
+	Prev1 int
+	Now   int
+	Next1 int
+	Next2 int
+	Next3 int
+	Max   int
+	Sort  string
+	Path  string
 }
 
 // URL generates a dynamic path from available items.
@@ -50,14 +53,17 @@ func (p *Pagination) CalcItems(total, max int) {
 
 	// Calculate max page and remainder.
 	p.Max = total / max
-	p.Rem = total % max
-	if p.Rem > 0 {
+	if total%max > 0 {
 		p.Max++
 	}
 
 	// Set prev/next.
-	p.Prev = p.Now - 1
-	p.Next = p.Now + 1
+	p.Prev1 = p.Now - 1
+	p.Prev2 = p.Now - 2
+	p.Prev3 = p.Now - 3
+	p.Next1 = p.Now + 1
+	p.Next2 = p.Now + 2
+	p.Next3 = p.Now + 3
 }
 
 func (p *Pagination) OutOfBounds() bool {

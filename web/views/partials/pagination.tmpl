@@ -1,106 +1,58 @@
-<div class="Pagination-wrapper mt:l mb:m flex jc:c ai:c">
-	<nav class="Pagination flex jc:c ai:c" aria-label="pagination">
-		{{ if not (eq .Now .Min) }}
+<section class="Pagination-wrapper mt:m flex jc:c ai:c">
+	<nav class="Pagination flex jc:c ai:c">
+		{{ if gt .Now 1 }}
 			<a
 				class="Pagination-button icon min"
 				href="{{ .URL 1 }}"
-				data-tooltip="Go to the first page"
 				aria-label="Go to the first page"
 			>{{ template "icons/chevrons-left" }}</a>
-		{{ else }}
-			<div class="Pagination-disabled">{{ template "icons/chevrons-left" }}</div>
-		{{ end }}
-
-		<div class="Pagination-divider"></div>
-		{{ if not (eq .Now .Min) }}
 			<a
 				class="Pagination-button icon back"
-				href="{{ .URL .Prev }}"
-				data-tooltip="Go to the previous page"
+				href="{{ .URL .Prev1 }}"
 				aria-label="Go to the previous page"
 			>{{ template "icons/chevron-left" }}</a>
 		{{ else }}
-			<div class="Pagination-disabled">{{ template "icons/chevron-left" }}</div>
+			<span class="Pagination-disabled">{{ template "icons/chevrons-left" }}</span>
+			<span class="Pagination-disabled">{{ template "icons/chevron-left" }}</span>
 		{{ end }}
-
-		{{ $prev3 := sub .Now 3 }}
-		{{ if not (lt $prev3 .Min) }}
-			<div class="Pagination-divider"></div>
-			<a class="Pagination-button page"
-				href="{{ .URL $prev3 }}"
-			>{{ $prev3 }}</a>
+		{{ if gt .Now 3 }}
+			<a class="Pagination-button icon" href="{{ .URL .Prev3 }}">{{ .Prev3 }}</a>
 		{{ end }}
-
-		{{ $prev2 := sub .Now 2 }}
-		{{ if not (lt $prev2 .Min) }}
-			<div class="Pagination-divider"></div>
-			<a class="Pagination-button page"
-				href="{{ .URL $prev2 }}"
-			>{{ $prev2 }}</a>
+		{{ if gt .Now 2 }}
+			<a class="Pagination-button icon" href="{{ .URL .Prev2 }}">{{ .Prev2 }}</a>
 		{{ end }}
-
-		{{ if not (eq .Now .Min) }}
-			<div class="Pagination-divider"></div>
-			<a
-				class="Pagination-button back"
-				href="{{ .URL .Prev }}"
-			>{{ .Prev }}</a>
+		{{ if gt .Now 1 }}
+			<a class="Pagination-button icon" href="{{ .URL .Prev1 }}">{{ .Prev1 }}</a>
 		{{ end }}
-
-		<div class="Pagination-divider"></div>
 		<a
 			class="Pagination-active now"
 			href="{{ .URL .Now }}"
 			aria-current="page">
 			<b>{{ .Now }}</b>
 		</a>
-		<div class="Pagination-divider"></div>
-
-		{{ if not (eq .Now .Max) }}
-			<a
-				class="Pagination-button next"
-				href="{{ .URL .Next }}"
-			>{{ .Next }}</a>
-			<div class="Pagination-divider"></div>
+		{{ if le .Next1 .Max }}
+			<a class="Pagination-button icon" href="{{ .URL .Next1 }}">{{ .Next1 }}</a>
 		{{ end }}
-
-		{{ $next2 := add .Now 2 }}
-		{{ if not (gt $next2 .Max) }}
-			<a class="Pagination-button page"
-				href="{{ .URL $next2 }}"
-			>{{ $next2 }}</a>
-			<div class="Pagination-divider"></div>
+		{{ if le .Next2 .Max }}
+			<a class="Pagination-button icon" href="{{ .URL .Next2 }}">{{ .Next2 }}</a>
 		{{ end }}
-
-		{{ $next3 := add .Now 3 }}
-		{{ if not (gt $next3 .Max) }}
-			<a class="Pagination-button page"
-				href="{{ .URL $next3 }}"
-			>{{ $next3 }}</a>
-			<div class="Pagination-divider"></div>
+		{{ if le .Next3 .Max }}
+			<a class="Pagination-button icon" href="{{ .URL .Next3 }}">{{ .Next3 }}</a>
 		{{ end }}
-
-		{{ if not (eq .Now .Max) }}
+		{{ if le .Next1 .Max }}
 			<a
 				class="Pagination-button icon next"
-				href="{{ .URL .Next }}"
-				data-tooltip="Go to the next page"
+				href="{{ .URL .Next1 }}"
 				aria-label="Go to the next page"
 			>{{ template "icons/chevron-right" }}</a>
-		{{ else }}
-			<div class="Pagination-disabled">{{ template "icons/chevron-right" }}</div>
-		{{ end }}
-
-		<div class="Pagination-divider"></div>
-		{{ if not (eq .Now .Max) }}
 			<a
 				class="Pagination-button icon max"
 				href="{{ .URL .Max }}"
-				data-tooltip="Go to the last page"
 				aria-label="Go to the last page"
 			>{{ template "icons/chevrons-right" }}</a>
 		{{ else }}
-			<div class="Pagination-disabled">{{ template "icons/chevrons-right" }}</div>
+			<span class="Pagination-disabled">{{ template "icons/chevron-right" }}</span>
+			<span class="Pagination-disabled">{{ template "icons/chevrons-right" }}</span>
 		{{ end }}
 	</nav>
-</div>
+</section>
