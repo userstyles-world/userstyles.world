@@ -10,12 +10,17 @@ import (
 
 // FlagsMiddleware gets flags cookie to enable feature flags.
 func FlagsMiddleware(c *fiber.Ctx) error {
-	var flags models.Flags
-	if err := json.Unmarshal([]byte(c.Cookies("flags")), &flags); err != nil {
+	cookie := c.Cookies("flags")
+	if cookie == "" {
+		return c.Next()
+	}
+
+	var f models.Flags
+	if err := json.Unmarshal([]byte(cookie), &f); err != nil {
 		return err
 	}
 
-	c.Locals("flags", flags)
+	c.Locals("flags", f)
 
 	return c.Next()
 }
