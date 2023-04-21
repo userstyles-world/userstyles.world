@@ -116,7 +116,7 @@
 */}}
 {{ end }}
 
-{{ if and (.Styles) (ge (len .Styles) 1) }}
+{{ if .Styles }}
 	<section class="mt:l">
 		<h2 class="ta:c">Featured userstyles</h2>
 		<p class="ta:c mb:l fg:2">See more styles on <a href="/explore">Explore</a> page.</p>

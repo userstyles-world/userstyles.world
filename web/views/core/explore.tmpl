@@ -9,7 +9,7 @@
 		{{ template "partials/form-sort" . }}
 	</form>
 
-	{{ if gt (len .Styles) 1 }}
+	{{ if .Styles }}
 		<div class="grid flex rwrap mx:r mt:m">
 			{{ range .Styles }}
 				{{ template "partials/style-card" . }}
