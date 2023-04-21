@@ -47,6 +47,9 @@ func main() {
 		ProxyHeader: config.ProxyRealIP,
 		JSONEncoder: utils.JSONEncoder,
 		IdleTimeout: 5 * time.Second,
+
+		// TODO: Explore using this more.
+		PassLocalsToViews: true,
 	})
 
 	if !config.Production {
@@ -57,6 +60,7 @@ func main() {
 
 	app.Use(core.HSTSMiddleware)
 	app.Use(core.CSPMiddleware)
+	app.Use(core.FlagsMiddleware)
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
 	if config.PerformanceMonitor {

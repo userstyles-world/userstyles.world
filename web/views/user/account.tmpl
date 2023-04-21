@@ -1,5 +1,6 @@
 {{ template "partials/alert" . }}
 
+{{ if not .flags.Welcome }}
 <section id="welcome">
 	<h1 class="title mb:m">Hi, {{ .Params.Name }}!</h1>
 	<p>This is your dashboard. More features will be added soon!</p>
@@ -12,6 +13,7 @@
 		or via <a href="mailto:feedback@userstyles.world">e-mail</a>.
 	</p>
 </section>
+{{ end }}
 
 <section id="details">
 	<h2 class="td:d">Details</h2>
@@ -218,6 +220,27 @@
 			>{{ template "icons/save" }} Save settings</button>
 		</div>
 	</div>
+</section>
+
+<section id="flags">
+	<h2 class="td:d">Feature flags</h2>
+	<p>Testing various (UI) changes before they go live.</p>
+	<form class="Form Form-box mt:m" method="post" action="/account/flags">
+		<div>
+			<div class="checkbox iflex">
+				<input
+					type="checkbox"
+					name="welcomeFlag" id="welcomeFlag"
+					{{ if .flags.Welcome }}checked{{ end }}>
+				{{ template "partials/checkboxes" }}
+				<label for="welcomeFlag">Disable welcome section</label>
+			</div>
+		</div>
+		<button
+			type="submit"
+			class="btn icon primary"
+		>{{ template "icons/save" }} Save</button>
+	</form>
 </section>
 
 <section id="actions">

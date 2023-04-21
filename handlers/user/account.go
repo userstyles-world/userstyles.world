@@ -1,14 +1,17 @@
 package user
 
 import (
+	"encoding/json"
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
@@ -145,6 +148,28 @@ func EditAccount(c *fiber.Ctx) error {
 		record["github"] = strings.TrimSpace(c.FormValue("github"))
 		record["gitlab"] = strings.TrimSpace(c.FormValue("gitlab"))
 		record["codeberg"] = strings.TrimSpace(c.FormValue("codeberg"))
+
+	case "flags":
+		b, err := json.Marshal(models.Flags{
+			Welcome: c.FormValue("welcomeFlag") == "on",
+		})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+				"Title": "Failed to create 'flags' cookie",
+				"User":  u,
+			})
+		}
+
+		cookie := &fiber.Cookie{
+			Name:     "flags",
+			Value:    string(b),
+			Path:     "/",
+			Expires:  time.Now().Add(time.Hour * 24 * 30),
+			Secure:   config.Production,
+			HTTPOnly: true,
+			SameSite: fiber.CookieSameSiteLaxMode,
+		}
+		c.Cookie(cookie)
 
 	default:
 		return c.Render("err", fiber.Map{
