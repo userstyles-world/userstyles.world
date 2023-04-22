@@ -3,9 +3,13 @@
 	<head>
 		{{ template "partials/head" . }}
 	</head>
-	<body>
+	<body {{ if .flags.Sidebar }}data-flags="sidebar"{{ end }}>
 		<a href="#content">Skip to content</a>
-		{{ template "partials/nav" . }}
+		{{ if .flags.Sidebar }}
+			{{ template "partials/sidebar" . }}
+		{{ else }}
+			{{ template "partials/nav" . }}
+		{{ end }}
 		<main id="content">{{ embed }}</main>
 		{{ template "partials/footer" . }}
 	</body>

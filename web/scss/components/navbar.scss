@@ -1,0 +1,159 @@
+// NOTE: Don't re-format this file: lines indented with spaces are from old nav.
+
+#navbar {
+	width: 100%;
+	padding: 1rem;
+	background-color: var(--bg-1);
+
+	gap: 1rem;
+	display: flex;
+	@media screen and (min-width: 840px) {
+		overflow: auto;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		flex-flow: column nowrap;
+		max-width: var(--sidebar-width);
+		border-right: 1px solid var(--bg-3);
+	}
+
+	@media screen and (max-width: 839.98px) {
+		border-bottom: 1px solid var(--bg-3);
+	}
+
+	a {
+		color: var(--fg-1);
+	}
+
+	.logo {
+		gap: 0.5rem;
+		display: flex;
+		align-items: center;
+	}
+
+    // TODO: This has to go.
+    .menu {
+        gap: 1rem;
+        display: flex;
+        flex-flow: column wrap;
+
+        // Icon wrapper.
+        &-icon {
+            top: 32px;
+            right: 16px;
+            padding: 1rem;
+            margin: -1rem;
+            position: absolute;
+            display: none;
+            cursor: pointer;
+
+            // Icon.
+            .i {
+                height: 2px;
+                width: 18px;
+                display: block;
+                position: relative;
+                transition: background 0.2s ease-out;
+                background-color: var(--fg-1);
+
+                &:before,
+                &:after {
+                    content: '';
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                    position: absolute;
+                    transition: all 0.2s ease-out;
+                    background-color: var(--fg-1);
+                }
+                &:before { top: 5px }
+                &:after { top: -5px }
+            }
+        }
+
+        // Toggle.
+        &-btn {
+            display: none;
+
+            // Show/hide menu.
+            &:checked ~ .menu {
+                max-height: calc(100vh - 64px);
+
+                // TODO: This has to go.
+                &-icon .i {
+                    background-color: transparent;
+                    &:before { transform: rotate(-45deg) }
+                    &:after { transform: rotate(45deg) }
+                }
+                &-icon:not(.steps) .i {
+                    &:before, &:after { top: 0 }
+                }
+            }
+        }
+    }
+}
+
+[data-flags="sidebar"] {
+	--sidebar-width: 240px;
+
+	display: flex;
+	flex-flow: row wrap;
+
+	@media screen and (min-width: 840px) {
+		padding-left: var(--sidebar-width);
+	}
+
+	@media screen and (max-width: 839.8px) {
+		flex-flow: column wrap;
+	}
+
+	@media screen and (min-width: 840px) {
+		footer {
+			width: 100%;
+			background-color: var(--bg-1);
+		}
+	}
+}
+
+@media screen and (min-width: 840px) {
+	// TODO: This has to go.
+	#navbar .Dropdown {
+		&, > ul, &:hover > ul, &:focus-within > ul {
+			all: revert;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		> button {
+			&, &:not(.active):focus {
+				all: inherit;
+			}
+
+			padding-bottom: 0.5rem !important;
+
+			svg { display: none }
+		}
+	}
+}
+
+@media screen and (max-width: 839.98px) {
+	// TODO: This has to go.
+	#navbar .menu {
+		display: none;
+		padding: 0 1rem;
+		min-height: 64px;
+		position: absolute;
+		flex-flow: row wrap;
+		align-items: center;
+		top: 0;
+		right: 3rem;
+		left: 0;
+		transition: max-height 0.425s linear;
+		background-color: var(--bg-1);
+
+		&-btn:checked ~ .menu { display: flex }
+		&-icon { display: inline-flex }
+	}
+}

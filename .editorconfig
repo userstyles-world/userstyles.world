@@ -12,5 +12,5 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{go,mod,html,tmpl}]
+[*.{go,mod,html,tmpl,scss}]
 indent_style = tab

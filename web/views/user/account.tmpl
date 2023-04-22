@@ -236,6 +236,16 @@
 				<label for="welcomeFlag">Disable welcome section</label>
 			</div>
 		</div>
+		<div>
+			<div class="checkbox iflex">
+				<input
+					type="checkbox"
+					name="sidebarFlag" id="sidebarFlag"
+					{{ if .flags.Sidebar }}checked{{ end }}>
+				{{ template "partials/checkboxes" }}
+				<label for="sidebarFlag">Enable sidebar navigation</label>
+			</div>
+		</div>
 		<button
 			type="submit"
 			class="btn icon primary"

@@ -1,0 +1,41 @@
+<nav id="navbar">
+	<a class="logo" href="/">
+		{{- template "partials/mascot" -}}
+		<span class="name">{{ config "appName" }}</span>
+	</a>
+
+	<input class="menu-btn" type="checkbox" id="menu-btn" title="Menu">
+	<label class="menu-icon" for="menu-btn"><span class="i"></span></label>
+
+	<div class="menu">
+		<div class="Dropdown">
+			<button class="btn icon">Userstyles {{ template "icons/chevron-down" }}</button>
+			<ul>
+				{{ if .User }}
+					<li><a href="/add">Add</a></li>
+					<li><a href="/import">Import</a></li>
+				{{ end }}
+				<li><a href="/explore">Explore</a></li>
+				<li><a href="/search">Search</a></li>
+				<li><a href="/modlog">Mod log</a></li>
+			</ul>
+		</div>
+		<div class="Dropdown">
+			<button class="btn icon">Account {{ template "icons/chevron-down" }}</button>
+			<ul>
+				{{ if .User }}
+					<li><a href="/user/{{ .User.Username }}">Profile</a></li>
+					<li><a href="/account">Settings</a></li>
+					{{ if .User.IsAdmin }}
+						<li><a href="/dashboard">Dashboard</a></li>
+						<li><a href="/monitor">Monitor</a></li>
+					{{ end }}
+					<li><a href="/logout">Log out</a></li>
+				{{ else }}
+					<li><a href="/login">Sign in</a></li>
+					<li><a href="/register">Regsiter</a></li>
+				{{ end }}
+			</ul>
+		</div>
+	</div>
+</nav>
