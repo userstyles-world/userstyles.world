@@ -1,9 +1,9 @@
 {{ template "partials/alert" . }}
 
-{{ if not .flags.Welcome }}
 <section id="welcome">
-	<h1 class="title mb:m">Hi, {{ .Params.Name }}!</h1>
-	<p>This is your dashboard. More features will be added soon!</p>
+	<h1 class="title">Hi, {{ .Params.Name }}!</h1>
+	{{ if not .flags.Welcome }}
+	<p class="mt:m">This is your dashboard. More features will be added soon!</p>
 	<p>
 		Since this is an early iteration, feedback would be
 		really helpful! If you're a userstyle author,
@@ -12,8 +12,8 @@
 		via <a href="{{ config "appSourceCode" }}">GitHub</a>
 		or via <a href="mailto:feedback@userstyles.world">e-mail</a>.
 	</p>
+	{{ end }}
 </section>
-{{ end }}
 
 <section id="details">
 	<h2 class="td:d">Details</h2>
@@ -223,8 +223,8 @@
 </section>
 
 <section id="flags">
-	<h2 class="td:d">Feature flags</h2>
-	<p>Testing various (UI) changes before they go live.</p>
+	<h2 class="td:d">Feature preview</h2>
+	<p>Opt in and help us test (unfinished) features.</p>
 	<form class="Form Form-box mt:m" method="post" action="/account/flags">
 		<div>
 			<div class="checkbox iflex">
