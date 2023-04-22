@@ -1,4 +1,4 @@
-nav {
+.navbar {
     border-bottom: 1px solid var(--bg-4);
     background-color: var(--bg-2);
 
@@ -32,6 +32,12 @@ nav {
         li a {
             display: flex;
             border-radius: var(--br-3);
+        }
+
+        // System navbar.
+        &.List.py\:m {
+            padding: 1rem 0;
+            width: 100%;
         }
     }
 
@@ -95,15 +101,15 @@ nav {
 }
 
 @media screen and (max-width: 959.98px) {
-    .menu {
-        padding: 0;
-        form:not(#z) {
-            margin: 1rem 0;
-            max-width: 100%;
-        }
-    }
     .navbar {
         overflow-y: hidden;
+        .menu {
+            padding: 0;
+            form:not(#z) {
+                margin: 1rem 0;
+                max-width: 100%;
+            }
+        }
         ul li a {
             padding: 1rem;
             &:hover { background-color: var(--bg-3) }
