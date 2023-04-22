@@ -161,9 +161,12 @@ func EditAccount(c *fiber.Ctx) error {
 			})
 		}
 
+		v := string(b)
+		log.Info.Printf("kind=flags username=%s data=%s", u.Username, v)
+
 		cookie := &fiber.Cookie{
 			Name:     "flags",
-			Value:    string(b),
+			Value:    v,
 			Path:     "/",
 			Expires:  time.Now().Add(time.Hour * 24 * 30),
 			Secure:   config.Production,
