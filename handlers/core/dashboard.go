@@ -49,6 +49,7 @@ var (
 		OtherSys    string
 
 		NextGC       string
+		AverageGC    string
 		LastGC       string
 		PauseTotalNs string
 		PauseNs      string
@@ -60,7 +61,9 @@ func getSystemStatus() {
 	systemMutex.Lock()
 	defer systemMutex.Unlock()
 
-	system.Uptime = time.Since(config.AppUptime).Round(time.Second).String()
+	uptime := time.Since(config.AppUptime).Round(time.Second)
+
+	system.Uptime = uptime.String()
 	system.GoRoutines = runtime.NumGoroutine()
 
 	m := new(runtime.MemStats)
@@ -92,6 +95,7 @@ func getSystemStatus() {
 	system.OtherSys = humanize.Bytes(m.OtherSys)
 
 	system.NextGC = humanize.Bytes(m.NextGC)
+	system.AverageGC = fmt.Sprintf("%.1fs", float64(uptime.Seconds())/float64(m.NumGC))
 	system.LastGC = fmt.Sprintf("%.1fs", float64(time.Now().UnixNano()-int64(m.LastGC))/1000/1000/1000)
 	system.PauseTotalNs = fmt.Sprintf("%.1fs", float64(m.PauseTotalNs)/1000/1000/1000)
 	system.PauseNs = fmt.Sprintf("%.3fs", float64(m.PauseNs[(m.NumGC+255)%256])/1000/1000/1000)
