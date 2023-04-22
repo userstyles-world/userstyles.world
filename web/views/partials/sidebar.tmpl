@@ -11,29 +11,30 @@
 		<div class="Dropdown">
 			<button class="btn icon">Userstyles {{ template "icons/chevron-down" }}</button>
 			<ul>
+				<li><a href="/">{{ template "icons/home" }} Home</a></li>
 				{{ if .User }}
-					<li><a href="/add">Add</a></li>
-					<li><a href="/import">Import</a></li>
+					<li><a href="/add">{{ template "icons/plus" }} Add</a></li>
+					<li><a href="/import">{{ template "icons/download-cloud" }} Import</a></li>
 				{{ end }}
-				<li><a href="/explore">Explore</a></li>
-				<li><a href="/search">Search</a></li>
-				<li><a href="/modlog">Mod log</a></li>
+				<li><a href="/explore">{{ template "icons/compass" }} Explore</a></li>
+				<li><a href="/search">{{ template "icons/search" }} Search</a></li>
+				<li><a href="/modlog">{{ template "icons/scroll" }} Mod log</a></li>
 			</ul>
 		</div>
 		<div class="Dropdown">
 			<button class="btn icon">Account {{ template "icons/chevron-down" }}</button>
 			<ul>
 				{{ if .User }}
-					<li><a href="/user/{{ .User.Username }}">Profile</a></li>
-					<li><a href="/account">Settings</a></li>
+					<li><a href="/user/{{ .User.Username }}">{{ template "icons/user" }} Profile</a></li>
+					<li><a href="/account">{{ template "icons/settings" }} Settings</a></li>
 					{{ if .User.IsAdmin }}
-						<li><a href="/dashboard">Dashboard</a></li>
-						<li><a href="/monitor">Monitor</a></li>
+						<li><a href="/dashboard">{{ template "icons/pie-chart" }} Dashboard</a></li>
+						<li><a href="/monitor">{{ template "icons/gauge" }} Monitor</a></li>
 					{{ end }}
-					<li><a href="/logout">Log out</a></li>
+					<li><a href="/logout">{{ template "icons/log-out" }} Log out</a></li>
 				{{ else }}
-					<li><a href="/login">Sign in</a></li>
-					<li><a href="/register">Regsiter</a></li>
+					<li><a href="/login">{{ template "icons/log-in" }} Sign in</a></li>
+					<li><a href="/register">{{ template "icons/user" }} Regsiter</a></li>
 				{{ end }}
 			</ul>
 		</div>
