@@ -95,6 +95,8 @@ func EditPost(c *fiber.Ctx) error {
 		return c.Render("style/create", args)
 	}
 
+	var uc usercss.UserCSS
+
 	// Check userstyle code length
 	// TODO: figure some limit, also update it in create.tmpl
 	s.Code = util.RemoveUpdateURL(uc.SourceCode)
@@ -122,7 +124,6 @@ func EditPost(c *fiber.Ctx) error {
 		s.Preview = ""
 	}
 
-	var uc usercss.UserCSS
 	if err := uc.Parse(c.FormValue("code")); err != nil {
 		args["Error"] = err
 		return c.Render("style/create", args)
