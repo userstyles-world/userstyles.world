@@ -99,7 +99,7 @@ func EditPost(c *fiber.Ctx) error {
 
 	// Check userstyle code length
 	// TODO: figure some limit, also update it in create.tmpl
-	s.Code = util.RemoveUpdateURL(uc.SourceCode)
+	s.Code = util.RemoveUpdateURL(c.FormValue("code"))
 	if len(s.Code) > 10000000 {
 		args["Error"] = "Code is too long"
 		return c.Render("style/create", args)
