@@ -74,6 +74,37 @@ func EditPost(c *fiber.Ctx) error {
 		return c.Render("style/create", args)
 	}
 
+	// Check userstyle name length
+	if len(s.Name) > 50 {
+		args["Error"] = "Name is too long"
+		return c.Render("style/create", args)
+	}
+
+	// Check userstyle description length
+	s.Description = strings.TrimSpace(c.FormValue("description"))
+	if len(s.Description) > 160 {
+		args["Error"] = "Description is too long"
+		return c.Render("style/create", args)
+	}
+
+	// Check userstyle notes length
+	// TODO: figure some smaller limit, also update it in create.tmpl
+	s.Notes = strings.TrimSpace(c.FormValue("notes"))
+	if len(s.Notes) > 50000 {
+		args["Error"] = "Notes are too long"
+		return c.Render("style/create", args)
+	}
+
+	// Check userstyle code length
+	// TODO: figure some limit, also update it in create.tmpl
+	s.Code = util.RemoveUpdateURL(uc.SourceCode)
+	if len(s.Code) > 10000000 {
+		args["Error"] = "Code is too long"
+		return c.Render("style/create", args)
+	}
+
+	// TODO: move these length checks into a separate method and reuse them in import.go
+
 	// Check for new preview image.
 	file, _ := c.FormFile("preview")
 	version := strconv.Itoa(s.PreviewVersion + 1)
@@ -101,11 +132,7 @@ func EditPost(c *fiber.Ctx) error {
 		return c.Render("style/create", args)
 	}
 
-	s.Code = util.RemoveUpdateURL(uc.SourceCode)
-
 	// Update the other fields with new data.
-	s.Description = strings.TrimSpace(c.FormValue("description"))
-	s.Notes = strings.TrimSpace(c.FormValue("notes"))
 	s.Homepage = strings.TrimSpace(c.FormValue("homepage"))
 	s.License = strings.TrimSpace(c.FormValue("license", "No License"))
 	s.Category = strings.TrimSpace(c.FormValue("category", "unset"))

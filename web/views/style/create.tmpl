@@ -38,14 +38,14 @@
 <form class="{{ $method }}" method="post" action="/{{ $method }}" enctype="multipart/form-data">
 	<label for="name">Name</label>
 	<input
-		required pattern=".+"
+		required pattern=".{1,50}"
 		type="text" name="name" id="name" value="{{ .Styles.Name }}"
 		placeholder="e.g. UserStyles.world tweaks">
 
 	<label for="description">Description</label>
 	<i class="fg:3" id="description-hint">Short description of what your userstyle does in plain text. Will be used for SEO and rich embeds.</i>
 	<textarea
-		required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
+		required pattern=".{1,160}"
 		type="text" name="description" id="description"
 		aria-describedby="description-hint"
 		placeholder="e.g. UI experiments for UserStyles.world."
@@ -54,6 +54,7 @@
 	<label for="notes">Notes</label>
 	<i class="fg:3" id="notes-hint">Long description of requirements, changelog, etc. Supports Markdown syntax.</i>
 	<textarea
+		pattern=".{1,50000}"
 		type="text" name="notes" id="notes"
 		aria-describedby="notes-hint"
 		placeholder="e.g. Please raise issues in the GitHub repository."
@@ -131,6 +132,7 @@
 
 	<label for="code">Source code</label>
 	<textarea
+		pattern=".{1,10000000}"
 		type="text" name="code" id="code"
 		spellcheck="false"
 		placeholder="{{ BaseCodeTemplate }}"
