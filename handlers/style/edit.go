@@ -124,7 +124,7 @@ func EditPost(c *fiber.Ctx) error {
 		s.Preview = ""
 	}
 
-	if err := uc.Parse(c.FormValue("code")); err != nil {
+	if err := uc.Parse(s.Code); err != nil {
 		args["Error"] = err
 		return c.Render("style/create", args)
 	}
