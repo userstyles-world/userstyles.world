@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 
 	"userstyles.world/modules/config"
@@ -11,6 +12,7 @@ import (
 type Pagination struct {
 	Path  string
 	Sort  string
+	Query string
 	Prev3 int
 	Prev2 int
 	Prev1 int
@@ -37,16 +39,22 @@ func NewPagination(page, total int, sort, path string) Pagination {
 // URL generates a dynamic path from available items.
 func (p Pagination) URL(page int) string {
 	s := fmt.Sprintf("%s?page=%d", p.Path, page)
+
 	if p.Sort != "" {
 		s += fmt.Sprintf("&sort=%s", p.Sort)
 	}
+
+	if p.Query != "" {
+		s += fmt.Sprintf("&q=%s", url.QueryEscape(p.Query))
+	}
+
 	return s
 }
 
 // IsValidPage checks whether a passed parameter is a valid number.
 func IsValidPage(s string) (int, error) {
 	if s == "" {
-		return 0, nil
+		return 1, nil
 	}
 
 	i, err := strconv.Atoi(s)

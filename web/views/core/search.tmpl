@@ -52,3 +52,5 @@
 		</div>
 	{{ end }}
 </section>
+
+{{ with .P }}{{ template "partials/pagination" . }}{{ end }}

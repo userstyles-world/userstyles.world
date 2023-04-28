@@ -6,6 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
+	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/search"
 )
 
@@ -20,14 +22,17 @@ func Search(c *fiber.Ctx) error {
 		})
 	}
 
-	// TODO: Refactor [probably] using Pagination struct.
-	size := 96
-	kind := c.Query("sort")
-	if kind != "" {
-		size = 500
+	page, err := models.IsValidPage(c.Query("page"))
+	if err != nil || page < 1 {
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
+			"Title": "Invalid page size",
+			"User":  u,
+		})
 	}
 
-	s, metrics, err := search.FindStylesByText(keyword, kind, size)
+	sort := c.Query("sort")
+
+	s, m, err := search.FindStylesByText(keyword, sort, page, config.AppPageMaxItems)
 	if errors.Is(err, search.ErrSearchNoResults) {
 		return c.
 			Status(fiber.StatusNotFound).
@@ -35,7 +40,7 @@ func Search(c *fiber.Ctx) error {
 				"Title":   "No results found",
 				"User":    u,
 				"Keyword": keyword,
-				"Sort":    kind,
+				"Sort":    sort,
 				"Error":   "No results found for <b>" + keyword + "</b>.",
 			})
 	} else if err != nil {
@@ -48,13 +53,20 @@ func Search(c *fiber.Ctx) error {
 			})
 	}
 
+	p := models.NewPagination(page, m.Total, sort, c.Path())
+	p.Query = keyword
+	if p.OutOfBounds() {
+		return c.Redirect(p.URL(p.Now), 302)
+	}
+
 	return c.Render("core/search", fiber.Map{
 		"Title":     "Search",
 		"User":      u,
 		"Styles":    s,
 		"Keyword":   keyword,
-		"Sort":      kind,
+		"Sort":      p.Sort,
 		"Canonical": "search",
-		"Metrics":   metrics,
+		"Metrics":   m,
+		"P":         p,
 	})
 }
