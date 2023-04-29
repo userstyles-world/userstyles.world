@@ -108,6 +108,11 @@ func (p *Pagination) OutOfBounds() bool {
 	return false
 }
 
+// Show renders pagination when page count is more than one.
+func (p Pagination) Show() bool {
+	return p.Max > 1
+}
+
 func (p *Pagination) SortStyles() string {
 	switch p.Sort {
 	case "newest":

@@ -48,4 +48,6 @@
 	{{ end }}
 </section>
 
-{{ with .Pagination }}{{ template "partials/pagination" . }}{{ end }}
+{{ if .Pagination.Show }}
+	{{ template "partials/pagination" .Pagination }}
+{{ end }}
