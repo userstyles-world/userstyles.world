@@ -35,6 +35,18 @@ h2 { font-size: 1.8em }
 img { width: 100% }
 hr { border: none; border-top: 1px solid var(--bg-3)  }
 
+#features .card {
+    display: flex;
+    align-items: center;
+}
+
+#features svg {
+    width: 40px;
+    height: 100%;
+    stroke-width: 1.5px;
+    margin-right: 1rem;
+}
+
 .btn {
     $x: color 0.15s ease-in-out;
     $y: border-color 0.15s ease-in-out;
