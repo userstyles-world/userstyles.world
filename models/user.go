@@ -28,7 +28,7 @@ type User struct {
 	Email             string    `gorm:"type:text COLLATE NOCASE;unique;not null" validate:"required,email"`
 	OAuthProvider     string    `gorm:"default:none"`
 	Password          string    `validate:"required,min=8,max=32"`
-	Biography         string    `validate:"min=0,max=512"`
+	Biography         string    `validate:"min=0,max=1000"`
 	DisplayName       string    `validate:"displayName,min=3,max=32"`
 	Role              Role      `gorm:"default:0"`
 	LastLogin         time.Time `gorm:"default:null"`

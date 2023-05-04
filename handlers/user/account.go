@@ -138,7 +138,7 @@ func EditAccount(c *fiber.Ctx) error {
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
-				"Error":  "Biography must be shorter than 512 characters.",
+				"Error":  "Biography must be shorter than 1000 characters.",
 			})
 		}
 
