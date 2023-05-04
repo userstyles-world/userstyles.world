@@ -41,11 +41,11 @@
 
 #description .md {
     max-height: 200px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #notes .md,
 #biography .md {
     max-height: 480px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }

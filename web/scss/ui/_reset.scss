@@ -143,7 +143,7 @@ select {
 
 pre {
     padding: 0.5rem;
-    overflow: scroll;
+    overflow: auto;
     resize: vertical;
     border: 1px solid var(--bg-4);
     background-color: var(--bg-2);

@@ -138,7 +138,7 @@
     &-Table {
         &Num { font-feature-settings: 'tnum' 1 }
         @media screen and (max-width: 1400px) {
-            &ScrollX { overflow-x: scroll }
+            &ScrollX { overflow-x: auto }
             &Min { min-width: 170px }
         }
     }
