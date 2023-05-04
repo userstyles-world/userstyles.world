@@ -23,7 +23,9 @@
 			>{{ template "icons/search" }} Search</button>
 		</div>
 
-		{{ template "partials/form-sort" . }}
+		{{ if and .Keyword .Styles }}
+			{{ template "partials/form-sort" . }}
+		{{ end }}
 	</form>
 </section>
 
