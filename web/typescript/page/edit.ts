@@ -1,5 +1,5 @@
 export function checkMaxLength() {
-    type input = HTMLTextAreaElement | HTMLInputElement
+    type input = HTMLTextAreaElement | HTMLInputElement;
 
     [...document.querySelectorAll('[maxlength]')].forEach((element: input) => {
         const maxlength = parseInt(element.getAttribute('maxlength'), 10);
