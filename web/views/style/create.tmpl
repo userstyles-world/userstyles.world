@@ -38,7 +38,7 @@
 <form class="{{ $method }}" method="post" action="/{{ $method }}" enctype="multipart/form-data">
 	<label for="name">Name</label>
 	<input
-		required pattern=".{1,50}"
+		required maxlength="50"
 		type="text" name="name" id="name" value="{{ .Styles.Name }}"
 		placeholder="e.g. UserStyles.world tweaks">
 
