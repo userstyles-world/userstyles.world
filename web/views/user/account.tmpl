@@ -119,7 +119,7 @@
 		<label for="biography">Set your biography</label>
 		<i class="fg:3" id="biography-hint">Supports Markdown syntax.</i>
 		<textarea
-			type="text" name="bio" id="biography" class="biography-text"
+			type="text" name="bio" id="biography" maxlength="1000"
 			placeholder="e.g. I'd often make styles."
 			aria-describedby="biography-hint">
 			{{- .Params.Biography -}}

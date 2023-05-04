@@ -10,7 +10,7 @@ import {getSettings} from './utils/storage';
 import {initViewStyle} from './page/view-style';
 import {page404} from './page/404';
 import {form_sort} from './page/form-sort';
-import {editLimit} from './page/edit';
+import {checkMaxLength} from './page/edit';
 import {updateTimestamps} from './utils/time';
 
 // Once settings update we should reinstalize any functionallity.
@@ -44,7 +44,7 @@ function pageSpecificFunctions(settings: UserSettings) {
             saveRedirect();
             break;
         case '/account':
-            editLimit('.biography-text', 1000);
+            checkMaxLength();
             checkRedirect(settings.redirect);
             break;
         case '/api/oauth/style/link':
@@ -58,9 +58,7 @@ function pageSpecificFunctions(settings: UserSettings) {
     }
 
     if (location.pathname.startsWith('/edit/')) {
-        editLimit('#description', 160);
-        editLimit('#notes', 50000);
-        editLimit('#code', 10000000);
+        checkMaxLength();
     }
 
     if (location.pathname.startsWith('/search') || location.pathname.startsWith('/explore') || location.pathname.startsWith('/user/')) {
