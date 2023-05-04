@@ -3,7 +3,7 @@ export function checkMaxLength() {
         const maxlength = element.getAttribute('maxlength');
         element.removeAttribute('maxlength');
         element.addEventListener('input', () => {
-            element.setCustomValidity(maxlength >= element.value.length ? '' : 'Your imput must be shorter than ' + maxlength + ' characters.');
+            element.setCustomValidity(element.value.length > maxlength ? `Your input must be up to ${maxlength} characters.` : '');
         }, {passive: true});
     });
 }
