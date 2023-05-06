@@ -109,7 +109,7 @@ func FindStyleCardsForSearch(items []int, kind string, size int) ([]StyleCard, e
 		b.WriteString(") ORDER BY " + kind + " LIMIT " + strconv.Itoa(size))
 	}
 
-	var res []StyleCard
+	res := make([]StyleCard, 0, len(items))
 	if err := database.Conn.Raw(b.String()).Scan(&res).Error; err != nil {
 		return nil, err
 	}

@@ -42,7 +42,7 @@ func FindStylesByText(text, kind string, page, size int) ([]storage.StyleCard, e
 
 	offset := (page - 1) * size
 	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, size, offset, true)
-	searchRequest.Fields = []string{"*"}
+	searchRequest.Fields = []string{"id"}
 
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
