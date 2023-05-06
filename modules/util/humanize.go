@@ -130,8 +130,6 @@ func RelTime(t time.Time) string {
 	seconds := now / second
 	if seconds > 0 && parts != maxParts {
 		b = buildTime(b, seconds, " second")
-		now -= seconds * second
-		parts++
 	}
 
 	if len(b) == 0 {
