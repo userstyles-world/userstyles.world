@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	usernameRule    = `^[a-zA-Z0-9][a-zA-Z0-9-_]+[a-zA-Z0-9]$`
-	displayNameRule = `^[a-zA-Z0-9-_ ]+$`
+	usernameRule    = regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9-_]+[a-zA-Z0-9]$`)
+	displayNameRule = regexp.MustCompile(`^[a-zA-Z0-9-_ ]+$`)
 	v               = validator.New()
 )
 
@@ -29,15 +29,11 @@ func InitializeValidator() {
 }
 
 func usernameValidation(fl validator.FieldLevel) bool {
-	regex := regexp.MustCompile(usernameRule)
-	valid := regex.Match([]byte(fl.Field().String()))
-	return valid
+	return usernameRule.Match([]byte(fl.Field().String()))
 }
 
 func displayNameValidation(fl validator.FieldLevel) bool {
-	regex := regexp.MustCompile(displayNameRule)
-	valid := regex.Match([]byte(fl.Field().String()))
-	return valid
+	return displayNameRule.Match([]byte(fl.Field().String()))
 }
 
 func Validate() *validator.Validate {
