@@ -57,9 +57,9 @@ func FindStylesByText(text, kind string, page, size int) ([]storage.StyleCard, e
 	metrics.Total = int(sr.Total)
 
 	nums := func() []int {
-		hits := make([]int, metrics.Hits)
-		for i, hit := range sr.Hits {
-			hits[i] = int(hit.Fields["id"].(float64))
+		hits := make([]int, 0, len(sr.Hits))
+		for _, hit := range sr.Hits {
+			hits = append(hits, int(hit.Fields["id"].(float64)))
 		}
 		return hits
 	}
