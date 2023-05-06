@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"os"
 	"path"
-	"regexp"
 	"strings"
 	"time"
 
@@ -120,9 +119,4 @@ func Proxy(c *fiber.Ctx) error {
 	}
 
 	return c.SendStream(f, int(stat.Size()))
-}
-
-func extractImage(s string) string {
-	re := regexp.MustCompile(`(?m).*"(https://.*)".*`)
-	return re.ReplaceAllString(s, "$1")
 }
