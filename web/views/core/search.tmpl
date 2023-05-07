@@ -9,7 +9,7 @@
 			<label for="q">Search keyword</label>
 			<div class="Form-row">
 				<input
-					type="search" {{ if not .Styles }}autofocus{{ end }} name="q" id="q"
+					type="search" {{ if and .flags.SearchAutofocus (not .Styles) }}autofocus{{ end }} name="q" id="q"
 					value="{{ .Keyword }}"
 					required pattern=".+"
 					placeholder="e.g. dark">
