@@ -245,6 +245,16 @@
 				<label for="sidebarFlag">Enable sidebar navigation</label>
 			</div>
 		</div>
+		<div>
+			<div class="checkbox iflex">
+				<input
+					type="checkbox"
+					name="autofocusFlag" id="autofocusFlag"
+					{{ if .flags.SearchAutofocus }}checked{{ end }}>
+				{{ template "partials/checkboxes" }}
+				<label for="autofocusFlag">Enable search autofocus</label>
+			</div>
+		</div>
 		<button
 			type="submit"
 			class="btn icon primary"
