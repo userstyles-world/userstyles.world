@@ -3,6 +3,7 @@ package style
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -59,7 +60,6 @@ func ReviewGet(c *fiber.Ctx) error {
 
 func ReviewPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	cmt := c.FormValue("comment")
 
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
@@ -103,6 +103,8 @@ func ReviewPost(c *fiber.Ctx) error {
 		}
 	}
 
+	cmt := strings.TrimSpace(c.FormValue("comment"))
+
 	r, err := strconv.Atoi(c.FormValue("rating"))
 	if err != nil {
 		return c.Render("err", fiber.Map{
@@ -132,6 +134,15 @@ func ReviewPost(c *fiber.Ctx) error {
 			"Error":   "Comment can't be longer than 500 characters.",
 			"Rating":  r,
 			"Comment": cmt,
+		})
+	}
+
+	if r == 0 && len(cmt) == 0 {
+		return c.Render("style/review", fiber.Map{
+			"Title": "Invalid input",
+			"User":  u,
+			"ID":    id,
+			"Error": "You can't make empty reviews. Please insert a rating and/or a comment.",
 		})
 	}
 
