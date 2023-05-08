@@ -129,7 +129,7 @@ func ResetPost(c *fiber.Ctx) error {
 	if err != nil {
 		log.Warn.Println("Failed to update user:", err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"Error": "Internal server error.",
 		})
 	}

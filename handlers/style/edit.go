@@ -70,20 +70,20 @@ func EditPost(c *fiber.Ctx) error {
 	// TODO: Implement proper validation.
 	s.Name = strings.TrimSpace(c.FormValue("name"))
 	if s.Name == "" {
-		args["Error"] = "Name field can't be empty"
+		args["Error"] = "Name field can't be empty."
 		return c.Render("style/create", args)
 	}
 
 	// Check userstyle name length
 	if len(s.Name) > 50 {
-		args["Error"] = "Name is too long"
+		args["Error"] = "Name must be up to 50 characters."
 		return c.Render("style/create", args)
 	}
 
 	// Check userstyle description length
 	s.Description = strings.TrimSpace(c.FormValue("description"))
 	if len(s.Description) > 160 {
-		args["Error"] = "Description is too long"
+		args["Error"] = "Description must be up to 160 characters."
 		return c.Render("style/create", args)
 	}
 
@@ -91,7 +91,7 @@ func EditPost(c *fiber.Ctx) error {
 	// TODO: figure some smaller limit, also update it in create.tmpl
 	s.Notes = strings.TrimSpace(c.FormValue("notes"))
 	if len(s.Notes) > 50000 {
-		args["Error"] = "Notes are too long"
+		args["Error"] = "Notes must be up to 50000 characters."
 		return c.Render("style/create", args)
 	}
 
@@ -101,7 +101,7 @@ func EditPost(c *fiber.Ctx) error {
 	// TODO: figure some limit, also update it in create.tmpl
 	s.Code = util.RemoveUpdateURL(c.FormValue("code"))
 	if len(s.Code) > 10000000 {
-		args["Error"] = "Code is too long"
+		args["Error"] = "Code must be up to 10000000 characters."
 		return c.Render("style/create", args)
 	}
 
@@ -145,7 +145,7 @@ func EditPost(c *fiber.Ctx) error {
 	if err = models.SelectUpdateStyle(s); err != nil {
 		log.Database.Printf("Failed to update style %d: %s\n", s.ID, err)
 		args["Title"] = "Failed to update userstyle"
-		args["Error"] = "Failed to update style in database"
+		args["Error"] = "Failed to update style in database."
 		return c.Render("style/create", args)
 	}
 

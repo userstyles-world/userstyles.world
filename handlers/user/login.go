@@ -90,7 +90,7 @@ func LoginPost(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
-				"Title": "Internal server error.",
+				"Title": "Internal server error",
 			})
 	}
 
@@ -111,7 +111,7 @@ func LoginPost(c *fiber.Ctx) error {
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).
 				Render("err", fiber.Map{
-					"Title": "Internal server error.",
+					"Title": "Internal server error",
 				})
 		}
 		return c.Redirect(path, fiber.StatusSeeOther)

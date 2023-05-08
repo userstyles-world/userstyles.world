@@ -115,7 +115,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	if err := user.DeleteWhereID(targetUser.ID); err != nil {
 		log.Warn.Printf("Failed to ban user %d: %s\n", id, err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}
@@ -125,7 +125,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	if err := styles.BanWhereUserID(targetUser.ID); err != nil {
 		log.Warn.Printf("Failed to ban styles from user %d: %s\n", id, err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}
@@ -145,7 +145,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	if err := modlog.AddLog(&logEntry); err != nil {
 		log.Warn.Printf("Failed to add user %d to ModLog: %s\n", targetUser.ID, err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}

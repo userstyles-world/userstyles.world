@@ -59,7 +59,7 @@ func Promote(c *fiber.Ctx) error {
 	// Only moderator and above have permissions to promote styles.
 	if u.Role < models.Moderator {
 		return c.Render("err", fiber.Map{
-			"Title": "You don't have enough permission for this.",
+			"Title": "You don't have enough permission for this",
 			"User":  u,
 		})
 	}
@@ -77,7 +77,7 @@ func Promote(c *fiber.Ctx) error {
 	if err != nil {
 		log.Warn.Println("Failed to get the style:", err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}

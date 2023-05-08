@@ -22,7 +22,7 @@ func BanGet(c *fiber.Ctx) error {
 	if !u.IsModOrAdmin() {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("err", fiber.Map{
-			"Title": "Can't do that",
+			"Title": "You don't have enough permission for this",
 			"User":  u,
 		})
 	}
@@ -88,7 +88,7 @@ func BanPost(c *fiber.Ctx) error {
 	if !u.IsModOrAdmin() {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("err", fiber.Map{
-			"Title": "Can't do that",
+			"Title": "You don't have enough permission for this",
 			"User":  u,
 		})
 	}
@@ -119,7 +119,7 @@ func BanPost(c *fiber.Ctx) error {
 	if err := modlog.AddLog(&logEntry); err != nil {
 		log.Warn.Printf("Failed to add style %d to ModLog: %s", s.ID, err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}
