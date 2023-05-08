@@ -931,6 +931,6 @@ Public License instead of this License.  But first, please read
 ```
 
 #### Changes:
-- vectorized by pabli24
-- converted to monochrome outline by 0eoc
+- vectorized by [pabli24](https://github.com/pabli24)
+- converted to monochrome outline by [0eoc](https://userstyles.world/user/0eoc)
 
