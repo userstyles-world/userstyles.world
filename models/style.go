@@ -15,11 +15,11 @@ type Style struct {
 	Original    string
 	MirrorURL   string
 	Homepage    string
-	Category    string `gorm:"not null"`
-	Name        string
-	Description string
-	Notes       string
-	Code        string
+	Category    string `validate:"required,min=1,max=255" gorm:"not null"`
+	Name        string `validate:"required,min=1,max=50"`
+	Description string `validate:"required,min=1,max=160"`
+	Notes       string `validate:"min=0,max=50000"`
+	Code        string `validate:"max=10000000"`
 	License     string
 	Preview     string
 	User        User `gorm:"foreignKey:ID"`

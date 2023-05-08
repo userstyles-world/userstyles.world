@@ -1,11 +1,13 @@
 package style
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
 	"github.com/vednoc/go-usercss-parser"
@@ -34,33 +36,66 @@ func CreatePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 	secureToken, oauthID := c.Query("token"), c.Query("oauthID")
 
-	// Check if userstyle name is empty.
-	if strings.TrimSpace(c.FormValue("name")) == "" {
-		return c.Render("err", fiber.Map{
-			"Title": "Style name can't be empty",
-			"User":  u,
-		})
-	}
-
 	s := &models.Style{
-		Name:        c.FormValue("name"),
-		Description: c.FormValue("description"),
-		Notes:       c.FormValue("notes"),
-		Homepage:    c.FormValue("homepage"),
-		Code:        c.FormValue("code"),
+		Name:        strings.TrimSpace(c.FormValue("name")),
+		Description: strings.TrimSpace(c.FormValue("description")),
+		Notes:       strings.TrimSpace(c.FormValue("notes")),
+		Homepage:    strings.TrimSpace(c.FormValue("homepage")),
 		License:     strings.TrimSpace(c.FormValue("license", "No License")),
-		Category:    strings.TrimSpace(c.FormValue("category", "unset")),
+		Category:    strings.TrimSpace(c.FormValue("category")),
 		UserID:      u.ID,
 	}
 
-	uc := new(usercss.UserCSS)
-	if err := uc.Parse(c.FormValue("code")); err != nil {
+	err := utils.Validate().StructPartial(s, "Name", "Description", "Category")
+	if err != nil {
 		arguments := fiber.Map{
-			"Title":  "Add userstyle",
 			"User":   u,
+			"Title":  "Add userstyle",
+			"Error":  "Missing mandatory userstyle data.",
 			"Styles": s,
-			"Method": "add",
-			"Error":  err,
+		}
+
+		var errs validator.ValidationErrors
+		if ok := errors.As(err, &errs); !ok {
+			log.Warn.Println("Validation error:", err)
+			return c.Render("err", fiber.Map{
+				"User":  u,
+				"Title": "Got an unexpected error during input validation",
+			})
+		}
+
+		for _, e := range errs {
+			var msg string
+
+			switch e.Field() {
+			case "Name":
+				msg = "Name must be up to 50 characters."
+			case "Description":
+				msg = "Description must be up to 160 characters."
+			case "Category":
+				msg = "Category must be up to 255 characters."
+			}
+
+			arguments["err"+e.Field()] = msg
+		}
+		return c.Render("style/create", arguments)
+	}
+
+	s.Code = strings.TrimSpace(util.RemoveUpdateURL(c.FormValue("code")))
+
+	uc := new(usercss.UserCSS)
+	if err := uc.Parse(s.Code); err != nil {
+		// TODO: Fix this in UserCSS parser.
+		e := err.Error()
+		msg := strings.ToUpper(string(e[0])) + e[1:] + "."
+
+		arguments := fiber.Map{
+			"Title":   "Add userstyle",
+			"User":    u,
+			"Styles":  s,
+			"Method":  "add",
+			"Error":   "Invalid source code.",
+			"errCode": msg,
 		}
 		if oauthID != "" {
 			arguments["Method"] = "add_api"
@@ -75,7 +110,8 @@ func CreatePost(c *fiber.Ctx) error {
 			"User":   u,
 			"Styles": s,
 			"Method": "add",
-			"Errors": errs,
+			"Error":  "Missing mandatory fields in source code.",
+			"errors": errs,
 		}
 		if oauthID != "" {
 			arguments["Method"] = "add_api"
@@ -96,15 +132,13 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 
 	// Prevent adding multiples of the same style.
-	err := models.CheckDuplicateStyle(s)
+	err = models.CheckDuplicateStyle(s)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": err,
 			"User":  u,
 		})
 	}
-
-	s.Code = util.RemoveUpdateURL(s.Code)
 
 	s, err = models.CreateStyle(s)
 	if err != nil {
