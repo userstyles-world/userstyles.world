@@ -165,6 +165,9 @@ hr { border: none; border-top: 1px solid var(--bg-3)  }
     }
 }
 
+.alert .limit { max-width: 100% }
+.styles { max-width: var(--form-max-width) }
+
 input[type="checkbox"],
 label[for="remember"] {
     width: unset;

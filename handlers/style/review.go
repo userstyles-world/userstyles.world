@@ -117,7 +117,7 @@ func ReviewPost(c *fiber.Ctx) error {
 			"Title":   "Review style",
 			"User":    u,
 			"ID":      id,
-			"Error":   "Rating is out of range",
+			"Error":   "Rating is out of range.",
 			"Rating":  r,
 			"Comment": cmt,
 		})
@@ -129,7 +129,7 @@ func ReviewPost(c *fiber.Ctx) error {
 			"Title":   "Review style",
 			"User":    u,
 			"ID":      id,
-			"Error":   "Comment can't be longer than 500 characters",
+			"Error":   "Comment can't be longer than 500 characters.",
 			"Rating":  r,
 			"Comment": cmt,
 		})

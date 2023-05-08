@@ -110,7 +110,7 @@ func CreatePost(c *fiber.Ctx) error {
 	if err != nil {
 		log.Warn.Println("Failed to create style:", err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}

@@ -138,7 +138,7 @@ func EditAccount(c *fiber.Ctx) error {
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
-				"Error":  "Biography must be shorter than 1000 characters.",
+				"Error":  "Biography must be up to 1000 characters.",
 			})
 		}
 
@@ -192,7 +192,7 @@ func EditAccount(c *fiber.Ctx) error {
 	if dbErr != nil {
 		log.Warn.Println("Updating user profile failed, err:", err)
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}

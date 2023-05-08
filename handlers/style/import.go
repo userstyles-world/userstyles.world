@@ -34,7 +34,7 @@ func ImportPost(c *fiber.Ctx) error {
 	// Check if someone tries submitting local userstyle.
 	if strings.Contains(r, "file:///") {
 		return c.Render("err", fiber.Map{
-			"Title": "Can't import local userstyles.",
+			"Title": "Can't import local userstyles",
 			"User":  u,
 		})
 	}
@@ -104,7 +104,7 @@ func ImportPost(c *fiber.Ctx) error {
 	if err != nil {
 		log.Warn.Println("Failed to import style from URL:", err.Error())
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error.",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}
