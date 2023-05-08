@@ -12,45 +12,40 @@ import (
 
 func GetExplore(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	c.Locals("User", u)
+	c.Locals("Title", "Explore custom website themes")
+	c.Locals("Canonical", "explore")
+	c.Locals("ExplorePage", true)
 
 	page, err := models.IsValidPage(c.Query("page"))
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Invalid page size",
-			"User":  u,
-		})
+		c.Locals("Title", "Invalid page size")
+		return c.Render("err", fiber.Map{})
 	}
 
 	count, err := models.GetStyleCount()
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Failed to count userstyles",
-			"User":  u,
-		})
+		c.Locals("Title", "Failed to count userstyles")
+		return c.Render("err", fiber.Map{})
 	}
 
-	// Set pagination.
-	p := models.NewPagination(page, count, c.Query("sort"), c.Path())
+	sort := c.Query("sort")
+	c.Locals("Sort", sort)
+
+	p := models.NewPagination(page, count, sort, c.Path())
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}
+	c.Locals("Pagination", p)
 
 	// Query for [sorted] styles.
 	s, err := storage.FindStyleCardsPaginated(p.Now, config.AppPageMaxItems, p.SortStyles())
 	if err != nil {
-		log.Warn.Println("Failed to get paginated styles:", err.Error())
-		return c.Render("err", fiber.Map{
-			"Title": "Styles not found",
-			"User":  u,
-		})
+		log.Database.Println("Failed to get styles:", err)
+		c.Locals("Title", "Styles not found")
+		return c.Render("err", fiber.Map{})
 	}
+	c.Locals("Styles", s)
 
-	return c.Render("core/explore", fiber.Map{
-		"Title":     "Explore website themes",
-		"User":      u,
-		"Styles":    s,
-		"Sort":      p.Sort,
-		"P":         p,
-		"Canonical": "explore",
-	})
+	return c.Render("core/explore", fiber.Map{})
 }

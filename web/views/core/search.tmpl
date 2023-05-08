@@ -3,7 +3,7 @@
 	<p>Sorted from most to least relevant results by default.</p>
 </section>
 
-<section class="mt:l">
+<section class="mt:m">
 	<form class="Form Form-inline jc:c" method="get" action="/search">
 		<div class="Form-section Form-row">
 			<label for="q">Search keyword</label>
@@ -23,20 +23,17 @@
 			>{{ template "icons/search" }} Search</button>
 		</div>
 
-		{{ template "partials/form-sort" . }}
+		{{ if and .Keyword .Styles }}
+			{{ template "partials/form-sort" . }}
+		{{ end }}
 	</form>
 </section>
 
-<section class="mt:l">
+<section class="mt:m">
 	{{ if .Styles }}
 		<div class="search-perf-metrics">
-			<span class="f:b">Metrics of search engine:</span>
-			{{ if gt .Metrics.Hits 96 }}
-				<span>Showing top 96 of {{ .Metrics.Hits }} hits</span>
-			{{ else }}
-				<span>Hits: {{ .Metrics.Hits }}</span>
-			{{ end }}
-			<span>Time Spent: {{ Elapsed .Metrics.TimeSpent }}</span>
+			<span class="f:b">Search engine metrics:</span>
+			<span>Found {{ .Metrics.Total }} results in {{ Elapsed .Metrics.TimeSpent }}.</span>
 		</div>
 
 		<div class="grid flex rwrap mx:r mt:m">
@@ -52,3 +49,7 @@
 		</div>
 	{{ end }}
 </section>
+
+{{ if .Pagination.Show }}
+	{{ template "partials/pagination" .Pagination }}
+{{ end }}

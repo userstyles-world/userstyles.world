@@ -6,75 +6,58 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
 )
 
 func Profile(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	username := c.Params("name")
+	c.Locals("User", u)
 
+	username := c.Params("name")
 	profile, err := models.FindUserByName(username)
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "User not found",
-			"User":  u,
-		})
+		c.Locals("Title", "User not found")
+		return c.Render("err", fiber.Map{})
 	}
+	c.Locals("Profile", profile)
+	c.Locals("Canonical", "user/"+username)
 
 	// Always redirect to correct URL.
 	if username != profile.Username {
 		return c.Redirect("/user/"+profile.Username, fiber.StatusSeeOther)
 	}
+	c.Locals("Title", profile.Name()+"'s profile")
 
 	page, err := models.IsValidPage(c.Query("page"))
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Invalid page size",
-			"User":  u,
-		})
+		c.Locals("Title", "Invalid page size")
+		return c.Render("err", fiber.Map{})
 	}
 
 	count, err := storage.CountStylesForUserID(profile.ID)
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Failed to count userstyles",
-			"User":  u,
-		})
+		c.Locals("Title", "Failed to count userstyles")
+		return c.Render("err", fiber.Map{})
 	}
+	c.Locals("Count", count)
 
-	// Set pagination.
 	size := config.AppPageMaxItems
 	p := models.NewPagination(page, count, c.Query("sort"), c.Path())
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}
+	c.Locals("Pagination", p)
+	c.Locals("Sort", p.Sort)
 
 	styles, err := storage.FindStyleCardsPaginatedForUserID(
 		p.Now, size, p.SortStyles(), profile.ID)
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Server error",
-		})
+		log.Database.Println("Failed to get styles:", err)
+		c.Locals("Title", "Styles not found")
+		return c.Render("err", fiber.Map{})
 	}
+	c.Locals("Styles", styles)
 
-	// Render Account template if current user matches active session.
-	/*if u.Username == username {
-		return c.Render("user/account", fiber.Map{
-			"Title":  "Account",
-			"User":   u,
-			"Styles": styles,
-		})
-	}*/
-
-	return c.Render("user/profile", fiber.Map{
-		"Title":     profile.Name() + "'s profile",
-		"User":      u,
-		"Profile":   profile,
-		"Styles":    styles,
-		"Count":     count,
-		"Canonical": "user/" + username,
-		"Sort":      p.Sort,
-		"P":         p,
-	})
+	return c.Render("user/profile", fiber.Map{})
 }

@@ -25,12 +25,13 @@ var (
 // engineMetrics returns basic metrics for search queries.
 type engineMetrics struct {
 	Hits      int
+	Total     int
 	TimeSpent time.Duration
 }
 
 // FindStylesByText searches for text and returns styles from search index and
 // performance metrics, or an error if it fails to find anything.
-func FindStylesByText(text, kind string, size int) ([]storage.StyleCard, engineMetrics, error) {
+func FindStylesByText(text, kind string, page, size int) ([]storage.StyleCard, engineMetrics, error) {
 	metrics := engineMetrics{}
 	// See https://github.com/blevesearch/bleve/issues/1290
 	// FuzzySearch won't work the way I'd like the search to behave.
@@ -39,8 +40,9 @@ func FindStylesByText(text, kind string, size int) ([]storage.StyleCard, engineM
 	timeStart := time.Now()
 	sanitzedQuery := bleve.NewMatchQuery(text)
 
-	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, size, 0, true)
-	searchRequest.Fields = []string{"*"}
+	offset := (page - 1) * size
+	searchRequest := bleve.NewSearchRequestOptions(sanitzedQuery, size, offset, true)
+	searchRequest.Fields = []string{"id"}
 
 	sr, err := StyleIndex.Search(searchRequest)
 	if err != nil {
@@ -48,24 +50,24 @@ func FindStylesByText(text, kind string, size int) ([]storage.StyleCard, engineM
 		return nil, metrics, ErrSearchBadRequest
 	}
 
-	hits := len(sr.Hits)
-	if hits == 0 {
+	if sr.Total < 1 {
 		return nil, metrics, ErrSearchNoResults
 	}
-	metrics.Hits = hits
+	metrics.Hits = len(sr.Hits)
+	metrics.Total = int(sr.Total)
 
 	nums := func() []int {
-		hits := make([]int, metrics.Hits)
-		for i, hit := range sr.Hits {
-			hits[i] = int(hit.Fields["id"].(float64))
+		hits := make([]int, 0, len(sr.Hits))
+		for _, hit := range sr.Hits {
+			hits = append(hits, int(hit.Fields["id"].(float64)))
 		}
 		return hits
 	}
 
-	res, err := storage.FindStyleCardsForSearch(nums(), kind, 96)
+	res, err := storage.FindStyleCardsForSearch(nums(), kind, size)
 	if err != nil {
 		metrics.Hits = 0
-		return res, metrics, err
+		return nil, metrics, err
 	}
 	metrics.TimeSpent = time.Since(timeStart)
 

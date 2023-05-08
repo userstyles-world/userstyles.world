@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"strconv"
 	"sync"
 	"time"
@@ -27,17 +28,21 @@ func RelNumber(i int64) string {
 	b := (*bp)[:0]
 
 	switch {
-	case i >= 1e12-5e6:
+	case i >= 1e12-5e6+1:
 		b = strconv.AppendFloat(b, float64(i)/1e12, 'f', 2, 32)
+		b = bytes.TrimSuffix(b, []byte(".00"))
 		b = append(b, 'T')
-	case i >= 1e9-5e3:
+	case i >= 1e9-5e3+1:
 		b = strconv.AppendFloat(b, float64(i)/1e9, 'f', 2, 32)
+		b = bytes.TrimSuffix(b, []byte(".00"))
 		b = append(b, 'B')
-	case i >= 1e6-5:
+	case i >= 1e6-5e2+1:
 		b = strconv.AppendFloat(b, float64(i)/1e6, 'f', 2, 32)
+		b = bytes.TrimSuffix(b, []byte(".00"))
 		b = append(b, 'M')
-	case i >= 1e3:
-		b = strconv.AppendFloat(b, float64(i)/1e3, 'f', 2, 32)
+	case i >= 1e4:
+		b = strconv.AppendFloat(b, float64(i)/1e3, 'f', 1, 32)
+		b = bytes.TrimSuffix(b, []byte(".0"))
 		b = append(b, 'K')
 	default:
 		b = strconv.AppendInt(b, i, 10)
@@ -130,8 +135,6 @@ func RelTime(t time.Time) string {
 	seconds := now / second
 	if seconds > 0 && parts != maxParts {
 		b = buildTime(b, seconds, " second")
-		now -= seconds * second
-		parts++
 	}
 
 	if len(b) == 0 {
