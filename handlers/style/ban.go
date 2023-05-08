@@ -22,7 +22,7 @@ func BanGet(c *fiber.Ctx) error {
 	if !u.IsModOrAdmin() {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("err", fiber.Map{
-			"Title": "You don't have enough permission for this",
+			"Title": "You are not authorized to perform this action",
 			"User":  u,
 		})
 	}
