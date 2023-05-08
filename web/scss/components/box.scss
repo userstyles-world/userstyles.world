@@ -28,6 +28,11 @@
         color: var(--fg-2);
         .datetime { color: inherit }
         a:hover { text-decoration: underline }
+		.username + svg {
+			margin-left: -0.25ex;
+			vertical-align: text-bottom;
+			stroke: var(--ac-1);
+		}
     }
 
     &-body {
