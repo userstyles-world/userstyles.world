@@ -1,13 +1,16 @@
 package models
 
 import (
+	stderrors "errors"
 	"fmt"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
+	"userstyles.world/utils"
 )
 
 type Style struct {
@@ -188,6 +191,16 @@ func CheckDuplicateStyle(s *Style) error {
 	return nil
 }
 
+// GetStyle tries to fetch a userstyle from database.
+func GetStyle(id string) (Style, error) {
+	var s Style
+	err := db().
+		Select("styles.*, u.username").
+		Joins("JOIN users u ON u.id = styles.user_id").
+		First(&s, "styles.id = ?", id).Error
+	return s, err
+}
+
 func (*Style) BanWhereUserID(id any) error {
 	return db().Delete(&Style{}, "user_id = ?", id).Error
 }
@@ -211,13 +224,54 @@ func (s *Style) SetPreview() {
 	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.BaseURL, s.ID, s.PreviewVersion)
 }
 
+var (
+	ErrStyleNoData = stderrors.New("missing mandatory userstyle data")
+	ErrStyleAsErrs = stderrors.New("unexpected error during validation")
+)
+
+// Validate makes sure input data is correct.
+func (s Style) Validate() (map[string]any, string, error) {
+	fields := []string{"Name", "Description", "Notes", "Category", "Code"}
+	err := utils.Validate().StructPartial(s, fields...)
+	if err == nil {
+		return nil, "", nil
+	}
+
+	var errs validator.ValidationErrors
+	if ok := stderrors.As(err, &errs); !ok {
+		return nil, "Unexpected error during validation.", ErrStyleAsErrs
+	}
+
+	m := make(map[string]any, len(errs))
+	for _, e := range errs {
+		var msg string
+
+		switch e.Field() {
+		case "Name":
+			msg = "Name must be up to 50 characters."
+		case "Description":
+			msg = "Description must be up to 160 characters."
+		case "Notes":
+			msg = "Notes must be up to 50K characters."
+		case "Category":
+			msg = "Category must be up to 255 characters."
+		case "Code":
+			msg = "Code must be up to 10M characters."
+		}
+
+		m[e.Field()] = msg
+	}
+
+	return m, "Missing mandatory userstyle data.", ErrStyleNoData
+}
+
 // SetPreview will set preview image URL.
 func (s *APIStyle) SetPreview() {
 	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.BaseURL, s.ID, s.PreviewVersion)
 }
 
 // SelectUpdateStyle will update specific fields in the styles table.
-func SelectUpdateStyle(s *APIStyle) error {
+func SelectUpdateStyle(s Style) error {
 	fields := []string{"name", "description", "notes", "code", "homepage",
 		"license", "category", "preview", "preview_version", "mirror_url",
 		"mirror_code", "mirror_meta"}

@@ -1,13 +1,11 @@
 package style
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
 	"github.com/vednoc/go-usercss-parser"
@@ -46,39 +44,16 @@ func CreatePost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	err := utils.Validate().StructPartial(s, "Name", "Description", "Category")
+	m, msg, err := s.Validate()
 	if err != nil {
-		arguments := fiber.Map{
-			"User":   u,
+		return c.Render("style/create", fiber.Map{
 			"Title":  "Add userstyle",
-			"Error":  "Missing mandatory userstyle data.",
+			"User":   u,
 			"Styles": s,
-		}
-
-		var errs validator.ValidationErrors
-		if ok := errors.As(err, &errs); !ok {
-			log.Warn.Println("Validation error:", err)
-			return c.Render("err", fiber.Map{
-				"User":  u,
-				"Title": "Got an unexpected error during input validation",
-			})
-		}
-
-		for _, e := range errs {
-			var msg string
-
-			switch e.Field() {
-			case "Name":
-				msg = "Name must be up to 50 characters."
-			case "Description":
-				msg = "Description must be up to 160 characters."
-			case "Category":
-				msg = "Category must be up to 255 characters."
-			}
-
-			arguments["err"+e.Field()] = msg
-		}
-		return c.Render("style/create", arguments)
+			"Method": "add",
+			"Error":  msg,
+			"err":    m,
+		})
 	}
 
 	s.Code = strings.TrimSpace(util.RemoveUpdateURL(c.FormValue("code")))

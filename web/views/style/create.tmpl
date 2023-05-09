@@ -44,7 +44,7 @@
 		required maxlength="50"
 		type="text" name="name" id="name" value="{{ .Styles.Name }}"
 		placeholder="e.g. UserStyles.world tweaks">
-	{{ with .errName }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	{{ with .err.Name }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 
 	<label for="description">Description</label>
 	<i class="fg:3" id="description-hint">Short description of what your userstyle does in plain text. Will be used for SEO and rich embeds.</i>
@@ -54,7 +54,7 @@
 		aria-describedby="description-hint"
 		placeholder="e.g. UI experiments for UserStyles.world."
 	>{{ .Styles.Description }}</textarea>
-	{{ with .errDescription }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	{{ with .err.Description }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 
 	<label for="notes">Notes</label>
 	<i class="fg:3" id="notes-hint">Long description of requirements, changelog, etc. Supports Markdown syntax.</i>
@@ -64,6 +64,7 @@
 		aria-describedby="notes-hint"
 		placeholder="e.g. Please raise issues in the GitHub repository."
 	>{{ .Styles.Notes }}</textarea>
+	{{ with .err.Notes }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 
 	<label for="homepage">Homepage</label>
 	<i class="fg:3" id="homepage-hint">Link to userstyle's homepage, bug tracker, etc.</i>
@@ -129,12 +130,12 @@
 	<label for="category">Category</label>
 	<i class="fg:3" id="category-hint">Domain name of website that your userstyle applies to.</i>
 	<input
-		required
+		required maxlength="255"
 		type="text" name="category" id="category"
 		aria-describedby="category-hint"
 		value="{{ .Styles.Category }}"
 		placeholder="e.g. test.userstyles.world -> userstyles">
-	{{ with .errCategory }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	{{ with .err.Category }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 
 	<label for="code">Source code</label>
 	<textarea
@@ -142,9 +143,9 @@
 		spellcheck="false"
 		placeholder="{{ BaseCodeTemplate }}"
 	>{{ with .Styles }}{{ .Code }}{{ end }}</textarea>
-	{{ with .errCode }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	{{ with .err.Code }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 	{{ with .errors }}
-		<div class="danger" role="alert">
+		<div class="danger mb:s" role="alert">
 			<p>Please fix the following issue(s):</p>
 			<ul>
 				{{ range . }}<li>{{ .Code }}</li>{{ end }}

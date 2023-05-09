@@ -46,19 +46,27 @@ func EditGet(c *fiber.Ctx) error {
 
 func EditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		return c.Render("err", fiber.Map{
+			"User":  u,
+			"Title": "Invalid style ID",
+		})
+	}
 	id := c.Params("id")
+
 	args := fiber.Map{
 		"User":   u,
 		"Title":  "Edit userstyle",
 		"Method": "edit", // TODO: Remove later.
 	}
 
-	s, err := models.GetStyleByID(id)
+	s, err := models.GetStyle(id)
 	if err != nil {
 		args["Title"] = "Style not found"
 		return c.Render("err", args)
 	}
-	args["Styles"] = s
 
 	// Check if logged-in user matches style author.
 	if u.ID != s.UserID {
@@ -66,46 +74,36 @@ func EditPost(c *fiber.Ctx) error {
 		return c.Render("err", args)
 	}
 
-	// Check if userstyle name is empty.
-	// TODO: Implement proper validation.
 	s.Name = strings.TrimSpace(c.FormValue("name"))
-	if s.Name == "" {
-		args["Error"] = "Name field can't be empty."
-		return c.Render("style/create", args)
-	}
-
-	// Check userstyle name length
-	if len(s.Name) > 50 {
-		args["Error"] = "Name must be up to 50 characters."
-		return c.Render("style/create", args)
-	}
-
-	// Check userstyle description length
 	s.Description = strings.TrimSpace(c.FormValue("description"))
-	if len(s.Description) > 160 {
-		args["Error"] = "Description must be up to 160 characters."
-		return c.Render("style/create", args)
-	}
-
-	// Check userstyle notes length
-	// TODO: figure some smaller limit, also update it in create.tmpl
 	s.Notes = strings.TrimSpace(c.FormValue("notes"))
-	if len(s.Notes) > 50000 {
-		args["Error"] = "Notes must be up to 50000 characters."
+	s.Code = util.RemoveUpdateURL(c.FormValue("code"))
+	s.Category = strings.TrimSpace(c.FormValue("category"))
+	args["Styles"] = s
+
+	m, msg, err := s.Validate()
+	if err != nil {
+		args["Error"] = msg
+		args["err"] = m
+
 		return c.Render("style/create", args)
 	}
 
 	var uc usercss.UserCSS
+	if err := uc.Parse(s.Code); err != nil {
+		// TODO: Fix this in UserCSS parser.
+		e := err.Error()
+		msg := strings.ToUpper(string(e[0])) + e[1:] + "."
 
-	// Check userstyle code length
-	// TODO: figure some limit, also update it in create.tmpl
-	s.Code = util.RemoveUpdateURL(c.FormValue("code"))
-	if len(s.Code) > 10000000 {
-		args["Error"] = "Code must be up to 10000000 characters."
+		args["Error"] = "Invalid source code."
+		args["errCode"] = msg
 		return c.Render("style/create", args)
 	}
-
-	// TODO: move these length checks into a separate method and reuse them in import.go
+	if errs := uc.Validate(); errs != nil {
+		args["Error"] = "Missing mandatory fields in source code."
+		args["errors"] = errs
+		return c.Render("style/create", args)
+	}
 
 	// Check for new preview image.
 	file, _ := c.FormFile("preview")
@@ -124,22 +122,13 @@ func EditPost(c *fiber.Ctx) error {
 		s.Preview = ""
 	}
 
-	if err := uc.Parse(s.Code); err != nil {
-		args["Error"] = err
-		return c.Render("style/create", args)
-	}
-	if errs := uc.Validate(); errs != nil {
-		args["Errors"] = errs
-		return c.Render("style/create", args)
-	}
-
 	// Update the other fields with new data.
 	s.Homepage = strings.TrimSpace(c.FormValue("homepage"))
 	s.License = strings.TrimSpace(c.FormValue("license", "No License"))
-	s.Category = strings.TrimSpace(c.FormValue("category", "unset"))
 	s.MirrorURL = strings.TrimSpace(c.FormValue("mirrorURL"))
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
+	args["Styles"] = s // NOTE: Add new data.
 
 	// TODO: Split updates into sections.
 	if err = models.SelectUpdateStyle(s); err != nil {
