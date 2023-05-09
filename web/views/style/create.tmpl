@@ -32,7 +32,8 @@
 		}
 		.alert > .limit { max-width: 100% }
 		input, textarea { margin-bottom: 0.5rem !important }
-		label:not(:first-of-type), button { margin-top: 1.5rem }
+		label:not(:first-of-type) { margin-top: 1.5rem }
+		button { margin-top: 1rem }
 		.shortTextarea { min-height: calc(3 * (0.875rem * 1.5)); height: unset i }
 	</style>
 	{{ template "partials/alert" . }}
@@ -76,7 +77,7 @@
 		placeholder="e.g. https://github.com/userstyles-world/tweaks">
 
 	{{- if eq .Method "edit" }}
-		<p>Current image</p>
+		<label for="currentImage">Current image</label>
 		<i class="fg:3">To change it, set a new preview URL or upload a new image.</i>
 		<div class="card mt:s mb:m">
 			<div class="screenshot">
@@ -103,10 +104,9 @@
 	{{ end }}
 
 	<label for="previewURL">Preview image URL</label>
-	<i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i><br>
+	<i class="fg:3" id="previewURL-hint">External images will be downloaded and hosted by UserStyles.world.</i><br>
 	<i class="fg:3"><mark>Hint:</mark> To remove preview image, remove the URL from field below.</i>
 	<input
-		pattern="{{ config "allowedImagesRe" }}"
 		type="url" name="previewURL" id="previewURL"
 		aria-describedby="previewURL-hint"
 		value="{{ .Styles.Preview }}"

@@ -25,7 +25,6 @@ var appConfig = map[string]string{
 	"appLatestCommit": config.AppLatestCommit,
 	"appCommitSHA":    config.AppCommitSHA,
 	"allowedEmailsRe": config.AllowedEmailsRe,
-	"allowedImagesRe": config.AllowedImagesRe,
 }
 
 type sys struct {

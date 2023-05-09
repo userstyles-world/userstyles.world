@@ -14,11 +14,10 @@
 
 	<label for="previewURL">Preview image URL</label>
 	<i class="fg:3">Skip this step if importing from USo-archive.</i><br>
-	<i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i>
+	<i class="fg:3" id="previewURL-hint">External images will be downloaded and hosted by UserStyles.world.</i>
 	<input
 		type="url" name="previewURL" id="preview"
 		aria-describedby="previewURL-hint"
-		pattern="{{ config "allowedImagesRe" }}"
 		placeholder="Link to userstyle's preview image (jpg, jpeg, png, avif, and webp formats only)">
 
 	<label for="preview">Upload preview image</label>

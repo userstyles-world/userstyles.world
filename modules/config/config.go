@@ -76,7 +76,6 @@ var (
 	AppLinkOpenCollective = "https://opencollective.com/userstyles"
 
 	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
-	AllowedImagesRe = `^https?:\/\/(www\.)?(` + raw(BaseURL) + `|(user-images|raw|gist)\.githubusercontent\.com|github\.com|gitlab\.com|codeberg\.org|cdn\.jsdelivr\.net/gh/33kk)\/.*\.(jpe?g|png|webp)(\?inline=(true|false))?$`
 
 	CachedCodeItems = uint(getEnvInt("CACHED_CODE_ITEMS", 25))
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")

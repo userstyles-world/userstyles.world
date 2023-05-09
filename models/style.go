@@ -224,7 +224,7 @@ func (s *Style) SetPreview() {
 }
 
 var (
-	ErrStyleNoData = stderrors.New("missing mandatory userstyle data")
+	ErrStyleNoData = stderrors.New("incorrect userstyle data was entered")
 	ErrStyleAsErrs = stderrors.New("unexpected error during validation")
 )
 
@@ -261,7 +261,7 @@ func (s Style) Validate(v *validator.Validate) (map[string]any, string, error) {
 		m[e.Field()] = msg
 	}
 
-	return m, "Missing mandatory userstyle data.", ErrStyleNoData
+	return m, "Incorrect userstyle data was entered. Please review the fields bellow.", ErrStyleNoData
 }
 
 // SetPreview will set preview image URL.
