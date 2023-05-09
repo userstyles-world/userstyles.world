@@ -104,10 +104,9 @@
 	{{ end }}
 
 	<label for="previewURL">Preview image URL</label>
-	<i class="fg:3" id="previewURL-hint">External images must be hosted on GitHub.com, GitLab.com, or Codeberg.org.</i><br>
+	<i class="fg:3" id="previewURL-hint">External images will be downloaded and hosted by UserStyles.world.</i><br>
 	<i class="fg:3"><mark>Hint:</mark> To remove preview image, remove the URL from field below.</i>
 	<input
-		pattern="{{ config "allowedImagesRe" }}"
 		type="url" name="previewURL" id="previewURL"
 		aria-describedby="previewURL-hint"
 		value="{{ .Styles.Preview }}"
