@@ -44,7 +44,7 @@ func CreatePost(c *fiber.Ctx) error {
 		UserID:      u.ID,
 	}
 
-	m, msg, err := s.Validate()
+	m, msg, err := s.Validate(utils.Validate())
 	if err != nil {
 		return c.Render("style/create", fiber.Map{
 			"Title":  "Add userstyle",

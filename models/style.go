@@ -10,7 +10,6 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
-	"userstyles.world/utils"
 )
 
 type Style struct {
@@ -230,9 +229,9 @@ var (
 )
 
 // Validate makes sure input data is correct.
-func (s Style) Validate() (map[string]any, string, error) {
+func (s Style) Validate(v *validator.Validate) (map[string]any, string, error) {
 	fields := []string{"Name", "Description", "Notes", "Category", "Code"}
-	err := utils.Validate().StructPartial(s, fields...)
+	err := v.StructPartial(s, fields...)
 	if err == nil {
 		return nil, "", nil
 	}

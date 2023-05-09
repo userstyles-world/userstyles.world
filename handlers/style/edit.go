@@ -14,6 +14,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
+	"userstyles.world/utils"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -81,7 +82,7 @@ func EditPost(c *fiber.Ctx) error {
 	s.Category = strings.TrimSpace(c.FormValue("category"))
 	args["Styles"] = s
 
-	m, msg, err := s.Validate()
+	m, msg, err := s.Validate(utils.Validate())
 	if err != nil {
 		args["Error"] = msg
 		args["err"] = m
