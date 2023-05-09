@@ -1,3 +1,69 @@
+{{ if .flags.ViewRedesign }}
+<style type="text/css">
+#code {
+	display: grid;
+	grid-template-rows: auto auto 1fr;
+	grid-template-areas: "title" "mark" "code";
+}
+#code h2 { grid-area: title }
+#code mark { display: unset; grid-area: mark }
+#code div { position: relative; border: none; grid-area: code }
+#code pre { position: absolute; width: 100%; height: 100%; padding: 0 }
+h2 { margin: 0 0 0.5rem 0; font-size: 1.25rem; text-decoration: unset !important }
+section > p, .md > *:last-child { margin-bottom: unset }
+
+main {
+	--bg-2: #1f1f1f;
+	max-width: var(--layout-max-width);
+	display: grid !important;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: auto;
+	grid-auto-flow: row;
+	grid-template-areas:
+		"preview preview"
+		"actions actions"
+		"details code"
+		"stats code"
+		"description code"
+		"notes code"
+		"reviews reviews";
+	gap: 1rem;
+}
+#preview { grid-area: preview } .header { grid-area: actions }
+#details { grid-area: details } #stats { grid-area: stats }
+#description { grid-area: description } #notes { grid-area: notes }
+#code { grid-area: code } #reviews { grid-area: reviews }
+@media (max-width: 1552px) {
+	main {
+		padding: 0 1rem;
+		grid-template-columns: 1fr;
+		grid-template-areas: "preview" "actions" "details" "stats" "description" "notes" "code" "reviews";
+	}
+}
+
+main > section:not(#preview, .header) {
+	padding: 1rem;
+	border-radius: var(--br-3);
+	border: 1px solid var(--bg-3);
+	background-color: var(--bg-2);
+}
+
+#preview { margin-top: 1rem }
+#preview h1 { margin: 0 !important; font-size: 2rem }
+#preview h1 > span { display: none }
+#preview .card { margin-top: 1rem }
+#preview, .header { padding: 0 !important }
+.header { margin-top: 0 }
+
+.Box {
+	--bg-3: #222222;
+	--bg-4: #333333;
+	background-color: var(--bg-3);
+}
+.Box:not(:last-child)::after { z-index: unset; background-color: var(--bg-4) }
+</style>
+{{ end }}
+
 <section id="preview">
 	<h1 class="mb:m">{{ .Style.Name }}
 		<span class="fg:4"> by {{ .Style.Username }}</span>

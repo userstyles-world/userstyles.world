@@ -154,6 +154,7 @@ func EditAccount(c *fiber.Ctx) error {
 			Welcome:         c.FormValue("welcomeFlag") == "on",
 			Sidebar:         c.FormValue("sidebarFlag") == "on",
 			SearchAutofocus: c.FormValue("autofocusFlag") == "on",
+			ViewRedesign:    c.FormValue("viewRedesignFlag") == "on",
 		})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{

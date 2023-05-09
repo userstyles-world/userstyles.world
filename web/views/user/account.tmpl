@@ -257,6 +257,16 @@
 				<label for="autofocusFlag">Enable search autofocus</label>
 			</div>
 		</div>
+		<div>
+			<div class="checkbox iflex">
+				<input
+					type="checkbox"
+					name="viewRedesignFlag" id="viewRedesignFlag"
+					{{ if .flags.ViewRedesign }}checked{{ end }}>
+				{{ template "partials/checkboxes" }}
+				<label for="viewRedesignFlag">Enable style view page redesign</label>
+			</div>
+		</div>
 		<button
 			type="submit"
 			class="btn icon primary"
