@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"math"
@@ -139,6 +140,14 @@ func New(views http.FileSystem) *html.Engine {
 
 	engine.AddFunc("toJPEG", func(url string) string {
 		return url[:len(url)-4] + "jpeg"
+	})
+
+	engine.AddFunc("jsonify", func(a any) string {
+		b, err := json.Marshal(a)
+		if err != nil {
+			return "Failed to serialize data to JSON."
+		}
+		return string(b)
 	})
 
 	if !config.Production {

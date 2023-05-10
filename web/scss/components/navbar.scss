@@ -94,7 +94,7 @@
     }
 }
 
-[data-flags="sidebar"] {
+[data-flags*="sidebar"] {
 	--sidebar-width: 240px;
 
 	display: flex;

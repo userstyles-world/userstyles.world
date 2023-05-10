@@ -79,12 +79,25 @@ build() {
             ;;
         sass-dev)
             log "Compiling Sass for development environment."
-            sassc --style nested --sourcemap=inline -l \
-                web/scss/main.scss web/static/css/main.css
+            for f in web/scss/*.scss; do
+                o="${f##*/}"
+                o="${o%.scss}"
+                o="web/static/css/${o}.css"
+                if sassc --style nested --sourcemap=inline -l "$f" "$o"; then
+                    log "Compiled '$f' to '$o'."
+                fi
+            done
             ;;
         sass-prod)
             log "Compiling Sass for production environment."
-            sassc --style compressed web/scss/main.scss web/static/css/main.css
+            for f in web/scss/*.scss; do
+                o="${f##*/}"
+                o="${o%.scss}"
+                o="web/static/css/${o}.css"
+                if sassc --style compressed "$f" "$o"; then
+                    log "Compiled '$f' to '$o'."
+                fi
+            done
             ;;
         dev)
             log "Building USw for $1 environment."

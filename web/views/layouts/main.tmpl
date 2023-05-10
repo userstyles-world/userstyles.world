@@ -3,7 +3,7 @@
 	<head>
 		{{ template "partials/head" . }}
 	</head>
-	<body {{ if .flags.Sidebar }}data-flags="sidebar"{{ end }}>
+	<body {{ if .flags }}data-flags="{{ jsonify .flags }}"{{ end }}>
 		<a href="#content">Skip to content</a>
 		{{ if .flags.Sidebar }}
 			{{ template "partials/sidebar" . }}

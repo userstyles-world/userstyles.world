@@ -1,0 +1,102 @@
+[data-flags*="view_redesign"] {
+	main {
+		max-width: var(--layout-max-width);
+		display: grid !important;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: auto;
+		grid-auto-flow: row;
+		grid-template-areas:
+			"preview preview"
+			"actions actions"
+			"details code"
+			"stats code"
+			"description code"
+			"notes code"
+			"reviews reviews";
+		gap: 1rem;
+
+		@media (max-width: 1552px) {
+			padding: 0 1rem;
+			grid-template-columns: 1fr;
+			grid-template-areas:
+				"preview" "actions" "details" "stats"
+				"description" "notes" "code" "reviews";
+		}
+
+		> section:not(#preview, .header) {
+			padding: 1rem;
+			border-radius: var(--br-3);
+			border: 1px solid var(--bg-3);
+			background-color: var(--bg-2);
+		}
+	}
+
+	#preview { grid-area: preview }
+	.header { grid-area: actions }
+	#details { grid-area: details }
+	#stats { grid-area: stats }
+	#description { grid-area: description }
+	#notes { grid-area: notes }
+	#code { grid-area: code }
+	#reviews { grid-area: reviews }
+
+	#code {
+		display: grid;
+		grid-template-rows: auto auto 1fr;
+		grid-template-areas: "title" "mark" "code";
+
+		h2 { grid-area: title }
+		mark {
+			display: unset;
+			grid-area: mark;
+		}
+		div {
+			position: relative;
+			border: none;
+			grid-area: code;
+		}
+		pre {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			padding: 0;
+		}
+	}
+
+	h2 {
+		margin: 0 0 0.5rem 0;
+		font-size: 1.25rem;
+		text-decoration: unset !important;
+	}
+
+	section > p,
+	.md > *:last-child {
+		margin-bottom: unset;
+	}
+
+	#preview {
+		padding: 0 !important;
+		margin-top: 1rem;
+
+		h1 {
+			margin: 0 !important;
+			font-size: 2rem;
+			> span { display: none }
+		}
+		.card { margin-top: 1rem }
+	}
+
+	.header {
+		padding: 0 !important;
+		margin-top: 0;
+	}
+
+	.Box {
+		background-color: var(--bg-3);
+
+		&:not(:last-child)::after {
+			z-index: unset;
+			background-color: var(--bg-4);
+		}
+	}
+}
