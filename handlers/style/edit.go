@@ -37,11 +37,10 @@ func EditGet(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Render("style/create", fiber.Map{
-		"Title":  "Edit userstyle",
-		"Method": "edit",
-		"User":   u,
-		"Styles": s,
+	return c.Render("style/edit", fiber.Map{
+		"Title": "Edit userstyle",
+		"User":  u,
+		"Style": s,
 	})
 }
 
@@ -58,9 +57,8 @@ func EditPost(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	args := fiber.Map{
-		"User":   u,
-		"Title":  "Edit userstyle",
-		"Method": "edit", // TODO: Remove later.
+		"User":  u,
+		"Title": "Edit userstyle",
 	}
 
 	s, err := models.GetStyle(id)
@@ -80,14 +78,14 @@ func EditPost(c *fiber.Ctx) error {
 	s.Notes = strings.TrimSpace(c.FormValue("notes"))
 	s.Code = util.RemoveUpdateURL(c.FormValue("code"))
 	s.Category = strings.TrimSpace(c.FormValue("category"))
-	args["Styles"] = s
+	args["Style"] = s
 
 	m, msg, err := s.Validate(utils.Validate())
 	if err != nil {
 		args["Error"] = msg
 		args["err"] = m
 
-		return c.Render("style/create", args)
+		return c.Render("style/edit", args)
 	}
 
 	var uc usercss.UserCSS
@@ -98,12 +96,12 @@ func EditPost(c *fiber.Ctx) error {
 
 		args["Error"] = "Invalid source code."
 		args["errCode"] = msg
-		return c.Render("style/create", args)
+		return c.Render("style/edit", args)
 	}
 	if errs := uc.Validate(); errs != nil {
 		args["Error"] = "Missing mandatory fields in source code."
 		args["errors"] = errs
-		return c.Render("style/create", args)
+		return c.Render("style/edit", args)
 	}
 
 	// Check for new preview image.
@@ -129,14 +127,14 @@ func EditPost(c *fiber.Ctx) error {
 	s.MirrorURL = strings.TrimSpace(c.FormValue("mirrorURL"))
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
-	args["Styles"] = s // NOTE: Add new data.
+	args["Style"] = s // NOTE: Add new data.
 
 	// TODO: Split updates into sections.
 	if err = models.SelectUpdateStyle(s); err != nil {
 		log.Database.Printf("Failed to update style %d: %s\n", s.ID, err)
 		args["Title"] = "Failed to update userstyle"
 		args["Error"] = "Failed to update style in database."
-		return c.Render("style/create", args)
+		return c.Render("style/edit", args)
 	}
 
 	// TODO: Move to code section once we refactor this messy logic.

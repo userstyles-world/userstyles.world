@@ -23,10 +23,9 @@ import (
 func CreateGet(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
 
-	return c.Render("style/create", fiber.Map{
-		"Title":  "Add userstyle",
-		"User":   u,
-		"Method": "add",
+	return c.Render("style/add", fiber.Map{
+		"Title": "Add userstyle",
+		"User":  u,
 	})
 }
 
@@ -46,11 +45,10 @@ func CreatePost(c *fiber.Ctx) error {
 
 	m, msg, err := s.Validate(utils.Validate())
 	if err != nil {
-		return c.Render("style/create", fiber.Map{
+		return c.Render("style/add", fiber.Map{
 			"Title":  "Add userstyle",
 			"User":   u,
 			"Styles": s,
-			"Method": "add",
 			"Error":  msg,
 			"err":    m,
 		})
@@ -68,32 +66,30 @@ func CreatePost(c *fiber.Ctx) error {
 			"Title":   "Add userstyle",
 			"User":    u,
 			"Styles":  s,
-			"Method":  "add",
 			"Error":   "Invalid source code.",
 			"errCode": msg,
 		}
 		if oauthID != "" {
-			arguments["Method"] = "add_api"
+			arguments["Method"] = "api"
 			arguments["OAuthID"] = oauthID
 			arguments["SecureToken"] = secureToken
 		}
-		return c.Render("style/create", arguments)
+		return c.Render("style/add", arguments)
 	}
 	if errs := uc.Validate(); errs != nil {
 		arguments := fiber.Map{
 			"Title":  "Add userstyle",
 			"User":   u,
 			"Styles": s,
-			"Method": "add",
 			"Error":  "Missing mandatory fields in source code.",
 			"errors": errs,
 		}
 		if oauthID != "" {
-			arguments["Method"] = "add_api"
+			arguments["Method"] = "api"
 			arguments["OAuthID"] = oauthID
 			arguments["SecureToken"] = secureToken
 		}
-		return c.Render("style/create", arguments)
+		return c.Render("style/add", arguments)
 	}
 
 	// Prevent broken traditional userstyles.
