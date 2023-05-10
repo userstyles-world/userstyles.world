@@ -22,16 +22,26 @@ import (
 
 func CreateGet(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
+	c.Locals("User", u)
+	c.Locals("Title", "Add userstyle")
 
-	return c.Render("style/add", fiber.Map{
-		"Title": "Add userstyle",
-		"User":  u,
-	})
+	return c.Render("style/add", fiber.Map{})
 }
 
 func CreatePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
-	secureToken, oauthID := c.Query("token"), c.Query("oauthID")
+	c.Locals("User", u)
+	c.Locals("Title", "Add userstyle")
+
+	secureToken := c.Query("token")
+	if secureToken != "" {
+		c.Locals("SecureToken", secureToken)
+	}
+	oauthID := c.Query("oauthID")
+	if oauthID != "" {
+		c.Locals("OAuthID", oauthID)
+		c.Locals("Method", "api")
+	}
 
 	s := &models.Style{
 		Name:        strings.TrimSpace(c.FormValue("name")),
@@ -42,16 +52,13 @@ func CreatePost(c *fiber.Ctx) error {
 		Category:    strings.TrimSpace(c.FormValue("category")),
 		UserID:      u.ID,
 	}
+	c.Locals("Style", s)
 
 	m, msg, err := s.Validate(utils.Validate())
 	if err != nil {
-		return c.Render("style/add", fiber.Map{
-			"Title":  "Add userstyle",
-			"User":   u,
-			"Styles": s,
-			"Error":  msg,
-			"err":    m,
-		})
+		c.Locals("Error", msg)
+		c.Locals("err", m)
+		return c.Render("style/add", fiber.Map{})
 	}
 
 	s.Code = strings.TrimSpace(util.RemoveUpdateURL(c.FormValue("code")))
@@ -62,62 +69,35 @@ func CreatePost(c *fiber.Ctx) error {
 		e := err.Error()
 		msg := strings.ToUpper(string(e[0])) + e[1:] + "."
 
-		arguments := fiber.Map{
-			"Title":   "Add userstyle",
-			"User":    u,
-			"Styles":  s,
-			"Error":   "Invalid source code.",
-			"errCode": msg,
-		}
-		if oauthID != "" {
-			arguments["Method"] = "api"
-			arguments["OAuthID"] = oauthID
-			arguments["SecureToken"] = secureToken
-		}
-		return c.Render("style/add", arguments)
+		c.Locals("Error", "Invalid source code.")
+		c.Locals("errCode", msg)
+		return c.Render("style/add", fiber.Map{})
 	}
 	if errs := uc.Validate(); errs != nil {
-		arguments := fiber.Map{
-			"Title":  "Add userstyle",
-			"User":   u,
-			"Styles": s,
-			"Error":  "Missing mandatory fields in source code.",
-			"errors": errs,
-		}
-		if oauthID != "" {
-			arguments["Method"] = "api"
-			arguments["OAuthID"] = oauthID
-			arguments["SecureToken"] = secureToken
-		}
-		return c.Render("style/add", arguments)
+		c.Locals("Error", "Missing mandatory fields in source code.")
+		c.Locals("errors", errs)
+		return c.Render("style/add", fiber.Map{})
 	}
 
 	// Prevent broken traditional userstyles.
 	// TODO: Remove a week or two after Stylus v1.5.20 is released.
 	if len(uc.MozDocument) == 0 {
-		return c.Render("err", fiber.Map{
-			"Title":  "Bad style format",
-			"Stylus": "Your style is affected by a bug in Stylus integration.",
-			"User":   u,
-		})
+		c.Locals("Title", "Bad style format")
+		c.Locals("Stylus", "Your style is affected by a bug in Stylus integration.")
+		return c.Render("err", fiber.Map{})
 	}
 
 	// Prevent adding multiples of the same style.
 	err = models.CheckDuplicateStyle(s)
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": err,
-			"User":  u,
-		})
+		return c.Render("err", fiber.Map{})
 	}
 
 	s, err = models.CreateStyle(s)
 	if err != nil {
-		log.Warn.Println("Failed to create style:", err.Error())
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"User":  u,
-		})
+		log.Warn.Println("Failed to create style:", err)
+		c.Locals("Title", "Internal server error")
+		return c.Render("err", fiber.Map{})
 	}
 
 	// Check preview image.
