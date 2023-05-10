@@ -19,58 +19,41 @@ import (
 
 func EditGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	p := c.Params("id")
+	c.Locals("User", u)
+	c.Locals("Title", "Edit userstyle")
 
-	s, err := models.GetStyleByID(p)
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "Invalid style ID")
+		return c.Render("err", fiber.Map{})
+	}
+
+	s, err := models.GetStyleFromAuthor(i, int(u.ID))
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Style not found",
-			"User":  u,
-		})
+		c.Locals("Title", "Style not found")
+		return c.Render("err", fiber.Map{})
 	}
+	c.Locals("Style", s)
 
-	// Check if logged-in user matches style author.
-	if u.ID != s.UserID {
-		return c.Render("err", fiber.Map{
-			"Title": "User and style author don't match",
-			"User":  u,
-		})
-	}
-
-	return c.Render("style/edit", fiber.Map{
-		"Title": "Edit userstyle",
-		"User":  u,
-		"Style": s,
-	})
+	return c.Render("style/edit", fiber.Map{})
 }
 
 func EditPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	c.Locals("User", u)
+	c.Locals("Title", "Edit userstyle")
 
 	i, err := c.ParamsInt("id")
 	if err != nil || i < 1 {
-		return c.Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Invalid style ID",
-		})
+		c.Locals("Title", "Invalid style ID")
+		return c.Render("err", fiber.Map{})
 	}
 	id := c.Params("id")
 
-	args := fiber.Map{
-		"User":  u,
-		"Title": "Edit userstyle",
-	}
-
-	s, err := models.GetStyle(id)
+	s, err := models.GetStyleFromAuthor(i, int(u.ID))
 	if err != nil {
-		args["Title"] = "Style not found"
-		return c.Render("err", args)
-	}
-
-	// Check if logged-in user matches style author.
-	if u.ID != s.UserID {
-		args["Title"] = "User and style author don't match"
-		return c.Render("err", args)
+		c.Locals("Title", "Style not found")
+		return c.Render("err", fiber.Map{})
 	}
 
 	s.Name = strings.TrimSpace(c.FormValue("name"))
@@ -78,14 +61,13 @@ func EditPost(c *fiber.Ctx) error {
 	s.Notes = strings.TrimSpace(c.FormValue("notes"))
 	s.Code = util.RemoveUpdateURL(c.FormValue("code"))
 	s.Category = strings.TrimSpace(c.FormValue("category"))
-	args["Style"] = s
+	c.Locals("Style", s)
 
 	m, msg, err := s.Validate(utils.Validate())
 	if err != nil {
-		args["Error"] = msg
-		args["err"] = m
-
-		return c.Render("style/edit", args)
+		c.Locals("Error", msg)
+		c.Locals("err", m)
+		return c.Status(fiber.StatusBadRequest).Render("style/edit", fiber.Map{})
 	}
 
 	var uc usercss.UserCSS
@@ -94,14 +76,14 @@ func EditPost(c *fiber.Ctx) error {
 		e := err.Error()
 		msg := strings.ToUpper(string(e[0])) + e[1:] + "."
 
-		args["Error"] = "Invalid source code."
-		args["errCode"] = msg
-		return c.Render("style/edit", args)
+		c.Locals("Error", "Invalid source code.")
+		c.Locals("errCode", msg)
+		return c.Render("style/edit", fiber.Map{})
 	}
 	if errs := uc.Validate(); errs != nil {
-		args["Error"] = "Missing mandatory fields in source code."
-		args["errors"] = errs
-		return c.Render("style/edit", args)
+		c.Locals("Error", "Missing mandatory fields in source code.")
+		c.Locals("errors", errs)
+		return c.Render("style/edit", fiber.Map{})
 	}
 
 	// Check for new preview image.
@@ -127,14 +109,14 @@ func EditPost(c *fiber.Ctx) error {
 	s.MirrorURL = strings.TrimSpace(c.FormValue("mirrorURL"))
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
-	args["Style"] = s // NOTE: Add new data.
+	c.Locals("Style", s) // NOTE: Add new data.
 
 	// TODO: Split updates into sections.
 	if err = models.SelectUpdateStyle(s); err != nil {
 		log.Database.Printf("Failed to update style %d: %s\n", s.ID, err)
-		args["Title"] = "Failed to update userstyle"
-		args["Error"] = "Failed to update style in database."
-		return c.Render("style/edit", args)
+		c.Locals("Title", "Failed to update userstyle")
+		c.Locals("Error", "Failed to update userstyle in database. Please try again.")
+		return c.Render("style/edit", fiber.Map{})
 	}
 
 	// TODO: Move to code section once we refactor this messy logic.

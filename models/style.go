@@ -190,13 +190,23 @@ func CheckDuplicateStyle(s *Style) error {
 	return nil
 }
 
-// GetStyle tries to fetch a userstyle from database.
+// GetStyle tries to fetch a userstyle.
 func GetStyle(id string) (Style, error) {
 	var s Style
 	err := db().
 		Select("styles.*, u.username").
 		Joins("JOIN users u ON u.id = styles.user_id").
 		First(&s, "styles.id = ?", id).Error
+	return s, err
+}
+
+// GetStyleFromAuthor tries to fetch a userstyle made by logged in user.
+func GetStyleFromAuthor(id, uid int) (Style, error) {
+	var s Style
+	err := db().
+		Select("styles.*, u.username").
+		Joins("JOIN users u ON u.id = styles.user_id").
+		First(&s, "styles.id = ? AND styles.user_id = ?", id, uid).Error
 	return s, err
 }
 
