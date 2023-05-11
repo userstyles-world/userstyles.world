@@ -170,6 +170,25 @@
 		</div>
 	</div>
 
+	<div class="ta:l">
+		<div class="checkbox iflex mb:m">
+			<input type="checkbox" name="importPrivate"
+				id="importPrivate" aria-describedby="importPrivate-hint"
+				{{ if .Style.ImportPrivate }}checked{{ end }}>
+			{{ template "partials/checkboxes" }}
+			<label for="importPrivate">Keep import URL private</label>
+		</div>
+	</div>
+	<div class="ta:l">
+		<div class="checkbox iflex mb:m">
+			<input type="checkbox" name="mirrorPrivate"
+				id="mirrorPrivate" aria-describedby="mirrorPrivate-hint"
+				{{ if .Style.MirrorPrivate }}checked{{ end }}>
+			{{ template "partials/checkboxes" }}
+			<label for="mirrorPrivate">Keep mirror URL private</label>
+		</div>
+	</div>
+
 	<button class="btn icon primary mt:m" type="submit">
 		{{ template "icons/save" }} Save changes
 	</button>

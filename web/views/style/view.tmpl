@@ -13,10 +13,10 @@
 		</p>
 	{{ else }}
 		{{ if .Style.Original }}
-			<p class="mb:m md">Imported from <code>{{ .Style.Original }}</code></p>
+			<p class="mb:m md">Imported{{ if .Style.ImportPrivate }} from <code>{{ .Style.Original }}</code>{{ end }}</p>
 		{{ end }}
 		{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
-			<p class="mb:m md">Mirrored from <code>{{ .Style.MirrorURL }}</code></p>
+			<p class="mb:m md">Mirrored{{ if .Style.MirrorPrivate }} from <code>{{ .Style.MirrorURL }}</code>{{ end }}</p>
 		{{ end }}
 	{{ end }}
 

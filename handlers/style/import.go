@@ -97,6 +97,9 @@ func ImportPost(c *fiber.Ctx) error {
 		}
 	}
 
+	s.ImportPrivate = c.FormValue("importPrivate") == "on"
+	s.MirrorPrivate = c.FormValue("mirrorPrivate") == "on"
+
 	// Enable code/meta mirroring.
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
