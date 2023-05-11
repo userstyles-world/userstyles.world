@@ -3,9 +3,11 @@ package models
 import (
 	stderrors "errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/vednoc/go-usercss-parser"
 	"gorm.io/gorm"
 
 	"userstyles.world/modules/config"
@@ -234,44 +236,57 @@ func (s *Style) SetPreview() {
 }
 
 var (
-	ErrStyleNoData = stderrors.New("incorrect userstyle data was entered")
-	ErrStyleAsErrs = stderrors.New("unexpected error during validation")
+	ErrStyleAsErrs   = stderrors.New("unexpected error during validation")
+	ErrStyleNoFields = stderrors.New("incorrect mandatory UserCSS fields")
+	ErrStyleNoGlobal = stderrors.New("bare global styles are forbidden")
+	ErrStyleNoCode   = stderrors.New("incorrect userstyle source code")
 )
 
 // Validate makes sure input data is correct.
-func (s Style) Validate(v *validator.Validate) (map[string]any, string, error) {
+func (s Style) Validate(v *validator.Validate, addPage bool) (map[string]any, error) {
+	m := make(map[string]any)
+
 	fields := []string{"Name", "Description", "Notes", "Category", "Code"}
 	err := v.StructPartial(s, fields...)
-	if err == nil {
-		return nil, "", nil
-	}
-
-	var errs validator.ValidationErrors
-	if ok := stderrors.As(err, &errs); !ok {
-		return nil, "Unexpected error during validation.", ErrStyleAsErrs
-	}
-
-	m := make(map[string]any, len(errs))
-	for _, e := range errs {
-		var msg string
-
-		switch e.Field() {
-		case "Name":
-			msg = "Name must be up to 50 characters."
-		case "Description":
-			msg = "Description must be up to 160 characters."
-		case "Notes":
-			msg = "Notes must be up to 50K characters."
-		case "Category":
-			msg = "Category must be up to 255 characters."
-		case "Code":
-			msg = "Code must be up to 10M characters."
+	if err != nil {
+		var errs validator.ValidationErrors
+		if ok := stderrors.As(err, &errs); !ok {
+			return nil, ErrStyleAsErrs
 		}
 
-		m[e.Field()] = msg
+		for _, e := range errs {
+			switch e.Field() {
+			case "Name":
+				m[e.Field()] = "Name must be up to 50 characters."
+			case "Description":
+				m[e.Field()] = "Description must be up to 160 characters."
+			case "Notes":
+				m[e.Field()] = "Notes must be up to 50K characters."
+			case "Category":
+				m[e.Field()] = "Category must be up to 255 characters."
+			case "Code":
+				m[e.Field()] = "Code must be up to 10M characters."
+			}
+		}
 	}
 
-	return m, "Incorrect userstyle data was entered. Please review the fields bellow.", ErrStyleNoData
+	// TODO: Improve in UserCSS parser.
+	var uc usercss.UserCSS
+	if err := uc.Parse(s.Code); err != nil {
+		msg := strings.ToUpper(string(err.Error()[0])) + err.Error()[1:] + "."
+		m["Code"] = msg
+		return m, ErrStyleNoCode
+	}
+	if errs := uc.Validate(); errs != nil {
+		m["UserCSS"] = errs
+		return m, ErrStyleNoFields
+	}
+	if addPage && len(uc.MozDocument) == 0 {
+		m["Stylus"] = "Your userstyle might be affected by a bug."
+		return m, ErrStyleNoGlobal
+	}
+
+	return m, err
 }
 
 // SetPreview will set preview image URL.

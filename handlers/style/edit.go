@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -63,27 +62,11 @@ func EditPost(c *fiber.Ctx) error {
 	s.Category = strings.TrimSpace(c.FormValue("category"))
 	c.Locals("Style", s)
 
-	m, msg, err := s.Validate(utils.Validate())
+	m, err := s.Validate(utils.Validate(), false)
 	if err != nil {
-		c.Locals("Error", msg)
 		c.Locals("err", m)
+		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")
 		return c.Status(fiber.StatusBadRequest).Render("style/edit", fiber.Map{})
-	}
-
-	var uc usercss.UserCSS
-	if err := uc.Parse(s.Code); err != nil {
-		// TODO: Fix this in UserCSS parser.
-		e := err.Error()
-		msg := strings.ToUpper(string(e[0])) + e[1:] + "."
-
-		c.Locals("Error", "Invalid source code.")
-		c.Locals("errCode", msg)
-		return c.Render("style/edit", fiber.Map{})
-	}
-	if errs := uc.Validate(); errs != nil {
-		c.Locals("Error", "Missing mandatory fields in source code.")
-		c.Locals("errors", errs)
-		return c.Render("style/edit", fiber.Map{})
 	}
 
 	// Check for new preview image.

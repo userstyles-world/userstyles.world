@@ -15,7 +15,7 @@
 			margin: 0 auto;
 			padding: 0;
 		}
-		.alert > .limit { max-width: 100% }
+		.alert > .limit { max-width: 100%; margin-bottom: 0 }
 		input, textarea { margin-bottom: 0.5rem !important }
 		label:not(:first-of-type) { margin-top: 1.5rem }
 		.shortTextarea { min-height: calc(3 * (0.875rem * 1.5)); height: unset i }
@@ -101,7 +101,7 @@
 		placeholder="{{ BaseCodeTemplate }}"
 	>{{ with .Style.Code }}{{ . }}{{ end }}</textarea>
 	{{ with .err.Code }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
-	{{ with .errors }}
+	{{ with .err.UserCSS }}
 		<div class="danger mb:s" role="alert">
 			<p>Please fix the following issue(s):</p>
 			<ul>
@@ -109,6 +109,10 @@
 			</ul>
 		</div>
 		<p>See <a href="https://github.com/openstyles/stylus/wiki/Writing-UserCSS">writing UserCSS</a> for more information.</p>
+	{{ end }}
+	{{ if .err.Stylus }}
+		<p class="danger" role="alert">Global userstyles without <b>@-moz-document</b> are forbidden.</p>
+		<p>Please visit <a href="/docs/faq#bad-style-format-error">FAQ page</a> to see how to work around it.</p>
 	{{ end }}
 
 	<button class="btn icon primary mt:m" type="submit">

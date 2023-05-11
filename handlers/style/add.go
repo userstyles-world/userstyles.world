@@ -8,7 +8,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
-	"github.com/vednoc/go-usercss-parser"
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
@@ -49,47 +48,23 @@ func CreatePost(c *fiber.Ctx) error {
 		Notes:       strings.TrimSpace(c.FormValue("notes")),
 		Homepage:    strings.TrimSpace(c.FormValue("homepage")),
 		License:     strings.TrimSpace(c.FormValue("license", "No License")),
+		Code:        strings.TrimSpace(util.RemoveUpdateURL(c.FormValue("code"))),
 		Category:    strings.TrimSpace(c.FormValue("category")),
 		UserID:      u.ID,
 	}
 	c.Locals("Style", s)
 
-	m, msg, err := s.Validate(utils.Validate())
+	m, err := s.Validate(utils.Validate(), true)
 	if err != nil {
-		c.Locals("Error", msg)
 		c.Locals("err", m)
+		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")
 		return c.Render("style/add", fiber.Map{})
-	}
-
-	s.Code = strings.TrimSpace(util.RemoveUpdateURL(c.FormValue("code")))
-
-	uc := new(usercss.UserCSS)
-	if err := uc.Parse(s.Code); err != nil {
-		// TODO: Fix this in UserCSS parser.
-		e := err.Error()
-		msg := strings.ToUpper(string(e[0])) + e[1:] + "."
-
-		c.Locals("Error", "Invalid source code.")
-		c.Locals("errCode", msg)
-		return c.Render("style/add", fiber.Map{})
-	}
-	if errs := uc.Validate(); errs != nil {
-		c.Locals("Error", "Missing mandatory fields in source code.")
-		c.Locals("errors", errs)
-		return c.Render("style/add", fiber.Map{})
-	}
-
-	// Prevent broken traditional userstyles.
-	// TODO: Remove a week or two after Stylus v1.5.20 is released.
-	if len(uc.MozDocument) == 0 {
-		c.Locals("Title", "Bad style format")
-		c.Locals("Stylus", "Your style is affected by a bug in Stylus integration.")
-		return c.Render("err", fiber.Map{})
 	}
 
 	// Prevent adding multiples of the same style.
 	err = models.CheckDuplicateStyle(s)
 	if err != nil {
+		c.Locals("Title", "Duplicate style")
 		return c.Render("err", fiber.Map{})
 	}
 
