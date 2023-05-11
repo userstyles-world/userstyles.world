@@ -4,7 +4,7 @@ userstyles, and a replacement for =UserStyles.org=, made by the userstyles
 community.
 
 ** Features
-Features are implemented as they are needed. Visit our [[https://github.com/userstyles-world/userstyles.world/projects/1][public roadmap]] to see
+Features are implemented as they are needed. Visit our [[https://github.com/orgs/userstyles-world/projects/1][public roadmap]] to see
 what we're working on, and feel free to open an issue to request new features.
 
 *** Core User functionality:
