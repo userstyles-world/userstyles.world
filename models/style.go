@@ -337,7 +337,7 @@ func (s *APIStyle) SetPreview() {
 func SelectUpdateStyle(s Style) error {
 	fields := []string{"name", "description", "notes", "code", "homepage",
 		"license", "category", "preview", "preview_version", "mirror_url",
-		"mirror_code", "mirror_meta"}
+		"mirror_code", "mirror_meta", "import_private", "mirror_private"}
 
 	return db().
 		Model(modelStyle).
