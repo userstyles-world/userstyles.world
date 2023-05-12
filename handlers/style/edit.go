@@ -24,13 +24,13 @@ func EditGet(c *fiber.Ctx) error {
 	i, err := c.ParamsInt("id")
 	if err != nil || i < 1 {
 		c.Locals("Title", "Invalid style ID")
-		return c.Render("err", fiber.Map{})
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 
 	s, err := models.GetStyleFromAuthor(i, int(u.ID))
 	if err != nil {
 		c.Locals("Title", "Style not found")
-		return c.Render("err", fiber.Map{})
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 	c.Locals("Style", s)
 
@@ -45,14 +45,14 @@ func EditPost(c *fiber.Ctx) error {
 	i, err := c.ParamsInt("id")
 	if err != nil || i < 1 {
 		c.Locals("Title", "Invalid style ID")
-		return c.Render("err", fiber.Map{})
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 	id := c.Params("id")
 
 	s, err := models.GetStyleFromAuthor(i, int(u.ID))
 	if err != nil {
 		c.Locals("Title", "Style not found")
-		return c.Render("err", fiber.Map{})
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
 	s.Name = strings.TrimSpace(c.FormValue("name"))
@@ -96,7 +96,7 @@ func EditPost(c *fiber.Ctx) error {
 		log.Database.Printf("Failed to update style %d: %s\n", s.ID, err)
 		c.Locals("Title", "Failed to update userstyle")
 		c.Locals("Error", "Failed to update userstyle in database. Please try again.")
-		return c.Render("style/edit", fiber.Map{})
+		return c.Status(fiber.StatusBadRequest).Render("style/edit", fiber.Map{})
 	}
 
 	// TODO: Move to code section once we refactor this messy logic.

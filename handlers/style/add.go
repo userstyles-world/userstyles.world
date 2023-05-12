@@ -58,21 +58,21 @@ func CreatePost(c *fiber.Ctx) error {
 	if err != nil {
 		c.Locals("err", m)
 		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")
-		return c.Render("style/add", fiber.Map{})
+		return c.Status(fiber.StatusBadRequest).Render("style/add", fiber.Map{})
 	}
 
 	// Prevent adding multiples of the same style.
 	err = models.CheckDuplicateStyle(s)
 	if err != nil {
 		c.Locals("Title", "Duplicate style")
-		return c.Render("err", fiber.Map{})
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 
 	s, err = models.CreateStyle(s)
 	if err != nil {
 		log.Warn.Println("Failed to create style:", err)
 		c.Locals("Title", "Internal server error")
-		return c.Render("err", fiber.Map{})
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 
 	// Check preview image.
