@@ -7,18 +7,26 @@
 		<span class="fg:4"> by {{ .Style.Username }}</span>
 	</h1>
 
-	{{ if .Style.CompareMirrorURL }}
-		<p class="mb:m md">
-			Imported and mirrored from <code>{{ .Style.Original }}</code>
-		</p>
-	{{ else }}
-		{{ if .Style.Original }}
-			<p class="mb:m md">Imported{{ if .Style.ImportPrivate }} from <code>{{ .Style.Original }}</code>{{ end }}</p>
+	<p class="mb:m md">
+		<!-- There is wired distribuion across lines not to get spaces before punctuation marks. (Imported , Mirrored .) -->
+		{{ if and .Style.CompareMirrorURL (not (or .Style.ImportPrivate .Style.MirrorPrivate)) }}
+			Imported and mirrored from <code>{{ .Style.Original }}</code>.
+		{{ else if or .Style.ImportPrivate .Style.MirrorPrivate }}
+			{{ if .Style.Original }}
+				Imported{{ if not .Style.ImportPrivate }} from <code>{{ .Style.Original }}</code>{{ end }}{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }},{{ else }}.{{ end }}
+			{{ end }}
+			{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
+				Mirrored{{ if not .Style.MirrorPrivate }} from <code>{{ .Style.MirrorURL }}</code>{{ end }}.
+			{{ end }}
+		{{ else }}
+			{{ if .Style.Original }}
+				Imported from <code>{{ .Style.Original }}</code>{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }},{{ else }}.{{ end }}
+			{{ end }}
+			{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
+				Mirrored from <code>{{ .Style.MirrorURL }}</code>.
+			{{ end }}
 		{{ end }}
-		{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
-			<p class="mb:m md">Mirrored{{ if .Style.MirrorPrivate }} from <code>{{ .Style.MirrorURL }}</code>{{ end }}</p>
-		{{ end }}
-	{{ end }}
+	</p>
 
 	<div class="card">
 		<div class="screenshot">

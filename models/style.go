@@ -346,13 +346,12 @@ func SelectUpdateStyle(s Style) error {
 		Updates(s).Error
 }
 
-// CompareMirrorURL will return true if a style is being imported and mirrored, and both URLs are public or private
-// from the same URL.
+// CompareMirrorURL will return true if a style is being imported and mirrored,
+// and both URLs are public or private from the same URL.
 func (s *APIStyle) CompareMirrorURL() bool {
 	if s.Original != "" &&
 		(s.MirrorCode || s.MirrorMeta) &&
-		(s.MirrorURL == "" || s.MirrorURL == s.Original) { /*&&
-		!(s.ImportPrivate || s.MirrorPrivate)*/
+		(s.MirrorURL == "" || s.MirrorURL == s.Original) {
 		return true
 	}
 
