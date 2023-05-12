@@ -170,15 +170,19 @@
 		</div>
 	</div>
 
-	<div class="ta:l">
-		<div class="checkbox iflex mb:m">
-			<input type="checkbox" name="importPrivate"
-				id="importPrivate" aria-describedby="importPrivate-hint"
-				{{ if .Style.ImportPrivate }}checked{{ end }}>
-			{{ template "partials/checkboxes" }}
-			<label for="importPrivate">Keep import URL private</label>
+	<!-- no reason to show this for styles which don't have import url -->
+	{{ if .Style.Original }}
+		<div class="ta:l">
+			<div class="checkbox iflex mb:m">
+				<input type="checkbox" name="importPrivate"
+					id="importPrivate" aria-describedby="importPrivate-hint"
+					{{ if .Style.ImportPrivate }}checked{{ end }}>
+				{{ template "partials/checkboxes" }}
+				<label for="importPrivate">Keep import URL private</label>
+			</div>
 		</div>
-	</div>
+	{{ end }}
+
 	<div class="ta:l">
 		<div class="checkbox iflex mb:m">
 			<input type="checkbox" name="mirrorPrivate"
