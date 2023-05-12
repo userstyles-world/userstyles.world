@@ -25,6 +25,7 @@
 		type="text" name="name" id="name" value="{{ .Style.Name }}"
 		placeholder="e.g. UserStyles.world tweaks">
 	{{ with .err.Name }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	{{ with .dupName }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 
 	<label for="description">Description</label>
 	<i class="fg:3" id="description-hint">Short description of what your userstyle does in plain text. Will be used for SEO and rich embeds.</i>

@@ -74,6 +74,14 @@ func EditPost(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).Render("style/edit", fiber.Map{})
 	}
 
+	// Prevent adding multiples of the same style.
+	err = models.CheckDuplicateStyle(&s)
+	if err != nil {
+		c.Locals("dupName", "Duplicate userstyle names aren't allowed.")
+		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")
+		return c.Status(fiber.StatusBadRequest).Render("style/edit", fiber.Map{})
+	}
+
 	// Check for new preview image.
 	file, _ := c.FormFile("preview")
 	version := strconv.Itoa(s.PreviewVersion + 1)
@@ -94,7 +102,6 @@ func EditPost(c *fiber.Ctx) error {
 	// TODO: Split updates into sections.
 	if err = models.SelectUpdateStyle(s); err != nil {
 		log.Database.Printf("Failed to update style %d: %s\n", s.ID, err)
-		c.Locals("Title", "Failed to update userstyle")
 		c.Locals("Error", "Failed to update userstyle in database. Please try again.")
 		return c.Status(fiber.StatusBadRequest).Render("style/edit", fiber.Map{})
 	}

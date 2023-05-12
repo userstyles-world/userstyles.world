@@ -64,15 +64,16 @@ func CreatePost(c *fiber.Ctx) error {
 	// Prevent adding multiples of the same style.
 	err = models.CheckDuplicateStyle(s)
 	if err != nil {
-		c.Locals("Title", "Duplicate style")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+		c.Locals("dupName", "Duplicate userstyle names aren't allowed.")
+		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")
+		return c.Status(fiber.StatusBadRequest).Render("style/add", fiber.Map{})
 	}
 
 	s, err = models.CreateStyle(s)
 	if err != nil {
 		log.Warn.Println("Failed to create style:", err)
-		c.Locals("Title", "Internal server error")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+		c.Locals("Error", "Failed to add userstyle to database. Please try again.")
+		return c.Status(fiber.StatusBadRequest).Render("style/add", fiber.Map{})
 	}
 
 	// Check preview image.

@@ -183,13 +183,22 @@ func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
 }
 
 func CheckDuplicateStyle(s *Style) error {
-	q := "styles.name = ? and styles.user_id = ?"
+	var i int64
+	err := db().
+		Debug().
+		Model(modelStyle).
+		Where("name = ? AND user_id = ?", s.Name, s.UserID).
+		Count(&i).
+		Error
 
-	if err := db().First(s, q, s.Name, s.UserID).Error; err == nil {
+	switch {
+	case i > 0:
 		return errors.ErrDuplicateStyle
+	case err != nil:
+		return err
+	default:
+		return nil
 	}
-
-	return nil
 }
 
 // GetStyle tries to fetch a userstyle.
