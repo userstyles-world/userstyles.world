@@ -60,6 +60,11 @@ func EditPost(c *fiber.Ctx) error {
 	s.Notes = strings.TrimSpace(c.FormValue("notes"))
 	s.Code = util.RemoveUpdateURL(c.FormValue("code"))
 	s.Category = strings.TrimSpace(c.FormValue("category"))
+	s.Homepage = strings.TrimSpace(c.FormValue("homepage"))
+	s.License = strings.TrimSpace(c.FormValue("license", "No License"))
+	s.MirrorURL = strings.TrimSpace(c.FormValue("mirrorURL"))
+	s.MirrorCode = c.FormValue("mirrorCode") == "on"
+	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 	c.Locals("Style", s)
 
 	m, err := s.Validate(utils.Validate(), false)
@@ -85,14 +90,6 @@ func EditPost(c *fiber.Ctx) error {
 		// to set "Preview image URL" field to be empty in order to remove it.
 		s.Preview = ""
 	}
-
-	// Update the other fields with new data.
-	s.Homepage = strings.TrimSpace(c.FormValue("homepage"))
-	s.License = strings.TrimSpace(c.FormValue("license", "No License"))
-	s.MirrorURL = strings.TrimSpace(c.FormValue("mirrorURL"))
-	s.MirrorCode = c.FormValue("mirrorCode") == "on"
-	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
-	c.Locals("Style", s) // NOTE: Add new data.
 
 	// TODO: Split updates into sections.
 	if err = models.SelectUpdateStyle(s); err != nil {
