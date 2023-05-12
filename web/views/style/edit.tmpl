@@ -170,10 +170,13 @@
 		</div>
 	</div>
 
+
+	<p class="mb:s fg:3" id="privateURLs-hint">Check if you don't want these URLs to be shown on the style's page.</p>
+	
 	<!-- no reason to show this for styles which don't have import url -->
 	{{ if .Style.Original }}
 		<div class="ta:l">
-			<div class="checkbox iflex mb:m">
+			<div class="checkbox iflex">
 				<input type="checkbox" name="importPrivate"
 					id="importPrivate" aria-describedby="importPrivate-hint"
 					{{ if .Style.ImportPrivate }}checked{{ end }}>
