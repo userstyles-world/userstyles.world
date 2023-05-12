@@ -81,5 +81,5 @@ func DeletePost(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to delete style %d from index: %s", s.ID, err)
 	}
 
-	return c.Redirect("/account", fiber.StatusSeeOther)
+	return c.Redirect("/user/"+u.Username, fiber.StatusSeeOther)
 }
