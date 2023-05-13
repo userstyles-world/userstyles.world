@@ -15,6 +15,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
+	"userstyles.world/utils"
 )
 
 func ImportGet(c *fiber.Ctx) error {
@@ -28,21 +29,22 @@ func ImportGet(c *fiber.Ctx) error {
 
 func ImportPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	r := c.FormValue("import")
-	s := new(models.Style)
 
 	// Check if someone tries submitting local userstyle.
-	if strings.Contains(r, "file:///") {
+	origin := strings.TrimSpace(c.FormValue("import"))
+	if strings.Contains(origin, "file:///") {
 		return c.Render("err", fiber.Map{
 			"Title": "Can't import local userstyles",
 			"User":  u,
 		})
 	}
 
-	// Check if userstyle is imported from USo-archive.
-	if archive.IsFromArchive(r) {
+	var s *models.Style
+	switch {
+	// Import from USo-archive.
+	case archive.IsFromArchive(origin):
 		var err error
-		r, err = archive.RewriteURL(r)
+		origin, err = archive.RewriteURL(origin)
 		if err != nil {
 			return c.Render("err", fiber.Map{
 				"Title": err,
@@ -50,26 +52,22 @@ func ImportPost(c *fiber.Ctx) error {
 			})
 		}
 
-		s, err = archive.ImportFromArchive(r, *u)
+		s, err = archive.ImportFromArchive(origin, *u)
 		if err != nil {
 			return c.Render("err", fiber.Map{
 				"Title": err,
 				"User":  u,
 			})
 		}
-	} else {
+
+	// Import from anywhere.
+	case origin != "":
 		// Get userstyle.
 		uc := new(usercss.UserCSS)
-		if err := uc.ParseURL(r); err != nil {
+		if err := uc.ParseURL(origin); err != nil {
 			log.Warn.Println("Failed to parse userstyle from URL:", err.Error())
 			return c.Render("err", fiber.Map{
 				"Title": "Failed to fetch external userstyle",
-				"User":  u,
-			})
-		}
-		if errs := uc.Validate(); errs != nil {
-			return c.Render("err", fiber.Map{
-				"Title": "Failed to validate external userstyle",
 				"User":  u,
 			})
 		}
@@ -82,15 +80,40 @@ func ImportPost(c *fiber.Ctx) error {
 		s.Description = uc.Description
 		s.Homepage = uc.HomepageURL
 		s.Category = strings.TrimSpace(c.FormValue("category", "unset"))
-		s.Original = r
+		s.Original = origin
+
+	// Validation stage.
+	default:
+		s = &models.Style{
+			Name:        strings.TrimSpace(c.FormValue("name")),
+			Description: strings.TrimSpace(c.FormValue("description")),
+			Notes:       strings.TrimSpace(c.FormValue("notes")),
+			Homepage:    strings.TrimSpace(c.FormValue("homepage")),
+			License:     strings.TrimSpace(c.FormValue("license", "No License")),
+			Code:        strings.TrimSpace(util.RemoveUpdateURL(c.FormValue("code"))),
+			Category:    strings.TrimSpace(c.FormValue("category")),
+			Original:    c.FormValue("original"),
+			UserID:      u.ID,
+		}
 	}
 
 	// Enable code/meta mirroring.
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 
+	m, err := s.Validate(utils.Validate(), true)
+	if err != nil {
+		return c.Render("style/import", fiber.Map{
+			"Title": "Import userstyle",
+			"User":  u,
+			"Style": s,
+			"err":   m,
+			"Error": "Incorrect userstyle data was entered. Please review the fields bellow.",
+		})
+	}
+
 	// Prevent importing multiples of the same style.
-	err := models.CheckDuplicateStyle(s)
+	err = models.CheckDuplicateStyle(s)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": err,
