@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ohler55/ojg/oj"
-	"github.com/vednoc/go-usercss-parser"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
@@ -46,9 +45,8 @@ var JSONParser = &oj.Parser{Reuse: true}
 
 func StylePost(c *fiber.Ctx) error {
 	u, _ := User(c)
-	sStyleID := c.Params("id")
 
-	styleID, err := strconv.Atoi(sStyleID)
+	id, err := c.ParamsInt("id")
 	if err != nil {
 		return c.Status(403).
 			JSON(fiber.Map{
@@ -63,14 +61,14 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
-	if u.StyleID != 0 && uint(styleID) != u.StyleID {
+	if u.StyleID != 0 && uint(id) != u.StyleID {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error: This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
 			})
 	}
 
-	style, err := models.GetStyleByID(sStyleID)
+	style, err := models.GetStyleByID(c.Params("id"))
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -97,29 +95,21 @@ func StylePost(c *fiber.Ctx) error {
 	postStyle.ID = style.ID
 	postStyle.UserID = u.ID
 	postStyle.Featured = style.Featured
+	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
-	uc := new(usercss.UserCSS)
-	if err := uc.Parse(postStyle.Code); err != nil {
-		return c.Status(403).JSON(fiber.Map{"data": "Error: " + err.Error()})
-	}
-	if errs := uc.Validate(); errs != nil {
-		var errors string
-		for i := 0; i < len(errs); i++ {
-			errors += errs[i].Code.Error() + ";"
+	_, err = postStyle.Validate(utils.Validate(), true)
+	if err != nil {
+		var msg string
+		switch err {
+		case models.ErrStyleNoCode:
+			msg = "Error: Userstyle source code is incorrect."
+		case models.ErrStyleNoFields:
+			msg = "Error: Userstyle is missing mandatory fields. Make sure you have name, namespace, and version fields."
+		case models.ErrStyleNoGlobal:
+			msg = "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)"
 		}
-		return c.Status(403).
-			JSON(fiber.Map{
-				"data": "Error: " + errors,
-			})
-	}
 
-	// Prevent broken traditional userstyles.
-	// TODO: Remove a week or two after Stylus v1.5.20 is released.
-	if len(uc.MozDocument) == 0 {
-		return c.Status(403).
-			JSON(fiber.Map{
-				"data": "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)",
-			})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
 	}
 
 	err = models.UpdateStyle(&postStyle)
@@ -132,14 +122,12 @@ func StylePost(c *fiber.Ctx) error {
 
 	// Evict from LRU cache when source code is updated.
 	if style.Code != postStyle.Code {
-		cache.LRU.Remove(sStyleID)
+		cache.LRU.Remove(c.Params("id"))
 	}
 
-	go func(style *models.Style) {
-		if err = search.IndexStyle(style.ID); err != nil {
-			log.Warn.Printf("Failed to re-index style %d: %s\n", style.ID, err)
-		}
-	}(&postStyle)
+	if err = search.IndexStyle(postStyle.ID); err != nil {
+		log.Warn.Printf("Failed to re-index style %d: %s\n", postStyle.ID, err)
+	}
 
 	return c.JSON(fiber.Map{
 		"data": "Successfully edited style.",
@@ -222,40 +210,24 @@ func NewStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	if postStyle.Name == "" || postStyle.Code == "" || postStyle.Description == "" || postStyle.Category == "" {
-		return c.Status(403).
-			JSON(fiber.Map{
-				"data": "Error: Make sure to fill out fields.",
-			})
-	}
-	postStyle.Featured = false
 	postStyle.UserID = u.ID
-
-	uc := new(usercss.UserCSS)
-	if err := uc.Parse(postStyle.Code); err != nil {
-		return c.Status(403).JSON(fiber.Map{"data": "Error: " + err.Error()})
-	}
-	if errs := uc.Validate(); errs != nil {
-		var errors string
-		for i := 0; i < len(errs); i++ {
-			errors += errs[i].Code.Error() + ";"
-		}
-		return c.Status(403).
-			JSON(fiber.Map{
-				"data": "Error:" + errors,
-			})
-	}
-
-	// Prevent broken traditional userstyles.
-	// TODO: Remove a week or two after Stylus v1.5.20 is released.
-	if len(uc.MozDocument) == 0 {
-		return c.Status(403).
-			JSON(fiber.Map{
-				"data": "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)",
-			})
-	}
-
+	postStyle.Featured = false
 	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
+
+	_, err = postStyle.Validate(utils.Validate(), true)
+	if err != nil {
+		var msg string
+		switch err {
+		case models.ErrStyleNoCode:
+			msg = "Error: Userstyle source code is incorrect."
+		case models.ErrStyleNoFields:
+			msg = "Error: Userstyle is missing mandatory fields. Make sure you have name, namespace, and version fields."
+		case models.ErrStyleNoGlobal:
+			msg = "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)"
+		}
+
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
+	}
 
 	// Prevent adding multiples of the same style.
 	err = models.CheckDuplicateStyle(&postStyle)
