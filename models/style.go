@@ -185,14 +185,13 @@ func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
 func CheckDuplicateStyle(s *Style) error {
 	var i int64
 	err := db().
-		Debug().
 		Model(modelStyle).
 		Where("name = ? AND user_id = ?", s.Name, s.UserID).
 		Count(&i).
 		Error
 
 	switch {
-	case i > 0:
+	case i > 1:
 		return errors.ErrDuplicateStyle
 	case err != nil:
 		return err
