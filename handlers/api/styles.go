@@ -97,18 +97,8 @@ func StylePost(c *fiber.Ctx) error {
 	postStyle.Featured = style.Featured
 	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
-	_, err = postStyle.Validate(utils.Validate(), true)
+	msg, err := postStyle.ValidateCode(utils.Validate(), true)
 	if err != nil {
-		var msg string
-		switch err {
-		case models.ErrStyleNoCode:
-			msg = "Error: Userstyle source code is incorrect."
-		case models.ErrStyleNoFields:
-			msg = "Error: Userstyle is missing mandatory fields. Make sure you have name, namespace, and version fields."
-		case models.ErrStyleNoGlobal:
-			msg = "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)"
-		}
-
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
 	}
 
@@ -214,18 +204,8 @@ func NewStyle(c *fiber.Ctx) error {
 	postStyle.Featured = false
 	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
-	_, err = postStyle.Validate(utils.Validate(), true)
+	msg, err := postStyle.ValidateCode(utils.Validate(), true)
 	if err != nil {
-		var msg string
-		switch err {
-		case models.ErrStyleNoCode:
-			msg = "Error: Userstyle source code is incorrect."
-		case models.ErrStyleNoFields:
-			msg = "Error: Userstyle is missing mandatory fields. Make sure you have name, namespace, and version fields."
-		case models.ErrStyleNoGlobal:
-			msg = "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)"
-		}
-
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
 	}
 

@@ -31,11 +31,11 @@ const onMessage = (ev: MessageEvent<any>) => {
                 return;
             }
             fillInformationOnForm('name', data['name']);
-            const metaData = data['metadata'];
-            if (metaData) {
-                fillInformationOnForm('description', metaData['description']);
-                fillInformationOnForm('license', metaData['license']);
-                fillInformationOnForm('homepage', metaData['homepage']);
+            fillInformationOnForm('description', data['description']);
+            const uc = data['usercssData'];
+            if (uc) {
+                fillInformationOnForm('homepage', uc['homepageURL']);
+                fillInformationOnForm('license', uc['license']);
             }
             handleSourceCode(data['sourceCode']);
         }

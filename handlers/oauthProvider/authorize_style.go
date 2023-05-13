@@ -182,10 +182,10 @@ func OAuthStyleNewPost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	return c.Render("style/create", fiber.Map{
+	return c.Render("style/add", fiber.Map{
 		"Title":       "Add userstyle",
 		"User":        u,
-		"Method":      "add_api",
+		"Method":      "api",
 		"OAuthID":     oauthID,
 		"SecureToken": secureToken,
 	})

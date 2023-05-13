@@ -186,12 +186,12 @@ func CheckDuplicateStyle(s *Style) error {
 	var i int64
 	err := db().
 		Model(modelStyle).
-		Where("name = ? AND user_id = ?", s.Name, s.UserID).
+		Where("name = ? AND user_id = ? AND id != ?", s.Name, s.UserID, s.ID).
 		Count(&i).
 		Error
 
 	switch {
-	case i > 1:
+	case i > 0:
 		return errors.ErrDuplicateStyle
 	case err != nil:
 		return err
@@ -295,6 +295,23 @@ func (s Style) Validate(v *validator.Validate, addPage bool) (map[string]any, er
 	}
 
 	return m, err
+}
+
+// ValidateCode makes sure source code is correct.
+func (s Style) ValidateCode(v *validator.Validate, addPage bool) (string, error) {
+	// TODO: Improve in UserCSS parser.
+	var uc usercss.UserCSS
+	if err := uc.Parse(s.Code); err != nil {
+		return "Error: Userstyle source code is incorrect.", ErrStyleNoCode
+	}
+	if errs := uc.Validate(); errs != nil {
+		return "Error: Source code is missing mandatory fields: name, namespace, and/or version.", ErrStyleNoFields
+	}
+	if addPage && len(uc.MozDocument) == 0 {
+		return "Error: Bad style format (visit https://userstyles.world/docs/faq#bad-style-format-error)", ErrStyleNoGlobal
+	}
+
+	return "", nil
 }
 
 // SetPreview will set preview image URL.
