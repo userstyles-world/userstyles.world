@@ -88,7 +88,7 @@
 								data-tooltip="Mirror your userstyle. You can do this once per hour."
 							>{{ template "icons/refresh" }} Mirror</a>
 						</li>
-                        <li class="Dropdown-divider" role="separator"></li>
+						<li class="Dropdown-divider" role="separator"></li>
 					{{ end }}
 					<li><a href="/delete/{{ .Style.ID }}" class="danger">{{ template "icons/trash" }} Delete</a></li>
 				</ul>
@@ -108,18 +108,6 @@
 				class="btn icon"
 			>{{ template "icons/home" }} Homepage</a>
 		{{ end }}
-		<a
-			target="_blank"
-			rel="noopener"
-			href="/api/style/{{ .Style.ID }}.user.css"
-			id="install" class="btn icon primary"
-		>{{ template "icons/download" }} Install</a>
-		<a
-			target="_blank"
-			rel="noopener"
-			href="https://github.com/openstyles/stylus/#readme"
-			id="stylus" class="btn icon stylus"
-		>{{ template "icons/brush" }} Get Stylus</a>
 
 		{{ if ne .Style.UserID .User.ID }}
 			<a
@@ -132,8 +120,21 @@
 					rel="noopener"
 					href="/styles/review/{{ $.Style.ID }}"
 				{{ end }}
-			>Write a review</a>
+			>{{ template "icons/edit" }} Write a review</a>
 		{{ end }}
+
+		<a
+			target="_blank"
+			rel="noopener"
+			href="/api/style/{{ .Style.ID }}.user.css"
+			id="install" class="btn icon primary"
+		>{{ template "icons/download" }} Install</a>
+		<a
+			target="_blank"
+			rel="noopener"
+			href="https://github.com/openstyles/stylus/#readme"
+			id="stylus" class="btn icon stylus"
+		>{{ template "icons/brush" }} Get Stylus</a>
 	</div>
 </section>
 
