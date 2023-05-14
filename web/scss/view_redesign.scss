@@ -1,5 +1,6 @@
 [data-flags*="view_redesign"] {
 	main {
+		padding: 0 1rem;
 		max-width: var(--layout-max-width);
 		display: grid !important;
 		grid-template-columns: 50%;
@@ -15,8 +16,7 @@
 			"reviews reviews";
 		gap: 1rem;
 
-		@media (max-width: 1551.98px) {
-			padding: 0 1rem;
+		@media (max-width: 1279.98px) {
 			grid-template-columns: 1fr;
 			grid-template-areas:
 				"preview" "actions" "details" "stats"
@@ -44,7 +44,7 @@
 		pre { padding: 0 }
 		div { border: none }
 
-		@media (min-width: 1552px) {
+		@media (min-width: 1280px) {
 			display: grid;
 			grid-template-rows: auto auto 1fr;
 			grid-template-areas: "title" "mark" "code";
