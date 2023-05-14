@@ -7,7 +7,7 @@
 
 	gap: 1rem;
 	display: flex;
-	@media screen and (min-width: 840px) {
+	@media screen and (min-width: 888px) {
 		overflow: auto;
 		position: fixed;
 		top: 0;
@@ -18,7 +18,7 @@
 		border-right: 1px solid var(--bg-3);
 	}
 
-	@media screen and (max-width: 839.98px) {
+	@media screen and (max-width: 887.98px) {
 		border-bottom: 1px solid var(--bg-3);
 	}
 
@@ -100,7 +100,7 @@
 	display: flex;
 	flex-flow: row wrap;
 
-	@media screen and (min-width: 840px) {
+	@media screen and (min-width: 888px) {
 		padding-left: var(--sidebar-width);
 	}
 
@@ -108,7 +108,7 @@
 		flex-flow: column wrap;
 	}
 
-	@media screen and (min-width: 840px) {
+	@media screen and (min-width: 888px) {
 		footer {
 			width: 100%;
 			background-color: var(--bg-1);
@@ -116,7 +116,7 @@
 	}
 }
 
-@media screen and (min-width: 840px) {
+@media screen and (min-width: 888px) {
 	// TODO: This has to go.
 	#navbar .Dropdown {
 		&, > ul, &:hover > ul, &:focus-within > ul {
@@ -138,7 +138,7 @@
 	}
 }
 
-@media screen and (max-width: 839.98px) {
+@media screen and (max-width: 887.98px) {
 	// TODO: This has to go.
 	#navbar .menu {
 		display: none;

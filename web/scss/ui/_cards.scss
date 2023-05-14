@@ -117,3 +117,24 @@
         .col { flex-basis: 100% }
     }
 }
+
+[data-flags*="sidebar"] {
+	.grid.grid-2 .col {
+		flex-basis: calc(100% / 2 - 1rem);
+		@media screen and (max-width: 903.98px) {
+			flex-basis: 100%;
+		}
+	}
+
+	.grid .col {
+		@media screen and (max-width: 1519.98px) {
+			flex-basis: calc(100% / 3 - 1rem);
+		}
+		@media screen and (max-width: 1203.98px) {
+			flex-basis: calc(100% / 2 - 1rem);
+		}
+		@media screen and (max-width: 647.98px) {
+			flex-basis: 100%;
+		}
+	}
+}
