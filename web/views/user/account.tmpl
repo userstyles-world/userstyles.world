@@ -254,7 +254,11 @@
 					name="autofocusFlag" id="autofocusFlag"
 					{{ if .flags.SearchAutofocus }}checked{{ end }}>
 				{{ template "partials/checkboxes" }}
-				<label for="autofocusFlag">Enable search autofocus</label>
+				<label for="autofocusFlag">Enable search autofocus
+					<div
+						data-tooltip="You can start typing immediately on the search page. Works best with sidebar navigation.">
+						{{ template "icons/info" }}</div>
+				</label>
 			</div>
 		</div>
 		<div>
