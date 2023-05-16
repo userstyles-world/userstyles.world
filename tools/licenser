@@ -9,17 +9,15 @@ cache=$(go env GOMODCACHE)
 gomod="${root}/go.mod"
 packages=$(sed -n '/^\t/,//{ s|\t\(\S\+\)\ \(v\S\+\).*\?|\1\@\2|;p }' "$gomod")
 
-# Normalize paths.
-packages=$(echo "$packages" | tr '[:upper:]' '[:lower:]')
-
 # Make output directory.
 content="${root}/web/static/license"
 mkdir -p "$content"
 
 # Scrape licenses.
 for package in $packages; do
-    name="${package%@*}"
-    path="${content}/$(echo "$name" | sed 's|/|-|g').txt"
+    name=$(echo "$package" | tr '[:upper:]' '[:lower:]')
+    package=$(echo "$package" | sed 's|\([A-Z]\)|!\L\1|g')
+    path="${content}/$(echo "${name%@*}" | sed 's|/|-|g').txt"
 
     for f in "license" "license.*" "copying"; do
         if find "$cache/$package" -iname "$f" -exec cp -f {} "$path" \;; then
