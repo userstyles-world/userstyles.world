@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+set -eu
+
+root="$(git rev-parse --show-toplevel)"
+cache=$(go env GOMODCACHE)
+
+# Scrape packages.
+gomod="${root}/go.mod"
+packages=$(sed -n '/^\t/,//{ s|\t\(\S\+\)\ \(v\S\+\).*\?|\1\@\2|;p }' "$gomod")
+
+# Normalize paths.
+packages=$(echo "$packages" | tr '[:upper:]' '[:lower:]')
+
+# Make output directory.
+content="${root}/web/static/license"
+mkdir -p "$content"
+
+# Scrape licenses.
+for package in $packages; do
+    name="${package%@*}"
+    path="${content}/$(echo "$name" | sed 's|/|-|g').txt"
+    if find "$cache/$package" -iname "license" -exec cp -f {} "$path" \;; then
+        printf "* [%s](/license/%s)\n" "$name" "${path##*/}"
+    fi
+done
