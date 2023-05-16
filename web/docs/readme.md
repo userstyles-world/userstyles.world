@@ -14,4 +14,4 @@ Here you can find the index for all of the internal documentation.
 - [Content Guidelines](/docs/content-guidelines "Content Guidelines")
 - [Security Policy](/docs/security "Security page")
 - [Cryptographic usage](/docs/crypto "Cryptographic page")
-- [Open Source Licenses](/docs/licenses "Licenses page") <!-- order? -->
+- [Third-party Licenses](/docs/licenses "Third-party licenses page")
