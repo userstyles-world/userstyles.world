@@ -30,11 +30,11 @@ type Style struct {
 	UserID         uint `gorm:"index"`
 	Archived       bool `gorm:"default:false"`
 	Featured       bool `gorm:"default:false"`
-	ImportPrivate  bool `gorm:"default:false"`
-	MirrorPrivate  bool `gorm:"default:false"`
 	MirrorCode     bool `gorm:"default:false"`
 	MirrorMeta     bool `gorm:"default:false"`
 	PreviewVersion int  `gorm:"default:0"`
+	ImportPrivate  bool `gorm:"default:false"`
+	MirrorPrivate  bool `gorm:"default:false"`
 }
 
 type APIStyle struct {
@@ -55,12 +55,12 @@ type APIStyle struct {
 	UserID         uint      `json:"user_id"`
 	ID             uint      `json:"id"`
 	Featured       bool      `json:"-"`
-	ImportPrivate  bool      `json:"-"`
-	MirrorPrivate  bool      `json:"-"`
 	MirrorCode     bool      `json:"-"`
 	MirrorMeta     bool      `json:"-"`
 	Archived       bool      `json:"-"`
 	PreviewVersion int       `json:"-"`
+	ImportPrivate  bool      `json:"-"`
+	MirrorPrivate  bool      `json:"-"`
 }
 
 type StyleSiteMap struct {
