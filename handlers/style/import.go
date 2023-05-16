@@ -39,7 +39,7 @@ func ImportPost(c *fiber.Ctx) error {
 		})
 	}
 
-	var s *models.Style
+	s := new(models.Style)
 	switch {
 	// Import from USo-archive.
 	case archive.IsFromArchive(origin):
