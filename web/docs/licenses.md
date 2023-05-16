@@ -1,8 +1,8 @@
 ---
-Title: Open Source Licenses
+Title: Third-party Licenses
 ---
 
-# Open Source Licenses
+# Third-party Licenses
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
