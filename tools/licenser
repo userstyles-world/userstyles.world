@@ -21,9 +21,10 @@ for package in $packages; do
 
     for f in "license" "license.*" "copying"; do
         if find "$cache/$package" -iname "$f" -exec cp -f {} "$path" \;; then
-            break
+            if [ -f "$path" ]; then
+                printf "* [%s](/license/%s)\n" "$name" "${path##*/}"
+                break
+            fi
         fi
     done
-
-    printf "* [%s](/license/%s)\n" "$name" "${path##*/}"
 done
