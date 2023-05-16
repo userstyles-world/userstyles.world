@@ -38,7 +38,7 @@
 	{{ with .err.Description }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 
 	<label for="notes">Notes</label>
-	<i class="fg:3" id="notes-hint">Long description of requirements, changelog, etc. Supports Markdown syntax.</i>
+	<i class="fg:3" id="notes-hint">Features, requirements, instructions, links, changelog, etc. Supports {{ template "partials/markdown" . }} syntax.</i>
 	<textarea
 		rows="3" class="shortTextarea"
 		type="text" name="notes" id="notes" maxlength="50000"

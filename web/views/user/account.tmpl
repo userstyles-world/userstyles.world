@@ -119,7 +119,7 @@
 	<article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
 	<form class="Form Form-box mt:m" method="post" action="/account/bio">
 		<label for="biography">Set your biography</label>
-		<i class="fg:3" id="biography-hint">Supports Markdown syntax.</i>
+		<i class="fg:3" id="biography-hint">Supports {{ template "partials/markdown" . }} syntax.</i>
 		<textarea
 			type="text" name="bio" id="biography" maxlength="1000"
 			placeholder="e.g. I'd often make styles."
