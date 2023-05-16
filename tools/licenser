@@ -20,7 +20,12 @@ mkdir -p "$content"
 for package in $packages; do
     name="${package%@*}"
     path="${content}/$(echo "$name" | sed 's|/|-|g').txt"
-    if find "$cache/$package" -iname "license" -exec cp -f {} "$path" \;; then
-        printf "* [%s](/license/%s)\n" "$name" "${path##*/}"
-    fi
+
+    for f in "license" "license.*" "copying"; do
+        if find "$cache/$package" -iname "$f" -exec cp -f {} "$path" \;; then
+            break
+        fi
+    done
+
+    printf "* [%s](/license/%s)\n" "$name" "${path##*/}"
 done
