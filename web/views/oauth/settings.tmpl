@@ -39,7 +39,7 @@
 			placeholder="e.g. UserCSS Manager">
 
 		<label for="description">Description</label>
-		<i class="fg:3" id="description-hint">Supports Markdown syntax.</i>
+		<i class="fg:3" id="description-hint">Supports {{ template "partials/markdown" . }} syntax.</i>
 		<textarea
 			required pattern="^[a-zA-Z0-9!@#$%-_ ]+$"
 			type="text" name="description" id="description"
