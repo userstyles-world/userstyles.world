@@ -24,9 +24,8 @@ for License in Licenses:
 
 	# make files writeable
 	chmod(Path, 0o0600)
-
+	# Read the license content and add it as a codeblock.
 	with open(Path, "r") as File:
-		# trim, enclose as codeblock
 		TheText = "```\n" + File.read().strip() + "\n```"
 
 	# use filename as license name, remove host prefix
