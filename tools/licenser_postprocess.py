@@ -29,7 +29,7 @@ for License in Licenses:
 		TheText = "```\n" + File.read().strip() + "\n```"
 
 	# use filename as license name, remove host prefix
-	Name = License.partition("-")[2].rpartition(".txt")[0]
+	Name = License.partition("-")[2].removesuffix(".txt")
 	RelName = Name
 	Name += " license"
 
