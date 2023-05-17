@@ -8,7 +8,7 @@ from os.path import dirname, basename
 # Directory where the scraped licenses are.
 Dir = dirname(__file__) + "/../web/"
 
-# copy licenses from customlicenses
+# Copy the licenses from customlicenses to licenses documentation.
 Licenses = listdir(Dir + "customlicenses")
 for License in Licenses:
 	system("cp " + Dir + "customlicenses/" + License + " " + Dir + "docs/licenses/" + License)
