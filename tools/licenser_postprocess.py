@@ -41,7 +41,6 @@ for License in Licenses:
 	if RelName == "stylus-logo":
 		Text += "\n\n\n#### Changes:\n- vectorized by [pabli24](https://github.com/pabli24)\n- converted to monochrome outline by [0eoc](https://userstyles.world/user/0eoc)"
 
-	# write license as document
 	with open(Path, "w") as File:
 		File.write(Text)
 
