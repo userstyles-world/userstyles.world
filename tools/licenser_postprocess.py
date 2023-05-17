@@ -18,7 +18,7 @@ for License in Licenses:
 	copyfile(join(CustomDir, License), join(Dir, License))
 
 IndexPath = Dir + ".md"
-IndexText = ""
+Index = []
 
 # Traverse the scraped licenses and create a markdown-formatted licensing page for each one.
 Licenses = listdir(Dir)
@@ -55,9 +55,15 @@ for License in Licenses:
 	# Change the file extension to the correct one.
 	rename(Path, Dir + "/" + RelName + ".md")
 
-	# Add this license to the index page.
-	IndexText += f"\n- [{RelName}](/docs/licenses/{RelName})\n"
+	# Add this license to the index.
+	Index.append(RelName)
 
-# Write the license index. We could write to it on every license, but for performance reasons, it's preferred to write to it all at once.
+# Generate the license index.
+Index.sort()
+IndexText = "---\nTitle: Third-party Licenses\n---\n# Third-party Licenses\n"
+for License in Index:
+	IndexText += f"\n- [{License}](/docs/licenses/{License})\n"
+
+# Write the index. We could write to it on every license, but for performance reasons, it's preferred to write to it all at once.
 with open(IndexPath, "w") as IndexFile:
-	IndexFile.write(f"---\nTitle: Third-party Licenses\n---\n# Third-party Licenses\n{IndexText}")
+	IndexFile.write(IndexText)
