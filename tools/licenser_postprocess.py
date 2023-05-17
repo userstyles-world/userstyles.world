@@ -5,7 +5,7 @@ This script generates the license documentation pages.
 from os import system, getcwd, listdir, chmod, rename
 from os.path import dirname, basename
 
-# where we work
+# Directory where the scraped licenses are.
 Dir = dirname(__file__) + "/../web/"
 
 # copy licenses from customlicenses
