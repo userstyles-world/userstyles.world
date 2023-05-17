@@ -89,6 +89,14 @@ func New(views http.FileSystem) *html.Engine {
 		return t.Format(time.RFC3339)
 	})
 
+	engine.AddFunc("toTime", func(s string) time.Time {
+		t, err := time.Parse(time.RFC3339, s)
+		if err != nil {
+			return time.Time{}
+		}
+		return t
+	})
+
 	engine.AddFunc("add", func(a, b int) int {
 		return a + b
 	})

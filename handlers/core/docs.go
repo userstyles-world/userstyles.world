@@ -49,5 +49,6 @@ func GetDocs(c *fiber.Ctx) error {
 		"User":      u,
 		"Content":   content,
 		"Canonical": "docs",
+		"meta":      meta,
 	})
 }

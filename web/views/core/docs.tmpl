@@ -1,3 +1,11 @@
 <article class="docs md">
+	{{ if .meta.UpdatedAt }}
+		<header class="mb:l">
+			<h1 class="mt:m">{{ .meta.Title }}</h1>
+			{{ $time := .meta.UpdatedAt | toTime }}
+			<time datetime="{{ iso $time }}">Updated {{ rel $time }}.</time>
+		</header>
+	{{ end }}
+
 	{{ .Content | unescape }}
 </article>

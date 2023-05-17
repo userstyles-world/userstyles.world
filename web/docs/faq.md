@@ -1,10 +1,7 @@
 ---
 Title: Frequently Asked Questions
+UpdatedAt: 2023-05-17T19:00:00+02:00
 ---
-
-# Frequently Asked Questions
-
-Last updated May 17, 2023
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
