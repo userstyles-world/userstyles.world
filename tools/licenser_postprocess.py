@@ -14,7 +14,6 @@ for License in Licenses:
 	system("cp " + Dir + "customlicenses/" + License + " " + Dir + "docs/licenses/" + License)
 Dir += "docs/licenses"
 
-# where licenses will be linked
 IndexPath = Dir + ".md"
 IndexText = ""
 
