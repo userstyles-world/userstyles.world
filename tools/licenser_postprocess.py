@@ -33,7 +33,7 @@ for License in Licenses:
 	RelName = Name
 	Name += " license"
 
-	# generate document
+	# Generate the document, which has the following: the title, a link to the index file and the license content.
 	Text = "---\n" + "Title: "+ Name + "\n---\n# " + Name
 	Text += "\n\n[Back to licenses](/docs/licenses)\n\n"
 	Text += "\n" + TheText
