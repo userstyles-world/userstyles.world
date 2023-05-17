@@ -15,4 +15,6 @@ node_modules/
 # Project-specific.
 userstyles.world
 web/static/*/
+web/docs/licenses
+web/docs/licenses.md
 !tools/.env
