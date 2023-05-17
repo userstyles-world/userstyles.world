@@ -47,7 +47,7 @@ for License in Licenses:
 	# rename file
 	rename(Path, Dir + "/" + RelName + ".md")
 
-	# add license link to index
+	# Add this license to the index page.
 	IndexText += "\n- [" + RelName + "](/docs/licenses/" + RelName + ")\n"
 
 # write license index. we could write to it on every license but i prefer writing big chunks
