@@ -1,4 +1,6 @@
-# this script is used to generate licenses-related stuff in docs
+"""
+This script generates the license documentation pages.
+"""
 
 from os import system, getcwd, listdir, chmod, rename
 from os.path import dirname, basename
