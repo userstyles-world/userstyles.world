@@ -13,7 +13,7 @@ func Routes(app *fiber.App) {
 	r.Get("/", Home)
 	r.Get("/proxy", Proxy)
 	r.Get("/search", Search)
-	r.Get("/docs/:document?", GetDocs)
+	r.Get("/docs/*", GetDocs)
 	r.Get("/modlog", GetModLog)
 	r.Get("/link/:site", GetLinkedSite)
 	r.Get("/security-policy", Redirect("/docs/security"))
