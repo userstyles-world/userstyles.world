@@ -52,4 +52,4 @@ for License in Licenses:
 
 # write license index. we could write to it on every license but i prefer writing big chunks
 with open(IndexPath, "w") as IndexFile:
-	IndexFile.write("---\nTitle: Third-party Licenses\n---\n# Third-party Licenses\n" + IndexText)
+	IndexFile.write(f"---\nTitle: Third-party Licenses\n---\n# Third-party Licenses\n{IndexText}")
