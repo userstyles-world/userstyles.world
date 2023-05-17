@@ -4,13 +4,13 @@ Title: Frequently Asked Questions
 
 # Frequently Asked Questions
 
-Last updated October 13, 2022
+Last updated May 17, 2023
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
 
 - [General](#general)
-    - [What is monetization strategy?](#what-is-monetization-strategy)
+    - [What is our monetization strategy?](#what-is-our-monetization-strategy)
     - [Why isn't \[insert here\] implemented?](#why-isnt-insert-here-implemented)
     - [How can I contact the admins?](#how-can-i-contact-the-admins)
 - [Userstyles](#userstyles)
@@ -30,16 +30,14 @@ Last updated October 13, 2022
 Non-specific questions.
 
 
-### What is monetization strategy?
+### What is our monetization strategy?
 
-There is none. USw is funded from our own pockets.
+Since we don't have any means to make money, we rely on donations. Currently, we
+fund everything from our own pockets: server (including backup) cost is $6 per
+month (or $72 per year) and domain cost is $22 per year (as of April, 2022). You
+can support the project on [Open Collective][oc] and help us stay afloat.
 
-All donations made to Vednoc's [LiberaPay][lp] and/or [Ko-fi][kf] go towards
-paying for the server and domain costs. The server and backup cost is $6 per
-month (as of April 2022), and the domain cost is $22 per year.
-
-[lp]: https://liberapay.com/vednoc
-[kf]: https://ko-fi.com/vednoc
+[oc]: https://opencollective.com/userstyles
 
 
 ### Why isn't [insert here] implemented?
