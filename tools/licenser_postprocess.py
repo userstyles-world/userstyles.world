@@ -6,6 +6,11 @@ from os import system, getcwd, listdir, chmod, rename
 from os.path import join, dirname, basename
 from shutil import copyfile
 
+# Optionally specify the changes for GPL-licensed dependencies.
+ChangedDependencies = {
+	"stylus-logo": "\n- vectorized by [pabli24](https://github.com/pabli24)\n- converted to monochrome outline by [0eoc](https://userstyles.world/user/0eoc)",
+}
+
 # Directory where the missing licenses are.
 CustomDir = join(dirname(__file__), "../web/customlicenses" )
 
@@ -42,10 +47,6 @@ for License in Licenses:
 	Text += "\n\n[Back to licenses](/docs/licenses)\n\n"
 	Text += "\n```\n" + LicenseText + "\n```"
 
-	# Optionally specify the changes for GPL-licensed dependencies.
-	ChangedDependencies = {
-		"stylus-logo": "\n- vectorized by [pabli24](https://github.com/pabli24)\n- converted to monochrome outline by [0eoc](https://userstyles.world/user/0eoc)",
-	}
 	if RelName in ChangedDependencies:
 		Text += "\n\n\n#### Changes:" + ChangedDependencies[RelName]
 
