@@ -2,6 +2,7 @@ package core
 
 import (
 	"io"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -14,7 +15,7 @@ import (
 func GetDocs(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
-	doc := c.Params("document")
+	doc := strings.TrimPrefix(strings.Split(c.Path(), "docs")[1], "/")
 	if doc == "" {
 		doc = "readme"
 	}
