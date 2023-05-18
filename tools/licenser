@@ -10,7 +10,8 @@ gomod="${root}/go.mod"
 packages=$(sed -n '/^\t/,//{ s|\t\(\S\+\)\ \(v\S\+\).*\?|\1\@\2|;p }' "$gomod")
 
 # Make output directory.
-content="${root}/web/static/license"
+content="${root}/web/docs/licenses"
+rm -rf "$content"
 mkdir -p "$content"
 
 # Scrape licenses.

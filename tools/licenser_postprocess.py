@@ -61,7 +61,7 @@ for License in Licenses:
 
 # Generate the license index.
 Index.sort()
-IndexText = "---\nTitle: Third-party Licenses\n---\n# Third-party Licenses\n"
+IndexText = "---\nTitle: Third-party Licenses\n---\n\n# Third-party Licenses\n"
 for License in Index:
 	IndexText += f"\n- [{License}](/docs/licenses/{License})\n"
 
