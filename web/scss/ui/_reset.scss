@@ -67,6 +67,11 @@ html {
         color: var(--inverse);
         background-color: var(--ac-4);
     }
+
+    blockquote {
+        padding-left: 0.5em;
+        border-left: 0.5em solid var(--bg-4);
+    }
 }
 
 h2, h3 { margin: 1em 0 0.5em }
