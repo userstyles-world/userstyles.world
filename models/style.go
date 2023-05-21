@@ -357,3 +357,13 @@ func (s *APIStyle) CompareMirrorURL() bool {
 
 	return false
 }
+
+// IsMirrored will return true if a style is being mirrored.
+func (s *APIStyle) IsMirrored() bool {
+	if s.MirrorURL != "" &&
+		(s.MirrorCode || s.MirrorMeta) {
+		return true
+	}
+
+	return false
+}

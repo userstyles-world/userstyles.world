@@ -13,16 +13,16 @@
 			Imported and mirrored from <code>{{ .Style.Original }}</code>.
 		{{ else if or .Style.ImportPrivate .Style.MirrorPrivate }}
 			{{ if .Style.Original }}
-				Imported{{ if not .Style.ImportPrivate }} from <code>{{ .Style.Original }}</code>{{ end }}{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }},{{ else }}.{{ end }}
+				Imported{{ if not .Style.ImportPrivate }} from <code>{{ .Style.Original }}</code>{{ end }}{{ if .Style.IsMirrored }},{{ else }}.{{ end }}
 			{{ end }}
-			{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
+			{{ if .Style.IsMirrored }}
 				Mirrored{{ if not .Style.MirrorPrivate }} from <code>{{ .Style.MirrorURL }}</code>{{ end }}.
 			{{ end }}
 		{{ else }}
 			{{ if .Style.Original }}
-				Imported from <code>{{ .Style.Original }}</code>{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }},{{ else }}.{{ end }}
+				Imported from <code>{{ .Style.Original }}</code>{{ if .Style.IsMirrored }},{{ else }}.{{ end }}
 			{{ end }}
-			{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
+			{{ if .Style.IsMirrored }}
 				<nobr>Mirrored from <code>{{ .Style.MirrorURL }}</code>.</nobr>
 			{{ end }}
 		{{ end }}
