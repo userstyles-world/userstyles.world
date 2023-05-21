@@ -23,7 +23,7 @@
 				Imported from <code>{{ .Style.Original }}</code>{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }},{{ else }}.{{ end }}
 			{{ end }}
 			{{ if and (or .Style.MirrorCode .Style.MirrorMeta) .Style.MirrorURL }}
-				Mirrored from <code>{{ .Style.MirrorURL }}</code>.
+				<nobr>Mirrored from <code>{{ .Style.MirrorURL }}</code>.</nobr>
 			{{ end }}
 		{{ end }}
 	</p>
