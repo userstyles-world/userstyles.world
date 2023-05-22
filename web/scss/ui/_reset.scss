@@ -69,8 +69,9 @@ html {
     }
 
     blockquote {
-        padding-left: 0.5em;
-        border-left: 0.5em solid var(--bg-4);
+        padding-left: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-left: 0.25rem solid var(--bg-4);
     }
 }
 
