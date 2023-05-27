@@ -235,12 +235,15 @@ func RecoverPost(c *fiber.Ctx) error {
 	link := c.BaseURL() + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
 
 	partPlain := utils.NewPart().
-		SetBody("We have received a request to reset the password for your UserStyles.world account.\n\n" +
+		SetBody("Hi " + user.Username + ",\n" +
+			"We have received a request to reset the password for your UserStyles.world account.\n\n" +
 			"The link will expire in 2 hours\n\n" +
 			link + "\n\n" +
 			"You can safely ignore this e-mail if you didn't request to reset your password.")
 	partHTML := utils.NewPart().
-		SetBody("<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
+		SetBody("<p>Hi " + user.Username + ",</p>\n" +
+			"<br>" +
+			"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
 			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset password link</a>\n" +

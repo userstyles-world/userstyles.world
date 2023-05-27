@@ -72,12 +72,15 @@ func RegisterPost(c *fiber.Ctx) error {
 	link := c.BaseURL() + "/verify/" + utils.EncryptText(token, utils.AEADCrypto, config.ScrambleConfig)
 
 	partPlain := utils.NewPart().
-		SetBody("Verify your UserStyles.world account by clicking the link below.\n" +
+		SetBody("Hi " + u.Username + ",\n" +
+			"Verify your UserStyles.world account by clicking the link below.\n" +
 			"The link will expire in 2 hours\n\n" +
 			link + "\n\n" +
 			"You can safely ignore this e-mail if you never made an account for UserStyles.world.")
 	partHTML := utils.NewPart().
-		SetBody("<p>Verify your UserStyles.world account by clicking the link below.</p>\n" +
+		SetBody("Hi <p>" + u.Username + ",</p>\n" +
+			"<br>" +
+			"<p>Verify your UserStyles.world account by clicking the link below.</p>\n" +
 			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Verifcation link</a>\n" +
