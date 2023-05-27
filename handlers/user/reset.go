@@ -199,7 +199,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			})
 	}
 
-	go func(u *models.User) {
+	go func(u models.User) {
 		user, err := models.FindUserByEmail(u.Email)
 		// Return early if we got a error, or when the LastPasswordReset isn't zero
 		// And LastPasswordReset + 5 minutes is later than time.Now(). So we only
@@ -240,13 +240,13 @@ func RecoverPost(c *fiber.Ctx) error {
 				"<p>You can safely ignore this email if you didn't request to reset your password.</p>").
 			SetContentType("text/html")
 
-		emailErr := utils.NewEmail().
+		utils.NewEmail().
 			SetTo(u.Email).
 			SetSubject("Reset your password").
 			AddPart(*partPlain).
 			AddPart(*partHTML).
 			SendEmail(config.IMAPServer)
-	}
+	}(u)
 
 	// We need to just say we have send an reset email.
 	// So that we can't leak if we have such email in our database ;).
