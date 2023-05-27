@@ -76,7 +76,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			"Verify your UserStyles.world account by clicking the link below.\n" +
 			"The link will expire in 2 hours\n\n" +
 			link + "\n\n" +
-			"You can safely ignore this e-mail if you never made an account for UserStyles.world.")
+			"You can safely ignore this email if you never made an account for UserStyles.world.")
 	partHTML := utils.NewPart().
 		SetBody("Hi <p>" + u.Username + ",</p>\n" +
 			"<br>\n" +
@@ -85,7 +85,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			"<br>\n" +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Verifcation link</a>\n" +
 			"<br><br>\n" +
-			"<p>You can safely ignore this e-mail if you never made an account for UserStyles.world.</p>").
+			"<p>You can safely ignore this email if you never made an account for UserStyles.world.</p>").
 		SetContentType("text/html")
 
 	err = utils.NewEmail().
@@ -100,12 +100,12 @@ func RegisterPost(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
 				"Title": "Internal server error",
-				"Error": "Failed to send e-mail.",
+				"Error": "Failed to send email.",
 			})
 	}
 
 	return c.Render("user/email-sent", fiber.Map{
 		"Title":  "Email verification sent",
-		"Reason": "Verification link has been sent to your e-mail address. Your account will be created when you visit the verification link.",
+		"Reason": "Verification link has been sent to your email address. Your account will be created when you visit the verification link.",
 	})
 }
