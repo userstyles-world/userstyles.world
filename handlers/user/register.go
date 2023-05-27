@@ -79,7 +79,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			"You can safely ignore this e-mail if you never made an account for UserStyles.world.")
 	partHTML := utils.NewPart().
 		SetBody("Hi <p>" + u.Username + ",</p>\n" +
-			"<br>" +
+			"<br>\n" +
 			"<p>Verify your UserStyles.world account by clicking the link below.</p>\n" +
 			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
