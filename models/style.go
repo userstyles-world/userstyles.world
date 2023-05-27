@@ -367,3 +367,48 @@ func (s *APIStyle) IsMirrored() bool {
 
 	return false
 }
+
+// HeadlineText prints imported and/or mirrored URLs.
+func (s *APIStyle) HeadlineText() string {
+	var res string
+	switch {
+	case s.CompareMirrorURL() && !(s.ImportPrivate || s.MirrorPrivate):
+		res = fmt.Sprintf("Imported and mirrored code from <code>%s</code>.", s.Original)
+
+	case s.ImportPrivate || s.MirrorPrivate:
+		if s.Original != "" {
+			res = "Imported"
+			if !s.ImportPrivate {
+				res += fmt.Sprintf(" from <code>%s</code>", s.Original)
+			}
+			if s.IsMirrored() {
+				res += ", "
+			} else {
+				res += "."
+			}
+		}
+		if s.IsMirrored() {
+			res += "Mirrored"
+			if !s.MirrorPrivate {
+				res += fmt.Sprintf(" from <code>%s</code>", s.MirrorURL)
+			}
+			res += "."
+		}
+
+	default:
+		if s.Original != "" {
+			res = fmt.Sprintf("Imported from <code>%s</code>", s.Original)
+			if s.IsMirrored() {
+				res += ", "
+			} else {
+				res += "."
+			}
+		}
+		if s.IsMirrored() {
+			res += fmt.Sprintf("<nobr>Mirrored from <code>%s</code>.</nobr>", s.MirrorURL)
+		}
+	}
+
+	return res
+}
+
