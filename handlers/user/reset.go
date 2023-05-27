@@ -242,7 +242,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			"You can safely ignore this e-mail if you didn't request to reset your password.")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<br>" +
+			"<br>\n" +
 			"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
 			"<b>The link will expire in 2 hours</b>\n" +
 			"<br>\n" +
