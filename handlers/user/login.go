@@ -122,5 +122,30 @@ func LoginPost(c *fiber.Ctx) error {
 		log.Warn.Println("Failed to update last login date for id:", user.ID)
 	}
 
+	go func(user *models.User) {
+		partPlain := utils.NewPart().
+			SetBody("Hi " + user.Username + ",\n" +
+				"We noticed a new login to your UserStyles.world account.\n\n" +
+				"If that was you, you can safely ignore this e-mail.\n" +
+				"If that wasn't you, change your password:\n" +
+				"https://userstyles.world/account#password")
+		partHTML := utils.NewPart().
+			SetBody("<p>Hi " + user.Username + ",</p>\n" +
+				"<br>" +
+				"<p>We noticed a new login to your UserStyles.world account.</p>\n" +
+				"<br>" +
+				"<b>If that was you, you can safely ignore this e-mail.\n" +
+				"<br>" +
+				"<b>If that wasn't you, <a target=\"_blank\" clicktracking=\"off\" href=\"https://userstyles.world/account#password\">change your password</a>.\n").
+			SetContentType("text/html")
+
+		utils.NewEmail().
+			SetTo(user.Email).
+			SetSubject("New login").
+			AddPart(*partPlain).
+			AddPart(*partHTML).
+			SendEmail(config.IMAPServer)
+	}(user)
+
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }
