@@ -347,58 +347,42 @@ func SelectUpdateStyle(s Style) error {
 }
 
 // CompareMirrorURL will return true if a style is being imported and mirrored,
-// and both URLs are public or private from the same URL.
+// and both URLs are public.
 func (s *APIStyle) CompareMirrorURL() bool {
 	if s.Original != "" &&
 		(s.MirrorCode || s.MirrorMeta) &&
-		(s.MirrorURL == "" || s.MirrorURL == s.Original) {
+		(s.MirrorURL == "" || s.MirrorURL == s.Original) &&
+		!(s.ImportPrivate || s.MirrorPrivate) {
 		return true
 	}
 
 	return false
 }
 
-// IsMirrored will return true if a style is being mirrored.
-func (s *APIStyle) IsMirrored() bool {
-	if s.MirrorURL != "" &&
-		(s.MirrorCode || s.MirrorMeta) {
-		return true
-	}
-
-	return false
+func (s *APIStyle) ImportedAndMirroredText() string {
+	return "Imported and mirrored from <code>" + s.Original + "</code>"
 }
 
-// HeadlineText prints imported and/or mirrored URLs.
-func (s *APIStyle) HeadlineText() string {
-	var res string
-	switch {
-	case s.CompareMirrorURL() && !(s.ImportPrivate || s.MirrorPrivate):
-		res = fmt.Sprintf("<p class=\"mb:m md\">Imported and mirrored from <code>%s</code></p>", s.Original)
+func (s *APIStyle) ImportedCondition() bool {
+	return s.Original != ""
+}
 
-	case s.ImportPrivate || s.MirrorPrivate:
-		if s.Original != "" {
-			res = "<p class=\"mb:m md\">Imported"
-			if !s.ImportPrivate {
-				res += fmt.Sprintf(" from <code>%s</code>", s.Original)
-			}
-			res += "</p>"
-		}
-		if s.IsMirrored() {
-			res += "<p class=\"mb:m md\">Mirrored"
-			if !s.MirrorPrivate {
-				res += fmt.Sprintf(" from <code>%s</code>", s.MirrorURL)
-			}
-			res += "</p>"
-		}
+func (s *APIStyle) MirroredCondition() bool {
+	return s.MirrorURL != "" && (s.MirrorCode || s.MirrorMeta)
+}
 
-	default:
-		if s.Original != "" {
-			res = fmt.Sprintf("<p class=\"mb:m md\">Imported from <code>%s</code></p>", s.Original)
-		}
-		if s.IsMirrored() {
-			res += fmt.Sprintf("<p class=\"mb:m md\">Mirrored from <code>%s</code></p>", s.MirrorURL)
-		}
+func (s *APIStyle) ImportedText() string {
+	t := "Imported"
+	if !s.ImportPrivate {
+		t += " from <code>" + s.Original + "</code>"
 	}
+	return t
+}
 
-	return res
+func (s *APIStyle) MirroredText() string {
+	t := "Mirrored"
+	if !s.MirrorPrivate {
+		t += " from <code>" + s.MirrorURL + "</code>"
+	}
+	return t
 }

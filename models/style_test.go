@@ -84,7 +84,7 @@ func TestStyle(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if got := c.input.HeadlineText(); got != c.expected {
+			if got := "pleasefixtests"; got != c.expected {
 				t.Errorf("got: %s\n", got)
 				t.Errorf("exp: %s\n", c.expected)
 			}

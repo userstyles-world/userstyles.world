@@ -7,8 +7,21 @@
 		<span class="fg:4"> by {{ .Style.Username }}</span>
 	</h1>
 
-	{{ with .Style.HeadlineText }}
-		{{ unescape . }}
+	{{ if .Style.CompareMirrorURL }}
+		{{ with .Style.ImportedAndMirroredText }}
+			<p class="mb:m md">{{ unescape . }}</p>
+		{{ end }}
+	{{ else }}
+		{{ if .Style.ImportedCondition }}
+			{{ with .Style.ImportedText }}
+				<p class="mb:m md">{{ unescape . }}</p>
+			{{ end }}
+		{{ end }}
+		{{ if .Style.MirroredCondition }}
+			{{ with .Style.MirroredText }}
+				<p class="mb:m md">{{ unescape . }}</p>
+			{{ end }}
+		{{ end }}
 	{{ end }}
 
 	<div class="card">
