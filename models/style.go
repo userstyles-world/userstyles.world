@@ -373,7 +373,7 @@ func (s *APIStyle) HeadlineText() string {
 	var res string
 	switch {
 	case s.CompareMirrorURL() && !(s.ImportPrivate || s.MirrorPrivate):
-		res = fmt.Sprintf("<p class=\"mb:m md\">Imported and mirrored code from <code>%s</code>.</p>", s.Original)
+		res = fmt.Sprintf("<p class=\"mb:m md\">Imported and mirrored from <code>%s</code></p>", s.Original)
 
 	case s.ImportPrivate || s.MirrorPrivate:
 		if s.Original != "" {
@@ -381,31 +381,22 @@ func (s *APIStyle) HeadlineText() string {
 			if !s.ImportPrivate {
 				res += fmt.Sprintf(" from <code>%s</code>", s.Original)
 			}
-			if s.IsMirrored() {
-				res += ",</p> "
-			} else {
-				res += ".</p>"
-			}
+			res += "</p>"
 		}
 		if s.IsMirrored() {
 			res += "<p class=\"mb:m md\">Mirrored"
 			if !s.MirrorPrivate {
 				res += fmt.Sprintf(" from <code>%s</code>", s.MirrorURL)
 			}
-			res += ".</p>"
+			res += "</p>"
 		}
 
 	default:
 		if s.Original != "" {
-			res = fmt.Sprintf("<p class=\"mb:m md\">Imported from <code>%s</code>", s.Original)
-			if s.IsMirrored() {
-				res += ",</p> "
-			} else {
-				res += ".</p>"
-			}
+			res = fmt.Sprintf("<p class=\"mb:m md\">Imported from <code>%s</code></p>", s.Original)
 		}
 		if s.IsMirrored() {
-			res += fmt.Sprintf("<p class=\"mb:m md\">Mirrored from <code>%s</code>.</p>", s.MirrorURL)
+			res += fmt.Sprintf("<p class=\"mb:m md\">Mirrored from <code>%s</code></p>", s.MirrorURL)
 		}
 	}
 
