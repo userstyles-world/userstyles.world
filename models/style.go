@@ -266,7 +266,7 @@ func (s Style) Validate(v *validator.Validate, addPage bool) (map[string]any, er
 			switch e.Field() {
 			case "Name":
 				if len(s.Name) == 0 {
-					m[e.Field()] = "Name required and it cannot be empty."
+					m[e.Field()] = "Name is required and it cannot be empty."
 				} else {
 					m[e.Field()] = "Name is too long. It must be up to 50 characters."
 				}
