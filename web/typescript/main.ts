@@ -43,6 +43,11 @@ function pageSpecificFunctions(settings: UserSettings) {
         case '/login':
             saveRedirect();
             break;
+        case '/add':
+        case '/import':
+        case '/api/oauth/style/new':
+            checkMaxLength();
+            break;
         case '/account':
             checkMaxLength();
             checkRedirect(settings.redirect);
