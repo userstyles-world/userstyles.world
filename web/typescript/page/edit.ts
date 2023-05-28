@@ -1,11 +1,17 @@
 export function checkMaxLength() {
     type input = HTMLTextAreaElement | HTMLInputElement;
 
-    [...document.querySelectorAll('[maxlength]')].forEach((element: input) => {
-        const maxlength = parseInt(element.getAttribute('maxlength'), 10);
-        element.removeAttribute('maxlength');
-        element.addEventListener('input', () => {
-            element.setCustomValidity(element.value.length > maxlength ? `Your input must be up to ${maxlength} characters.` : '');
-        }, {passive: true});
+    const validate = (el: input, max: number) => {
+        el.setCustomValidity(el.value.length > max
+            ? `Your input must be up to ${max} characters.`
+            : '');
+    }
+
+    [...document.querySelectorAll('[maxlength]')].forEach((el: input) => {
+        const max = parseInt(el.getAttribute('maxlength'), 10);
+        el.removeAttribute('maxlength');
+        validate(el, max);
+
+        el.addEventListener('input', () => validate(el, max), { passive: true });
     });
 }
