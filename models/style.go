@@ -265,15 +265,27 @@ func (s Style) Validate(v *validator.Validate, addPage bool) (map[string]any, er
 		for _, e := range errs {
 			switch e.Field() {
 			case "Name":
-				m[e.Field()] = "Name must be up to 50 characters."
+				if len(s.Name) == 0 {
+					m[e.Field()] = "Name required and it cannot be empty."
+				} else {
+					m[e.Field()] = "Name is too long. It must be up to 50 characters."
+				}
 			case "Description":
-				m[e.Field()] = "Description must be up to 160 characters."
+				if len(s.Description) == 0 {
+					m[e.Field()] = "Description is required and it cannot be empty."
+				} else {
+					m[e.Field()] = "Description is too long. It must be up to 160 characters."
+				}
 			case "Notes":
-				m[e.Field()] = "Notes must be up to 50K characters."
+				m[e.Field()] = "Notes are too long. They must be up to 50K characters."
 			case "Category":
-				m[e.Field()] = "Category must be up to 255 characters."
+				if len(s.Category) == 0 {
+					m[e.Field()] = "Category is required and it cannot be empty."
+				} else {
+					m[e.Field()] = "Category is too long. It must be up to 255 characters."
+				}
 			case "Code":
-				m[e.Field()] = "Code must be up to 10M characters."
+				m[e.Field()] = "Code is too long. It must be up to 10M characters."
 			}
 		}
 	}
