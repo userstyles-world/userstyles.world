@@ -14,14 +14,14 @@ func TestStyle(t *testing.T) {
 				Original:      "x",
 				ImportPrivate: true,
 			},
-			expected: "Imported.",
+			expected: "<p class=\"mb:m md\">Imported.</p>",
 		},
 		{
 			name: "imported from x",
 			input: APIStyle{
 				Original: "x",
 			},
-			expected: "Imported from <code>x</code>.",
+			expected: "<p class=\"mb:m md\">Imported from <code>x</code>.</p>",
 		},
 		{
 			name: "mirrored",
@@ -30,7 +30,7 @@ func TestStyle(t *testing.T) {
 				MirrorCode:    true,
 				MirrorPrivate: true,
 			},
-			expected: "Mirrored.",
+			expected: "<p class=\"mb:m md\">Mirrored.</p>",
 		},
 		{
 			name: "mirrored from x",
@@ -38,7 +38,7 @@ func TestStyle(t *testing.T) {
 				MirrorURL:  "x",
 				MirrorCode: true,
 			},
-			expected: "<nobr>Mirrored from <code>x</code>.</nobr>",
+			expected: "<p class=\"mb:m md\">Mirrored from <code>x</code>.</p>",
 		},
 		{
 			name: "imported and mirrored",
@@ -49,7 +49,7 @@ func TestStyle(t *testing.T) {
 				MirrorCode:    true,
 				MirrorPrivate: true,
 			},
-			expected: "Imported, Mirrored.",
+			expected: "<p class=\"mb:m md\">Imported</p>, <p class=\"mb:m md\">Mirrored.</p>",
 		},
 		{
 			name: "imported from x and mirrored",
@@ -59,7 +59,7 @@ func TestStyle(t *testing.T) {
 				MirrorCode:    true,
 				MirrorPrivate: true,
 			},
-			expected: "Imported from <code>x</code>, Mirrored.",
+			expected: "<p class=\"mb:m md\">Imported from <code>x</code>,</p> <p class=\"mb:m md\">Mirrored.</p>",
 		},
 		{
 			name: "imported and mirrored from x",
@@ -69,7 +69,7 @@ func TestStyle(t *testing.T) {
 				MirrorURL:     "y",
 				MirrorCode:    true,
 			},
-			expected: "Imported, Mirrored from <code>y</code>.",
+			expected: "<p class=\"mb:m md\">Imported,</p> <p class=\"mb:m md\">Mirrored from <code>y</code>.</p>",
 		},
 		{
 			name: "imported from x and mirrored from x",
@@ -78,7 +78,7 @@ func TestStyle(t *testing.T) {
 				MirrorURL:  "y",
 				MirrorCode: true,
 			},
-			expected: "Imported from <code>x</code>, <nobr>Mirrored from <code>y</code>.</nobr>",
+			expected: "<p class=\"mb:m md\">Imported from <code>x</code>,</p> <p class=\"mb:m md\">Mirrored from <code>y</code>.</p>",
 		},
 	}
 
