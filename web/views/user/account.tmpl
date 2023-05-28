@@ -117,15 +117,16 @@
 <section id="biography">
 	<h2 class="td:d">Biography</h2>
 	<article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
-	<form class="Form Form-box mt:m" method="post" action="/account/bio">
+	<form class="Form Form-box mt:m" method="post" action="/account/biography">
 		<label for="biography">Set your biography</label>
 		<i class="fg:3" id="biography-hint">Supports {{ template "partials/markdown" . }} syntax.</i>
 		<textarea
-			type="text" name="bio" id="biography" maxlength="1000"
+			type="text" name="biography" id="biography" maxlength="1000"
 			placeholder="e.g. I'd often make styles."
 			aria-describedby="biography-hint">
 			{{- .Params.Biography -}}
 		</textarea>
+		{{ with .errBio }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
 		<div class="Form-control">
 			<button
 				type="submit"

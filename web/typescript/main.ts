@@ -48,16 +48,18 @@ function pageSpecificFunctions(settings: UserSettings) {
         case '/api/oauth/style/new':
             checkMaxLength();
             break;
-        case '/account':
-            checkMaxLength();
-            checkRedirect(settings.redirect);
-            break;
         case '/api/oauth/style/link':
             checkRedirect(settings.redirect);
             break;
         default:
             page404();
     }
+
+    if (location.pathname.startsWith("/account")) {
+        checkMaxLength();
+        checkRedirect(settings.redirect);
+    }
+
     if (location.pathname.startsWith('/style/') && styleViewRegex.test(location.pathname)) {
         initViewStyle();
     }

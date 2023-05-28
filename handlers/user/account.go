@@ -122,27 +122,24 @@ func EditAccount(c *fiber.Ctx) error {
 		user.Password = utils.GenerateHashedPassword(newPassword)
 		record["password"] = user.Password
 
-	case "bio":
-		bio := strings.TrimSpace(c.FormValue("bio"))
-		prev := user.Biography
-		user.Biography = bio
+	case "biography":
+		user.Biography = strings.TrimSpace(c.FormValue("biography"))
 
 		if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
 			var validationError validator.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
 				log.Info.Println("Validation errors:", validationError)
 			}
-			user.Biography = prev
 
 			return c.Render("user/account", fiber.Map{
 				"Title":  "Validation Error",
 				"User":   u,
 				"Params": user,
-				"Error":  "Biography must be up to 1000 characters.",
+				"errBio": "Biography is too long. It must be up to 1000 characters.",
 			})
 		}
 
-		record["biography"] = bio
+		record["biography"] = user.Biography
 
 	case "socials":
 		record["github"] = strings.TrimSpace(c.FormValue("github"))
