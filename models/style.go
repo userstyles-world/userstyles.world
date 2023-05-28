@@ -372,17 +372,16 @@ func (s *APIStyle) MirroredCondition() bool {
 }
 
 func (s *APIStyle) ImportedText() string {
-	t := "Imported"
-	if !s.ImportPrivate {
-		t += " from <code>" + s.Original + "</code>"
-	}
-	return t
+	return "Imported from " + ternary(s.ImportPrivate, "private source", "<code>"+s.Original+"</code>")
 }
 
 func (s *APIStyle) MirroredText() string {
-	t := "Mirrored"
-	if !s.MirrorPrivate {
-		t += " from <code>" + s.MirrorURL + "</code>"
+	return "Mirrored from " + ternary(s.MirrorPrivate, "private source", "<code>"+s.MirrorURL+"</code>")
+}
+
+func ternary(what bool, truetext string, falsetext string) string {
+	if what {
+		return truetext
 	}
-	return t
+	return falsetext
 }
