@@ -59,7 +59,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		SetClaim("username", u.Username).
 		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).
-		SetExpiration(time.Now().Add(time.Hour * 2)).
+		SetExpiration(time.Now().Add(time.Hour * 4)).
 		GetSignedString(utils.VerifySigningKey)
 	if err != nil {
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
@@ -74,14 +74,14 @@ func RegisterPost(c *fiber.Ctx) error {
 	partPlain := utils.NewPart().
 		SetBody("Hi " + u.Username + ",\n" +
 			"Verify your UserStyles.world account by clicking the link below.\n" +
-			"The link will expire in 2 hours\n\n" +
+			"The link will expire in 4 hours\n\n" +
 			link + "\n\n" +
 			"You can safely ignore this email if you never made an account for UserStyles.world.")
 	partHTML := utils.NewPart().
 		SetBody("Hi <p>" + u.Username + ",</p>\n" +
 			"<br>\n" +
 			"<p>Verify your UserStyles.world account by clicking the link below.</p>\n" +
-			"<b>The link will expire in 2 hours</b>\n" +
+			"<b>The link will expire in 4 hours</b>\n" +
 			"<br>\n" +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Verifcation link</a>\n" +
 			"<br><br>\n" +

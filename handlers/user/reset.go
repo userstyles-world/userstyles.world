@@ -223,7 +223,7 @@ func RecoverPost(c *fiber.Ctx) error {
 
 	jwtToken, err := utils.NewJWTToken().
 		SetClaim("email", u.Email).
-		SetExpiration(time.Now().Add(time.Hour * 2)).
+		SetExpiration(time.Now().Add(time.Hour * 4)).
 		GetSignedString(utils.VerifySigningKey)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).
@@ -237,14 +237,14 @@ func RecoverPost(c *fiber.Ctx) error {
 	partPlain := utils.NewPart().
 		SetBody("Hi " + user.Username + ",\n" +
 			"We have received a request to reset the password for your UserStyles.world account.\n\n" +
-			"The link will expire in 2 hours\n\n" +
+			"The link will expire in 4 hours\n\n" +
 			link + "\n\n" +
 			"You can safely ignore this email if you didn't request to reset your password.")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
 			"<br>\n" +
 			"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
-			"<b>The link will expire in 2 hours</b>\n" +
+			"<b>The link will expire in 4 hours</b>\n" +
 			"<br>\n" +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset password link</a>\n" +
 			"<br><br>\n" +
