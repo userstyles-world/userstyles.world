@@ -351,8 +351,7 @@ func SelectUpdateStyle(s Style) error {
 func (s *APIStyle) CompareMirrorURL() bool {
 	if s.Original != "" &&
 		(s.MirrorCode || s.MirrorMeta) &&
-		(s.MirrorURL == "" || s.MirrorURL == s.Original) &&
-		!(s.ImportPrivate || s.MirrorPrivate) {
+		(s.MirrorURL == "" || s.MirrorURL == s.Original) {
 		return true
 	}
 
@@ -360,6 +359,9 @@ func (s *APIStyle) CompareMirrorURL() bool {
 }
 
 func (s *APIStyle) ImportedAndMirroredText() string {
+	if s.ImportPrivate || s.MirrorPrivate {
+		return "Imported and mirrored from a private source"
+	}
 	return "Imported and mirrored from <code>" + s.Original + "</code>"
 }
 
@@ -372,16 +374,15 @@ func (s *APIStyle) MirroredCondition() bool {
 }
 
 func (s *APIStyle) ImportedText() string {
-	return "Imported from " + ternary(s.ImportPrivate, "private source", "<code>"+s.Original+"</code>")
+	if s.ImportPrivate {
+		return "Imported from a private source"
+	}
+	return "Imported from <code>" + s.Original + "</code>"
 }
 
 func (s *APIStyle) MirroredText() string {
-	return "Mirrored from " + ternary(s.MirrorPrivate, "private source", "<code>"+s.MirrorURL+"</code>")
-}
-
-func ternary(what bool, truetext string, falsetext string) string {
-	if what {
-		return truetext
+	if s.MirrorPrivate {
+		return "Mirrored from a private source"
 	}
-	return falsetext
+	return "Mirrored from <code>" + s.MirrorURL + "</code>"
 }
