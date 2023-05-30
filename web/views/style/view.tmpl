@@ -7,20 +7,14 @@
 		<span class="fg:4"> by {{ .Style.Username }}</span>
 	</h1>
 
-	{{ if .Style.CompareMirrorURL }}
-		{{ with .Style.ImportedAndMirroredText }}
-			<p class="mb:m md">{{ unescape . }}</p>
-		{{ end }}
+	{{ if .Style.ImportedAndMirrored }}
+		<p class="mb:m md">{{ unescape .Style.ImportedAndMirroredText }}</p>
 	{{ else }}
-		{{ if .Style.ImportedCondition }}
-			{{ with .Style.ImportedText }}
-				<p class="mb:m md">{{ unescape . }}</p>
-			{{ end }}
+		{{ if .Style.Imported }}
+			<p class="mb:m md">{{ unescape .Style.ImportedText }}</p>
 		{{ end }}
-		{{ if .Style.MirroredCondition }}
-			{{ with .Style.MirroredText }}
-				<p class="mb:m md">{{ unescape . }}</p>
-			{{ end }}
+		{{ if .Style.Mirrored }}
+			<p class="mb:m md">{{ unescape .Style.MirroredText }}</p>
 		{{ end }}
 	{{ end }}
 

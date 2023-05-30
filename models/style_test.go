@@ -2,7 +2,7 @@ package models
 
 import "testing"
 
-func TestAPIStyle_CompareMirrorURL(t *testing.T) {
+func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 	cases := []struct {
 		name     string
 		input    APIStyle
@@ -49,7 +49,7 @@ func TestAPIStyle_CompareMirrorURL(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if !c.input.CompareMirrorURL() {
+			if !c.input.ImportedAndMirrored() {
 				t.Fatal("import and mirror URL don't match")
 			}
 			if got := c.input.ImportedAndMirroredText(); got != c.expected {
@@ -60,14 +60,14 @@ func TestAPIStyle_CompareMirrorURL(t *testing.T) {
 	}
 }
 
-func TestAPIStyle_ImportedCondition(t *testing.T) {
+func TestAPIStyle_Imported(t *testing.T) {
 	cases := []struct {
 		name     string
 		input    APIStyle
 		expected string
 	}{
 		{
-			name: "imported private",
+			name: "private",
 			input: APIStyle{
 				Original:      "x",
 				ImportPrivate: true,
@@ -75,7 +75,7 @@ func TestAPIStyle_ImportedCondition(t *testing.T) {
 			expected: "Imported from a private source",
 		},
 		{
-			name: "imported public",
+			name: "public",
 			input: APIStyle{
 				Original: "x",
 			},
@@ -85,7 +85,7 @@ func TestAPIStyle_ImportedCondition(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if !c.input.ImportedCondition() {
+			if !c.input.Imported() {
 				t.Errorf("style isn't imported")
 			}
 			if got := c.input.ImportedText(); got != c.expected {
@@ -96,14 +96,14 @@ func TestAPIStyle_ImportedCondition(t *testing.T) {
 	}
 }
 
-func TestAPIStyle_MirroredCondition(t *testing.T) {
+func TestAPIStyle_Mirrored(t *testing.T) {
 	cases := []struct {
 		name     string
 		input    APIStyle
 		expected string
 	}{
 		{
-			name: "mirrored private",
+			name: "private",
 			input: APIStyle{
 				MirrorURL:     "x",
 				MirrorCode:    true,
@@ -112,7 +112,7 @@ func TestAPIStyle_MirroredCondition(t *testing.T) {
 			expected: "Mirrored from a private source",
 		},
 		{
-			name: "mirrored public",
+			name: "public",
 			input: APIStyle{
 				MirrorURL:  "x",
 				MirrorCode: true,
@@ -123,7 +123,7 @@ func TestAPIStyle_MirroredCondition(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if !c.input.MirroredCondition() {
+			if !c.input.Mirrored() {
 				t.Errorf("style isn't mirrored")
 			}
 			if got := c.input.MirroredText(); got != c.expected {

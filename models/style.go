@@ -346,18 +346,19 @@ func SelectUpdateStyle(s Style) error {
 		Updates(s).Error
 }
 
-// CompareMirrorURL will return true if a style is being imported and mirrored,
-// and both URLs are public.
-func (s *APIStyle) CompareMirrorURL() bool {
-	if s.Original != "" &&
-		(s.MirrorCode || s.MirrorMeta) &&
-		(s.MirrorURL == "" || s.MirrorURL == s.Original) {
-		return true
-	}
-
-	return false
+// MirrorEnabled returns whether or not a userstyle is mirrored.
+func (s *APIStyle) MirrorEnabled() bool {
+	return s.MirrorCode || s.MirrorMeta
 }
 
+// ImportedAndMirrored returns whether or not a userstyle is imported and
+// mirrored from the same URLs.
+func (s *APIStyle) ImportedAndMirrored() bool {
+	return s.Imported() && s.MirrorEnabled()
+}
+
+// ImportedAndMirroredText returns from which location a userstyle is imported
+// and mirrored.
 func (s *APIStyle) ImportedAndMirroredText() string {
 	if s.ImportPrivate || s.MirrorPrivate {
 		return "Imported and mirrored from a private source"
@@ -365,14 +366,12 @@ func (s *APIStyle) ImportedAndMirroredText() string {
 	return "Imported and mirrored from <code>" + s.Original + "</code>"
 }
 
-func (s *APIStyle) ImportedCondition() bool {
-	return s.Original != ""
+// Imported returns whether or not a userstyle is imported.
+func (s *APIStyle) Imported() bool {
+	return s.Original != "" && (s.MirrorURL == "" || s.Original == s.MirrorURL)
 }
 
-func (s *APIStyle) MirroredCondition() bool {
-	return s.MirrorURL != "" && (s.MirrorCode || s.MirrorMeta)
-}
-
+// ImportedText returns from which location a userstyle is imported.
 func (s *APIStyle) ImportedText() string {
 	if s.ImportPrivate {
 		return "Imported from a private source"
@@ -380,6 +379,12 @@ func (s *APIStyle) ImportedText() string {
 	return "Imported from <code>" + s.Original + "</code>"
 }
 
+// Mirrored returns whether or not a userstyle is mirrored.
+func (s *APIStyle) Mirrored() bool {
+	return s.MirrorURL != "" && s.MirrorEnabled()
+}
+
+// MirroredText returns from which location a userstyle is mirrored.
 func (s *APIStyle) MirroredText() string {
 	if s.MirrorPrivate {
 		return "Mirrored from a private source"
