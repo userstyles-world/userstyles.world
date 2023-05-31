@@ -12,6 +12,15 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 		mirrored string
 	}{
 		{
+			name: "mirrored import public",
+			input: APIStyle{
+				Original:   "x",
+				MirrorCode: true,
+			},
+			branch:   true,
+			combined: "Imported and mirrored from <code>x</code>",
+		},
+		{
 			name: "mirrored import private due to import",
 			input: APIStyle{
 				Original:      "x",
@@ -22,23 +31,24 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 			combined: "Imported and mirrored from a private source",
 		},
 		{
-			name: "mirrored import public",
+			name: "mirrored import private due to mirror",
+			input: APIStyle{
+				Original:      "x",
+				MirrorPrivate: true,
+				MirrorCode:    true,
+			},
+			branch:   true,
+			combined: "Imported and mirrored from a private source",
+		},
+		{
+			name: "both public",
 			input: APIStyle{
 				Original:   "x",
+				MirrorURL:  "x",
 				MirrorCode: true,
 			},
 			branch:   true,
 			combined: "Imported and mirrored from <code>x</code>",
-		},
-		{
-			name: "mirrored import private due to mirror",
-			input: APIStyle{
-				Original:      "x",
-				MirrorCode:    true,
-				MirrorPrivate: true,
-			},
-			branch:   true,
-			combined: "Imported and mirrored from a private source",
 		},
 		{
 			name: "both private due to import",
@@ -52,58 +62,47 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 			combined: "Imported and mirrored from a private source",
 		},
 		{
-			name: "both public",
-			input: APIStyle{
-				Original:   "x",
-				MirrorCode: true,
-				MirrorURL:  "x",
-			},
-			branch:   true,
-			combined: "Imported and mirrored from <code>x</code>",
-		},
-		{
 			name: "both private due to mirror",
 			input: APIStyle{
 				Original:      "x",
 				MirrorURL:     "x",
-				MirrorCode:    true,
 				MirrorPrivate: true,
+				MirrorCode:    true,
 			},
 			branch:   true,
 			combined: "Imported and mirrored from a private source",
 		},
 		{
-			name: "different URLs private",
-			input: APIStyle{
-				Original:      "x",
-				ImportPrivate: true,
-				MirrorCode:    true,
-				MirrorURL:     "y",
-				MirrorPrivate: true,
-			},
-			branch:   false,
-			imported: "Imported from a private source",
-			mirrored: "Mirrored from a private source",
-		},
-		{
 			name: "different URLs public",
 			input: APIStyle{
 				Original:   "x",
-				MirrorCode: true,
 				MirrorURL:  "y",
+				MirrorCode: true,
 			},
 			branch:   false,
 			imported: "Imported from <code>x</code>",
 			mirrored: "Mirrored from <code>y</code>",
 		},
 		{
+			name: "different URLs private",
+			input: APIStyle{
+				Original:      "x",
+				ImportPrivate: true,
+				MirrorURL:     "y",
+				MirrorPrivate: true,
+				MirrorCode:    true,
+			},
+			branch:   false,
+			imported: "Imported from a private source",
+			mirrored: "Mirrored from a private source",
+		},
+		{
 			name: "different URLs private import",
 			input: APIStyle{
 				Original:      "x",
 				ImportPrivate: true,
-				MirrorCode:    true,
 				MirrorURL:     "y",
-				MirrorPrivate: false,
+				MirrorCode:    true,
 			},
 			branch:   false,
 			imported: "Imported from a private source",
@@ -113,10 +112,9 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 			name: "different URLs private mirror",
 			input: APIStyle{
 				Original:      "x",
-				ImportPrivate: false,
-				MirrorCode:    true,
 				MirrorURL:     "y",
 				MirrorPrivate: true,
+				MirrorCode:    true,
 			},
 			branch:   false,
 			imported: "Imported from <code>x</code>",
@@ -159,19 +157,19 @@ func TestAPIStyle_Imported(t *testing.T) {
 		expected string
 	}{
 		{
+			name: "public",
+			input: APIStyle{
+				Original: "x",
+			},
+			expected: "Imported from <code>x</code>",
+		},
+		{
 			name: "private",
 			input: APIStyle{
 				Original:      "x",
 				ImportPrivate: true,
 			},
 			expected: "Imported from a private source",
-		},
-		{
-			name: "public",
-			input: APIStyle{
-				Original: "x",
-			},
-			expected: "Imported from <code>x</code>",
 		},
 	}
 
@@ -195,21 +193,21 @@ func TestAPIStyle_Mirrored(t *testing.T) {
 		expected string
 	}{
 		{
-			name: "private",
-			input: APIStyle{
-				MirrorURL:     "x",
-				MirrorCode:    true,
-				MirrorPrivate: true,
-			},
-			expected: "Mirrored from a private source",
-		},
-		{
 			name: "public",
 			input: APIStyle{
 				MirrorURL:  "x",
 				MirrorCode: true,
 			},
 			expected: "Mirrored from <code>x</code>",
+		},
+		{
+			name: "private",
+			input: APIStyle{
+				MirrorURL:     "x",
+				MirrorPrivate: true,
+				MirrorCode:    true,
+			},
+			expected: "Mirrored from a private source",
 		},
 	}
 
