@@ -12,17 +12,17 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 		mirrored string
 	}{
 		{
-			name: "private import",
+			name: "mirrored import private due to import",
 			input: APIStyle{
 				Original:      "x",
-				MirrorCode:    true,
 				ImportPrivate: true,
+				MirrorCode:    true,
 			},
 			branch:   true,
 			combined: "Imported and mirrored from a private source",
 		},
 		{
-			name: "public origin",
+			name: "mirrored import public",
 			input: APIStyle{
 				Original:   "x",
 				MirrorCode: true,
@@ -31,13 +31,22 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 			combined: "Imported and mirrored from <code>x</code>",
 		},
 		{
-			name: "both private",
+			name: "mirrored import private due to mirror",
+			input: APIStyle{
+				Original:      "x",
+				MirrorCode:    true,
+				MirrorPrivate: true,
+			},
+			branch:   true,
+			combined: "Imported and mirrored from a private source",
+		},
+		{
+			name: "both private due to import",
 			input: APIStyle{
 				Original:      "x",
 				ImportPrivate: true,
 				MirrorURL:     "x",
 				MirrorCode:    true,
-				MirrorPrivate: false,
 			},
 			branch:   true,
 			combined: "Imported and mirrored from a private source",
@@ -51,6 +60,17 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 			},
 			branch:   true,
 			combined: "Imported and mirrored from <code>x</code>",
+		},
+		{
+			name: "both private due to mirror",
+			input: APIStyle{
+				Original:      "x",
+				MirrorURL:     "x",
+				MirrorCode:    true,
+				MirrorPrivate: true,
+			},
+			branch:   true,
+			combined: "Imported and mirrored from a private source",
 		},
 		{
 			name: "different URLs private",
