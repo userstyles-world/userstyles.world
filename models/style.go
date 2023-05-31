@@ -346,10 +346,20 @@ func SelectUpdateStyle(s Style) error {
 		Updates(s).Error
 }
 
+// MirrorEnabled returns whether or not mirroring is enabled.
+func (s *APIStyle) MirrorEnabled() bool {
+	return s.MirrorCode || s.MirrorMeta
+}
+
+// SameMirrorURL returns whether or not mirror URL matches import URL.
+func (s *APIStyle) SameMirrorURL() bool {
+	return s.MirrorURL == "" || s.Original == s.MirrorURL
+}
+
 // ImportedAndMirrored returns whether or not a userstyle is imported and
 // mirrored from the same URLs.
 func (s *APIStyle) ImportedAndMirrored() bool {
-	return s.Imported() && s.Mirrored() && (s.Original == s.MirrorURL || s.MirrorURL == "")
+	return s.Imported() && s.MirrorEnabled() && s.SameMirrorURL()
 }
 
 // ImportedAndMirroredText returns from which location a userstyle is imported
@@ -376,7 +386,7 @@ func (s *APIStyle) ImportedText() string {
 
 // Mirrored returns whether or not a userstyle is mirrored.
 func (s *APIStyle) Mirrored() bool {
-	return s.MirrorCode || s.MirrorMeta
+	return s.MirrorURL != "" && s.MirrorEnabled()
 }
 
 // MirroredText returns from which location a userstyle is mirrored.

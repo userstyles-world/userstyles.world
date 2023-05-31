@@ -120,6 +120,25 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 			imported: "Imported from <code>x</code>",
 			mirrored: "Mirrored from a private source",
 		},
+		{
+			name: "has import URL but not mirrored",
+			input: APIStyle{
+				Original: "x",
+			},
+			branch:   false,
+			imported: "Imported from <code>x</code>",
+		},
+		{
+			name: "has mirror URL but not mirrored",
+			input: APIStyle{
+				MirrorURL: "y",
+			},
+			branch: false,
+		},
+		{
+			name:  "empty",
+			input: APIStyle{},
+		},
 	}
 
 	for _, c := range cases {
@@ -135,15 +154,19 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 					t.Errorf("exp: %v\n", c.combined)
 				}
 			} else {
-				got := c.input.ImportedText()
-				if got != c.imported {
-					t.Errorf("got: %v\n", got)
-					t.Errorf("exp: %v\n", c.imported)
+				if c.input.Imported() {
+					got := c.input.ImportedText()
+					if got != c.imported {
+						t.Errorf("got: %v\n", got)
+						t.Errorf("exp: %v\n", c.imported)
+					}
 				}
-				got = c.input.MirroredText()
-				if got != c.mirrored {
-					t.Errorf("got: %v\n", got)
-					t.Errorf("exp: %v\n", c.mirrored)
+				if c.input.Mirrored() {
+					got := c.input.MirroredText()
+					if got != c.mirrored {
+						t.Errorf("got: %v\n", got)
+						t.Errorf("exp: %v\n", c.mirrored)
+					}
 				}
 			}
 		})
