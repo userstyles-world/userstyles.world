@@ -254,6 +254,6 @@ func RecoverPost(c *fiber.Ctx) error {
 
 	return c.Render("user/email-sent", fiber.Map{
 		"Title":  "Password reset",
-		"Reason": "We've sent an email to reset your password.",
+		"Reason": "If there is an account associated with this email address, we'll send a password reset link to it.",
 	})
 }
