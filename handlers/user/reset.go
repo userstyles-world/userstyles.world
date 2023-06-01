@@ -219,6 +219,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			SetExpiration(time.Now().Add(time.Hour * 2)).
 			GetSignedString(utils.VerifySigningKey)
 		if err != nil {
+			log.Warn.Printf("Not able to generate JWT token: %v\n", err)
 			return
 		}
 
