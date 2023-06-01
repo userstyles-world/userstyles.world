@@ -199,73 +199,61 @@ func RecoverPost(c *fiber.Ctx) error {
 			})
 	}
 
-	user, err := models.FindUserByEmail(u.Email)
-	// Return early if we got a error, or when the LastPasswordReset isn't zero
-	// And LastPasswordReset + 5 minutes is later than time.Now(). So we only
-	// allow to request a new password token every 5 minutes, also to prevent
-	// spamming a user's mail.
-	if err != nil || (!user.LastPasswordReset.IsZero() && user.LastPasswordReset.Add(emailRequestLimit).After(time.Now())) {
-		// We need to just say we have send an reset email.
-		// So that we can't leak if we have such email in our database ;).
-		return c.Render("user/email-sent", fiber.Map{
-			"Title":  "Password reset",
-			"Reason": "We've sent an email to reset your password.",
-		})
-	}
+	go func(u models.User) {
+		user, err := models.FindUserByEmail(u.Email)
+		// Return early if we got a error, or when the LastPasswordReset isn't zero
+		// And LastPasswordReset + 5 minutes is later than time.Now(). So we only
+		// allow to request a new password token every 5 minutes, also to prevent
+		// spamming a user's mail.
+		if err != nil || (!user.LastPasswordReset.IsZero() && user.LastPasswordReset.Add(emailRequestLimit).After(time.Now())) {
+			return
+		}
 
-	if err := user.UpdateLastPasswordRequest(); err != nil {
-		log.Warn.Printf("Not able to update user's last password reset: %v\n", err)
-		return c.Status(fiber.StatusInternalServerError).
-			Render("err", fiber.Map{
-				"Title": "Internal server error",
-			})
-	}
+		if err := user.UpdateLastPasswordRequest(); err != nil {
+			log.Warn.Printf("Not able to update user's last password reset: %v\n", err)
+			return
+		}
 
-	jwtToken, err := utils.NewJWTToken().
-		SetClaim("email", u.Email).
-		SetExpiration(time.Now().Add(time.Hour * 4)).
-		GetSignedString(utils.VerifySigningKey)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).
-			Render("err", fiber.Map{
-				"Title": "Internal server error",
-			})
-	}
+		jwtToken, err := utils.NewJWTToken().
+			SetClaim("email", u.Email).
+			SetExpiration(time.Now().Add(time.Hour * 2)).
+			GetSignedString(utils.VerifySigningKey)
+		if err != nil {
+			log.Warn.Printf("Not able to generate JWT token: %v\n", err)
+			return
+		}
 
-	link := c.BaseURL() + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
+		link := c.BaseURL() + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
 
-	partPlain := utils.NewPart().
-		SetBody("Hi " + user.Username + ",\n" +
-			"We have received a request to reset the password for your UserStyles.world account.\n\n" +
-			"Follow the link bellow to reset your password. The link will expire in 4 hours.\n" +
-			link + "\n\n" +
-			"You can safely ignore this email if you didn't request to reset your password.")
-	partHTML := utils.NewPart().
-		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
-			"<br>\n" +
-			"<p>Click the link bellow to reset your password. <b>The link will expire in 4 hours.</b><br>\n" +
-			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset your password</a></p>\n" +
-			"<br>\n" +
-			"<p>You can safely ignore this email if you didn't request to reset your password.</p>").
-		SetContentType("text/html")
+		partPlain := utils.NewPart().
+			SetBody("Hi " + user.Username + ",\n" +
+				"We have received a request to reset the password for your UserStyles.world account.\n\n" +
+				"Follow the link bellow to reset your password. The link will expire in 4 hours.\n" +
+				link + "\n\n" +
+				"You can safely ignore this email if you didn't request to reset your password.")
+		partHTML := utils.NewPart().
+			SetBody("<p>Hi " + user.Username + ",</p>\n" +
+				"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
+				"<br>\n" +
+				"<p>Click the link bellow to reset your password. <b>The link will expire in 4 hours.</b><br>\n" +
+				"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset your password</a></p>\n" +
+				"<br>\n" +
+				"<p>You can safely ignore this email if you didn't request to reset your password.</p>").
+			SetContentType("text/html")
 
-	emailErr := utils.NewEmail().
-		SetTo(u.Email).
-		SetSubject("Reset your password").
-		AddPart(*partPlain).
-		AddPart(*partHTML).
-		SendEmail(config.IMAPServer)
+		utils.NewEmail().
+			SetTo(u.Email).
+			SetSubject("Reset your password").
+			AddPart(*partPlain).
+			AddPart(*partHTML).
+			SendEmail(config.IMAPServer)
+	}(u)
 
-	if emailErr != nil {
-		return c.Status(fiber.StatusInternalServerError).
-			Render("err", fiber.Map{
-				"Title": "Internal server error",
-			})
-	}
+	// We need to just say we have send an reset email.
+	// So that we can't leak if we have such email in our database ;).
 
 	return c.Render("user/email-sent", fiber.Map{
 		"Title":  "Password reset",
-		"Reason": "We've sent an email to reset your password.",
+		"Reason": "If there is an account associated with this email address, we'll send a password reset link to it.",
 	})
 }
