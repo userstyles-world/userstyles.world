@@ -56,15 +56,14 @@ func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, mod
 			"Regards,\n" + "The Moderation Team")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<br>" +
 			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
-			"<br><br>" +
+			"<br>\n" +
 			"<p>Your style \"<b>" + style.Name + "</b>\" has been removed from our platform.</p>\n" +
 			"<p>You can check for more information about this action on the " +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
 			"<p>If you'd like to come in touch with us, " +
 			"please email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.<p>\n" +
-			"<br><br>" +
+			"<br>\n" +
 			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
 		SetContentType("text/html")
 
