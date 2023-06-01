@@ -30,13 +30,12 @@ func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL st
 			"Regards,\n" + "The Moderation Team")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<br>\n" +
 			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
-			"<br><br>\n" +
+			"<br>\n" +
 			"<p>Your style \"" + style.Name + "\" has been promoted to be featured on the homepage!\n</p>\n" +
 			"<p>It has been promoted by the moderator " +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modProfile + "\">" + modName + "</a>.</p>\n" +
-			"<br><br>\n" +
+			"<br>\n" +
 			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
 		SetContentType("text/html")
 

@@ -139,25 +139,25 @@ func ResetPost(c *fiber.Ctx) error {
 	go func(user *models.User) {
 		partPlain := utils.NewPart().
 			SetBody("Hi " + user.Username + ",\n" +
-				"We'd like to notice you about a recent action of your account\n\n" +
+				"We'd like to notice you about a recent action of your account:\n\n" +
 				"We've authorized a password change. Which was verified by email.\n" +
 				"If you don't recognize this account, please email us at feedback@userstyles.world.\n\n" +
 				"Regards,\n" + "The UserStyles.world team")
 		partHTML := utils.NewPart().
 			SetBody("<p>Hi " + user.Username + ",</p>\n" +
-				"<br>" +
-				"<p>We'd like to notice you about a recent action of your account</p>\n" +
-				"<br><br>" +
+				"<p>We'd like to notice you about a recent action of your account:</p>\n" +
+				"<br>\n" +
 				"<p>We've authorized a password change. Which was verified by email.</p>\n" +
+				"<br>\n" +
 				"<p>If you don't recognize this account, " +
 				"please email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.</p>\n" +
-				"<br><br>" +
+				"<br>\n" +
 				"<p>Regards,</p>\n" + "<p>The UserStyles.world team</p>").
 			SetContentType("text/html")
 
 		err := utils.NewEmail().
 			SetTo(user.Email).
-			SetSubject("Account change").
+			SetSubject("Your password has been changed").
 			AddPart(*partPlain).
 			AddPart(*partHTML).
 			SendEmail(config.IMAPServer)
@@ -237,17 +237,16 @@ func RecoverPost(c *fiber.Ctx) error {
 	partPlain := utils.NewPart().
 		SetBody("Hi " + user.Username + ",\n" +
 			"We have received a request to reset the password for your UserStyles.world account.\n\n" +
-			"The link will expire in 4 hours\n\n" +
+			"Follow the link bellow to reset your password. The link will expire in 4 hours.\n" +
 			link + "\n\n" +
 			"You can safely ignore this email if you didn't request to reset your password.")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<br>\n" +
 			"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
-			"<b>The link will expire in 4 hours</b>\n" +
 			"<br>\n" +
-			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset password link</a>\n" +
-			"<br><br>\n" +
+			"<p>Click the link bellow to reset your password. <b>The link will expire in 4 hours.</b><br>\n" +
+			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset your password</a></p>\n" +
+			"<br>\n" +
 			"<p>You can safely ignore this email if you didn't request to reset your password.</p>").
 		SetContentType("text/html")
 

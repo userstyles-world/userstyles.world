@@ -131,12 +131,9 @@ func LoginPost(c *fiber.Ctx) error {
 				"https://userstyles.world/account#password")
 		partHTML := utils.NewPart().
 			SetBody("<p>Hi " + user.Username + ",</p>\n" +
-				"<br>\n" +
 				"<p>We noticed a new sign in to your UserStyles.world account.</p>\n" +
-				"<br>\n" +
-				"<b>If that was you, you can safely ignore this email.\n" +
-				"<br>\n" +
-				"<b>If that wasn't you, <a target=\"_blank\" clicktracking=\"off\" href=\"https://userstyles.world/account#password\">please change your password</a>.\n").
+				"<p>If that was you, you can safely ignore this email.<br>\n" +
+				"<b>If that wasn't you, please <a target=\"_blank\" clicktracking=\"off\" href=\"https://userstyles.world/account#password\">change your password</a>.</b></p>\n").
 			SetContentType("text/html")
 
 		utils.NewEmail().
