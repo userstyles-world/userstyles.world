@@ -24,13 +24,15 @@
 
 <section id="biography">
 	<h2 class="td:d">Biography</h2>
-	<article class="md">
-		{{ if .Profile.Biography }}
-			{{ proxy (.Profile.Biography | MarkdownUnsafe) "profile" .Profile.ID | unescape }}
+	{{ if .Profile.Biography }}
+		{{ with proxy (.Profile.Biography | MarkdownUnsafe) "profile" .Profile.ID }}
+			<article class="md">{{ unescape . }}</article>
 		{{ else }}
-			<p class="fg:3"><i>Biography isn't set.</i></p>
+			<p class="fg:3"><i>There is a syntax error in biography.</i></p>
 		{{ end }}
-	</article>
+	{{ else }}
+		<p class="fg:3"><i>Biography isn't set.</i></p>
+	{{ end }}
 </section>
 
 <section id="links">

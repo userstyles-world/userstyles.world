@@ -116,7 +116,15 @@
 
 <section id="biography">
 	<h2 class="td:d">Biography</h2>
-	<article class="md">{{ proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID | unescape }}</article>
+	{{ if .Params.Biography }}
+		{{ with proxy (.Params.Biography | MarkdownUnsafe) "profile" .Params.ID }}
+			<article class="md">{{ unescape . }}</article>
+		{{ else }}
+			<p class="fg:3"><i>There is a syntax error in biography.</i></p>
+		{{ end }}
+	{{ else }}
+		<p class="fg:3"><i>Biography isn't set.</i></p>
+	{{ end }}
 	<form class="Form Form-box mt:m" method="post" action="/account/biography">
 		<label for="biography">Set your biography</label>
 		<i class="fg:3" id="biography-hint">Supports {{ template "partials/markdown" . }} syntax.</i>

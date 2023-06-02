@@ -159,7 +159,11 @@
 <section id="description">
 	<h2 class="td:d">Description</h2>
 	{{ if .Style.Description }}
-		<article class="md">{{ proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
+		{{ with proxy (.Style.Description | MarkdownUnsafe) "style" .Style.ID }}
+			<article class="md">{{ unescape . }}</article>
+		{{ else }}
+			<i>There is a syntax error in description.</i>
+		{{ end }}
 	{{ else }}
 		<i>Userstyle doesn't have description.</i>
 	{{ end }}
@@ -168,7 +172,11 @@
 <section id="notes">
 	<h2 class="td:d">Notes</h2>
 	{{ if .Style.Notes }}
-		<article class="md">{{ proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID | unescape }}</article>
+		{{ with proxy (.Style.Notes | MarkdownUnsafe) "style" .Style.ID }}
+			<article class="md">{{ unescape . }}</article>
+		{{ else }}
+			<i>There is a syntax error in notes.</i>
+		{{ end }}
 	{{ else }}
 		<i>Userstyle doesn't have notes.</i>
 	{{ end }}
