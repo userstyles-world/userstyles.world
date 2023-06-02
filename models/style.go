@@ -67,7 +67,7 @@ type StyleSiteMap struct {
 
 // TruncateCode returns if it should the style, to prevent long loading times.
 func (s APIStyle) TruncateCode() bool {
-	return len(s.Code) > 100_000
+	return len(s.Code) > 10_000
 }
 
 func GetAllSitesSiteMap() ([]StyleSiteMap, error) {
