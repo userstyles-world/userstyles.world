@@ -19,7 +19,8 @@ what we're working on, and feel free to open an issue to request new features.
 - Search functionality (to be improved upon)
 - Importing from [[https://uso.kkx.one][USo-archive]], GitHub, GitLab, Codeberg, etc.
 - Permanent link to original URL that the style was imported from
-- Optional source code as well as metadata mirroring for imported userstyles
+- Optional source code as well as metadata mirroring
+- Private or public import and mirror URLs
 - Project homepages, description, notes, license, category, screenshots, etc.
 - Userstyle deletion and editing of all available fields
 - Style statistics in form of views, and weekly/total installs
