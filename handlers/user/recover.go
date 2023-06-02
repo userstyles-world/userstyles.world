@@ -69,14 +69,14 @@ func RecoverPost(c *fiber.Ctx) error {
 
 		jwtToken, err := utils.NewJWTToken().
 			SetClaim("email", u.Email).
-			SetExpiration(time.Now().Add(time.Hour * 2)).
+			SetExpiration(time.Now().Add(time.Hour * 4)).
 			GetSignedString(utils.VerifySigningKey)
 		if err != nil {
 			log.Warn.Printf("Not able to generate JWT token: %v\n", err)
 			return
 		}
 
-		link := c.BaseURL() + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
+		link := config.BaseURL + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
 
 		partPlain := utils.NewPart().
 			SetBody("Hi " + user.Username + ",\n" +
