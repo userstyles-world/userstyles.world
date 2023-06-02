@@ -9,7 +9,7 @@ what we're working on, and feel free to open an issue to request new features.
 
 *** Core User functionality:
 - Register, login, and logout
-- Email verification and password recovery
+- Email verification, login notifications and password recovery
 - OAuth login via GitHub, GitLab, and Codeberg
 - Custom biography area with [[https://guides.github.com/features/mastering-markdown/][Markdown]] support
 - Links to GitHub, GitLab, and Codeberg profiles
