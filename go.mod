@@ -26,6 +26,7 @@ require (
 	github.com/yuin/goldmark v1.5.2
 	github.com/yuin/goldmark-meta v1.1.0
 	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
+	golang.org/x/net v0.7.0
 	gorm.io/driver/sqlite v1.4.2
 	gorm.io/gorm v1.24.3
 	gorm.io/plugin/prometheus v0.0.0-20230109022219-ee24990c7392
@@ -82,7 +83,6 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
 	golang.org/x/image v0.5.0 // indirect
-	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect

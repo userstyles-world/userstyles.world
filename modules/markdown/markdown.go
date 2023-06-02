@@ -11,6 +11,8 @@ import (
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
 
+	xhtml "golang.org/x/net/html"
+
 	"userstyles.world/modules/log"
 )
 
@@ -39,7 +41,8 @@ var (
 			parser.WithAutoHeadingID(),
 		),
 	)
-	fallback = "<mark>Failed to convert Markdown. Please try again.</mark>"
+	fallback    = "<mark>Failed to convert Markdown. Please try again.</mark>"
+	unreachable = "<mark>Unreachable. Please contact us if you see this.<mark>"
 )
 
 // RenderSafe is used for rendering internal documents.
@@ -55,13 +58,31 @@ func RenderSafe(text []byte) string {
 
 // RenderUnsafe is used for rendering user-generated input.
 func RenderUnsafe(text []byte) string {
-	s, err := convert(text)
-	if err != nil {
-		log.Warn.Printf("Failed to render %16q: %v\n", text, err)
+	var buf bytes.Buffer
+	if err := md.Convert(text, &buf); err != nil {
+		log.Warn.Printf("Failed to convert %16q: %v\n", text, err)
 		return fallback
 	}
 
-	return bm.Sanitize(s)
+	// TODO(vednoc): Explore moving this up or down.
+	doc, err := xhtml.Parse(&buf)
+	if err != nil {
+		log.Warn.Printf("Failed to parse %16q: %v\n", text, err)
+		return fallback
+	}
+
+	if body := getContent(doc); body != nil {
+		for child := body.FirstChild; child != nil; child = child.NextSibling {
+			err := xhtml.Render(&buf, child)
+			if err != nil {
+				log.Warn.Printf("Failed to render %q: %v\n", child.Data, err)
+				return fallback
+			}
+		}
+		return bm.Sanitize(buf.String())
+	}
+
+	return unreachable
 }
 
 func RenderDocs(text []byte) (string, map[string]interface{}) {
@@ -85,4 +106,19 @@ func convert(text []byte) (string, error) {
 	}
 
 	return buf.String(), nil
+}
+
+// getContent traverses the document and tries to return content in body tag.
+func getContent(n *xhtml.Node) *xhtml.Node {
+	if n.Type == xhtml.ElementNode && n.Data == "body" {
+		return n
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if content := getContent(c); content != nil {
+			return content
+		}
+	}
+
+	return nil
 }
