@@ -2,146 +2,146 @@ package models
 
 import "testing"
 
-func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
-	cases := []struct {
-		name     string
-		input    APIStyle
-		branch   bool
-		combined string
-		imported string
-		mirrored string
-	}{
-		{
-			name: "mirrored import public",
-			input: APIStyle{
-				Original:   "x",
-				MirrorCode: true,
-			},
-			branch:   true,
-			combined: "Imported and mirrored from <code>x</code>",
+var importAndMirrorCases = []struct {
+	name     string
+	input    APIStyle
+	branch   bool
+	combined string
+	imported string
+	mirrored string
+}{
+	{
+		name: "mirrored import public",
+		input: APIStyle{
+			Original:   "x",
+			MirrorCode: true,
 		},
-		{
-			name: "mirrored import private due to import",
-			input: APIStyle{
-				Original:      "x",
-				ImportPrivate: true,
-				MirrorCode:    true,
-			},
-			branch:   true,
-			combined: "Imported and mirrored from a private source",
+		branch:   true,
+		combined: "Imported and mirrored from <code>x</code>",
+	},
+	{
+		name: "mirrored import private due to import",
+		input: APIStyle{
+			Original:      "x",
+			ImportPrivate: true,
+			MirrorCode:    true,
 		},
-		{
-			name: "mirrored import private due to mirror",
-			input: APIStyle{
-				Original:      "x",
-				MirrorPrivate: true,
-				MirrorCode:    true,
-			},
-			branch:   true,
-			combined: "Imported and mirrored from a private source",
+		branch:   true,
+		combined: "Imported and mirrored from a private source",
+	},
+	{
+		name: "mirrored import private due to mirror",
+		input: APIStyle{
+			Original:      "x",
+			MirrorPrivate: true,
+			MirrorCode:    true,
 		},
-		{
-			name: "both public",
-			input: APIStyle{
-				Original:   "x",
-				MirrorURL:  "x",
-				MirrorCode: true,
-			},
-			branch:   true,
-			combined: "Imported and mirrored from <code>x</code>",
+		branch:   true,
+		combined: "Imported and mirrored from a private source",
+	},
+	{
+		name: "both public",
+		input: APIStyle{
+			Original:   "x",
+			MirrorURL:  "x",
+			MirrorCode: true,
 		},
-		{
-			name: "both private due to import",
-			input: APIStyle{
-				Original:      "x",
-				ImportPrivate: true,
-				MirrorURL:     "x",
-				MirrorCode:    true,
-			},
-			branch:   true,
-			combined: "Imported and mirrored from a private source",
+		branch:   true,
+		combined: "Imported and mirrored from <code>x</code>",
+	},
+	{
+		name: "both private due to import",
+		input: APIStyle{
+			Original:      "x",
+			ImportPrivate: true,
+			MirrorURL:     "x",
+			MirrorCode:    true,
 		},
-		{
-			name: "both private due to mirror",
-			input: APIStyle{
-				Original:      "x",
-				MirrorURL:     "x",
-				MirrorPrivate: true,
-				MirrorCode:    true,
-			},
-			branch:   true,
-			combined: "Imported and mirrored from a private source",
+		branch:   true,
+		combined: "Imported and mirrored from a private source",
+	},
+	{
+		name: "both private due to mirror",
+		input: APIStyle{
+			Original:      "x",
+			MirrorURL:     "x",
+			MirrorPrivate: true,
+			MirrorCode:    true,
 		},
-		{
-			name: "different URLs public",
-			input: APIStyle{
-				Original:   "x",
-				MirrorURL:  "y",
-				MirrorCode: true,
-			},
-			branch:   false,
-			imported: "Imported from <code>x</code>",
-			mirrored: "Mirrored from <code>y</code>",
+		branch:   true,
+		combined: "Imported and mirrored from a private source",
+	},
+	{
+		name: "different URLs public",
+		input: APIStyle{
+			Original:   "x",
+			MirrorURL:  "y",
+			MirrorCode: true,
 		},
-		{
-			name: "different URLs private",
-			input: APIStyle{
-				Original:      "x",
-				ImportPrivate: true,
-				MirrorURL:     "y",
-				MirrorPrivate: true,
-				MirrorCode:    true,
-			},
-			branch:   false,
-			imported: "Imported from a private source",
-			mirrored: "Mirrored from a private source",
+		branch:   false,
+		imported: "Imported from <code>x</code>",
+		mirrored: "Mirrored from <code>y</code>",
+	},
+	{
+		name: "different URLs private",
+		input: APIStyle{
+			Original:      "x",
+			ImportPrivate: true,
+			MirrorURL:     "y",
+			MirrorPrivate: true,
+			MirrorCode:    true,
 		},
-		{
-			name: "different URLs private import",
-			input: APIStyle{
-				Original:      "x",
-				ImportPrivate: true,
-				MirrorURL:     "y",
-				MirrorCode:    true,
-			},
-			branch:   false,
-			imported: "Imported from a private source",
-			mirrored: "Mirrored from <code>y</code>",
+		branch:   false,
+		imported: "Imported from a private source",
+		mirrored: "Mirrored from a private source",
+	},
+	{
+		name: "different URLs private import",
+		input: APIStyle{
+			Original:      "x",
+			ImportPrivate: true,
+			MirrorURL:     "y",
+			MirrorCode:    true,
 		},
-		{
-			name: "different URLs private mirror",
-			input: APIStyle{
-				Original:      "x",
-				MirrorURL:     "y",
-				MirrorPrivate: true,
-				MirrorCode:    true,
-			},
-			branch:   false,
-			imported: "Imported from <code>x</code>",
-			mirrored: "Mirrored from a private source",
+		branch:   false,
+		imported: "Imported from a private source",
+		mirrored: "Mirrored from <code>y</code>",
+	},
+	{
+		name: "different URLs private mirror",
+		input: APIStyle{
+			Original:      "x",
+			MirrorURL:     "y",
+			MirrorPrivate: true,
+			MirrorCode:    true,
 		},
-		{
-			name: "has import URL but not mirrored",
-			input: APIStyle{
-				Original: "x",
-			},
-			branch:   false,
-			imported: "Imported from <code>x</code>",
+		branch:   false,
+		imported: "Imported from <code>x</code>",
+		mirrored: "Mirrored from a private source",
+	},
+	{
+		name: "has import URL but not mirrored",
+		input: APIStyle{
+			Original: "x",
 		},
-		{
-			name: "has mirror URL but not mirrored",
-			input: APIStyle{
-				MirrorURL: "y",
-			},
-			branch: false,
+		branch:   false,
+		imported: "Imported from <code>x</code>",
+	},
+	{
+		name: "has mirror URL but not mirrored",
+		input: APIStyle{
+			MirrorURL: "y",
 		},
-		{
-			name:  "empty",
-			input: APIStyle{},
-		},
-	}
+		branch: false,
+	},
+	{
+		name:  "empty",
+		input: APIStyle{},
+	},
+}
 
-	for _, c := range cases {
+func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
+	for _, c := range importAndMirrorCases {
 		t.Run(c.name, func(t *testing.T) {
 			if c.input.ImportedAndMirrored() != c.branch {
 				t.Fatal("import and mirror URL should match")
@@ -166,6 +166,27 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 					if got != c.mirrored {
 						t.Errorf("got: %v\n", got)
 						t.Errorf("exp: %v\n", c.mirrored)
+					}
+				}
+			}
+		})
+	}
+}
+
+func BenchmarkAPIStyle_ImportedAndMirrored(b *testing.B) {
+	for _, c := range importAndMirrorCases {
+		b.Run(c.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				if c.branch {
+					if c.input.ImportedAndMirrored() {
+						c.input.ImportedAndMirroredText()
+					}
+				} else {
+					if c.input.Imported() {
+						c.input.ImportedText()
+					}
+					if c.input.Mirrored() {
+						c.input.MirroredText()
 					}
 				}
 			}
