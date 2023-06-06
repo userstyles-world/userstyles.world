@@ -143,30 +143,25 @@ var importAndMirrorCases = []struct {
 func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 	for _, c := range importAndMirrorCases {
 		t.Run(c.name, func(t *testing.T) {
-			if c.input.ImportedAndMirrored() != c.branch {
-				t.Fatal("import and mirror URL should match")
-			}
-
 			if c.branch {
-				got := c.input.ImportedAndMirroredText()
-				if got != c.combined {
-					t.Errorf("got: %v\n", got)
-					t.Errorf("exp: %v\n", c.combined)
+				combined := c.input.ImportedAndMirrored()
+				if combined != c.combined {
+					t.Errorf("combined: %v\n", combined)
+					t.Errorf("expected: %v\n", c.combined)
 				}
 			} else {
-				if c.input.Imported() {
-					got := c.input.ImportedText()
-					if got != c.imported {
-						t.Errorf("got: %v\n", got)
-						t.Errorf("exp: %v\n", c.imported)
-					}
+				if c.input.isImportedAndMirrored() {
+					t.Fatal("import and mirror URL should match")
 				}
-				if c.input.Mirrored() {
-					got := c.input.MirroredText()
-					if got != c.mirrored {
-						t.Errorf("got: %v\n", got)
-						t.Errorf("exp: %v\n", c.mirrored)
-					}
+				imported := c.input.Imported()
+				if imported != c.imported {
+					t.Errorf("imported: %v\n", imported)
+					t.Errorf("expected: %v\n", c.imported)
+				}
+				mirrored := c.input.Mirrored()
+				if mirrored != c.mirrored {
+					t.Errorf("mirrored: %v\n", mirrored)
+					t.Errorf("expected: %v\n", c.mirrored)
 				}
 			}
 		})
@@ -178,16 +173,10 @@ func BenchmarkAPIStyle_ImportedAndMirrored(b *testing.B) {
 		b.Run(c.name, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				if c.branch {
-					if c.input.ImportedAndMirrored() {
-						c.input.ImportedAndMirroredText()
-					}
+					c.input.ImportedAndMirrored()
 				} else {
-					if c.input.Imported() {
-						c.input.ImportedText()
-					}
-					if c.input.Mirrored() {
-						c.input.MirroredText()
-					}
+					c.input.Imported()
+					c.input.Mirrored()
 				}
 			}
 		})
@@ -219,10 +208,10 @@ func TestAPIStyle_Imported(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if !c.input.Imported() {
+			if !c.input.isImported() {
 				t.Fatal("style isn't imported")
 			}
-			if got := c.input.ImportedText(); got != c.expected {
+			if got := c.input.Imported(); got != c.expected {
 				t.Errorf("got: %v\n", got)
 				t.Errorf("exp: %v\n", c.expected)
 			}
@@ -257,10 +246,10 @@ func TestAPIStyle_Mirrored(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if !c.input.Mirrored() {
+			if !c.input.isMirrored() {
 				t.Fatal("style isn't mirrored")
 			}
-			if got := c.input.MirroredText(); got != c.expected {
+			if got := c.input.Mirrored(); got != c.expected {
 				t.Errorf("got: %v\n", got)
 				t.Errorf("exp: %v\n", c.expected)
 			}

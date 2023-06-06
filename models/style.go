@@ -346,51 +346,60 @@ func SelectUpdateStyle(s Style) error {
 		Updates(s).Error
 }
 
-// MirrorEnabled returns whether or not mirroring is enabled.
-func (s *APIStyle) MirrorEnabled() bool {
+// mirrorEnabled returns whether or not mirroring is enabled.
+func (s *APIStyle) mirrorEnabled() bool {
 	return s.MirrorCode || s.MirrorMeta
 }
 
-// SameMirrorURL returns whether or not mirror URL matches import URL.
-func (s *APIStyle) SameMirrorURL() bool {
+// sameMirrorURL returns whether or not mirror URL matches import URL.
+func (s *APIStyle) sameMirrorURL() bool {
 	return s.MirrorURL == "" || s.Original == s.MirrorURL
 }
 
-// ImportedAndMirrored returns whether or not a userstyle is imported and
+// isImportedAndMirrored returns whether or not a userstyle is imported and
 // mirrored from the same URLs.
-func (s *APIStyle) ImportedAndMirrored() bool {
-	return s.Imported() && s.MirrorEnabled() && s.SameMirrorURL()
+func (s *APIStyle) isImportedAndMirrored() bool {
+	return s.isImported() && s.mirrorEnabled() && s.sameMirrorURL()
 }
 
-// ImportedAndMirroredText returns from which location a userstyle is imported
-// and mirrored.
-func (s *APIStyle) ImportedAndMirroredText() string {
+// ImportedAndMirrored returns from which location a userstyle is imported and
+// mirrored.
+func (s *APIStyle) ImportedAndMirrored() string {
+	if !s.isImportedAndMirrored() {
+		return ""
+	}
 	if s.ImportPrivate || s.MirrorPrivate {
 		return "Imported and mirrored from a private source"
 	}
 	return "Imported and mirrored from <code>" + s.Original + "</code>"
 }
 
-// Imported returns whether or not a userstyle is imported.
-func (s *APIStyle) Imported() bool {
+// isImported returns whether or not a userstyle is isImported.
+func (s *APIStyle) isImported() bool {
 	return s.Original != ""
 }
 
-// ImportedText returns from which location a userstyle is imported.
-func (s *APIStyle) ImportedText() string {
+// Imported returns from which location a userstyle is imported.
+func (s *APIStyle) Imported() string {
+	if !s.isImported() {
+		return ""
+	}
 	if s.ImportPrivate {
 		return "Imported from a private source"
 	}
 	return "Imported from <code>" + s.Original + "</code>"
 }
 
-// Mirrored returns whether or not a userstyle is mirrored.
-func (s *APIStyle) Mirrored() bool {
-	return s.MirrorURL != "" && s.MirrorEnabled()
+// isMirrored returns whether or not a userstyle is isMirrored.
+func (s *APIStyle) isMirrored() bool {
+	return s.MirrorURL != "" && s.mirrorEnabled()
 }
 
-// MirroredText returns from which location a userstyle is mirrored.
-func (s *APIStyle) MirroredText() string {
+// Mirrored returns from which location a userstyle is mirrored.
+func (s *APIStyle) Mirrored() string {
+	if !s.isMirrored() {
+		return ""
+	}
 	if s.MirrorPrivate {
 		return "Mirrored from a private source"
 	}
