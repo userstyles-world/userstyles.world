@@ -3,13 +3,33 @@ package api
 import (
 	"fmt"
 	"hash/crc32"
+	"strconv"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
+
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/storage"
 )
 
-func GetStyleSource(c *fiber.Ctx) error {
-	return nil
+func statsMiddleware(c *fiber.Ctx) error {
+	if !strings.HasSuffix(c.Path(), ".user.css") {
+		c.Next()
+	}
+
+	id := strings.TrimPrefix(c.Path(), "/api/style/")
+	id = strings.TrimSuffix(id, ".user.css")
+
+	i, err := strconv.Atoi(id)
+	if err != nil && i < 1 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid userstyle ID",
+		})
+	}
+
+	cache.InstallStats.Add(c.IP() + " " + id)
+
+	return c.Next()
 }
 
 func GetStyleEtag(c *fiber.Ctx) error {
