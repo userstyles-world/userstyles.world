@@ -3,33 +3,13 @@ package api
 import (
 	"fmt"
 	"hash/crc32"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-
-	"userstyles.world/modules/cache"
 	"userstyles.world/modules/storage"
 )
 
 func GetStyleSource(c *fiber.Ctx) error {
-	id, err := c.ParamsInt("id")
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "invalid userstyle ID",
-		})
-	}
-
-	code, err := storage.FindStyleCode(id)
-	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"data": "style not found",
-		})
-	}
-
-	cache.InstallStats.Add(c.IP() + " " + strconv.Itoa(id))
-
-	c.Type("css", "utf-8")
-	return c.SendString(code)
+	return nil
 }
 
 func GetStyleEtag(c *fiber.Ctx) error {
@@ -40,7 +20,7 @@ func GetStyleEtag(c *fiber.Ctx) error {
 		})
 	}
 
-	code, err := storage.FindStyleCode(id)
+	code, err := storage.FindStyleCode(id) // sftodo: use something file-related or etags won't work.
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "style not found",

@@ -3,6 +3,9 @@ package models
 import (
 	stderrors "errors"
 	"fmt"
+	"os"
+	"path"
+	"strconv"
 	"strings"
 	"time"
 
@@ -338,6 +341,12 @@ func SelectUpdateStyle(s Style) error {
 	fields := []string{"name", "description", "notes", "code", "homepage",
 		"license", "category", "preview", "preview_version", "mirror_url",
 		"mirror_code", "mirror_meta", "import_private", "mirror_private"}
+
+	// sftodo: remove "code" from fields when not needed
+	// sftodo: move this somewhere out of SelectUpdateStyle
+	// sftodo: support .styl or whatever
+	// sftodo: figure filemode
+	os.WriteFile(path.Join("data/styles", strconv.Itoa(int(s.ID))+".user.css"), []byte(s.Code), 0666)
 
 	return db().
 		Model(modelStyle).

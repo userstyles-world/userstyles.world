@@ -109,6 +109,7 @@ func EditPost(c *fiber.Ctx) error {
 	}
 
 	// TODO: Move to code section once we refactor this messy logic.
+	// sftodo: is it needed?
 	cache.LRU.Remove(id)
 
 	if err = search.IndexStyle(s.ID); err != nil {

@@ -58,6 +58,7 @@ var (
 	DataDir   = path.Join(getEnv("DATA_DIR", "data"))
 	CacheDir  = path.Join(DataDir, "cache")
 	ImageDir  = path.Join(DataDir, "images")
+	StyleDir  = path.Join(DataDir, "styles")
 	ProxyDir  = path.Join(DataDir, "proxy")
 	PublicDir = path.Join(DataDir, "public")
 
