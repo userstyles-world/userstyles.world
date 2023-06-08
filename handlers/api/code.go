@@ -37,7 +37,9 @@ func GetStyleCode(c *fiber.Ctx) error {
 		})
 	}
 
-	c.Type("css", "utf-8") // #107
+	if c.Method() == fiber.MethodGet {
+		c.Type("css", "utf-8") // #107
+	}
 
 	cl := strconv.Itoa((len(code)))
 	cs := crc32.ChecksumIEEE([]byte(code))
