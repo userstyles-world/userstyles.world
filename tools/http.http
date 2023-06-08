@@ -15,6 +15,9 @@ GET :url/api/index/uso-format
 # Get style source code.
 GET :url/api/style/1.user.css
 
+# Get headers for style source code.
+HEAD :url/api/style/1.user.css
+
 # Bad endpoint.
 GET :url/api/404
 

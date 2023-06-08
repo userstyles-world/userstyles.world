@@ -3,54 +3,47 @@ package api
 import (
 	"fmt"
 	"hash/crc32"
+	"os"
+	"path/filepath"
 	"strconv"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/storage"
+	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 )
 
-func statsMiddleware(c *fiber.Ctx) error {
-	if !strings.HasSuffix(c.Path(), ".user.css") {
-		c.Next()
-	}
-
-	id := strings.TrimPrefix(c.Path(), "/api/style/")
-	id = strings.TrimSuffix(id, ".user.css")
-
-	i, err := strconv.Atoi(id)
-	if err != nil && i < 1 {
+func GetStyleCode(c *fiber.Ctx) error {
+	kind := c.Params("ext")
+	if kind != "css" && kind != "styl" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid userstyle ID",
+			"message": "invalid userstyle extension",
 		})
 	}
 
-	cache.InstallStats.Add(c.IP() + " " + id)
-
-	return c.Next()
-}
-
-func GetStyleEtag(c *fiber.Ctx) error {
-	id, err := c.ParamsInt("id")
-	if err != nil {
+	id := c.Params("id")
+	if i, err := strconv.Atoi(id); err != nil || i < 1 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "invalid userstyle ID",
 		})
 	}
 
-	code, err := storage.FindStyleCode(id) // sftodo: use something file-related or etags won't work.
+	code, err := os.ReadFile(filepath.Join(config.StyleDir, id))
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "style not found",
+		log.Info.Println(err)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "userstyle not found",
 		})
 	}
 
-	// Follows the format "source code length - MD5 Checksum of source code"
-	val := fmt.Sprintf(`%v-%v`, len(code), crc32.ChecksumIEEE([]byte(code)))
+	c.Type("css", "utf-8") // #107
 
-	// Set the value for "Etag" header
-	c.Set("etag", val)
-	return nil
+	cl := strconv.Itoa((len(code)))
+	cs := crc32.ChecksumIEEE([]byte(code))
+	c.Set("ETag", fmt.Sprintf("%s-%d", cl, cs))
+
+	cache.InstallStats.Add(c.IP() + " " + id)
+
+	return c.Send(code)
 }
