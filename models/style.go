@@ -351,7 +351,7 @@ func SelectUpdateStyle(s Style) error {
 
 func SaveStyleCode(s Style) error {
 	// sftodo: use in places were LRU cache was used. also look at CreateStyle() UpdateStyle() SelectUpdateStyle() MirrorStyle() which are using DB
-	return os.WriteFile(path.Join("data/styles", strconv.Itoa(int(s.ID))+".user.css"), []byte(s.Code), 0644)
+	return os.WriteFile(path.Join("data/styles", strconv.Itoa(int(s.ID))), []byte(s.Code), 0644)
 }
 
 // mirrorEnabled returns whether or not mirroring is enabled.
