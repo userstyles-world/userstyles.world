@@ -342,17 +342,16 @@ func SelectUpdateStyle(s Style) error {
 		"license", "category", "preview", "preview_version", "mirror_url",
 		"mirror_code", "mirror_meta", "import_private", "mirror_private"}
 
-	// sftodo: remove "code" from fields when not needed
-	// sftodo: move this somewhere out of SelectUpdateStyle
-	// sftodo: support .styl or whatever
-	// sftodo: figure filemode
-	os.WriteFile(path.Join("data/styles", strconv.Itoa(int(s.ID))+".user.css"), []byte(s.Code), 0666)
-
 	return db().
 		Model(modelStyle).
 		Select(fields).
 		Where("id = ?", s.ID).
 		Updates(s).Error
+}
+
+func SaveStyleCode(s Style) error {
+	// sftodo: use in places were LRU cache was used. also look at CreateStyle() UpdateStyle() SelectUpdateStyle() MirrorStyle() which are using DB
+	return os.WriteFile(path.Join("data/styles", strconv.Itoa(int(s.ID))+".user.css"), []byte(s.Code), 0644)
 }
 
 // mirrorEnabled returns whether or not mirroring is enabled.
