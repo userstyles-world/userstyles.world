@@ -64,6 +64,7 @@ func GetLogOfKind(kind LogKind) ([]APILog, error) {
 		Model(modelLog).
 		Select("logs.*, (SELECT username FROM users WHERE id = logs.user_id) AS Username").
 		Where("kind = ?", kind).
+		Order("created_at desc").
 		Find(&q).
 		Error
 	if err != nil {
