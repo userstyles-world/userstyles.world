@@ -89,6 +89,8 @@ Example response
         "Featured": true,
         "Category": "userstyles.world",
         "Original": "https://raw.githubusercontent.com/userstyles-world/tweaks/main/tweaks.user.styl",
+        "ImportPrivate": false,
+		"MirrorPrivate": false,
         "MirrorCode": true,
         "MirrorMeta": false,
         "UserID": 1,
@@ -112,7 +114,9 @@ Example response
         "MirrorCode": true,
         "MirrorMeta": false,
         "UserID": 1,
-        "Username": "vednoc"
+        "Username": "vednoc",
+        "ImportPrivate": false,
+		"MirrorPrivate": false
     }
 ]
 ```
@@ -143,7 +147,9 @@ Example response ID=29
     "MirrorCode": true,
     "MirrorMeta": false,
     "UserID": 11,
-    "Username": "Freeplay"
+    "Username": "Freeplay",
+    "ImportPrivate": false,
+	"MirrorPrivate": false
 }
 ```
 

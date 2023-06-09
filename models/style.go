@@ -16,49 +16,51 @@ import (
 
 type Style struct {
 	gorm.Model
-	Original    string
-	MirrorURL   string
-	Homepage    string
-	Category    string `validate:"required,min=1,max=255" gorm:"not null"`
-	Name        string `validate:"required,min=1,max=50"`
-	Description string `validate:"required,min=1,max=160"`
-	Notes       string `validate:"min=0,max=50000"`
-	Code        string `validate:"max=10000000"`
-	License     string
-	Preview     string
-	User        User `gorm:"foreignKey:ID"`
-	UserID      uint `gorm:"index"`
-	Archived    bool `gorm:"default:false"`
-	Featured    bool `gorm:"default:false"`
-	MirrorCode  bool `gorm:"default:false"`
-	MirrorMeta  bool `gorm:"default:false"`
-
-	PreviewVersion int `gorm:"default:0"`
+	Original       string
+	MirrorURL      string
+	Homepage       string
+	Category       string `validate:"required,min=1,max=255" gorm:"not null"`
+	Name           string `validate:"required,min=1,max=50"`
+	Description    string `validate:"required,min=1,max=160"`
+	Notes          string `validate:"min=0,max=50000"`
+	Code           string `validate:"max=10000000"`
+	License        string
+	Preview        string
+	User           User `gorm:"foreignKey:ID"`
+	UserID         uint `gorm:"index"`
+	Archived       bool `gorm:"default:false"`
+	Featured       bool `gorm:"default:false"`
+	MirrorCode     bool `gorm:"default:false"`
+	MirrorMeta     bool `gorm:"default:false"`
+	PreviewVersion int  `gorm:"default:0"`
+	ImportPrivate  bool `gorm:"default:false"`
+	MirrorPrivate  bool `gorm:"default:false"`
 }
 
 type APIStyle struct {
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	Category    string    `json:"category"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Notes       string    `json:"notes"`
-	Code        string    `json:"-"`
-	License     string    `json:"license"`
-	Preview     string    `json:"preview_url"`
-	Homepage    string    `json:"homepage"`
-	Username    string    `json:"username"`
-	Original    string    `json:"original"`
-	MirrorURL   string    `json:"mirror_url"`
-	DisplayName string    `json:"display_name"`
-	UserID      uint      `json:"user_id"`
-	ID          uint      `json:"id"`
-	Featured    bool      `json:"-"`
-	MirrorCode  bool      `json:"-"`
-	MirrorMeta  bool      `json:"-"`
-	Archived    bool      `json:"-"`
-
-	PreviewVersion int `json:"-"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	Category       string    `json:"category"`
+	Name           string    `json:"name"`
+	Description    string    `json:"description"`
+	Notes          string    `json:"notes"`
+	Code           string    `json:"-"`
+	License        string    `json:"license"`
+	Preview        string    `json:"preview_url"`
+	Homepage       string    `json:"homepage"`
+	Username       string    `json:"username"`
+	Original       string    `json:"original"`
+	MirrorURL      string    `json:"mirror_url"`
+	DisplayName    string    `json:"display_name"`
+	UserID         uint      `json:"user_id"`
+	ID             uint      `json:"id"`
+	Featured       bool      `json:"-"`
+	MirrorCode     bool      `json:"-"`
+	MirrorMeta     bool      `json:"-"`
+	Archived       bool      `json:"-"`
+	PreviewVersion int       `json:"-"`
+	ImportPrivate  bool      `json:"-"`
+	MirrorPrivate  bool      `json:"-"`
 }
 
 type StyleSiteMap struct {
@@ -335,7 +337,7 @@ func (s *APIStyle) SetPreview() {
 func SelectUpdateStyle(s Style) error {
 	fields := []string{"name", "description", "notes", "code", "homepage",
 		"license", "category", "preview", "preview_version", "mirror_url",
-		"mirror_code", "mirror_meta"}
+		"mirror_code", "mirror_meta", "import_private", "mirror_private"}
 
 	return db().
 		Model(modelStyle).
@@ -344,14 +346,62 @@ func SelectUpdateStyle(s Style) error {
 		Updates(s).Error
 }
 
-// CompareMirrorURL will return true if a style is being imported and mirrored
-// from the same URL.
-func (s *APIStyle) CompareMirrorURL() bool {
-	if s.Original != "" &&
-		(s.MirrorCode || s.MirrorMeta) &&
-		(s.MirrorURL == "" || s.MirrorURL == s.Original) {
-		return true
-	}
+// mirrorEnabled returns whether or not mirroring is enabled.
+func (s *APIStyle) mirrorEnabled() bool {
+	return s.MirrorCode || s.MirrorMeta
+}
 
-	return false
+// sameMirrorURL returns whether or not mirror URL matches import URL.
+func (s *APIStyle) sameMirrorURL() bool {
+	return s.MirrorURL == "" || s.Original == s.MirrorURL
+}
+
+// isImportedAndMirrored returns whether or not a userstyle is imported and
+// mirrored from the same URLs.
+func (s *APIStyle) isImportedAndMirrored() bool {
+	return s.isImported() && s.mirrorEnabled() && s.sameMirrorURL()
+}
+
+// ImportedAndMirrored returns from which location a userstyle is imported and
+// mirrored.
+func (s *APIStyle) ImportedAndMirrored() string {
+	if !s.isImportedAndMirrored() {
+		return ""
+	}
+	if s.ImportPrivate || s.MirrorPrivate {
+		return "Imported and mirrored from a private source"
+	}
+	return "Imported and mirrored from <code>" + s.Original + "</code>"
+}
+
+// isImported returns whether or not a userstyle is isImported.
+func (s *APIStyle) isImported() bool {
+	return s.Original != ""
+}
+
+// Imported returns from which location a userstyle is imported.
+func (s *APIStyle) Imported() string {
+	if !s.isImported() {
+		return ""
+	}
+	if s.ImportPrivate {
+		return "Imported from a private source"
+	}
+	return "Imported from <code>" + s.Original + "</code>"
+}
+
+// isMirrored returns whether or not a userstyle is isMirrored.
+func (s *APIStyle) isMirrored() bool {
+	return s.MirrorURL != "" && s.mirrorEnabled()
+}
+
+// Mirrored returns from which location a userstyle is mirrored.
+func (s *APIStyle) Mirrored() string {
+	if !s.isMirrored() {
+		return ""
+	}
+	if s.MirrorPrivate {
+		return "Mirrored from a private source"
+	}
+	return "Mirrored from <code>" + s.MirrorURL + "</code>"
 }

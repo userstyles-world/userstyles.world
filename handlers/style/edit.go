@@ -63,6 +63,8 @@ func EditPost(c *fiber.Ctx) error {
 	s.Homepage = strings.TrimSpace(c.FormValue("homepage"))
 	s.License = strings.TrimSpace(c.FormValue("license", "No License"))
 	s.MirrorURL = strings.TrimSpace(c.FormValue("mirrorURL"))
+	s.ImportPrivate = c.FormValue("importPrivate") == "on"
+	s.MirrorPrivate = c.FormValue("mirrorPrivate") == "on"
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 	c.Locals("Style", s)
