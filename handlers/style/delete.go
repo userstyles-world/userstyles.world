@@ -1,6 +1,8 @@
 package style
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -75,6 +77,10 @@ func DeletePost(c *fiber.Ctx) error {
 			"Title": "Internal server error",
 			"User":  u,
 		})
+	}
+
+	if err = models.RemoveStyleCode(strconv.Itoa(int(s.ID))); err != nil {
+		log.Warn.Printf("kind=removecode id=%v err=%q\n", s.ID, err)
 	}
 
 	if err = search.DeleteStyle(s.ID); err != nil {

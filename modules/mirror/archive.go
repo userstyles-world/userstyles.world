@@ -8,7 +8,6 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/archive"
-	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
@@ -84,7 +83,6 @@ func mirror(batch models.Style) {
 			return
 		}
 		if uc.Version != old.Version {
-			cache.LRU.Remove(strconv.Itoa(int(batch.ID)))
 			fields["code"] = util.RemoveUpdateURL(uc.SourceCode)
 			updateReady = true
 		}
@@ -117,14 +115,21 @@ func mirror(batch models.Style) {
 
 	if updateReady {
 		// Update database record.
-		if err := batch.MirrorStyle(fields); err != nil {
+		err := batch.MirrorStyle(fields)
+		if err != nil {
 			log.Warn.Printf("Failed to mirror style %d: %s\n", batch.ID, err.Error())
 		} else {
 			log.Info.Printf("Successfully mirrored style %d\n", batch.ID)
 		}
 
+		err = models.SaveStyleCode(strconv.Itoa(int(batch.ID)), fields["code"].(string))
+		if err != nil {
+			log.Warn.Printf("kind=code id=%v err=%q\n", batch.ID, err)
+		}
+
 		// Update search index.
-		if err := search.IndexStyle(batch.ID); err != nil {
+		err = search.IndexStyle(batch.ID)
+		if err != nil {
 			log.Warn.Printf("Failed to re-index style %d: %s\n", batch.ID, err.Error())
 		}
 	}

@@ -4,8 +4,7 @@ import (
 	stderrors "errors"
 	"fmt"
 	"os"
-	"path"
-	"strconv"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -349,9 +348,12 @@ func SelectUpdateStyle(s Style) error {
 		Updates(s).Error
 }
 
-func SaveStyleCode(s Style) error {
-	// sftodo: use in places were LRU cache was used. also look at CreateStyle() UpdateStyle() SelectUpdateStyle() MirrorStyle() which are using DB
-	return os.WriteFile(path.Join("data/styles", strconv.Itoa(int(s.ID))), []byte(s.Code), 0644)
+func SaveStyleCode(id, s string) error {
+	return os.WriteFile(filepath.Join(config.StyleDir, id), []byte(s), 0o644)
+}
+
+func RemoveStyleCode(id string) error {
+	return os.Remove(filepath.Join(config.StyleDir, id))
 }
 
 // mirrorEnabled returns whether or not mirroring is enabled.

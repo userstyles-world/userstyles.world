@@ -134,6 +134,11 @@ func ImportPost(c *fiber.Ctx) error {
 		})
 	}
 
+	err = models.SaveStyleCode(strconv.Itoa(int(s.ID)), s.Code)
+	if err != nil {
+		log.Warn.Printf("kind=code id=%v err=%q\n", s.ID, err)
+	}
+
 	// Check preview image.
 	file, _ := c.FormFile("preview")
 	preview := c.FormValue("previewURL", s.Preview)

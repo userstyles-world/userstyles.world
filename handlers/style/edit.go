@@ -8,7 +8,6 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
-	"userstyles.world/modules/cache"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
@@ -108,8 +107,10 @@ func EditPost(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).Render("style/edit", fiber.Map{})
 	}
 
-	// TODO: Move to code section once we refactor this messy logic.
-	cache.LRU.Remove(id)
+	err = models.SaveStyleCode(id, s.Code)
+	if err != nil {
+		log.Warn.Printf("kind=code id=%s err=%q\n", id, err)
+	}
 
 	if err = search.IndexStyle(s.ID); err != nil {
 		log.Warn.Printf("Failed to re-index style %d: %s\n", s.ID, err)

@@ -7,7 +7,6 @@ import (
 	"github.com/ohler55/ojg/oj"
 
 	"userstyles.world/models"
-	"userstyles.world/modules/cache"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
@@ -110,9 +109,12 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
-	// Evict from LRU cache when source code is updated.
+	// TODO: Benchmark this approach.
 	if style.Code != postStyle.Code {
-		cache.LRU.Remove(c.Params("id"))
+		err = models.SaveStyleCode(strconv.Itoa(int(postStyle.ID)), postStyle.Code)
+		if err != nil {
+			log.Warn.Printf("kind=code id=%v err=%q\n", postStyle.ID, err)
+		}
 	}
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {
@@ -175,6 +177,11 @@ func DeleteStyle(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to delete style %d from index: %s", style.ID, err)
 	}
 
+	err = models.RemoveStyleCode(strconv.Itoa(int(style.ID)))
+	if err != nil {
+		log.Warn.Printf("kind=removecode id=%v err=%q\n", style.ID, err)
+	}
+
 	return c.JSON(fiber.Map{
 		"data": "Successful removed the style!",
 	})
@@ -224,6 +231,11 @@ func NewStyle(c *fiber.Ctx) error {
 			JSON(fiber.Map{
 				"data": "Error: Couldn't save style",
 			})
+	}
+
+	err = models.SaveStyleCode(strconv.Itoa(int(s.ID)), s.Code)
+	if err != nil {
+		log.Warn.Printf("kind=code id=%v err=%q\n", s.ID, err)
 	}
 
 	// Check preview image.

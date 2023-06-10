@@ -144,6 +144,10 @@ func BanPost(c *fiber.Ctx) error {
 		})
 	}
 
+	if err = models.RemoveStyleCode(strconv.Itoa(int(s.ID))); err != nil {
+		log.Warn.Printf("kind=removecode id=%v err=%q\n", s.ID, err)
+	}
+
 	if err = search.DeleteStyle(s.ID); err != nil {
 		log.Warn.Printf("Failed to delete style %d from index: %s", s.ID, err)
 	}
