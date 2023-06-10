@@ -71,7 +71,7 @@ func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
 
 	err := utils.NewEmail().
 		SetTo(user.Email).
-		SetSubject("Moderation notice").
+		SetSubject("You have been banned").
 		AddPart(*partPlain).
 		AddPart(*partHTML).
 		SendEmail(config.IMAPServer)

@@ -41,7 +41,7 @@ func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL st
 
 	err = utils.NewEmail().
 		SetTo(user.Email).
-		SetSubject("Style is being featured").
+		SetSubject("Your style is being featured").
 		AddPart(*partPlain).
 		AddPart(*partHTML).
 		SendEmail(config.IMAPServer)
