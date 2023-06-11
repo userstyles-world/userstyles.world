@@ -5,6 +5,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
+
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
@@ -19,19 +21,27 @@ var ViewStats = newStats("view")
 // stats stores moving parts of a stats cache.
 type stats struct {
 	sync.Mutex
-	name   string
-	done   chan bool
-	m      map[string]string
-	ticker *time.Ticker
+	name    string
+	done    chan bool
+	m       map[string]string
+	ticker  *time.Ticker
+	counter prometheus.Counter
 }
 
 // newStats initializes a specific stats cache.
 func newStats(name string) *stats {
+	counter := prometheus.NewCounter(prometheus.CounterOpts{
+		Name: "cache_stats_" + name,
+		Help: "Total amount of stats that was cached in " + name + " cache.",
+	})
+	prometheus.MustRegister(counter)
+
 	return &stats{
-		name:   name,
-		done:   make(chan bool),
-		m:      make(map[string]string),
-		ticker: time.NewTicker(time.Minute),
+		name:    name,
+		done:    make(chan bool),
+		m:       make(map[string]string),
+		ticker:  time.NewTicker(time.Minute),
+		counter: counter,
 	}
 }
 
@@ -87,13 +97,13 @@ func (s *stats) UpsertAndEvict() {
 	s.Lock()
 	defer s.Unlock()
 
-	count := len(s.m)
-	if count > 0 {
-		if err := s.Upsert(count); err != nil {
+	i := len(s.m)
+	if i > 0 {
+		if err := s.Upsert(i); err != nil {
 			log.Database.Printf("Failed to upsert %q: %s\n", s.name, err)
 		} else {
-			log.Info.Printf("Evicting %d items from %q.\n", count, s.name)
 			s.m = make(map[string]string)
+			s.counter.Add(float64(i))
 		}
 	}
 }
