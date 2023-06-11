@@ -3,6 +3,8 @@ package models
 import (
 	stderrors "errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -344,6 +346,14 @@ func SelectUpdateStyle(s Style) error {
 		Select(fields).
 		Where("id = ?", s.ID).
 		Updates(s).Error
+}
+
+func SaveStyleCode(id, s string) error {
+	return os.WriteFile(filepath.Join(config.StyleDir, id), []byte(s), 0o644)
+}
+
+func RemoveStyleCode(id string) error {
+	return os.Remove(filepath.Join(config.StyleDir, id))
 }
 
 // mirrorEnabled returns whether or not mirroring is enabled.

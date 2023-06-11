@@ -3,54 +3,49 @@ package api
 import (
 	"fmt"
 	"hash/crc32"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/storage"
+	"userstyles.world/modules/config"
+	"userstyles.world/modules/log"
 )
 
-func GetStyleSource(c *fiber.Ctx) error {
-	id, err := c.ParamsInt("id")
-	if err != nil {
+func GetStyleCode(c *fiber.Ctx) error {
+	kind := c.Params("ext")
+	if kind != "css" && kind != "styl" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "invalid userstyle extension",
+		})
+	}
+
+	id := c.Params("id")
+	if i, err := strconv.Atoi(id); err != nil || i < 1 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "invalid userstyle ID",
 		})
 	}
 
-	code, err := storage.FindStyleCode(id)
+	code, err := os.ReadFile(filepath.Join(config.StyleDir, id))
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"data": "style not found",
+		log.Info.Println(err)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "userstyle not found",
 		})
 	}
 
-	cache.InstallStats.Add(c.IP() + " " + strconv.Itoa(id))
-
-	c.Type("css", "utf-8")
-	return c.SendString(code)
-}
-
-func GetStyleEtag(c *fiber.Ctx) error {
-	id, err := c.ParamsInt("id")
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "invalid userstyle ID",
-		})
+	if c.Method() == fiber.MethodGet {
+		c.Type("css", "utf-8") // #107
 	}
 
-	code, err := storage.FindStyleCode(id)
-	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "style not found",
-		})
-	}
+	cl := strconv.Itoa((len(code)))
+	cs := crc32.ChecksumIEEE([]byte(code))
+	c.Set("ETag", fmt.Sprintf("%s-%d", cl, cs))
 
-	// Follows the format "source code length - MD5 Checksum of source code"
-	val := fmt.Sprintf(`%v-%v`, len(code), crc32.ChecksumIEEE([]byte(code)))
+	cache.InstallStats.Add(c.IP() + " " + id)
 
-	// Set the value for "Etag" header
-	c.Set("etag", val)
-	return nil
+	return c.Send(code)
 }

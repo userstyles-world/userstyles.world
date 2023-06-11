@@ -11,8 +11,8 @@ import (
 func FastRoutes(app *fiber.App) {
 	r := app.Group("/api")
 	r.Get("/health", GetHealth)
-	r.Head("/style/:id.user.css", GetStyleEtag)
-	r.Get("/style/:id.user.css", GetStyleSource)
+	r.Get("/style/:id.user.:ext", GetStyleCode)
+	r.Head("/style/:id.user.:ext", GetStyleCode)
 	r.Get("/metrics", adaptor.HTTPHandler(promhttp.Handler()))
 }
 
