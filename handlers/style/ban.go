@@ -69,7 +69,7 @@ func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, mod
 
 	err := utils.NewEmail().
 		SetTo(user.Email).
-		SetSubject("Moderation notice").
+		SetSubject("Your style has been removed").
 		AddPart(*partPlain).
 		AddPart(*partHTML).
 		SendEmail(config.IMAPServer)
