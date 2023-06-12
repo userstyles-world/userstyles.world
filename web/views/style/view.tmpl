@@ -143,11 +143,9 @@
 	<p><span class="minw">Category</span>{{ .Style.Category }}</p>
 	<p><span class="minw">Created</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
 	<p><span class="minw">Updated</span><time datetime="{{ .Style.UpdatedAt | iso }}">{{ .Style.UpdatedAt | rel }}</time></p>
+	<p><span class="minw">Size</span><span data-tooltip="{{ .Style.GetSourceCodeSize }} bytes">{{ num .Style.GetSourceCodeSize }}B</span></p>
 	{{ if .User.IsModOrAdmin }}
-		<p><span class="minw">Size</span>{{ .Style.GetSourceCodeSize }}B</p>
-		<p><span class="minw">CRC32</span>{{ .Style.GetSourceCodeCRC32 }}</p>
-	{{ else }}
-		<p><span class="minw">Size</span><span data-tooltip="{{ .Style.GetSourceCodeSize }} bytes">{{ num .Style.GetSourceCodeSize }}B</span></p>
+		<p><span class="minw">Size-CRC32</span>{{ .Style.GetSourceCodeSize }}-{{ .Style.GetSourceCodeCRC32 }}</p>
 	{{ end }}
 </section>
 
