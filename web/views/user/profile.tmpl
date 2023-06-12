@@ -19,6 +19,9 @@
 				{{ .Profile.UpdatedAt | rel }}
 			</time>
 		</p>
+		{{ if ne .Profile.ID .User.ID }}
+			<a href="/user/ban/{{ .Profile.ID }}">Ban this user</a>
+		{{ end }}
 	{{ end }}
 </section>
 
