@@ -26,6 +26,7 @@ func init() {
 		config.ImageDir,
 		config.ProxyDir,
 		config.PublicDir,
+		config.StyleDir,
 	}
 
 	// Create dir if it doesn't exist.
