@@ -3,6 +3,7 @@ package models
 import (
 	stderrors "errors"
 	"fmt"
+	"hash/crc32"
 	"os"
 	"path/filepath"
 	"strings"
@@ -212,6 +213,14 @@ func GetStyle(id string) (Style, error) {
 		Joins("JOIN users u ON u.id = styles.user_id").
 		First(&s, "styles.id = ?", id).Error
 	return s, err
+}
+
+func (s *APIStyle) GetSourceCodeSize() int64 {
+	return int64(len(s.Code))
+}
+
+func (s *APIStyle) GetSourceCodeCRC32() string {
+	return fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
 // GetStyleFromAuthor tries to fetch a userstyle made by logged in user.
