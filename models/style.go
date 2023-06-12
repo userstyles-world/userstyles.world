@@ -215,8 +215,12 @@ func GetStyle(id string) (Style, error) {
 	return s, err
 }
 
+func (s *APIStyle) GetSourceCodeSize() int64 {
+	return int64(len(s.Code))
+}
+
 func (s *APIStyle) GetSourceCodeCRC32() string {
-	return fmt.Sprintf("%08X", crc32.ChecksumIEEE([]byte(s.Code)))
+	return fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
 // GetStyleFromAuthor tries to fetch a userstyle made by logged in user.
