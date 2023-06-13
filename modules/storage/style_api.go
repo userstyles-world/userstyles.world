@@ -7,7 +7,6 @@ import (
 
 	"gorm.io/gorm"
 
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 )
 
@@ -42,7 +41,7 @@ type StyleCompact struct {
 func (StyleCompact) TableName() string { return "styles" }
 
 // GetStyleCompactIndex returns a compact index for our integration with Stylus.
-func GetStyleCompactIndex() ([]byte, error) {
+func GetStyleCompactIndex(db *gorm.DB) ([]byte, error) {
 	buf := make([]byte, 0, 2e6)
 	buf = append(buf, `{"data":`...)
 
@@ -64,7 +63,7 @@ func GetStyleCompactIndex() ([]byte, error) {
 		return nil
 	}
 
-	err := database.Conn.
+	err := db.
 		Select(selectCompactIndex).
 		Where(notDeleted).
 		FindInBatches(&styles, 100, action).Error

@@ -5,6 +5,7 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
 )
@@ -13,7 +14,7 @@ func getUSoIndex(c *fiber.Ctx) error {
 	index, found := cache.Store.Get("index")
 	if !found {
 		var err error
-		index, err = storage.GetStyleCompactIndex()
+		index, err = storage.GetStyleCompactIndex(database.Conn)
 		if err != nil {
 			log.Warn.Printf("Failed to get compact index: %s\n", err)
 			return c.JSON(fiber.Map{"data": "index not found"})
