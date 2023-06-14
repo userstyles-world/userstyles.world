@@ -98,4 +98,3 @@ func BenchmarkGetStyleCompactIndex(b *testing.B) {
 		})
 	}
 }
-
