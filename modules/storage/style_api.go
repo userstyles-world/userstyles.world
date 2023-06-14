@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"strings"
-	"time"
 
 	"gorm.io/gorm"
 
@@ -60,7 +59,6 @@ func GetStyleCompactIndex(db *gorm.DB) ([]byte, error) {
 			buf.Write(b[1 : len(b)-1])
 		}
 
-		time.Sleep(100 * time.Millisecond)
 		return nil
 	}
 
