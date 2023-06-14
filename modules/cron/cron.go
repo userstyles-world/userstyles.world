@@ -8,6 +8,7 @@ import (
 	// "userstyles.world/models"
 	// "userstyles.world/modules/cache"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/database/snapshot"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/mirror"
@@ -55,7 +56,7 @@ func Initialize() {
 	}
 
 	_, err = s.Every("15m").Do(func() {
-		index, err := storage.GetStyleCompactIndex()
+		index, err := storage.GetStyleCompactIndex(database.Conn)
 		if err != nil {
 			log.Warn.Printf("Failed to get compact index: %s\n", err)
 			return
