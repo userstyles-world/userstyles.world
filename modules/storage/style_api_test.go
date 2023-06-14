@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 )
 
 func initDB() (*gorm.DB, error) {
@@ -56,3 +57,45 @@ func TestGetStyleCompactIndex(t *testing.T) {
 		t.Errorf("exp: %s\n", exp)
 	}
 }
+
+func BenchmarkGetStyleCompactIndex(b *testing.B) {
+	cases := []struct {
+		name string
+		size int
+	}{
+		{"10", 10},
+		{"100", 100},
+		{"1000", 1000},
+		{"10000", 10000},
+	}
+
+	for _, c := range cases {
+		b.Run(c.name, func(b *testing.B) {
+			db, err := initDB()
+			if err != nil {
+				b.Fatal(err)
+			}
+
+			var s []models.Style
+			for i := 1; i <= c.size; i++ {
+				id := strconv.Itoa(i)
+				s = append(s, models.Style{
+					Model: gorm.Model{
+						UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
+					},
+					Name:    "test " + id,
+					Preview: config.BaseURL + "/preview/" + id + "/0.webp",
+				})
+			}
+
+			if err = db.CreateInBatches(s, 100).Error; err != nil {
+				b.Fatal(err)
+			}
+
+			for i := 0; i < b.N; i++ {
+				GetStyleCompactIndex(db)
+			}
+		})
+	}
+}
+
