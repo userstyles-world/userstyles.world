@@ -42,35 +42,31 @@ func (StyleCompact) TableName() string { return "styles" }
 
 // GetStyleCompactIndex returns a compact index for our integration with Stylus.
 func GetStyleCompactIndex(db *gorm.DB) ([]byte, error) {
+	var size int
+	err := db.Raw("SELECT count(*) FROM styles").Scan(&size).Error
+	if err != nil || size < 1 {
+		return nil, errors.ErrStylesNotFound
+	}
+
 	var buf bytes.Buffer
 	buf.WriteString(`{"data":`)
 
-	var styles []StyleCompact
-	action := func(tx *gorm.DB, batch int) error {
-		b, err := json.Marshal(&styles)
-		if err != nil {
-			return err
-		}
-
-		if batch == 1 {
-			buf.Write(b[:len(b)-1])
-		} else {
-			buf.WriteRune(',')
-			buf.Write(b[1 : len(b)-1])
-		}
-
-		return nil
-	}
-
-	err := db.
+	styles := make([]StyleCompact, size)
+	err = db.
 		Select(selectCompactIndex).
 		Where(notDeleted).
-		FindInBatches(&styles, 100, action).Error
+		Find(&styles).Error
 	if err != nil {
 		return nil, errors.ErrStylesNotFound
 	}
 
-	buf.WriteString("]}")
+	b, err := json.Marshal(&styles)
+	if err != nil {
+		return nil, err
+	}
+	buf.Write(b)
+
+	buf.WriteRune('}')
 
 	return buf.Bytes(), nil
 }
