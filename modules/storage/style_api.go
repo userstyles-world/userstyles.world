@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"bytes"
 	"encoding/json"
 	"strings"
 	"time"
@@ -42,8 +43,8 @@ func (StyleCompact) TableName() string { return "styles" }
 
 // GetStyleCompactIndex returns a compact index for our integration with Stylus.
 func GetStyleCompactIndex(db *gorm.DB) ([]byte, error) {
-	buf := make([]byte, 0, 2e6)
-	buf = append(buf, `{"data":`...)
+	var buf bytes.Buffer
+	buf.WriteString(`{"data":`)
 
 	var styles []StyleCompact
 	action := func(tx *gorm.DB, batch int) error {
@@ -53,10 +54,10 @@ func GetStyleCompactIndex(db *gorm.DB) ([]byte, error) {
 		}
 
 		if batch == 1 {
-			buf = append(buf, b[0:len(b)-1]...)
+			buf.Write(b[:len(b)-1])
 		} else {
-			buf = append(buf, ',')
-			buf = append(buf, b[1:len(b)-1]...)
+			buf.WriteRune(',')
+			buf.Write(b[1 : len(b)-1])
 		}
 
 		time.Sleep(100 * time.Millisecond)
@@ -71,7 +72,7 @@ func GetStyleCompactIndex(db *gorm.DB) ([]byte, error) {
 		return nil, errors.ErrStylesNotFound
 	}
 
-	buf = append(buf, `]}`...)
+	buf.WriteString("]}")
 
-	return buf, nil
+	return buf.Bytes(), nil
 }
