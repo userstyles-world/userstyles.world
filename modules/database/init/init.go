@@ -177,6 +177,7 @@ func seed() {
 			Email:     "moderator@usw.local",
 			Biography: "I'm a moderator.",
 			Password:  utils.GenerateHashedPassword("moderator123"),
+			Role:      models.Moderator,
 		},
 		{
 			Username: "regular",
