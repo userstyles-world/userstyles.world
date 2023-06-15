@@ -51,6 +51,7 @@ func getPreviousHistory(id uint) (q *models.History) {
 }
 
 func StyleStatistics() {
+	log.Info.Println("Collecting stats history.")
 	var try int
 
 again:
@@ -89,7 +90,9 @@ again:
 		*stats = append(*stats, item)
 	}
 
-	log.Info.Println("Collecting stats history.")
-	database.Conn.Create(stats)
+	err = database.Conn.CreateInBatches(stats, 250).Error
+	if err != nil {
+		log.Database.Printf("Failed to snapshot stats: %s\n", err)
+	}
 	log.Info.Println("Stats history is collected.")
 }
