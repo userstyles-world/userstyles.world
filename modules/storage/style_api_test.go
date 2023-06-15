@@ -27,34 +27,46 @@ func initDB() (*gorm.DB, error) {
 }
 
 func TestGetStyleCompactIndex(t *testing.T) {
-	db, err := initDB()
-	if err != nil {
-		t.Fatal(err)
+	cases := []struct {
+		name string
+		size int
+		exp  string
+	}{
+		{"one", 1, `{"data":[{"n":"test 1","an":"","sn":"","c":"","i":1,"u":3600,"t":0,"w":0,"r":0}]}`},
+		{"many", 2, `{"data":[{"n":"test 1","an":"","sn":"","c":"","i":1,"u":3600,"t":0,"w":0,"r":0},{"n":"test 2","an":"","sn":"","c":"","i":2,"u":3600,"t":0,"w":0,"r":0}]}`},
 	}
 
-	var s []models.Style
-	for i := 1; i <= 2; i++ {
-		s = append(s, models.Style{
-			Model: gorm.Model{
-				UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
-			},
-			Name: "test " + strconv.Itoa(i),
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			db, err := initDB()
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			var s []models.Style
+			for i := 1; i <= c.size; i++ {
+				s = append(s, models.Style{
+					Model: gorm.Model{
+						UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
+					},
+					Name: "test " + strconv.Itoa(i),
+				})
+			}
+
+			if err = db.Create(s).Error; err != nil {
+				t.Fatal(err)
+			}
+
+			got, err := GetStyleCompactIndex(db)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if string(got) != c.exp {
+				t.Errorf("got: %s\n", got)
+				t.Errorf("exp: %s\n", c.exp)
+			}
 		})
-	}
-
-	if err = db.Create(s).Error; err != nil {
-		t.Fatal(err)
-	}
-
-	got, err := GetStyleCompactIndex(db)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	exp := `{"data":[{"n":"test 1","an":"","sn":"","c":"","i":1,"u":3600,"t":0,"w":0,"r":0},{"n":"test 2","an":"","sn":"","c":"","i":2,"u":3600,"t":0,"w":0,"r":0}]}`
-	if string(got) != exp {
-		t.Errorf("got: %s\n", got)
-		t.Errorf("exp: %s\n", exp)
 	}
 }
 
