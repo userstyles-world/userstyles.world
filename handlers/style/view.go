@@ -3,12 +3,14 @@ package style
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
+
 	// "userstyles.world/modules/charts"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
@@ -55,6 +57,23 @@ func GetStylePage(c *fiber.Ctx) error {
 		cache.ViewStats.Add(c.IP() + " " + id)
 	}
 
+	if u.ID != data.UserID {
+		if u.ID == 0 {
+			args["CanReview"] = false
+			args["CantReviewReason"] = "An account is required in order to review userstyles."
+		} else {
+			reviewSpam := new(models.Review)
+			if _ = reviewSpam.FindLastFromUser(data.ID, u.ID); reviewSpam.ID > 0 {
+				week := -7 * 24 * time.Hour
+				if reviewSpam.CreatedAt.After(time.Now().Add(week)) {
+					args["CanReview"] = false
+					args["CantReviewReason"] = "You can review this style again in " + time.Since(reviewSpam.CreatedAt.Add(week)).Truncate(time.Second).String()
+				}
+			} else {
+				args["CanReview"] = true
+			}
+		}
+	}
 	/*
 		// Get history data.
 		history, err := models.GetStyleHistory(id)

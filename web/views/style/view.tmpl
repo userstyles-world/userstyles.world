@@ -110,13 +110,13 @@
 		{{ if ne .Style.UserID .User.ID }}
 			<a
 				id="write-review" class="btn icon write-review"
-				{{ if not .User.ID }}
-					disabled
-					data-tooltip="An account is required in order to review userstyles."
-				{{ else }}
+				{{ if .CanReview }}
 					target="_blank"
 					rel="noopener"
 					href="/styles/review/{{ $.Style.ID }}"
+				{{ else }}
+					disabled
+					data-tooltip="{{ .CantReviewReason }}"
 				{{ end }}
 			>{{ template "icons/edit" }} Write a review</a>
 		{{ end }}
