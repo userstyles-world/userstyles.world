@@ -15,6 +15,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
+	"userstyles.world/modules/log"
 )
 
 type Style struct {
@@ -221,6 +222,20 @@ func (s *APIStyle) GetSourceCodeSize() int64 {
 
 func (s *APIStyle) GetSourceCodeCRC32() string {
 	return fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(s.Code)))
+}
+
+func AbleToReview(uid, sid uint) (bool, string) {
+	reviewSpam := new(Review)
+	// Collecting of the error is not needed.
+	// As we simply check "valid" data by checking if ID is a positive integer.
+	if _ = reviewSpam.FindLastFromUser(sid, uid); reviewSpam.ID > 0 {
+		log.Info.Printf("User %d tried to review style %v more than once.\n", uid, sid)
+		week := -7 * 24 * time.Hour
+		if reviewSpam.CreatedAt.After(time.Now().Add(week)) {
+			return false, time.Since(reviewSpam.CreatedAt.Add(week)).Truncate(time.Second).String()
+		}
+	}
+	return true, ""
 }
 
 // GetStyleFromAuthor tries to fetch a userstyle made by logged in user.

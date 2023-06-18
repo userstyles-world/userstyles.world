@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -36,19 +35,13 @@ func ReviewGet(c *fiber.Ctx) error {
 	}
 
 	// Prevent spam.
-	reviewSpam := new(models.Review)
-	// Collecting of the error is not needed.
-	// As we simply check "valid" data by checking if ID is a positive integer.
-	if _ = reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
-		log.Info.Printf("User %d tried to review style %v more than once.\n", u.ID, id)
-		week := -7 * 24 * time.Hour
-		if reviewSpam.CreatedAt.After(time.Now().Add(week)) {
-			c.Status(fiber.StatusUnauthorized)
-			return c.Render("err", fiber.Map{
-				"Title": "You can review this style again in " + time.Since(reviewSpam.CreatedAt.Add(week)).Truncate(time.Second).String(),
-				"User":  u,
-			})
-		}
+	allowed, timeneeded := models.AbleToReview(u.ID, style.ID)
+	if !allowed {
+		c.Status(fiber.StatusUnauthorized)
+		return c.Render("err", fiber.Map{
+			"Title": "You can review this style again in " + timeneeded,
+			"User":  u,
+		})
 	}
 
 	return c.Render("style/review", fiber.Map{
@@ -88,19 +81,13 @@ func ReviewPost(c *fiber.Ctx) error {
 	}
 
 	// Prevent spam.
-	reviewSpam := new(models.Review)
-	// Collecting of the error is not needed.
-	// As we simply check "valid" data by checking if ID is a positive integer.
-	if _ = reviewSpam.FindLastFromUser(id, u.ID); reviewSpam.ID > 0 {
-		log.Warn.Printf("User %d tried to review style %v more than once.\n", u.ID, id)
-		week := -7 * 24 * time.Hour
-		if reviewSpam.CreatedAt.After(time.Now().Add(week)) {
-			c.Status(fiber.StatusUnauthorized)
-			return c.Render("err", fiber.Map{
-				"Title": "You can review this style again in " + time.Since(reviewSpam.CreatedAt.Add(week)).Truncate(time.Second).String(),
-				"User":  u,
-			})
-		}
+	allowed, timeneeded := models.AbleToReview(u.ID, style.ID)
+	if !allowed {
+		c.Status(fiber.StatusUnauthorized)
+		return c.Render("err", fiber.Map{
+			"Title": "You can review this style again in " + timeneeded,
+			"User":  u,
+		})
 	}
 
 	cmt := strings.TrimSpace(c.FormValue("comment"))

@@ -3,7 +3,6 @@ package style
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -62,13 +61,10 @@ func GetStylePage(c *fiber.Ctx) error {
 			args["CanReview"] = false
 			args["CantReviewReason"] = "An account is required in order to review userstyles."
 		} else {
-			reviewSpam := new(models.Review)
-			if _ = reviewSpam.FindLastFromUser(data.ID, u.ID); reviewSpam.ID > 0 {
-				week := -7 * 24 * time.Hour
-				if reviewSpam.CreatedAt.After(time.Now().Add(week)) {
-					args["CanReview"] = false
-					args["CantReviewReason"] = "You can review this style again in " + time.Since(reviewSpam.CreatedAt.Add(week)).Truncate(time.Second).String()
-				}
+			allowed, timeneeded := models.AbleToReview(u.ID, data.ID)
+			if !allowed {
+				args["CanReview"] = false
+				args["CantReviewReason"] = "You can review this style again in " + timeneeded
 			} else {
 				args["CanReview"] = true
 			}
