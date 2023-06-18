@@ -43,7 +43,7 @@ func RelNumber(i int64) string {
 	case i >= 1e4:
 		b = strconv.AppendFloat(b, float64(i)/1e3, 'f', 1, 32)
 		b = bytes.TrimSuffix(b, []byte(".0"))
-		b = append(b, 'K')
+		b = append(b, 'k')
 	default:
 		b = strconv.AppendInt(b, i, 10)
 	}
