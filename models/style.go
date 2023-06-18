@@ -215,8 +215,8 @@ func GetStyle(id string) (Style, error) {
 	return s, err
 }
 
-func (s *APIStyle) GetSourceCodeSize() int64 {
-	return int64(len(s.Code))
+func (s *APIStyle) GetSourceCodeSize() uint64 {
+	return uint64(len(s.Code))
 }
 
 func (s *APIStyle) GetSourceCodeCRC32() string {

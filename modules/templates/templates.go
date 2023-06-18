@@ -61,6 +61,8 @@ func New(views http.FileSystem) *html.Engine {
 
 	engine.AddFunc("comma", humanize.Comma)
 
+	engine.AddFunc("size", humanize.Bytes)
+
 	engine.AddFunc("num", util.RelNumber)
 
 	engine.AddFunc("proxy", func(src, kind string, id uint) string {
