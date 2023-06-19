@@ -230,9 +230,10 @@ func AbleToReview(uid, sid uint) (bool, string) {
 	// As we simply check "valid" data by checking if ID is a positive integer.
 	if _ = reviewSpam.FindLastFromUser(sid, uid); reviewSpam.ID > 0 {
 		log.Info.Printf("User %d tried to review style %v more than once.\n", uid, sid)
-		week := -7 * 24 * time.Hour
-		if reviewSpam.CreatedAt.After(time.Now().Add(week)) {
-			return false, time.Since(reviewSpam.CreatedAt.Add(week)).Truncate(time.Second).String()
+		t := time.Now().Sub(reviewSpam.CreatedAt)
+		if t < 7*24*time.Hour {
+			t = 7*24*time.Hour - t
+			return false, t.Round(time.Second).String()
 		}
 	}
 	return true, ""
