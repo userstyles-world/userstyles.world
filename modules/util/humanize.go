@@ -93,8 +93,12 @@ func RelDuration(d time.Duration) string {
 	defer relTimePool.Put(buf)
 	b := (*buf)[:0]
 
-	now := int(d)
-	parts := 0
+	var parts int
+	var past bool
+	if int(d) > 0 {
+		past = true
+	}
+	now := int(d.Abs())
 
 	years := now / year
 	if years > 0 {
@@ -147,7 +151,10 @@ func RelDuration(d time.Duration) string {
 		return "just now"
 	}
 
-	b = append(b[:len(b)-2], " ago"...)
+	b = append(b[:len(b)-2])
+	if past {
+		b = append(b, " ago"...)
+	}
 
 	return *(*string)(unsafe.Pointer(&b))
 }
