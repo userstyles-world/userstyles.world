@@ -39,8 +39,9 @@ func ReviewGet(c *fiber.Ctx) error {
 	if !allowed {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("err", fiber.Map{
-			"Title": "You can review this style again in " + timeneeded,
-			"User":  u,
+			"Title":    "Cannot review style",
+			"ErrTitle": "You can review this style again in " + timeneeded,
+			"User":     u,
 		})
 	}
 
@@ -85,8 +86,9 @@ func ReviewPost(c *fiber.Ctx) error {
 	if !allowed {
 		c.Status(fiber.StatusUnauthorized)
 		return c.Render("err", fiber.Map{
-			"Title": "You can review this style again in " + timeneeded,
-			"User":  u,
+			"Title":    "Cannot review style",
+			"ErrTitle": "You can review this style again in " + timeneeded,
+			"User":     u,
 		})
 	}
 

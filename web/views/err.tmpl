@@ -1,4 +1,8 @@
 <section class="flex f-col ta:c">
-	<h1>{{ .Title }}</h1>
+	{{ if .ErrTitle }}
+		<h1>{{ .ErrTitle }}</h1>
+	{{ else }}
+		<h1>{{ .Title }}</h1>
+	{{ end }}
 	<p>Go to <a class="prev-page" data-javascript>previous page</a> or visit our <a href="/">home page</a>.</p>
 </section>
