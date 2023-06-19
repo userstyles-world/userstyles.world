@@ -16,6 +16,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 )
 
 type Style struct {
@@ -233,7 +234,7 @@ func AbleToReview(uid, sid uint) (bool, string) {
 		t := time.Now().Sub(reviewSpam.CreatedAt)
 		if t < 7*24*time.Hour {
 			t = 7*24*time.Hour - t
-			return false, t.Round(time.Second).String()
+			return false, util.RelDuration(t)
 		}
 	}
 	return true, ""
