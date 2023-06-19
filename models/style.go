@@ -15,7 +15,6 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
-	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
 )
 
@@ -230,10 +229,9 @@ func AbleToReview(uid, sid uint) (bool, string) {
 	// Collecting of the error is not needed.
 	// As we simply check "valid" data by checking if ID is a positive integer.
 	if _ = reviewSpam.FindLastFromUser(sid, uid); reviewSpam.ID > 0 {
-		log.Info.Printf("User %d tried to review style %v more than once.\n", uid, sid)
 		t := time.Now().Sub(reviewSpam.CreatedAt)
 		if t < 7*24*time.Hour {
-			t = 7*24*time.Hour - t
+			t = -7*24*time.Hour + t
 			return false, util.RelDuration(t)
 		}
 	}

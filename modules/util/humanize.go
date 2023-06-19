@@ -94,10 +94,6 @@ func RelDuration(d time.Duration) string {
 	b := (*buf)[:0]
 
 	var parts int
-	var past bool
-	if int(d) > 0 {
-		past = true
-	}
 	now := int(d.Abs())
 
 	years := now / year
@@ -152,7 +148,7 @@ func RelDuration(d time.Duration) string {
 	}
 
 	b = append(b[:len(b)-2])
-	if past {
+	if int(d) > 0 {
 		b = append(b, " ago"...)
 	}
 
