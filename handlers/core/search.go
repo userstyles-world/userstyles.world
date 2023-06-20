@@ -1,6 +1,8 @@
 package core
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -15,7 +17,7 @@ func Search(c *fiber.Ctx) error {
 	c.Locals("Title", "Search userstyles")
 	c.Locals("Canonical", "search")
 
-	keyword := c.Query("q")
+	keyword := strings.TrimSpace(c.Query("q"))
 	if keyword == "" {
 		return c.Render("core/search", fiber.Map{})
 	}
