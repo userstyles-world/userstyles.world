@@ -37,20 +37,20 @@ func Search(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
 	}
 
-	s, err := storage.FindSearchStyles(keyword)
-	if err != nil {
-		log.Database.Println(err)
-		c.Locals("Title", "Failed to search for userstyles")
-		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
-	}
-	c.Locals("Styles", s)
-
 	p := models.NewPagination(page, total, sort, c.Path())
 	p.Query = keyword
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}
 	c.Locals("Pagination", p)
+
+	s, err := storage.FindSearchStyles(keyword, p.SortStyles(), page)
+	if err != nil {
+		log.Database.Println(err)
+		c.Locals("Title", "Failed to search for userstyles")
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
+	}
+	c.Locals("Styles", s)
 
 	return c.Render("core/search", fiber.Map{})
 }
