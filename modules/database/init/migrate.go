@@ -18,7 +18,7 @@ func runMigration(db *gorm.DB) {
 	// Wrap in a transaction to allow rollbacks.
 	db.Transaction(func(tx *gorm.DB) error {
 		bootstrap := `DROP TABLE IF EXISTS fts_styles;
-CREATE VIRTUAL TABLE fts_styles USING FTS5(id, name, description, notes);
+CREATE VIRTUAL TABLE fts_styles USING FTS5(id, name, description, notes, tokenize="trigram");
 INSERT INTO fts_styles(id, name, description, notes) SELECT id, name, description, notes FROM styles;
 `
 		if err := tx.Exec(bootstrap).Error; err != nil {
