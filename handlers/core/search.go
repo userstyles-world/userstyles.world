@@ -2,6 +2,7 @@ package core
 
 import (
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -32,6 +33,8 @@ func Search(c *fiber.Ctx) error {
 	sort := c.Query("sort")
 	c.Locals("Sort", sort)
 
+	t := time.Now()
+
 	total, err := storage.TotalSearchStyles(keyword)
 	if err != nil {
 		log.Database.Println(err)
@@ -53,6 +56,15 @@ func Search(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
 	}
 	c.Locals("Styles", s)
+
+	m := struct {
+		Total     int
+		TimeSpent time.Duration
+	}{
+		Total:     total,
+		TimeSpent: time.Since(t),
+	}
+	c.Locals("Metrics", m)
 
 	return c.Render("core/search", fiber.Map{})
 }
