@@ -50,7 +50,7 @@ build() {
         go-dev)
             : "Setting BIN to ${BIN:=bin/userstyles-dev}."
             log "Compiling development executable to ${BIN}."
-            go build -v -o "$BIN" cmd/userstyles-world/main.go
+            go build -v -o "$BIN" -tags "fts5" cmd/userstyles-world/main.go
             ;;
         go-prod)
             : "Setting BIN to ${BIN:=bin/userstyles-prod}."
@@ -66,7 +66,7 @@ build() {
                 -o "$BIN" \
                 -ldflags "$f" \
                 -buildmode pie \
-                -tags 'osusergo netgo static_build' \
+                -tags 'osusergo netgo static_build fts5' \
                 cmd/userstyles-world/main.go
             ;;
         ts-dev)

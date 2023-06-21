@@ -31,10 +31,12 @@
 
 <section class="mt:m">
 	{{ if .Styles }}
-		<div class="search-perf-metrics">
-			<span class="f:b">Search engine metrics:</span>
-			<span>Found {{ .Metrics.Total }} results in {{ Elapsed .Metrics.TimeSpent }}.</span>
-		</div>
+		{{ if .Metrics }}
+			<div class="search-perf-metrics">
+				<span class="f:b">Search engine metrics:</span>
+				<span>Found {{ .Metrics.Total }} results in {{ Elapsed .Metrics.TimeSpent }}.</span>
+			</div>
+		{{ end }}
 
 		<div class="grid flex rwrap mx:r mt:m">
 			{{ range .Styles }}
