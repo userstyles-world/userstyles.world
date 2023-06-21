@@ -131,6 +131,10 @@ func (p *Pagination) SortStyles() string {
 		return "views DESC"
 	case "leastviews":
 		return "views ASC"
+	case "ratinghigh":
+		return "rating DESC"
+	case "ratinglow":
+		return "rating ASC"
 	default:
 		return "styles.id ASC"
 	}

@@ -11,6 +11,8 @@
 			<option {{ if eq .Sort "leastinstalls" }}selected{{ end }} value="leastinstalls">Least installs</option>
 			<option {{ if eq .Sort "mostviews" }}selected{{ end }} value="mostviews">Most views</option>
 			<option {{ if eq .Sort "leastviews" }}selected{{ end }} value="leastviews">Least views</option>
+			<option {{ if eq .Sort "ratinghigh" }}selected{{ end }} value="ratinghigh">Rating high to low</option>
+			<option {{ if eq .Sort "ratinglow" }}selected{{ end }} value="ratinglow">Rating low to high</option>
 		</select>
 		{{ template "icons/chevron-down" }}
 	</div>
