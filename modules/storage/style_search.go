@@ -86,9 +86,8 @@ MATCH ?`)
 	b.WriteString(" LIMIT ")
 	b.WriteString(strconv.Itoa(config.AppPageMaxItems))
 	if page > 1 {
-		page = (page - 1) * 36
 		b.WriteString(" OFFSET ")
-		b.WriteString(strconv.Itoa(page - 1*config.AppPageMaxItems))
+		b.WriteString(strconv.Itoa((page - 1) * config.AppPageMaxItems))
 	}
 
 	var s []*StyleCard
