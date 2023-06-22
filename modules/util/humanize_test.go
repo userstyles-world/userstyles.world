@@ -91,6 +91,7 @@ var relTimeCases = []struct {
 	{"3y5w", time.Now().Add(-42 * month), "3 years, 5 months ago"},
 	{"34y11mo", time.Now().Add(-420 * month), "34 years, 11 months ago"},
 	{"11mo4w", time.Now().Add(-52 * week), "11 months, 4 weeks ago"},
+	{"future", time.Now().Add(420 * time.Hour), "2 weeks, 3 days"},
 }
 
 func TestRelTime(t *testing.T) {

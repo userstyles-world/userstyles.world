@@ -81,14 +81,20 @@ func buildTime(b []byte, count int, dur string) []byte {
 	return b
 }
 
-// RelTime returns a relative representation of a time t.
+// RelTime is a wrapper around RelDuration that returns a relative
+// representation of a time t.
 func RelTime(t time.Time) string {
+	return RelDuration(time.Since(t))
+}
+
+// RelDuration returns a relative representation of a duration d.
+func RelDuration(d time.Duration) string {
 	buf := relTimePool.Get().(*[]byte)
 	defer relTimePool.Put(buf)
 	b := (*buf)[:0]
 
-	now := int(time.Since(t))
-	parts := 0
+	var parts int
+	now := int(d.Abs())
 
 	years := now / year
 	if years > 0 {
@@ -141,7 +147,10 @@ func RelTime(t time.Time) string {
 		return "just now"
 	}
 
-	b = append(b[:len(b)-2], " ago"...)
+	b = append(b[:len(b)-2])
+	if int(d) > 0 {
+		b = append(b, " ago"...)
+	}
 
 	return *(*string)(unsafe.Pointer(&b))
 }

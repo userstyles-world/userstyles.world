@@ -9,6 +9,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
+
 	// "userstyles.world/modules/charts"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
@@ -55,6 +56,20 @@ func GetStylePage(c *fiber.Ctx) error {
 		cache.ViewStats.Add(c.IP() + " " + id)
 	}
 
+	if u.ID != data.UserID {
+		if u.ID == 0 {
+			args["CanReview"] = false
+			args["CantReviewReason"] = "An account is required in order to review userstyles."
+		} else {
+			allowed, timeneeded := models.AbleToReview(u.ID, data.ID)
+			if !allowed {
+				args["CanReview"] = false
+				args["CantReviewReason"] = "You can review this style again in " + timeneeded
+			} else {
+				args["CanReview"] = true
+			}
+		}
+	}
 	/*
 		// Get history data.
 		history, err := models.GetStyleHistory(id)
