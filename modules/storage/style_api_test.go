@@ -18,7 +18,7 @@ func initDB() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	t := []any{models.Style{}, models.Stats{}, models.User{}, models.Review{}}
+	t := []any{models.Style{}, models.Stats{}, models.User{}, models.Review{}, models.History{}}
 	if err = db.AutoMigrate(t...); err != nil {
 		return nil, err
 	}
