@@ -158,6 +158,8 @@ func FindStyleCardsPaginated(page, size int, order string) ([]StyleCard, error) 
 		stmt = "id, (SELECT SUM(daily_views) FROM histories h WHERE h.style_id = styles.id) AS views"
 	case strings.HasPrefix(order, "installs"):
 		stmt = "id, (SELECT SUM(daily_installs) FROM histories h WHERE h.style_id = styles.id) AS installs"
+	case strings.HasPrefix(order, "rating"):
+		stmt = "id, (SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating"
 	}
 
 	var nums []struct{ ID int }
