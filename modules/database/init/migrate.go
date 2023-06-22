@@ -50,6 +50,16 @@ END;
 			log.Database.Fatalf("Failed to add triggers: %s\n", err)
 		}
 
+		stats := `DELETE FROM histories WHERE created_at < DATE('now', '-1 day');
+
+UPDATE histories
+SET total_updates = 0, -- Not necessary, but I might as well do it until stats are rewritten.
+    total_installs = (SELECT COUNT(*) FROM stats WHERE style_id = histories.style_id AND install > 0),
+	total_views = (SELECT COUNT(*) FROM stats WHERE style_id = histories.style_id AND view > 0);`
+		if err := tx.Exec(stats).Error; err != nil {
+			log.Database.Fatalf("Failed to reset histories: %s", err)
+		}
+
 		return nil
 	})
 
