@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"encoding/gob"
 	"os"
 	"path"
 	"time"
@@ -11,7 +10,6 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/storage"
 )
 
 var (
@@ -49,8 +47,6 @@ func init() {
 }
 
 func Initialize() {
-	gob.Register([]storage.StyleCard{})
-
 	if err := Store.LoadFile(CacheFile); err != nil {
 		log.Warn.Println("Failed to read cache:", err)
 	}

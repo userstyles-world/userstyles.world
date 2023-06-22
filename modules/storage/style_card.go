@@ -12,8 +12,8 @@ import (
 
 const (
 	selectAuthor   = "(SELECT username FROM users WHERE user_id = users.id AND deleted_at IS NULL) AS Username"
-	selectInstalls = "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.install > 0) AS Installs"
-	selectViews    = "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.view > 0) AS Views"
+	selectInstalls = "(SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS installs"
+	selectViews    = "(SELECT total_views FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS views"
 	selectRatings  = "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND rating > 0 AND r.deleted_at IS NULL) AS Rating"
 	notDeleted     = "deleted_at IS NULL"
 )
@@ -155,9 +155,9 @@ func FindStyleCardsPaginated(page, size int, order string) ([]StyleCard, error) 
 	case strings.HasPrefix(order, "styles"):
 		stmt = "id"
 	case strings.HasPrefix(order, "views"):
-		stmt = "id, (SELECT SUM(daily_views) FROM histories h WHERE h.style_id = styles.id) AS views"
+		stmt = "id, (SELECT total_views FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS views"
 	case strings.HasPrefix(order, "installs"):
-		stmt = "id, (SELECT SUM(daily_installs) FROM histories h WHERE h.style_id = styles.id) AS installs"
+		stmt = "id, (SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS installs"
 	case strings.HasPrefix(order, "rating"):
 		stmt = "id, (SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating"
 	}
@@ -191,9 +191,9 @@ func FindStyleCardsPaginatedForUserID(page, size int, order string, id uint) ([]
 	case strings.HasPrefix(order, "styles"):
 		stmt = "id"
 	case strings.HasPrefix(order, "views"):
-		stmt = "id, (SELECT SUM(daily_views) FROM histories h WHERE h.style_id = styles.id) AS views"
+		stmt = "id, (SELECT total_views FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS views"
 	case strings.HasPrefix(order, "installs"):
-		stmt = "id, (SELECT SUM(daily_installs) FROM histories h WHERE h.style_id = styles.id) AS installs"
+		stmt = "id, (SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS installs"
 	case strings.HasPrefix(order, "rating"):
 		stmt = "id, (SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating"
 	}
