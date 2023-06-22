@@ -35,7 +35,7 @@ func Search(c *fiber.Ctx) error {
 
 	t := time.Now()
 
-	total, err := storage.TotalSearchStyles(keyword)
+	total, err := storage.TotalSearchStyles(keyword, sort)
 	if err != nil {
 		log.Database.Println(err)
 		c.Locals("Title", "Failed to count userstyles")

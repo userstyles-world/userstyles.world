@@ -46,10 +46,15 @@ func FindStylesForSearch(action func([]StyleSearch) error) error {
 }
 
 // TotalSearchStyles returns total amount of userstyles for search page.
-func TotalSearchStyles(query string) (int, error) {
+func TotalSearchStyles(query, sort string) (int, error) {
+	q := "SELECT COUNT(*) FROM fts_styles WHERE fts_styles MATCH ?"
+	if strings.HasPrefix(sort, "rating") {
+		q += " AND (SELECT COUNT(*) FROM reviews WHERE style_id = fts_styles.id AND rating > 0)"
+	}
+
 	var total int
 	err := database.Conn.
-		Raw("SELECT COUNT(*) FROM fts_styles WHERE fts_styles MATCH ?", query).
+		Raw(q, query).
 		Scan(&total).Error
 	if err != nil {
 		return 0, err
@@ -72,6 +77,9 @@ WHERE fts_styles
 MATCH ?`)
 
 	if sort != "" {
+		if strings.HasPrefix(sort, "rating") {
+			b.WriteString(" AND rating > 0")
+		}
 		b.WriteString(" ORDER BY ")
 		b.WriteString(sort)
 	}
