@@ -30,7 +30,7 @@ type stats struct {
 
 // newStats initializes a specific stats cache.
 func newStats(name string) *stats {
-	counter := prometheus.NewCounter(prometheus.CounterOpts{
+	counter := prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "cache_stats_" + name,
 		Help: "Total amount of stats that was cached in " + name + " cache.",
 	})
