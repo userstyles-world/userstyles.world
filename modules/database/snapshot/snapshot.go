@@ -3,96 +3,37 @@ package snapshot
 import (
 	"time"
 
-	"userstyles.world/models"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 )
 
-func getViews(id int64) (i int64) {
-	day := time.Now().AddDate(0, 0, -1)
-	database.Conn.
-		Model(models.Stats{}).
-		Where("style_id = ? and created_at > ? and view > ?", id, day, day).
-		Count(&i)
-
-	return i
-}
-
-func getUpdates(id int64) (i int64) {
-	day := time.Now().AddDate(0, 0, -1)
-	q := "style_id = ? and install > ? and updated_at > ?"
-	database.Conn.
-		Model(models.Stats{}).
-		Where(q, id, day, day).
-		Count(&i)
-
-	return i
-}
-
-func getInstalls(id int64) (i int64) {
-	day := time.Now().AddDate(0, 0, -1)
-	q := "style_id = ? and install > ? and created_at > ?"
-	database.Conn.
-		Model(models.Stats{}).
-		Where(q, id, day, day).
-		Count(&i)
-
-	return i
-}
-
-func getPreviousHistory(id uint) (q *models.History) {
-	database.Conn.
-		Model(models.History{}).
-		Where("style_id = ?", id).
-		Order("id DESC").
-		Find(&q)
-
-	return q
-}
+const q = `INSERT INTO histories(style_id, created_at, updated_at, daily_views, daily_installs, daily_updates, total_views, total_installs, total_updates)
+SELECT
+	s.id, DATETIME('now'), DATETIME('now'),
+	(SELECT COUNT(*) FROM stats WHERE style_id = s.id AND view > DATE('now', '-1 day') AND created_at > DATE('now', '-1 day')) AS daily_views,
+	(SELECT COUNT(*) FROM stats WHERE style_id = s.id AND install > DATE('now', '-1 day') AND created_at > DATE('now', '-1 day')) AS daily_installs,
+	(SELECT COUNT(*) FROM stats WHERE style_id = s.id AND install > DATE('now', '-1 day') AND created_at != install) AS daily_updates,
+	(SELECT COUNT(*) FROM stats WHERE style_id = s.id AND view > 0) AS total_views,
+	(SELECT COUNT(*) FROM stats WHERE style_id = s.id AND install > 0) AS total_installs,
+	(SELECT COUNT(*) FROM stats WHERE style_id = s.id AND install != created_at) AS total_updates
+FROM styles s
+WHERE deleted_at IS NULL
+`
 
 func StyleStatistics() {
 	log.Info.Println("Collecting stats history.")
-	var try int
 
-again:
-	styles, err := models.GetAllStyleIDs()
-	if err != nil {
-		log.Warn.Println("Failed to get IDs for all styles:", err.Error())
-		if try < 10 {
-			try++
-			goto again
-		}
-	}
-
-	// Store style stats.
-	stats := new([]models.History)
-
-	// Iterate over styles and collect their stats.
-	for _, v := range styles {
-		prev := getPreviousHistory(v.ID)
-		views := getViews(int64(v.ID))
-		totalViews := prev.TotalViews + views
-		installs := getInstalls(int64(v.ID))
-		totalInstalls := prev.TotalInstalls + installs
-		updates := getUpdates(int64(v.ID))
-		totalUpdates := prev.TotalUpdates + updates
-
-		item := models.History{
-			StyleID:       v.ID,
-			DailyViews:    views,
-			DailyInstalls: installs,
-			DailyUpdates:  updates,
-			TotalViews:    totalViews,
-			TotalInstalls: totalInstalls,
-			TotalUpdates:  totalUpdates,
+	for i := 0; i < 10; i++ {
+		// NOTE: Might need some tweaks; it looks a bit too easy.
+		err := database.Conn.Exec(q).Error
+		if err == nil {
+			// Exit if query was successful, otherwise try again.
+			break
 		}
 
-		*stats = append(*stats, item)
+		log.Database.Printf("Failed to take a snapshot on try %d: %s\n", i, err)
+		time.Sleep(500 * time.Millisecond)
 	}
 
-	err = database.Conn.CreateInBatches(stats, 250).Error
-	if err != nil {
-		log.Database.Printf("Failed to snapshot stats: %s\n", err)
-	}
 	log.Info.Println("Stats history is collected.")
 }
