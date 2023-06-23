@@ -114,6 +114,8 @@
 .minw {
     display: inline-flex;
     min-width: 15ex;
+    align-items: center;
+    gap: 0.25rem;
 }
 .td\:d { text-decoration: underline }
 [hidden] { display: none !important }

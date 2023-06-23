@@ -21,12 +21,24 @@
 	<h2 class="td:d">Details</h2>
 	<p><span class="minw">ID</span>{{ .Params.ID }}</p>
 	<p><span class="minw">Role</span>{{ .Params.RoleString }}</p>
-	<p><span class="minw">Username</span>{{ .Params.Username }}</p>
+	<p>
+		<span class="minw">Username
+			<label data-tooltip="Contact admins to change">
+				{{ template "icons/info" }}
+			</label>
+		</span>{{ .Params.Username }}
+	</p>
 	{{ with .Params.DisplayName }}
 		<p><span class="minw">Display name</span>{{ . }}</p>
 	{{ end }}
 	{{ with .Params.Email }}
-		<p><span class="minw">Email</span>{{ . }}</p>
+		<p>
+			<span class="minw">Email
+				<label data-tooltip="Contact admins to change">
+					{{ template "icons/info" }}
+				</label>
+			</span>{{ . }}
+		</p>
 	{{ end }}
 	<p class="joined flex">
 		<span class="minw">Joined</span>
