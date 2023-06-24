@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bytes"
 	"errors"
 	"time"
 
@@ -70,25 +71,27 @@ func RegisterPost(c *fiber.Ctx) error {
 	}
 
 	link := c.BaseURL() + "/verify/" + utils.EncryptText(token, utils.AEADCrypto, config.ScrambleConfig)
+	args := fiber.Map{
+		"user": u,
+		"link": link,
+	}
 
-	partPlain := utils.NewPart().
-		SetBody("Hi " + u.Username + ",\n" +
-			"Follow the link bellow to verify your UserStyles.world account. The link will expire in 4 hours.\n" +
-			link + "\n\n" +
-			"You can safely ignore this email if you never made an account for UserStyles.world.")
-	partHTML := utils.NewPart().
-		SetBody("<p>Hi " + u.Username + ",</p>\n" +
-			"<p>Click the link bellow to verify your UserStyles.world account. <b>The link will expire in 4 hours.</b><br>\n" +
-			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Verify your email address</a></p>\n" +
-			"<br>\n" +
-			"<p>You can safely ignore this email if you never made an account for UserStyles.world.</p>").
-		SetContentType("text/html")
+	var bufText bytes.Buffer
+	var bufHTML bytes.Buffer
+	errText := c.App().Config().Views.Render(&bufText, "email/register.text", args)
+	errHTML := c.App().Config().Views.Render(&bufHTML, "email/register.html", args)
+	if errText != nil || errHTML != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"Error": "Failed to render email templates.",
+		})
+	}
 
 	err = utils.NewEmail().
 		SetTo(u.Email).
 		SetSubject("Verify your email address").
-		AddPart(*partPlain).
-		AddPart(*partHTML).
+		AddPart(*utils.NewPart().SetBody(bufText.String())).
+		AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
 		SendEmail(config.IMAPServer)
 
 	if err != nil {
