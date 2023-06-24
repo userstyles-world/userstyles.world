@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
+	"userstyles.world/models"
 	"userstyles.world/modules/log"
 )
 
@@ -58,6 +59,11 @@ SET total_updates = 0, -- Not necessary, but I might as well do it until stats a
 	total_views = (SELECT COUNT(*) FROM stats WHERE style_id = histories.style_id AND view > 0);`
 		if err := tx.Exec(stats).Error; err != nil {
 			log.Database.Fatalf("Failed to reset histories: %s", err)
+		}
+
+		var l models.Log
+		if err := tx.Migrator().AddColumn(l, "Message"); err != nil {
+			log.Database.Fatalf("Failed to add column message: %s\n", err)
 		}
 
 		return nil
