@@ -4,12 +4,12 @@
 
 <p>
 	Your style <b>{{ .style.Name }}</b> has been removed from our platform for the following reason:<br>
-	{{ .reason }}
+	{{ .Reason }}
 </p>
 
 <p>
 	Additional message from the moderator:<br>
-	{{.message }}
+	{{ .Message }}
 </p>
 
 {{ template "email/actionrecorded.html" . }}
