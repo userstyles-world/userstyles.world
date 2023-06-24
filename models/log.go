@@ -21,6 +21,7 @@ type Log struct {
 	UserID   uint
 	Username string
 	Reason   string
+	Message  string
 
 	// This isn't the Censor you'd expect.
 	// It will only just wrap the style's information into a spoiler.
