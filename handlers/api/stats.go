@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/models"
+	"userstyles.world/modules/storage"
 )
 
 type badgeSchema struct {
@@ -15,18 +15,14 @@ type badgeSchema struct {
 	Color         string `json:"color"`
 }
 
-func fullStats(c *fiber.Ctx, id string) error {
-	return c.JSON(fiber.Map{
-		"total_views":    models.GetTotalViewsForStyle(id),
-		"total_installs": models.GetTotalInstallsForStyle(id),
-	})
-}
-
 func GetStyleStats(c *fiber.Ctx) error {
 	id, t := c.Params("id"), c.Params("type")
 
 	if t == "" {
-		return fullStats(c, id)
+		return c.JSON(fiber.Map{
+			"total_views":    storage.GetTotalViews(id),
+			"total_installs": storage.GetTotalInstalls(id),
+		})
 	}
 
 	badge := badgeSchema{
@@ -39,14 +35,14 @@ func GetStyleStats(c *fiber.Ctx) error {
 	case "views":
 		badge.Message = fmt.Sprintf(
 			"%d weekly, %d total views",
-			models.GetWeeklyViewsForStyle(id),
-			models.GetTotalViewsForStyle(id),
+			storage.GetWeeklyViews(id),
+			storage.GetTotalViews(id),
 		)
 	case "installs":
 		badge.Message = fmt.Sprintf(
 			"%d weekly, %d total installs",
-			models.GetWeeklyInstallsForStyle(id),
-			models.GetTotalInstallsForStyle(id),
+			storage.GetWeeklyInstalls(id),
+			storage.GetTotalInstalls(id),
 		)
 	default:
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{

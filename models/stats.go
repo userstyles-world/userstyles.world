@@ -56,54 +56,6 @@ func (*Stats) Delete(id any) error {
 	return db().Delete(&modelStats, "style_id = ?", id).Error
 }
 
-func GetWeeklyInstallsForStyle(id string) (weekly int64) {
-	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and install > 0 and created_at > ?"
-	db().
-		Model(modelStats).
-		Where(q, id, lastWeek).
-		Count(&weekly)
-
-	return weekly
-}
-
-func GetWeeklyViewsForStyle(id string) (weekly int64) {
-	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and view > 0 and created_at > ?"
-	db().Model(modelStats).Where(q, id, lastWeek).Count(&weekly)
-
-	return weekly
-}
-
-func GetTotalInstallsForStyle(id string) (total int64) {
-	db().
-		Model(modelStats).
-		Where("style_id = ? and install > 0", id).
-		Count(&total)
-
-	return total
-}
-
-func GetTotalViewsForStyle(id string) (total int64) {
-	db().
-		Model(modelStats).
-		Where("style_id = ? and view > 0", id).
-		Count(&total)
-
-	return total
-}
-
-func GetWeeklyUpdatesForStyle(id string) (weekly int64) {
-	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
-	q := "style_id = ? and install > 0 and updated_at > ? and created_at < ?"
-	db().
-		Model(modelStats).
-		Where(q, id, lastWeek, lastWeek).
-		Count(&weekly)
-
-	return weekly
-}
-
 func GetHomepageStatistics() *SiteStats {
 	p := SiteStats{}
 	q := `
