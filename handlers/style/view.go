@@ -9,6 +9,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/storage"
 
 	// "userstyles.world/modules/charts"
 	"userstyles.world/modules/log"
@@ -95,8 +96,10 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 	args["Reviews"] = reviews
 
-	// Get stats.
-	stats := models.GetStyleStatistics(id)
+	stats, err := storage.GetStyleStats(id)
+	if err != nil {
+		log.Database.Printf("Failed to get stats: %s\n", err)
+	}
 	args["Stats"] = stats
 
 	return c.Render("style/view", args)

@@ -29,11 +29,6 @@ type SiteStats struct {
 	DailyUpdates, WeeklyUpdates                  int64
 }
 
-type StyleStats struct {
-	TotalViews, TotalInstalls     int64
-	WeeklyUpdates, WeeklyInstalls int64
-}
-
 type DashStats struct {
 	CreatedAt time.Time
 	Date      string
@@ -107,28 +102,6 @@ func GetWeeklyUpdatesForStyle(id string) (weekly int64) {
 		Count(&weekly)
 
 	return weekly
-}
-
-func GetStyleStatistics(id string) StyleStats {
-	p := StyleStats{}
-	q := `
-SELECT id,
-	(SELECT count(*) FROM stats s WHERE style_id = @id AND view > 0) TotalViews,
-	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0) TotalInstalls,
-	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0 AND created_at > @week) WeeklyInstalls,
-	(SELECT count(*) FROM stats s WHERE style_id = @id AND install > 0 AND created_at < @week AND install > @week) WeeklyUpdates
-FROM stats
-WHERE id = @id
-	`
-
-	i := sql.Named("id", id)
-	now := sql.Named("now", time.Now().AddDate(0, 0, -1))
-	week := sql.Named("week", time.Now().AddDate(0, 0, -7))
-	if err := db().Raw(q, i, now, week).Scan(&p).Error; err != nil {
-		log.Warn.Println("Failed to get style stats:", err.Error())
-	}
-
-	return p
 }
 
 func GetHomepageStatistics() *SiteStats {
