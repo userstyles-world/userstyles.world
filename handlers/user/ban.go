@@ -64,7 +64,7 @@ func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
 			"<p>You can check for more information about this action on the " +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
 			"<p>If you'd like to come in touch with us, please email us at " +
-			"<a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.<p>\n" +
+			"<a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.</p>\n" +
 			"<br>\n" +
 			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
 		SetContentType("text/html")

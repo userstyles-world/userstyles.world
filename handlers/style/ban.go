@@ -71,7 +71,7 @@ func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, mod
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
 			"<br>\n" +
 			"<p>If you'd like to come in touch with us, " +
-			"please email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.<p>\n" +
+			"please email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.</p>\n" +
 			"<br>\n" +
 			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
 		SetContentType("text/html")
