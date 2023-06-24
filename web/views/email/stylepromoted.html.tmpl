@@ -1,6 +1,6 @@
 {{ template "email/greeting.html" . }}
 
-<p>We'd like to notice you about a recent action from our moderation team:</p>
+{{ template "email/noticeaction.html" . }}
 
 <p>Your style <b>{{ .style.Name}}</b> has been promoted to be featured on the homepage!</p>
 

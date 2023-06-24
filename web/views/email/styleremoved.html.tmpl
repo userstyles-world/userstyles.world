@@ -1,6 +1,6 @@
 {{ template "email/greeting.html" . }}
 
-<p>We'd like to notice you about a recent action from our moderation team:</p><br>
+{{ template "email/noticeaction.html" . }}
 
 <p>
 	Your style <b>{{ .style.Name }}</b> has been removed from our platform for the following reason:<br>
@@ -12,12 +12,8 @@
 	{{.message }}
 </p>
 
-<p>
-	This action is recorded in the <a target="_blank" clicktracking="off" href="{{ .Link }}">Modlog</a>.
-</p>
+{{ template "email/actionrecorded.html" . }}
 
-<p>
-	If you'd like to come in touch with us, please email us at <a href="mailto:feedback@userstyles.world">feedback@userstyles.world</a>.
-</p>
+{{ template "email/getintouch.html" . }}
 
 {{ template "email/regardsmod.html" . }}

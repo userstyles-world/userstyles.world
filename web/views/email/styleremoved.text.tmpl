@@ -1,6 +1,6 @@
 {{ template "email/greeting.text" . }}
 
-We'd like to notice you about a recent action from our moderation team:
+{{ template "email/noticeaction.text" . }}
 
 Your style "{{ .style.Name }}" has been removed from our platform for the following reason:
 {{ .Reason }}
@@ -8,7 +8,7 @@ Your style "{{ .style.Name }}" has been removed from our platform for the follow
 Additional message from the moderator:
 {{ .Message }}
 
-This action is recorded in the modlog: {{ .Link }}
+{{ template "email/actionrecorded.text" . }}
 
 If you'd like to come in touch with us, please email us at feedback@userstyles.world
 
