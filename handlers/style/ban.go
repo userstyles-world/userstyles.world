@@ -52,7 +52,7 @@ func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, mod
 			"We'd like to notice you about a recent action from our moderation team:\n\n" +
 			"Your style \"" + style.Name + "\" has been removed from our platform.\n" +
 			"You can check for more information about this action on the modlog: " + modLogEntry + "\n\n" +
-			"If you'd like to come in touch with us, please email us at feedback@userstyles.world\n" +
+			"If you'd like to come in touch with us, please email us at feedback@userstyles.world\n\n" +
 			"Regards,\n" + "The Moderation Team")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
