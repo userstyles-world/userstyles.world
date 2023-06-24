@@ -119,10 +119,9 @@ func BanPost(c *fiber.Ctx) error {
 		TargetUserName: s.Username,
 		TargetData:     s.Name,
 		Reason:         strings.TrimSpace(c.FormValue("reason")),
+		Message:        strings.TrimSpace(c.FormValue("message")),
 		Censor:         c.FormValue("censor") == "on",
 	}
-
-	message := strings.TrimSpace(c.FormValue("message"))
 
 	// Add banned style log entry.
 	modlog := new(models.Log)
@@ -187,7 +186,7 @@ func BanPost(c *fiber.Ctx) error {
 		if err := sendBanEmail(baseURL, targetUser, style, modLogID, reason, message); err != nil {
 			log.Warn.Printf("Failed to mail author for style %d: %s", style.ID, err.Error())
 		}
-	}(c.BaseURL(), s, logEntry.ID, logEntry.Reason, message)
+	}(c.BaseURL(), s, logEntry.ID, logEntry.Reason, logEntry.Message)
 
 	return c.Redirect("/modlog", fiber.StatusSeeOther)
 }
