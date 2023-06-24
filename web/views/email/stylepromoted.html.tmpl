@@ -1,0 +1,12 @@
+{{ template "email/greeting.html" . }}
+
+<p>We'd like to notice you about a recent action from our moderation team:</p>
+
+<p>Your style <b>{{ .style.Name}}</b> has been promoted to be featured on the homepage!</p>
+
+<p>
+    It has been promoted by our moderator
+    <a target="_blank" clicktracking="off" href="{{ .ModLink }}">{{ .ModName }}</a>.
+</p>
+
+{{ template "email/regardsmod.html" . }}

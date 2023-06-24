@@ -1,0 +1,18 @@
+{{ template "email/greeting.html" . }}
+
+<p>We'd like to notice you about a recent action from our moderation team:</p><br>
+
+<p>
+	You have been banned from our platform for the following reason:
+	{{ .Reason }}
+</p>
+
+<p>
+	This action is recorded in the <a target="_blank" clicktracking="off" href="{{ .Link }}">Modlog</a>.
+</p>
+
+<p>
+	If you'd like to come in touch with us, please email us at <a href="mailto:feedback@userstyles.world">feedback@userstyles.world</a>.
+</p>
+
+{{ template "email/regardsmod.html" . }}

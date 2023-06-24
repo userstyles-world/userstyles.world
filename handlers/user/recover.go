@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bytes"
 	"errors"
 	"time"
 
@@ -78,27 +79,24 @@ func RecoverPost(c *fiber.Ctx) error {
 
 		link := config.BaseURL + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
 
-		partPlain := utils.NewPart().
-			SetBody("Hi " + user.Username + ",\n" +
-				"We have received a request to reset the password for your UserStyles.world account.\n\n" +
-				"Follow the link bellow to reset your password. The link will expire in 4 hours.\n" +
-				link + "\n\n" +
-				"You can safely ignore this email if you didn't request to reset your password.")
-		partHTML := utils.NewPart().
-			SetBody("<p>Hi " + user.Username + ",</p>\n" +
-				"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
-				"<br>\n" +
-				"<p>Click the link bellow to reset your password. <b>The link will expire in 4 hours.</b><br>\n" +
-				"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset your password</a></p>\n" +
-				"<br>\n" +
-				"<p>You can safely ignore this email if you didn't request to reset your password.</p>").
-			SetContentType("text/html")
+		args := fiber.Map{
+			"Link": link,
+		}
+
+		var bufText bytes.Buffer
+		var bufHTML bytes.Buffer
+		errText := c.App().Config().Views.Render(&bufText, "email/passwordrecovery.text", args)
+		errHTML := c.App().Config().Views.Render(&bufHTML, "email/passwordrecovery.html", args)
+		if errText != nil || errHTML != nil {
+			log.Warn.Printf("Failed to render email template: %v\n", err)
+			return
+		}
 
 		utils.NewEmail().
 			SetTo(u.Email).
 			SetSubject("Reset your password").
-			AddPart(*partPlain).
-			AddPart(*partHTML).
+			AddPart(*utils.NewPart().SetBody(bufText.String())).
+			AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
 			SendEmail(config.IMAPServer)
 	}(u)
 

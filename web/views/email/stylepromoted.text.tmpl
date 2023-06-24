@@ -1,0 +1,10 @@
+{{ template "email/greeting.text" . }}
+
+We'd like to notice you about a recent action from our moderation team:
+
+Your style "{{ .style.Name}}" has been promoted to be featured on the homepage!
+
+It has been promoted by our moderator {{ .ModName }},
+checkout their profile: {{ .ModLink }}
+
+{{ template "email/regardsmod.text" . }}

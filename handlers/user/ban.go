@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bytes"
 	"strconv"
 	"strings"
 
@@ -46,34 +47,30 @@ func Ban(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(baseURL string, user *models.User, modLogID uint) error {
+func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, modLogID uint, reason string) error {
 	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
 
-	partPlain := utils.NewPart().
-		SetBody("Hi " + user.Username + ",\n" +
-			"We'd like to notice you about a recent action from our moderation team:\n\n" +
-			"You have been banned from our platform.\n" +
-			"You can check for more information about this action on the modlog: " + modLogEntry + "\n\n" +
-			"If you'd like to come in touch with us,please email us at feedback@userstyles.world\n\n" +
-			"Regards,\n" + "The Moderation Team")
-	partHTML := utils.NewPart().
-		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
-			"<br>\n" +
-			"<p>You have been banned from our platform.</p>\n" +
-			"<p>You can check for more information about this action on the " +
-			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
-			"<p>If you'd like to come in touch with us, please email us at " +
-			"<a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.</p>\n" +
-			"<br>\n" +
-			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
-		SetContentType("text/html")
+	args := fiber.Map{
+		"Reason": reason,
+		"Link":   modLogEntry,
+	}
+
+	var bufText bytes.Buffer
+	var bufHTML bytes.Buffer
+	errText := c.App().Config().Views.Render(&bufText, "email/userbanned.text", args)
+	errHTML := c.App().Config().Views.Render(&bufHTML, "email/userbanned.html", args)
+	if errText != nil || errHTML != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"Error": "Failed to render email templates.",
+		})
+	}
 
 	err := utils.NewEmail().
 		SetTo(user.Email).
 		SetSubject("You have been banned").
-		AddPart(*partPlain).
-		AddPart(*partHTML).
+		AddPart(*utils.NewPart().SetBody(bufText.String())).
+		AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
 		SendEmail(config.IMAPServer)
 	if err != nil {
 		return err
@@ -149,12 +146,12 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	go func(baseURL string, user *models.User, modLogID uint) {
+	go func(baseURL string, user *models.User, modLogID uint, reason string) {
 		// Send a email about they've been banned.
-		if err := sendBanEmail(baseURL, targetUser, modLogID); err != nil {
+		if err := sendBanEmail(c, baseURL, targetUser, modLogID, reason); err != nil {
 			log.Warn.Printf("Failed to send an email to user %d: %s", user.ID, err.Error())
 		}
-	}(c.BaseURL(), targetUser, logEntry.ID)
+	}(c.BaseURL(), targetUser, logEntry.ID, logEntry.Reason)
 
 	return c.Redirect("/dashboard")
 }

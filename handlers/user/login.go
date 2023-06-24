@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bytes"
 	"errors"
 	"net/url"
 	"time"
@@ -123,24 +124,22 @@ func LoginPost(c *fiber.Ctx) error {
 	}
 
 	go func(user *models.User) {
-		partPlain := utils.NewPart().
-			SetBody("Hi " + user.Username + ",\n" +
-				"We noticed a new sign in to your UserStyles.world account.\n\n" +
-				"If that was you, you can safely ignore this email.\n" +
-				"If that wasn't you, please change your password:\n" +
-				"https://userstyles.world/account#password")
-		partHTML := utils.NewPart().
-			SetBody("<p>Hi " + user.Username + ",</p>\n" +
-				"<p>We noticed a new sign in to your UserStyles.world account.</p>\n" +
-				"<p>If that was you, you can safely ignore this email.<br>\n" +
-				"<b>If that wasn't you, please <a target=\"_blank\" clicktracking=\"off\" href=\"https://userstyles.world/account#password\">change your password</a>.</b></p>\n").
-			SetContentType("text/html")
+		args := fiber.Map{}
+
+		var bufText bytes.Buffer
+		var bufHTML bytes.Buffer
+		errText := c.App().Config().Views.Render(&bufText, "email/signin.text", args)
+		errHTML := c.App().Config().Views.Render(&bufHTML, "email/signin.html", args)
+		if errText != nil || errHTML != nil {
+			log.Warn.Printf("Failed to render email template: %v\n", err)
+			return
+		}
 
 		utils.NewEmail().
 			SetTo(user.Email).
 			SetSubject("New sign-in").
-			AddPart(*partPlain).
-			AddPart(*partHTML).
+			AddPart(*utils.NewPart().SetBody(bufText.String())).
+			AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
 			SendEmail(config.IMAPServer)
 	}(user)
 

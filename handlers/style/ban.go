@@ -1,6 +1,7 @@
 package style
 
 import (
+	"bytes"
 	"strconv"
 	"strings"
 
@@ -44,43 +45,31 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, modLogID uint, reason string, message string) error {
+func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, style *models.APIStyle, modLogID uint, reason string, message string) error {
 	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
 
-	partPlain := utils.NewPart().
-		SetBody("Hi " + user.Username + ",\n" +
-			"We'd like to notice you about a recent action from our moderation team:\n\n" +
-			"Your style \"" + style.Name + "\" has been removed from our platform for the following reason:\n" +
-			reason + "\n\n" +
-			"Additional message from the moderator:\n" +
-			message + "\n\n" +
-			"This action is recorded in the modlog: " + modLogEntry + "\n\n" +
-			"If you'd like to come in touch with us, please email us at feedback@userstyles.world\n\n" +
-			"Regards,\n" + "The Moderation Team")
-	partHTML := utils.NewPart().
-		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
-			"<br>\n" +
-			"<p>Your style \"<b>" + style.Name + "</b>\" has been removed from our platform for the following reason:\n" +
-			reason + "</p>\n" +
-			"<br>\n" +
-			"<p>Additional message from the moderator:\n" +
-			message + "</p>\n" +
-			"<br>\n" +
-			"<p>This action is recorded in the " +
-			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
-			"<br>\n" +
-			"<p>If you'd like to come in touch with us, " +
-			"please email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.</p>\n" +
-			"<br>\n" +
-			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
-		SetContentType("text/html")
+	args := fiber.Map{
+		"Reason":  reason,
+		"Message": message,
+		"Link":    modLogEntry,
+	}
+
+	var bufText bytes.Buffer
+	var bufHTML bytes.Buffer
+	errText := c.App().Config().Views.Render(&bufText, "email/styleremoved.text", args)
+	errHTML := c.App().Config().Views.Render(&bufHTML, "email/styleremoved.html", args)
+	if errText != nil || errHTML != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"Error": "Failed to render email templates.",
+		})
+	}
 
 	err := utils.NewEmail().
 		SetTo(user.Email).
 		SetSubject("Your style has been removed").
-		AddPart(*partPlain).
-		AddPart(*partHTML).
+		AddPart(*utils.NewPart().SetBody(bufText.String())).
+		AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
 		SendEmail(config.IMAPServer)
 	if err != nil {
 		return err
@@ -183,7 +172,7 @@ func BanPost(c *fiber.Ctx) error {
 		}
 
 		// Notify the author about style removal.
-		if err := sendBanEmail(baseURL, targetUser, style, modLogID, reason, message); err != nil {
+		if err := sendBanEmail(c, baseURL, targetUser, style, modLogID, reason, message); err != nil {
 			log.Warn.Printf("Failed to mail author for style %d: %s", style.ID, err.Error())
 		}
 	}(c.BaseURL(), s, logEntry.ID, logEntry.Reason, logEntry.Message)

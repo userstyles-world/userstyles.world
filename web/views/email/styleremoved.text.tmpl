@@ -1,0 +1,15 @@
+{{ template "email/greeting.text" . }}
+
+We'd like to notice you about a recent action from our moderation team:
+
+Your style "{{ .style.Name }}" has been removed from our platform for the following reason:
+{{ .Reason }}
+
+Additional message from the moderator:
+{{ .Message }}
+
+This action is recorded in the modlog: {{ .Link }}
+
+If you'd like to come in touch with us, please email us at feedback@userstyles.world
+
+{{ template "email/regardsmod.text" . }}
