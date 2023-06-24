@@ -44,23 +44,32 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, modLogID uint) error {
+func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, modLogID uint, reason string, message string) error {
 	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
 
 	partPlain := utils.NewPart().
 		SetBody("Hi " + user.Username + ",\n" +
 			"We'd like to notice you about a recent action from our moderation team:\n\n" +
-			"Your style \"" + style.Name + "\" has been removed from our platform.\n" +
-			"You can check for more information about this action on the modlog: " + modLogEntry + "\n\n" +
+			"Your style \"" + style.Name + "\" has been removed from our platform for the following reason:\n" +
+			reason + "\n\n" +
+			"Additional message from the moderator:\n" +
+			message + "\n\n" +
+			"This action is recorded in the modlog: " + modLogEntry + "\n\n" +
 			"If you'd like to come in touch with us, please email us at feedback@userstyles.world\n\n" +
 			"Regards,\n" + "The Moderation Team")
 	partHTML := utils.NewPart().
 		SetBody("<p>Hi " + user.Username + ",</p>\n" +
 			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
 			"<br>\n" +
-			"<p>Your style \"<b>" + style.Name + "</b>\" has been removed from our platform.</p>\n" +
-			"<p>You can check for more information about this action on the " +
+			"<p>Your style \"<b>" + style.Name + "</b>\" has been removed from our platform for the following reason:\n" +
+			reason + "</p>\n" +
+			"<br>\n" +
+			"<p>Additional message from the moderator:\n" +
+			message + "</p>\n" +
+			"<br>\n" +
+			"<p>This action is recorded in the " +
 			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modLogEntry + "\">Modlog</a>.</p>\n" +
+			"<br>\n" +
 			"<p>If you'd like to come in touch with us, " +
 			"please email us at <a href=\"mailto:feedback@userstyles.world\">feedback@userstyles.world</a>.<p>\n" +
 			"<br>\n" +
@@ -113,6 +122,8 @@ func BanPost(c *fiber.Ctx) error {
 		Censor:         c.FormValue("censor") == "on",
 	}
 
+	message := strings.TrimSpace(c.FormValue("message"))
+
 	// Add banned style log entry.
 	modlog := new(models.Log)
 	if err := modlog.AddLog(&logEntry); err != nil {
@@ -152,7 +163,7 @@ func BanPost(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to delete style %d from index: %s", s.ID, err)
 	}
 
-	go func(baseURL string, style *models.APIStyle, modLogID uint) {
+	go func(baseURL string, style *models.APIStyle, modLogID uint, reason string, message string) {
 		// Add notification to database.
 		notification := models.Notification{
 			Seen:     false,
@@ -173,10 +184,10 @@ func BanPost(c *fiber.Ctx) error {
 		}
 
 		// Notify the author about style removal.
-		if err := sendBanEmail(baseURL, targetUser, style, modLogID); err != nil {
+		if err := sendBanEmail(baseURL, targetUser, style, modLogID, reason, message); err != nil {
 			log.Warn.Printf("Failed to mail author for style %d: %s", style.ID, err.Error())
 		}
-	}(c.BaseURL(), s, logEntry.ID)
+	}(c.BaseURL(), s, logEntry.ID, logEntry.Reason, message)
 
 	return c.Redirect("/modlog", fiber.StatusSeeOther)
 }

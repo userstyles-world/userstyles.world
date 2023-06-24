@@ -10,9 +10,16 @@
 		<label for="reason">Reason for ban</label>
 		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
 		<input
+		required
+		type="text" name="reason"
+		placeholder="Your reason to ban this style">
+		
+		<label for="message">Private message for the author</label>
+		<i class="fg:3">For example, a hint about was done wrong and what can be done now.</i>
+		<input
 			required
-			type="text" name="reason"
-			placeholder="Your reason to ban this style">
+			type="text" name="message"
+			placeholder="Your message to the author of this style">
 
 		<div class="checkbox flex">
 			<input type="checkbox" name="censor">
