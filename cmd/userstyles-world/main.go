@@ -23,6 +23,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/cron"
 	database "userstyles.world/modules/database/init"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
@@ -51,6 +52,8 @@ func main() {
 		// TODO: Explore using this more.
 		PassLocalsToViews: true,
 	})
+
+	email.SetRenderer(app)
 
 	if !config.Production {
 		app.Use(logger.New())

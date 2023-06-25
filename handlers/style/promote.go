@@ -10,6 +10,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -28,12 +29,10 @@ func sendPromotionEmail(c *fiber.Ctx, userID uint, style *models.APIStyle, modNa
 		"ModProfile": modProfile,
 	}
 
-	var bufText bytes.Buffer
-	var bufHTML bytes.Buffer
-	errText := c.App().Config().Views.Render(&bufText, "email/stylepromoted.text", args)
-	errHTML := c.App().Config().Views.Render(&bufHTML, "email/stylepromoted.html", args)
-	if errText != nil || errHTML != nil {
-		log.Warn.Printf("Failed to render email template: %v%v\n", errText, errHTML)
+	var bufText, bufHTML bytes.Buffer
+	err = email.Render(&bufText, &bufHTML, "stylepromoted", args)
+	if err != nil {
+		log.Warn.Printf("Failed to render email template: %v\n", err)
 		return
 	}
 

@@ -12,6 +12,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -126,11 +127,9 @@ func LoginPost(c *fiber.Ctx) error {
 	go func(user *models.User) {
 		args := fiber.Map{}
 
-		var bufText bytes.Buffer
-		var bufHTML bytes.Buffer
-		errText := c.App().Config().Views.Render(&bufText, "email/signin.text", args)
-		errHTML := c.App().Config().Views.Render(&bufHTML, "email/signin.html", args)
-		if errText != nil || errHTML != nil {
+		var bufText, bufHTML bytes.Buffer
+		err := email.Render(&bufText, &bufHTML, "signin", args)
+		if err != nil {
 			log.Warn.Printf("Failed to render email template: %v\n", err)
 			return
 		}

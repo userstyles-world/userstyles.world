@@ -10,6 +10,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -55,18 +56,16 @@ func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, modLogID uint
 		"Link":   modLogEntry,
 	}
 
-	var bufText bytes.Buffer
-	var bufHTML bytes.Buffer
-	errText := c.App().Config().Views.Render(&bufText, "email/userbanned.text", args)
-	errHTML := c.App().Config().Views.Render(&bufHTML, "email/userbanned.html", args)
-	if errText != nil || errHTML != nil {
+	var bufText, bufHTML bytes.Buffer
+	err := email.Render(&bufText, &bufHTML, "userbanned", args)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
 			"Title": "Internal server error",
 			"Error": "Failed to render email templates.",
 		})
 	}
 
-	err := utils.NewEmail().
+	err = utils.NewEmail().
 		SetTo(user.Email).
 		SetSubject("You have been banned").
 		AddPart(*utils.NewPart().SetBody(bufText.String())).

@@ -11,6 +11,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/utils"
@@ -54,18 +55,16 @@ func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, style *models
 		"Link":    modLogEntry,
 	}
 
-	var bufText bytes.Buffer
-	var bufHTML bytes.Buffer
-	errText := c.App().Config().Views.Render(&bufText, "email/styleremoved.text", args)
-	errHTML := c.App().Config().Views.Render(&bufHTML, "email/styleremoved.html", args)
-	if errText != nil || errHTML != nil {
+	var bufText, bufHTML bytes.Buffer
+	err := email.Render(&bufText, &bufHTML, "styleremoved", args)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
 			"Title": "Internal server error",
 			"Error": "Failed to render email templates.",
 		})
 	}
 
-	err := utils.NewEmail().
+	err = utils.NewEmail().
 		SetTo(user.Email).
 		SetSubject("Your style has been removed").
 		AddPart(*utils.NewPart().SetBody(bufText.String())).

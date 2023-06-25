@@ -12,6 +12,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -128,16 +129,14 @@ func ResetPost(c *fiber.Ctx) error {
 
 		args := fiber.Map{}
 
-		var bufText bytes.Buffer
-		var bufHTML bytes.Buffer
-		errText := c.App().Config().Views.Render(&bufText, "email/passwordreset.text", args)
-		errHTML := c.App().Config().Views.Render(&bufHTML, "email/passwordreset.html", args)
-		if errText != nil || errHTML != nil {
+		var bufText, bufHTML bytes.Buffer
+		err := email.Render(&bufText, &bufHTML, "passwordreset", args)
+		if err != nil {
 			log.Warn.Printf("Failed to render email template: %v\n", err)
 			return
 		}
 
-		err := utils.NewEmail().
+		err = utils.NewEmail().
 			SetTo(user.Email).
 			SetSubject("Your password has been changed").
 			AddPart(*utils.NewPart().SetBody(bufText.String())).

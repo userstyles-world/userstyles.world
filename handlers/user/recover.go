@@ -11,6 +11,7 @@ import (
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -83,11 +84,9 @@ func RecoverPost(c *fiber.Ctx) error {
 			"Link": link,
 		}
 
-		var bufText bytes.Buffer
-		var bufHTML bytes.Buffer
-		errText := c.App().Config().Views.Render(&bufText, "email/passwordrecovery.text", args)
-		errHTML := c.App().Config().Views.Render(&bufHTML, "email/passwordrecovery.html", args)
-		if errText != nil || errHTML != nil {
+		var bufText, bufHTML bytes.Buffer
+		err = email.Render(&bufText, &bufHTML, "passwordrecovery", args)
+		if err != nil {
 			log.Warn.Printf("Failed to render email template: %v\n", err)
 			return
 		}

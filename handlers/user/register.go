@@ -11,6 +11,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -76,11 +77,8 @@ func RegisterPost(c *fiber.Ctx) error {
 		"Link": link,
 	}
 
-	var bufText bytes.Buffer
-	var bufHTML bytes.Buffer
-	errText := c.App().Config().Views.Render(&bufText, "email/register.text", args)
-	errHTML := c.App().Config().Views.Render(&bufHTML, "email/register.html", args)
-	if errText != nil || errHTML != nil {
+	var bufText, bufHTML bytes.Buffer
+	if err = email.Render(&bufText, &bufHTML, "register", args); err != nil {
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
 			"Title": "Internal server error",
 			"Error": "Failed to render email templates.",
