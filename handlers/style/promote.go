@@ -1,7 +1,6 @@
 package style
 
 import (
-	"bytes"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,39 +11,25 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
 )
 
-func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL string) {
-	user, err := models.FindUserByID(strconv.Itoa(int(userID)))
+func sendPromotionEmail(style *models.APIStyle, mod string) {
+	user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
 	if err != nil {
-		log.Warn.Printf("Couldn't find user %d: %s", userID, err.Error())
+		log.Warn.Printf("Couldn't find user %d: %s\n", style.UserID, err)
 		return
 	}
-
-	modProfile := baseURL + "/user/" + modName
 
 	args := fiber.Map{
-		"ModName":    modName,
-		"ModProfile": modProfile,
+		"User":       user,
+		"ModName":    mod,
+		"ModProfile": config.BaseURL + "/user/" + mod,
 	}
 
-	var bufText, bufHTML bytes.Buffer
-	err = email.Render(&bufText, &bufHTML, "stylepromoted", args)
+	title := "Your style has been featured"
+	err = email.Send("stylepromoted", user.Email, title, args)
 	if err != nil {
-		log.Warn.Printf("Failed to render email template: %v\n", err)
-		return
-	}
-
-	err = utils.NewEmail().
-		SetTo(user.Email).
-		SetSubject("Your style is being featured").
-		AddPart(*utils.NewPart().SetBody(bufText.String())).
-		AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
-		SendEmail(config.IMAPServer)
-	if err != nil {
-		log.Warn.Println("Failed to send email:", err.Error())
-		return
+		log.Warn.Printf("Failed to send an email: %s\n", err)
 	}
 }
 
@@ -95,7 +80,7 @@ func Promote(c *fiber.Ctx) error {
 	// Ahem!!! We don't save the new value of Featured to the current style.
 	// So we have to reverse check it ;)
 	if !style.Featured {
-		go sendPromotionEmail(style.UserID, style, u.Username, c.BaseURL())
+		go sendPromotionEmail(style, u.Username)
 
 		// Create a notification.
 		notification := models.Notification{

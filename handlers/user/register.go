@@ -1,7 +1,6 @@
 package user
 
 import (
-	"bytes"
 	"errors"
 	"time"
 
@@ -77,23 +76,9 @@ func RegisterPost(c *fiber.Ctx) error {
 		"Link": link,
 	}
 
-	var bufText, bufHTML bytes.Buffer
-	if err = email.Render(&bufText, &bufHTML, "register", args); err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"Error": "Failed to render email templates.",
-		})
-	}
-
-	err = utils.NewEmail().
-		SetTo(u.Email).
-		SetSubject("Verify your email address").
-		AddPart(*utils.NewPart().SetBody(bufText.String())).
-		AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
-		SendEmail(config.IMAPServer)
-
+	err = email.Send("register", u.Email, "Verify your email address", args)
 	if err != nil {
-		log.Warn.Println("Failed to send an email:", err.Error())
+		log.Warn.Printf("Failed to send an email: %s\n", err)
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
 				"Title": "Internal server error",

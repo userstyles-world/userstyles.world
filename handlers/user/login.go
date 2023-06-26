@@ -1,7 +1,6 @@
 package user
 
 import (
-	"bytes"
 	"errors"
 	"net/url"
 	"time"
@@ -124,23 +123,8 @@ func LoginPost(c *fiber.Ctx) error {
 		log.Warn.Println("Failed to update last login date for id:", user.ID)
 	}
 
-	go func(user *models.User) {
-		args := fiber.Map{}
-
-		var bufText, bufHTML bytes.Buffer
-		err := email.Render(&bufText, &bufHTML, "signin", args)
-		if err != nil {
-			log.Warn.Printf("Failed to render email template: %v\n", err)
-			return
-		}
-
-		utils.NewEmail().
-			SetTo(user.Email).
-			SetSubject("New sign-in").
-			AddPart(*utils.NewPart().SetBody(bufText.String())).
-			AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
-			SendEmail(config.IMAPServer)
-	}(user)
+	args := fiber.Map{"User": user}
+	go email.Send("signin", user.Email, "New sign-in", args)
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }

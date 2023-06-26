@@ -1,7 +1,6 @@
 package user
 
 import (
-	"bytes"
 	"errors"
 
 	"github.com/go-playground/validator/v10"
@@ -123,29 +122,9 @@ func ResetPost(c *fiber.Ctx) error {
 		})
 	}
 
-	// Sends email that the password has been changed.
-	// But we do it in a separate routine, so we can render the view for the user.
-	go func(user *models.User) {
-
-		args := fiber.Map{}
-
-		var bufText, bufHTML bytes.Buffer
-		err := email.Render(&bufText, &bufHTML, "passwordreset", args)
-		if err != nil {
-			log.Warn.Printf("Failed to render email template: %v\n", err)
-			return
-		}
-
-		err = utils.NewEmail().
-			SetTo(user.Email).
-			SetSubject("Your password has been changed").
-			AddPart(*utils.NewPart().SetBody(bufText.String())).
-			AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
-			SendEmail(config.IMAPServer)
-		if err != nil {
-			log.Warn.Println("Failed to send an email:", err.Error())
-		}
-	}(user)
+	args := fiber.Map{"User": user}
+	title := "Your password has been changed"
+	go email.Send("passwordreset", user.Email, title, args)
 
 	return c.Render("user/verification", fiber.Map{
 		"Title":        "Successful reset",

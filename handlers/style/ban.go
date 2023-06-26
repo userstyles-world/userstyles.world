@@ -1,7 +1,6 @@
 package style
 
 import (
-	"bytes"
 	"strconv"
 	"strings"
 
@@ -14,7 +13,6 @@ import (
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
-	"userstyles.world/utils"
 )
 
 func BanGet(c *fiber.Ctx) error {
@@ -46,32 +44,17 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, modLogID uint, reason string, message string) error {
-	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
+func sendBanEmail(user *models.User, entry *models.Log) error {
+	modLogEntry := config.BaseURL + "/modlog#id-" + strconv.Itoa(int(entry.ID))
 
 	args := fiber.Map{
-		"Reason":  reason,
-		"Message": message,
+		"Reason":  entry.Reason,
+		"Message": entry.Message,
 		"Link":    modLogEntry,
 	}
 
-	var bufText, bufHTML bytes.Buffer
-	err := email.Render(&bufText, &bufHTML, "styleremoved", args)
-	if err != nil {
-		log.Warn.Printf("Failed to render email template: %v\n", err)
-		return err
-	}
-
-	err = utils.NewEmail().
-		SetTo(user.Email).
-		SetSubject("Your style has been removed").
-		AddPart(*utils.NewPart().SetBody(bufText.String())).
-		AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
-		SendEmail(config.IMAPServer)
-	if err != nil {
-		return err
-	}
-	return nil
+	title := "Your style has been removed"
+	return email.Send("styleremoved", user.Email, title, args)
 }
 
 func BanPost(c *fiber.Ctx) error {
@@ -148,12 +131,12 @@ func BanPost(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to delete style %d from index: %s", s.ID, err)
 	}
 
-	go func(baseURL string, style *models.APIStyle, modLogID uint, reason string, message string) {
+	go func(style *models.APIStyle, entry models.Log) {
 		// Add notification to database.
 		notification := models.Notification{
 			Seen:     false,
 			Kind:     models.KindBannedStyle,
-			TargetID: int(modLogID),
+			TargetID: int(entry.ID),
 			UserID:   int(u.ID),
 			StyleID:  int(s.ID),
 		}
@@ -169,10 +152,10 @@ func BanPost(c *fiber.Ctx) error {
 		}
 
 		// Notify the author about style removal.
-		if err := sendBanEmail(baseURL, targetUser, style, modLogID, reason, message); err != nil {
-			log.Warn.Printf("Failed to mail author for style %d: %s", style.ID, err.Error())
+		if err := sendBanEmail(targetUser, &logEntry); err != nil {
+			log.Warn.Printf("Failed to email author for style %d: %s\n", style.ID, err)
 		}
-	}(c.BaseURL(), s, logEntry.ID, logEntry.Reason, logEntry.Message)
+	}(s, logEntry)
 
 	return c.Redirect("/modlog", fiber.StatusSeeOther)
 }

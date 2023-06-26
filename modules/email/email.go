@@ -2,9 +2,12 @@
 package email
 
 import (
-	"io"
+	"bytes"
 
 	"github.com/gofiber/fiber/v2"
+
+	"userstyles.world/modules/config"
+	"userstyles.world/utils"
 )
 
 var views fiber.Views
@@ -14,16 +17,24 @@ func SetRenderer(app *fiber.App) {
 	views = app.Config().Views
 }
 
-// Render rendres both kinds of email templates with provided data.
-func Render(bufText, bufHTML io.Writer, name string, args any) error {
-	err := views.Render(bufText, "email/"+name+".text", args)
-	if err != nil {
-		return err
-	}
-	err = views.Render(bufHTML, "email/"+name+".html", args)
+// Send renders templates with provided data, prepares an email, and sends it.
+func Send(tmpl, address, title string, args any) error {
+	var text bytes.Buffer
+	err := views.Render(&text, "email/"+tmpl+".text", args)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	var html bytes.Buffer
+	err = views.Render(&html, "email/"+tmpl+".html", args)
+	if err != nil {
+		return err
+	}
+
+	return utils.NewEmail().
+		SetTo(address).
+		SetSubject(title).
+		AddPart(*utils.NewPart().SetBody(text.String())).
+		AddPart(*utils.NewPart().SetBody(html.String()).HTML()).
+		SendEmail(config.IMAPServer)
 }

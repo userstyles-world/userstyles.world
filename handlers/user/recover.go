@@ -1,7 +1,6 @@
 package user
 
 import (
-	"bytes"
 	"errors"
 	"time"
 
@@ -81,22 +80,15 @@ func RecoverPost(c *fiber.Ctx) error {
 		link := config.BaseURL + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
 
 		args := fiber.Map{
+			"User": user,
 			"Link": link,
 		}
 
-		var bufText, bufHTML bytes.Buffer
-		err = email.Render(&bufText, &bufHTML, "passwordrecovery", args)
+		title := "Reset your password"
+		err = email.Send("passwordrecovery", user.Email, title, args)
 		if err != nil {
-			log.Warn.Printf("Failed to render email template: %v\n", err)
-			return
+			log.Warn.Printf("Failed to send an email: %s\n", err)
 		}
-
-		utils.NewEmail().
-			SetTo(u.Email).
-			SetSubject("Reset your password").
-			AddPart(*utils.NewPart().SetBody(bufText.String())).
-			AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
-			SendEmail(config.IMAPServer)
 	}(u)
 
 	// We need to just say we have send an reset email.

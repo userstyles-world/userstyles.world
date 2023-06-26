@@ -1,7 +1,6 @@
 package user
 
 import (
-	"bytes"
 	"strconv"
 	"strings"
 
@@ -12,7 +11,6 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
 )
 
 func Ban(c *fiber.Ctx) error {
@@ -46,33 +44,6 @@ func Ban(c *fiber.Ctx) error {
 		"User":   u,
 		"Params": user,
 	})
-}
-
-func sendBanEmail(baseURL string, user *models.User, modLogID uint, reason string) error {
-	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
-
-	args := fiber.Map{
-		"Reason": reason,
-		"Link":   modLogEntry,
-	}
-
-	var bufText, bufHTML bytes.Buffer
-	err := email.Render(&bufText, &bufHTML, "userbanned", args)
-	if err != nil {
-		log.Warn.Printf("Failed to render email template: %v\n", err)
-		return err
-	}
-
-	err = utils.NewEmail().
-		SetTo(user.Email).
-		SetSubject("You have been banned").
-		AddPart(*utils.NewPart().SetBody(bufText.String())).
-		AddPart(*utils.NewPart().SetBody(bufHTML.String()).HTML()).
-		SendEmail(config.IMAPServer)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func ConfirmBan(c *fiber.Ctx) error {
@@ -143,12 +114,14 @@ func ConfirmBan(c *fiber.Ctx) error {
 		})
 	}
 
-	go func(baseURL string, user *models.User, modLogID uint, reason string) {
-		// Send a email about they've been banned.
-		if err := sendBanEmail(baseURL, targetUser, modLogID, reason); err != nil {
-			log.Warn.Printf("Failed to send an email to user %d: %s", user.ID, err.Error())
-		}
-	}(c.BaseURL(), targetUser, logEntry.ID, logEntry.Reason)
+	args := fiber.Map{
+		"Reason": logEntry.Reason,
+		"Link":   config.BaseURL + "/modlog#id-" + strconv.Itoa(int(logEntry.ID)),
+	}
+	err = email.Send("userbanned", user.Email, "You have been banned", args)
+	if err != nil {
+		log.Warn.Printf("Failed to send an email to user %d: %s\n", user.ID, err)
+	}
 
 	return c.Redirect("/dashboard")
 }
