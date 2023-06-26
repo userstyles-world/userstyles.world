@@ -48,7 +48,7 @@ func Ban(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, modLogID uint, reason string) error {
+func sendBanEmail(baseURL string, user *models.User, modLogID uint, reason string) error {
 	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
 
 	args := fiber.Map{
@@ -59,10 +59,8 @@ func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, modLogID uint
 	var bufText, bufHTML bytes.Buffer
 	err := email.Render(&bufText, &bufHTML, "userbanned", args)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"Error": "Failed to render email templates.",
-		})
+		log.Warn.Printf("Failed to render email template: %v\n", err)
+		return err
 	}
 
 	err = utils.NewEmail().
@@ -147,7 +145,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 
 	go func(baseURL string, user *models.User, modLogID uint, reason string) {
 		// Send a email about they've been banned.
-		if err := sendBanEmail(c, baseURL, targetUser, modLogID, reason); err != nil {
+		if err := sendBanEmail(baseURL, targetUser, modLogID, reason); err != nil {
 			log.Warn.Printf("Failed to send an email to user %d: %s", user.ID, err.Error())
 		}
 	}(c.BaseURL(), targetUser, logEntry.ID, logEntry.Reason)

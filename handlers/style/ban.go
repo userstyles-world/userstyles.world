@@ -46,7 +46,7 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, style *models.APIStyle, modLogID uint, reason string, message string) error {
+func sendBanEmail(baseURL string, user *models.User, style *models.APIStyle, modLogID uint, reason string, message string) error {
 	modLogEntry := baseURL + "/modlog#id-" + strconv.Itoa(int(modLogID))
 
 	args := fiber.Map{
@@ -58,10 +58,8 @@ func sendBanEmail(c *fiber.Ctx, baseURL string, user *models.User, style *models
 	var bufText, bufHTML bytes.Buffer
 	err := email.Render(&bufText, &bufHTML, "styleremoved", args)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"Error": "Failed to render email templates.",
-		})
+		log.Warn.Printf("Failed to render email template: %v\n", err)
+		return err
 	}
 
 	err = utils.NewEmail().
@@ -171,7 +169,7 @@ func BanPost(c *fiber.Ctx) error {
 		}
 
 		// Notify the author about style removal.
-		if err := sendBanEmail(c, baseURL, targetUser, style, modLogID, reason, message); err != nil {
+		if err := sendBanEmail(baseURL, targetUser, style, modLogID, reason, message); err != nil {
 			log.Warn.Printf("Failed to mail author for style %d: %s", style.ID, err.Error())
 		}
 	}(c.BaseURL(), s, logEntry.ID, logEntry.Reason, logEntry.Message)

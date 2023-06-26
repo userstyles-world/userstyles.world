@@ -15,7 +15,7 @@ import (
 	"userstyles.world/utils"
 )
 
-func sendPromotionEmail(c *fiber.Ctx, userID uint, style *models.APIStyle, modName, baseURL string) {
+func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL string) {
 	user, err := models.FindUserByID(strconv.Itoa(int(userID)))
 	if err != nil {
 		log.Warn.Printf("Couldn't find user %d: %s", userID, err.Error())
@@ -95,7 +95,7 @@ func Promote(c *fiber.Ctx) error {
 	// Ahem!!! We don't save the new value of Featured to the current style.
 	// So we have to reverse check it ;)
 	if !style.Featured {
-		go sendPromotionEmail(c, style.UserID, style, u.Username, c.BaseURL())
+		go sendPromotionEmail(style.UserID, style, u.Username, c.BaseURL())
 
 		// Create a notification.
 		notification := models.Notification{
