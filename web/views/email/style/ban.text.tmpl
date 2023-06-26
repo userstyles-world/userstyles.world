@@ -2,11 +2,10 @@
 
 {{ template "email/noticeaction.text" . }}
 
-Your style "{{ .style.Name }}" has been removed from our platform for the following reason:
-{{ .Reason }}
+Your style "{{ .Style.Name }}" has been removed from our platform for the following reason:
+{{ .Log.Reason }}
 
-Additional message from the moderator:
-{{ .Message }}
+{{ with .Log.Message }}Additional message from the moderator: {{ . }}{{ end }}
 
 {{ template "email/actionrecorded.text" . }}
 

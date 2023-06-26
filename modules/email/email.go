@@ -31,6 +31,11 @@ func Send(tmpl, address, title string, args any) error {
 		return err
 	}
 
+	// if !config.Production {
+	// 	divider := strings.Repeat("-", 80)
+	// 	log.Info.Printf("\n%s%s\n\n%s", text.String(), divider, html.String())
+	// }
+
 	return utils.NewEmail().
 		SetTo(address).
 		SetSubject(title).

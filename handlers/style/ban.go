@@ -44,13 +44,12 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(user *models.User, entry *models.Log) error {
-	modLogEntry := config.BaseURL + "/modlog#id-" + strconv.Itoa(int(entry.ID))
-
+func sendBanEmail(user *models.User, style *models.APIStyle, entry *models.Log) error {
 	args := fiber.Map{
-		"Reason":  entry.Reason,
-		"Message": entry.Message,
-		"Link":    modLogEntry,
+		"User":  user,
+		"Style": style,
+		"Log":   entry,
+		"Link":  config.BaseURL + "/modlog#id-" + strconv.Itoa(int(entry.ID)),
 	}
 
 	title := "Your style has been removed"
@@ -145,14 +144,14 @@ func BanPost(c *fiber.Ctx) error {
 			log.Warn.Printf("Failed to create a notification for ban removal %d: %v\n", style.ID, err)
 		}
 
-		targetUser, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
+		user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
 		if err != nil {
 			log.Warn.Printf("Failed to find user %d: %s", style.UserID, err.Error())
 			return
 		}
 
 		// Notify the author about style removal.
-		if err := sendBanEmail(targetUser, &logEntry); err != nil {
+		if err := sendBanEmail(user, style, &logEntry); err != nil {
 			log.Warn.Printf("Failed to email author for style %d: %s\n", style.ID, err)
 		}
 	}(s, logEntry)

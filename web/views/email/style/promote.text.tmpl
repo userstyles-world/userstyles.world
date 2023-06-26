@@ -2,9 +2,8 @@
 
 {{ template "email/noticeaction.text" . }}
 
-Your style "{{ .style.Name}}" has been promoted to be featured on the homepage!
+Your style "{{ .Style.Name }}" has been promoted to be featured on the homepage!
 
-It has been promoted by our moderator {{ .ModName }},
-checkout their profile: {{ .ModLink }}
+It was promoted by {{ .ModName }} ({{ .ModLink }}).
 
 {{ template "email/regardsmod.text" . }}

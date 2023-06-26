@@ -13,7 +13,7 @@ import (
 	"userstyles.world/modules/log"
 )
 
-func sendPromotionEmail(style *models.APIStyle, mod string) {
+func sendPromotionEmail(style *models.APIStyle, user *models.User, mod string) {
 	user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
 	if err != nil {
 		log.Warn.Printf("Couldn't find user %d: %s\n", style.UserID, err)
@@ -21,9 +21,10 @@ func sendPromotionEmail(style *models.APIStyle, mod string) {
 	}
 
 	args := fiber.Map{
-		"User":       user,
-		"ModName":    mod,
-		"ModProfile": config.BaseURL + "/user/" + mod,
+		"User":    user,
+		"Style":   style,
+		"ModName": mod,
+		"ModLink": config.BaseURL + "/user/" + mod,
 	}
 
 	title := "Your style has been featured"
@@ -63,6 +64,15 @@ func Promote(c *fiber.Ctx) error {
 		})
 	}
 
+	user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
+	if err != nil {
+		log.Warn.Printf("Failed to find user %d: %s\n", style.UserID, err)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"User":  u,
+		})
+	}
+
 	err = database.Conn.
 		Model(models.Style{}).
 		Where("id = ?", p).
@@ -80,7 +90,7 @@ func Promote(c *fiber.Ctx) error {
 	// Ahem!!! We don't save the new value of Featured to the current style.
 	// So we have to reverse check it ;)
 	if !style.Featured {
-		go sendPromotionEmail(style, u.Username)
+		go sendPromotionEmail(style, user, u.Username)
 
 		// Create a notification.
 		notification := models.Notification{
