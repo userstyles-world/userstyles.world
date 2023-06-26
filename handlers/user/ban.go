@@ -118,7 +118,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 		"Reason": logEntry.Reason,
 		"Link":   config.BaseURL + "/modlog#id-" + strconv.Itoa(int(logEntry.ID)),
 	}
-	err = email.Send("userbanned", user.Email, "You have been banned", args)
+	err = email.Send("user/ban", user.Email, "You have been banned", args)
 	if err != nil {
 		log.Warn.Printf("Failed to send an email to user %d: %s\n", user.ID, err)
 	}

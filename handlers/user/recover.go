@@ -85,7 +85,7 @@ func RecoverPost(c *fiber.Ctx) error {
 		}
 
 		title := "Reset your password"
-		err = email.Send("passwordrecovery", user.Email, title, args)
+		err = email.Send("user/recover", user.Email, title, args)
 		if err != nil {
 			log.Warn.Printf("Failed to send an email: %s\n", err)
 		}

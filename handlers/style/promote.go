@@ -27,7 +27,7 @@ func sendPromotionEmail(style *models.APIStyle, mod string) {
 	}
 
 	title := "Your style has been featured"
-	err = email.Send("stylepromoted", user.Email, title, args)
+	err = email.Send("style/promote", user.Email, title, args)
 	if err != nil {
 		log.Warn.Printf("Failed to send an email: %s\n", err)
 	}

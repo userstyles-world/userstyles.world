@@ -124,7 +124,7 @@ func ResetPost(c *fiber.Ctx) error {
 
 	args := fiber.Map{"User": user}
 	title := "Your password has been changed"
-	go email.Send("passwordreset", user.Email, title, args)
+	go email.Send("user/reset", user.Email, title, args)
 
 	return c.Render("user/verification", fiber.Map{
 		"Title":        "Successful reset",

@@ -54,7 +54,7 @@ func sendBanEmail(user *models.User, entry *models.Log) error {
 	}
 
 	title := "Your style has been removed"
-	return email.Send("styleremoved", user.Email, title, args)
+	return email.Send("style/ban", user.Email, title, args)
 }
 
 func BanPost(c *fiber.Ctx) error {

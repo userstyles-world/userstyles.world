@@ -76,7 +76,7 @@ func RegisterPost(c *fiber.Ctx) error {
 		"Link": link,
 	}
 
-	err = email.Send("register", u.Email, "Verify your email address", args)
+	err = email.Send("user/register", u.Email, "Verify your email address", args)
 	if err != nil {
 		log.Warn.Printf("Failed to send an email: %s\n", err)
 		return c.Status(fiber.StatusInternalServerError).

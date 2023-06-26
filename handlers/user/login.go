@@ -124,7 +124,7 @@ func LoginPost(c *fiber.Ctx) error {
 	}
 
 	args := fiber.Map{"User": user}
-	go email.Send("signin", user.Email, "New sign-in", args)
+	go email.Send("user/login", user.Email, "New sign-in", args)
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }
