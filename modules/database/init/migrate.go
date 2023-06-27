@@ -18,49 +18,6 @@ func runMigration(db *gorm.DB) {
 
 	// Wrap in a transaction to allow rollbacks.
 	db.Transaction(func(tx *gorm.DB) error {
-		bootstrap := `DROP TABLE IF EXISTS fts_styles;
-CREATE VIRTUAL TABLE fts_styles USING FTS5(id, name, description, notes, tokenize="trigram");
-INSERT INTO fts_styles(id, name, description, notes) SELECT id, name, description, notes FROM styles;
-`
-		if err := tx.Exec(bootstrap).Error; err != nil {
-			log.Database.Fatalf("Failed to run bootstrap: %s\n", err)
-		}
-
-		triggers := `DROP TRIGGER IF EXISTS fts_styles_insert;
-CREATE TRIGGER fts_styles_insert AFTER INSERT ON styles
-BEGIN
-	INSERT INTO fts_styles(id, name, description, notes)
-	VALUES (new.id, new.name, new.description, new.notes);
-END;
-
-DROP TRIGGER IF EXISTS fts_styles_update;
-CREATE TRIGGER fts_styles_update AFTER UPDATE ON styles
-BEGIN
-	UPDATE fts_styles
-	SET name = new.name, description = new.description, notes = new.notes
-	WHERE id = old.id;
-END;
-
-DROP TRIGGER IF EXISTS fts_styles_delete;
-CREATE TRIGGER fts_styles_delete AFTER DELETE ON styles
-BEGIN
-	DELETE FROM fts_styles WHERE id = old.id;
-END;
-`
-		if err := tx.Exec(triggers).Error; err != nil {
-			log.Database.Fatalf("Failed to add triggers: %s\n", err)
-		}
-
-		stats := `DELETE FROM histories WHERE created_at < DATE('now', '-1 day');
-
-UPDATE histories
-SET total_updates = 0, -- Not necessary, but I might as well do it until stats are rewritten.
-    total_installs = (SELECT COUNT(*) FROM stats WHERE style_id = histories.style_id AND install > 0),
-	total_views = (SELECT COUNT(*) FROM stats WHERE style_id = histories.style_id AND view > 0);`
-		if err := tx.Exec(stats).Error; err != nil {
-			log.Database.Fatalf("Failed to reset histories: %s", err)
-		}
-
 		var l models.Log
 		if err := tx.Migrator().AddColumn(l, "Message"); err != nil {
 			log.Database.Fatalf("Failed to add column message: %s\n", err)

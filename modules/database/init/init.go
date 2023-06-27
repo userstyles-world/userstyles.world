@@ -109,6 +109,10 @@ func Initialize() {
 
 			log.Info.Println("Migrated table", table.name)
 		}
+
+		if err := models.InitStyleSearch(); err != nil {
+			log.Database.Fatalf("Failed to init fts_styles: %s\n", err)
+		}
 	}
 
 	if shouldSeed {
