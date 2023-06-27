@@ -76,7 +76,9 @@ JOIN styles ON styles.id = fts.id
 WHERE fts_styles
 MATCH ?`)
 
-	if sort != "" {
+	if sort == "styles.id ASC" {
+		b.WriteString(" ORDER BY bm25(fts_styles, 1, 2, 1.5, 1)")
+	} else if sort != "" {
 		if strings.HasPrefix(sort, "rating") {
 			b.WriteString(" AND rating > 0")
 		}
