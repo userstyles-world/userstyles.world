@@ -95,11 +95,6 @@ func Initialize() {
 		os.Exit(0)
 	}
 
-	q := "DELETE FROM fts_styles WHERE id IN (SELECT id FROM styles WHERE deleted_at IS NOT NULL)"
-	if err = database.Conn.Exec(q).Error; err != nil {
-		log.Info.Fatal(err)
-	}
-
 	// Migrate tables.
 	if config.DBMigrate {
 		for _, table := range tables {
@@ -113,6 +108,11 @@ func Initialize() {
 		if err := models.InitStyleSearch(); err != nil {
 			log.Database.Fatalf("Failed to init fts_styles: %s\n", err)
 		}
+	}
+
+	q := "DELETE FROM fts_styles WHERE id IN (SELECT id FROM styles WHERE deleted_at IS NOT NULL)"
+	if err = database.Conn.Exec(q).Error; err != nil {
+		log.Info.Fatal(err)
 	}
 
 	if shouldSeed {
