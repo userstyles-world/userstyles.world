@@ -10,6 +10,7 @@ import (
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -78,28 +79,16 @@ func RecoverPost(c *fiber.Ctx) error {
 
 		link := config.BaseURL + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
 
-		partPlain := utils.NewPart().
-			SetBody("Hi " + user.Username + ",\n" +
-				"We have received a request to reset the password for your UserStyles.world account.\n\n" +
-				"Follow the link bellow to reset your password. The link will expire in 4 hours.\n" +
-				link + "\n\n" +
-				"You can safely ignore this email if you didn't request to reset your password.")
-		partHTML := utils.NewPart().
-			SetBody("<p>Hi " + user.Username + ",</p>\n" +
-				"<p>We have received a request to reset the password for your UserStyles.world account.</p>\n" +
-				"<br>\n" +
-				"<p>Click the link bellow to reset your password. <b>The link will expire in 4 hours.</b><br>\n" +
-				"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Reset your password</a></p>\n" +
-				"<br>\n" +
-				"<p>You can safely ignore this email if you didn't request to reset your password.</p>").
-			SetContentType("text/html")
+		args := fiber.Map{
+			"User": user,
+			"Link": link,
+		}
 
-		utils.NewEmail().
-			SetTo(u.Email).
-			SetSubject("Reset your password").
-			AddPart(*partPlain).
-			AddPart(*partHTML).
-			SendEmail(config.IMAPServer)
+		title := "Reset your password"
+		err = email.Send("user/recover", user.Email, title, args)
+		if err != nil {
+			log.Warn.Printf("Failed to send an email: %s\n", err)
+		}
 	}(u)
 
 	// We need to just say we have send an reset email.

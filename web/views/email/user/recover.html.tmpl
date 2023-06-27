@@ -1,0 +1,12 @@
+{{ template "email/greeting.html" . }}
+
+<p>We have received a request to reset the password for your UserStyles.world account.</p>
+
+<p>
+	Click the link bellow to reset your password. <b>The link will expire in 4 hours.</b><br>
+	<a target="_blank" clicktracking="off" href="{{ .Link }}">Verify your email address</a>
+</p>
+
+<p>You can safely ignore this email if you didn't request to reset your password.</p>
+
+{{ template "email/regardsdef.html" . }}

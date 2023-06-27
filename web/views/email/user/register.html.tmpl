@@ -1,0 +1,10 @@
+{{ template "email/greeting.html" . }}
+
+<p>
+	Click the link bellow to verify your UserStyles.world account. <b>The link will expire in 4 hours.</b><br>
+	<a target="_blank" clicktracking="off" href="{{ .Link }}">Verify your email address</a>
+</p>
+
+<p>You can safely ignore this email if you never made an account for UserStyles.world.</p>
+
+{{ template "email/regardsdef.html" . }}

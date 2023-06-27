@@ -1,0 +1,9 @@
+{{ template "email/greeting.text" . }}
+
+{{ template "email/noticeaction.text" . }}
+
+Your style "{{ .Style.Name }}" has been promoted to be featured on the homepage!
+
+It was promoted by {{ .ModName }} ({{ .ModLink }}).
+
+{{ template "email/regardsmod.text" . }}

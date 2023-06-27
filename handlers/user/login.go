@@ -11,6 +11,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -122,27 +123,8 @@ func LoginPost(c *fiber.Ctx) error {
 		log.Warn.Println("Failed to update last login date for id:", user.ID)
 	}
 
-	go func(user *models.User) {
-		partPlain := utils.NewPart().
-			SetBody("Hi " + user.Username + ",\n" +
-				"We noticed a new sign in to your UserStyles.world account.\n\n" +
-				"If that was you, you can safely ignore this email.\n" +
-				"If that wasn't you, please change your password:\n" +
-				"https://userstyles.world/account#password")
-		partHTML := utils.NewPart().
-			SetBody("<p>Hi " + user.Username + ",</p>\n" +
-				"<p>We noticed a new sign in to your UserStyles.world account.</p>\n" +
-				"<p>If that was you, you can safely ignore this email.<br>\n" +
-				"<b>If that wasn't you, please <a target=\"_blank\" clicktracking=\"off\" href=\"https://userstyles.world/account#password\">change your password</a>.</b></p>\n").
-			SetContentType("text/html")
-
-		utils.NewEmail().
-			SetTo(user.Email).
-			SetSubject("New sign-in").
-			AddPart(*partPlain).
-			AddPart(*partHTML).
-			SendEmail(config.IMAPServer)
-	}(user)
+	args := fiber.Map{"User": user}
+	go email.Send("user/login", user.Email, "New sign-in", args)
 
 	return c.Redirect("/account", fiber.StatusSeeOther)
 }

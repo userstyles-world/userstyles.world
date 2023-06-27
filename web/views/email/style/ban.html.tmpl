@@ -1,0 +1,18 @@
+{{ template "email/greeting.html" . }}
+
+{{ template "email/noticeaction.html" . }}
+
+<p>
+	Your style <b>{{ .Style.Name }}</b> has been removed from our platform for the following reason:<br>
+	{{ .Log.Reason }}
+</p>
+
+{{ with .Log.Message }}
+	<p>Additional message from the moderator:<br> {{ . }}</p>
+{{ end }}
+
+{{ template "email/actionrecorded.html" . }}
+
+{{ template "email/getintouch.html" . }}
+
+{{ template "email/regardsmod.html" . }}

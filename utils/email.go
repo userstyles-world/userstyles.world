@@ -52,6 +52,11 @@ func NewPart() *MimePart {
 	return &MimePart{}
 }
 
+func (mp *MimePart) HTML() *MimePart {
+	mp.contentType = "text/html"
+	return mp
+}
+
 func (mp *MimePart) SetContentType(contentType string) *MimePart {
 	mp.contentType = contentType
 	return mp

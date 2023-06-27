@@ -9,45 +9,28 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
 )
 
-func sendPromotionEmail(userID uint, style *models.APIStyle, modName, baseURL string) {
-	user, err := models.FindUserByID(strconv.Itoa(int(userID)))
+func sendPromotionEmail(style *models.APIStyle, user *models.User, mod string) {
+	user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
 	if err != nil {
-		log.Warn.Printf("Couldn't find user %d: %s", userID, err.Error())
+		log.Warn.Printf("Couldn't find user %d: %s\n", style.UserID, err)
 		return
 	}
 
-	modProfile := baseURL + "/user/" + modName
+	args := fiber.Map{
+		"User":    user,
+		"Style":   style,
+		"ModName": mod,
+		"ModLink": config.BaseURL + "/user/" + mod,
+	}
 
-	partPlain := utils.NewPart().
-		SetBody("Hi " + user.Username + ",\n" +
-			"We'd like to notice you about a recent action from our moderation team:\n\n" +
-			"Your style \"" + style.Name + "\" has been promoted to be featured on the homepage!\n" +
-			"It has been promoted by the moderator" + modName + ", checkout their profile: " + modProfile + ".\n\n" +
-			"Regards,\n" + "The Moderation Team")
-	partHTML := utils.NewPart().
-		SetBody("<p>Hi " + user.Username + ",</p>\n" +
-			"<p>We'd like to notice you about a recent action from our moderation team:</p>\n" +
-			"<br>\n" +
-			"<p>Your style \"" + style.Name + "\" has been promoted to be featured on the homepage!\n</p>\n" +
-			"<p>It has been promoted by the moderator " +
-			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + modProfile + "\">" + modName + "</a>.</p>\n" +
-			"<br>\n" +
-			"<p>Regards,</p>\n" + "<p>The Moderation Team</p>").
-		SetContentType("text/html")
-
-	err = utils.NewEmail().
-		SetTo(user.Email).
-		SetSubject("Your style is being featured").
-		AddPart(*partPlain).
-		AddPart(*partHTML).
-		SendEmail(config.IMAPServer)
+	title := "Your style has been featured"
+	err = email.Send("style/promote", user.Email, title, args)
 	if err != nil {
-		log.Warn.Println("Failed to send email:", err.Error())
-		return
+		log.Warn.Printf("Failed to send an email: %s\n", err)
 	}
 }
 
@@ -81,6 +64,15 @@ func Promote(c *fiber.Ctx) error {
 		})
 	}
 
+	user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
+	if err != nil {
+		log.Warn.Printf("Failed to find user %d: %s\n", style.UserID, err)
+		return c.Render("err", fiber.Map{
+			"Title": "Internal server error",
+			"User":  u,
+		})
+	}
+
 	err = database.Conn.
 		Model(models.Style{}).
 		Where("id = ?", p).
@@ -98,7 +90,7 @@ func Promote(c *fiber.Ctx) error {
 	// Ahem!!! We don't save the new value of Featured to the current style.
 	// So we have to reverse check it ;)
 	if !style.Featured {
-		go sendPromotionEmail(style.UserID, style, u.Username, c.BaseURL())
+		go sendPromotionEmail(style, user, u.Username)
 
 		// Create a notification.
 		notification := models.Notification{

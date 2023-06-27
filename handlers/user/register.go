@@ -10,6 +10,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/utils"
 )
@@ -70,29 +71,14 @@ func RegisterPost(c *fiber.Ctx) error {
 	}
 
 	link := c.BaseURL() + "/verify/" + utils.EncryptText(token, utils.AEADCrypto, config.ScrambleConfig)
+	args := fiber.Map{
+		"User": u,
+		"Link": link,
+	}
 
-	partPlain := utils.NewPart().
-		SetBody("Hi " + u.Username + ",\n" +
-			"Follow the link bellow to verify your UserStyles.world account. The link will expire in 4 hours.\n" +
-			link + "\n\n" +
-			"You can safely ignore this email if you never made an account for UserStyles.world.")
-	partHTML := utils.NewPart().
-		SetBody("<p>Hi " + u.Username + ",</p>\n" +
-			"<p>Click the link bellow to verify your UserStyles.world account. <b>The link will expire in 4 hours.</b><br>\n" +
-			"<a target=\"_blank\" clicktracking=\"off\" href=\"" + link + "\">Verify your email address</a></p>\n" +
-			"<br>\n" +
-			"<p>You can safely ignore this email if you never made an account for UserStyles.world.</p>").
-		SetContentType("text/html")
-
-	err = utils.NewEmail().
-		SetTo(u.Email).
-		SetSubject("Verify your email address").
-		AddPart(*partPlain).
-		AddPart(*partHTML).
-		SendEmail(config.IMAPServer)
-
+	err = email.Send("user/register", u.Email, "Verify your email address", args)
 	if err != nil {
-		log.Warn.Println("Failed to send an email:", err.Error())
+		log.Warn.Printf("Failed to send an email: %s\n", err)
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
 				"Title": "Internal server error",

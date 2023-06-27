@@ -1,0 +1,14 @@
+{{ template "email/greeting.html" . }}
+
+{{ template "email/noticeaction.html" . }}
+
+<p>
+	You have been banned from our platform for the following reason:
+	{{ .Reason }}
+</p>
+
+{{ template "email/actionrecorded.html" . }}
+
+{{ template "email/getintouch.html" . }}
+
+{{ template "email/regardsmod.html" . }}
