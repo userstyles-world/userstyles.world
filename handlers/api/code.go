@@ -16,7 +16,7 @@ import (
 
 func GetStyleCode(c *fiber.Ctx) error {
 	kind := c.Params("ext")
-	if kind != "css" && kind != "styl" {
+	if kind != "css" && kind != "styl" && kind != "less" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "invalid userstyle extension",
 		})
