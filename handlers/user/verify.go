@@ -9,6 +9,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -57,7 +58,7 @@ func VerifyGet(c *fiber.Ctx) error {
 
 	regErr := database.Conn.Create(&models.User{
 		Username: claims["username"].(string),
-		Password: utils.GenerateHashedPassword(claims["password"].(string)),
+		Password: util.GenerateHashedPassword(claims["password"].(string)),
 		Email:    claims["email"].(string),
 	})
 

@@ -14,6 +14,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -90,7 +91,7 @@ func EditAccount(c *fiber.Ctx) error {
 	case "password":
 		current := c.FormValue("current")
 		if user.Password != "" {
-			err := utils.CompareHashedPassword(user.Password, current)
+			err := util.CompareHashedPassword(user.Password, current)
 			if err != nil {
 				return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
 					"Title": "Failed to match current password",
@@ -119,7 +120,7 @@ func EditAccount(c *fiber.Ctx) error {
 			})
 		}
 
-		user.Password = utils.GenerateHashedPassword(newPassword)
+		user.Password = util.GenerateHashedPassword(newPassword)
 		record["password"] = user.Password
 
 	case "biography":

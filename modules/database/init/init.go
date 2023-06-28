@@ -14,6 +14,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -178,20 +179,20 @@ func seed() {
 			Username:  "admin",
 			Email:     "admin@usw.local",
 			Biography: "Admin of USw.",
-			Password:  utils.GenerateHashedPassword("admin123"),
+			Password:  util.GenerateHashedPassword("admin123"),
 			Role:      models.Admin,
 		},
 		{
 			Username:  "moderator",
 			Email:     "moderator@usw.local",
 			Biography: "I'm a moderator.",
-			Password:  utils.GenerateHashedPassword("moderator123"),
+			Password:  util.GenerateHashedPassword("moderator123"),
 			Role:      models.Moderator,
 		},
 		{
 			Username: "regular",
 			Email:    "regular@usw.local",
-			Password: utils.GenerateHashedPassword("regular123"),
+			Password: util.GenerateHashedPassword("regular123"),
 		},
 	}
 

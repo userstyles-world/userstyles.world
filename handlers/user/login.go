@@ -13,6 +13,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -65,7 +66,7 @@ func LoginPost(c *fiber.Ctx) error {
 			})
 	}
 
-	match := utils.CompareHashedPassword(user.Password, form.Password)
+	match := util.CompareHashedPassword(user.Password, form.Password)
 	if match != nil {
 		log.Warn.Println("Failed to match hash for user:", user.Email)
 

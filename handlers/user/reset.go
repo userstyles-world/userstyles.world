@@ -13,6 +13,7 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -106,7 +107,7 @@ func ResetPost(c *fiber.Ctx) error {
 			"Key":    key,
 		})
 	}
-	user.Password = utils.GenerateHashedPassword(newPassword)
+	user.Password = util.GenerateHashedPassword(newPassword)
 
 	err = database.Conn.
 		Model(t).
