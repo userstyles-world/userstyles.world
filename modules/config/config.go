@@ -78,7 +78,7 @@ var (
 
 	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
 
-	CachedCodeItems = uint(getEnvInt("CACHED_CODE_ITEMS", 25))
+	CachedCodeItems = getEnvInt("CACHED_CODE_ITEMS", 250)
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")
 )
 

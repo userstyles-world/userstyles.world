@@ -5,7 +5,6 @@ import (
 	"path"
 	"time"
 
-	caching "codeberg.org/Gusted/algorithms-go/caching/lru"
 	"github.com/patrickmn/go-cache"
 
 	"userstyles.world/modules/config"
@@ -15,7 +14,7 @@ import (
 var (
 	CacheFile = path.Join(config.CacheDir, "cache")
 	Store     = cache.New(cache.NoExpiration, 5*time.Minute)
-	LRU       = caching.CreateLRUCache(config.CachedCodeItems)
+	Code      = newLRU(config.CachedCodeItems)
 )
 
 func init() {
