@@ -13,11 +13,12 @@ func ExampleLRU_Add() {
 	lru.Add(1, []byte("foo"))
 	lru.Add(2, []byte("bar"))
 	lru.Add(3, []byte("baz"))
+	lru.Add(2, []byte("bar"))
 	lru.debug()
 
 	// Output:
-	// 3 baz
 	// 2 bar
+	// 3 baz
 }
 
 func ExampleLRU_Get() {
