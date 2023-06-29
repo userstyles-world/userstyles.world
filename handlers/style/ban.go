@@ -45,18 +45,6 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func sendBanEmail(user *models.User, style *models.APIStyle, entry *models.Log) error {
-	args := fiber.Map{
-		"User":  user,
-		"Style": style,
-		"Log":   entry,
-		"Link":  config.BaseURL + "/modlog#id-" + strconv.Itoa(int(entry.ID)),
-	}
-
-	title := "Your style has been removed"
-	return email.Send("style/ban", user.Email, title, args)
-}
-
 func BanPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
@@ -142,27 +130,34 @@ func BanPost(c *fiber.Ctx) error {
 	cache.Code.Remove(i)
 
 	go func(style *models.APIStyle, entry models.Log) {
-		// Add notification to database.
-		notification := models.Notification{
-			Seen:     false,
-			Kind:     models.KindBannedStyle,
-			TargetID: int(entry.ID),
-			UserID:   int(u.ID),
-			StyleID:  int(s.ID),
-		}
-
-		if err := notification.Create(); err != nil {
-			log.Warn.Printf("Failed to create a notification for ban removal %d: %v\n", style.ID, err)
-		}
-
 		user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
 		if err != nil {
 			log.Warn.Printf("Failed to find user %d: %s", style.UserID, err.Error())
 			return
 		}
 
-		// Notify the author about style removal.
-		if err := sendBanEmail(user, style, &logEntry); err != nil {
+		// Add notification to database.
+		notification := models.Notification{
+			Seen:     false,
+			Kind:     models.KindBannedStyle,
+			TargetID: int(entry.ID),
+			UserID:   int(user.ID),
+			StyleID:  int(style.ID),
+		}
+
+		if err := notification.Create(); err != nil {
+			log.Warn.Printf("Failed to create a notification for ban removal %d: %v\n", style.ID, err)
+		}
+
+		args := fiber.Map{
+			"User":  user,
+			"Style": style,
+			"Log":   entry,
+			"Link":  config.BaseURL + "/modlog#id-" + strconv.Itoa(int(entry.ID)),
+		}
+
+		title := "Your style has been removed"
+		if err := email.Send("style/ban", user.Email, title, args); err != nil {
 			log.Warn.Printf("Failed to email author for style %d: %s\n", style.ID, err)
 		}
 	}(s, logEntry)
