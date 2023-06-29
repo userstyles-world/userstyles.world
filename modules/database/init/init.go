@@ -115,6 +115,11 @@ func Initialize() {
 		log.Info.Fatal(err)
 	}
 
+	q = "UPDATE styles SET user_id = 1592 WHERE id = 10653"
+	if err = database.Conn.Debug().Exec(q).Error; err != nil {
+		log.Info.Fatal(err)
+	}
+
 	if shouldSeed {
 		seed()
 	}
