@@ -7,6 +7,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
@@ -41,9 +42,17 @@ func DeleteGet(c *fiber.Ctx) error {
 
 func DeletePost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	p := c.Params("id")
 
-	s, err := models.GetStyleByID(p)
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
+			"User":  u,
+			"Title": "Invalid style ID",
+		})
+	}
+	id := c.Params("id")
+
+	s, err := models.GetStyleByID(id)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -61,7 +70,7 @@ func DeletePost(c *fiber.Ctx) error {
 
 	// Delete style from database.
 	q := new(models.Style)
-	if err = database.Conn.Delete(q, "styles.id = ?", p).Error; err != nil {
+	if err = database.Conn.Delete(q, "styles.id = ?", id).Error; err != nil {
 		log.Warn.Printf("Failed to delete style %d: %s\n", s.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
@@ -86,6 +95,8 @@ func DeletePost(c *fiber.Ctx) error {
 	if err = search.DeleteStyle(s.ID); err != nil {
 		log.Warn.Printf("Failed to delete style %d from index: %s", s.ID, err)
 	}
+
+	cache.Code.Remove(i)
 
 	return c.Redirect("/user/"+u.Username, fiber.StatusSeeOther)
 }

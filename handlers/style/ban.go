@@ -8,6 +8,7 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
@@ -58,7 +59,6 @@ func sendBanEmail(user *models.User, style *models.APIStyle, entry *models.Log) 
 
 func BanPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id := c.Params("id")
 
 	// Check if logged-in user has permissions.
 	if !u.IsModOrAdmin() {
@@ -68,6 +68,15 @@ func BanPost(c *fiber.Ctx) error {
 			"User":  u,
 		})
 	}
+
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
+			"User":  u,
+			"Title": "Invalid style ID",
+		})
+	}
+	id := c.Params("id")
 
 	// Check if style exists.
 	s, err := models.GetStyleByID(id)
@@ -129,6 +138,8 @@ func BanPost(c *fiber.Ctx) error {
 	if err = search.DeleteStyle(s.ID); err != nil {
 		log.Warn.Printf("Failed to delete style %d from index: %s", s.ID, err)
 	}
+
+	cache.Code.Remove(i)
 
 	go func(style *models.APIStyle, entry models.Log) {
 		// Add notification to database.

@@ -8,6 +8,7 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/archive"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
@@ -122,7 +123,8 @@ func mirror(batch models.Style) {
 			log.Info.Printf("Successfully mirrored style %d\n", batch.ID)
 		}
 
-		err = models.SaveStyleCode(strconv.Itoa(int(batch.ID)), fields["code"].(string))
+		i := int(batch.ID)
+		err = models.SaveStyleCode(strconv.Itoa(i), fields["code"].(string))
 		if err != nil {
 			log.Warn.Printf("kind=code id=%v err=%q\n", batch.ID, err)
 		}
@@ -132,5 +134,7 @@ func mirror(batch models.Style) {
 		if err != nil {
 			log.Warn.Printf("Failed to re-index style %d: %s\n", batch.ID, err.Error())
 		}
+
+		cache.Code.Remove(i)
 	}
 }

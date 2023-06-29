@@ -7,6 +7,7 @@ import (
 	"github.com/ohler55/ojg/oj"
 
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
@@ -115,6 +116,7 @@ func StylePost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Printf("kind=code id=%v err=%q\n", postStyle.ID, err)
 		}
+		cache.Code.Remove(id)
 	}
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {
@@ -128,9 +130,9 @@ func StylePost(c *fiber.Ctx) error {
 
 func DeleteStyle(c *fiber.Ctx) error {
 	u, _ := User(c)
-	sStyleID := c.Params("id")
+	id := c.Params("id")
 
-	styleID, err := strconv.Atoi(sStyleID)
+	i, err := strconv.Atoi(id)
 	if err != nil {
 		return c.Status(403).
 			JSON(fiber.Map{
@@ -138,7 +140,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	style, err := models.GetStyleByID(sStyleID)
+	style, err := models.GetStyleByID(id)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -146,7 +148,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	if u.StyleID != 0 && uint(styleID) != u.StyleID {
+	if u.StyleID != 0 && uint(i) != u.StyleID {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
@@ -162,7 +164,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 
 	styleModel := new(models.Style)
 	err = database.Conn.
-		Delete(styleModel, "styles.id = ?", sStyleID).
+		Delete(styleModel, "styles.id = ?", id).
 		Error
 
 	if err != nil {
@@ -181,6 +183,8 @@ func DeleteStyle(c *fiber.Ctx) error {
 	if err != nil {
 		log.Warn.Printf("kind=removecode id=%v err=%q\n", style.ID, err)
 	}
+
+	cache.Code.Remove(i)
 
 	return c.JSON(fiber.Map{
 		"data": "Successful removed the style!",
