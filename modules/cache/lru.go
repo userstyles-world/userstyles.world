@@ -20,9 +20,10 @@ type item struct {
 	v []byte
 }
 
-// Add checks whether a key exists and moves it to the front, otherwise saves
-// the key and its associated value to the front of the list, then saves the
-// pointer to the element in the list as a value in the cache for fast lookup.
+// Add checks whether a key exists and moves it to the front of the list while
+// updating its value, otherwise saves the key and its associated value as a new
+// item and moves it to the front of the list, then saves the pointer to the new
+// element in the list as a value in the cache for fast lookup.
 func (lru *LRU) Add(k int, v []byte) {
 	lru.mu.Lock()
 	defer lru.mu.Unlock()
@@ -30,15 +31,16 @@ func (lru *LRU) Add(k int, v []byte) {
 	el, ok := lru.cache[k]
 	if ok {
 		lru.list.MoveToFront(el)
+		el.Value.(*item).v = v
 		return
 	}
 
 	if lru.list.Len() >= lru.cap {
-		delete(lru.cache, lru.list.Back().Value.(item).k)
+		delete(lru.cache, lru.list.Back().Value.(*item).k)
 		lru.list.Remove(lru.list.Back())
 	}
 
-	el = lru.list.PushFront(item{k, v})
+	el = lru.list.PushFront(&item{k, v})
 	lru.cache[k] = el
 }
 
@@ -62,7 +64,7 @@ func (lru *LRU) Get(k int) []byte {
 	el, ok := lru.cache[k]
 	if ok {
 		lru.list.MoveToFront(el)
-		return lru.list.Front().Value.(item).v
+		return lru.list.Front().Value.(*item).v
 	}
 
 	return nil
@@ -74,7 +76,7 @@ func (lru *LRU) debug() {
 	defer lru.mu.Unlock()
 
 	for e := lru.list.Front(); e != nil; e = e.Next() {
-		fmt.Println(e.Value.(item).k, string(e.Value.(item).v))
+		fmt.Println(e.Value.(*item).k, string(e.Value.(*item).v))
 	}
 }
 
