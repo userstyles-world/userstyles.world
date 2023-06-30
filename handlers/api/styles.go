@@ -116,7 +116,7 @@ func StylePost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Printf("kind=code id=%v err=%q\n", postStyle.ID, err)
 		}
-		cache.Code.Remove(id)
+		cache.Code.Update(id, []byte(postStyle.Code))
 	}
 
 	if err = search.IndexStyle(postStyle.ID); err != nil {

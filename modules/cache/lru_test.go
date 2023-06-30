@@ -48,7 +48,23 @@ func ExampleLRU_Remove() {
 	// Output:
 }
 
-func Benchmark_LRU_Add(b *testing.B) {
+func ExampleLRU_Update() {
+	lru := newLRU(2)
+
+	lru.Add(1, []byte("foo"))
+	lru.Add(2, []byte("bar"))
+	lru.Add(3, []byte("baz"))
+	lru.Update(1, []byte("baz"))
+	lru.Update(2, []byte("bar"))
+	lru.Update(3, []byte("foo"))
+	lru.debug()
+
+	// Output:
+	// 3 foo
+	// 2 bar
+}
+
+func BenchmarkLRU(b *testing.B) {
 	cases := []int{2, 50, 100, 500}
 	s := bytes.Repeat([]byte(" "), 1e4)
 
@@ -60,6 +76,9 @@ func Benchmark_LRU_Add(b *testing.B) {
 			}
 			for i := 0; i < b.N; i++ {
 				lru.Get(i)
+			}
+			for i := 0; i < b.N; i++ {
+				lru.Update(i, s)
 			}
 			for i := 0; i < b.N; i++ {
 				lru.Remove(i)

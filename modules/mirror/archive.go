@@ -124,7 +124,8 @@ func mirror(batch models.Style) {
 		}
 
 		i := int(batch.ID)
-		err = models.SaveStyleCode(strconv.Itoa(i), fields["code"].(string))
+		code := fields["code"].(string)
+		err = models.SaveStyleCode(strconv.Itoa(i), code)
 		if err != nil {
 			log.Warn.Printf("kind=code id=%v err=%q\n", batch.ID, err)
 		}
@@ -135,6 +136,6 @@ func mirror(batch models.Style) {
 			log.Warn.Printf("Failed to re-index style %d: %s\n", batch.ID, err.Error())
 		}
 
-		cache.Code.Remove(i)
+		cache.Code.Update(i, []byte(code))
 	}
 }

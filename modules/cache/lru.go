@@ -70,6 +70,19 @@ func (lru *LRU) Get(k int) []byte {
 	return nil
 }
 
+// Update checks whether a key exists and moves it to the front of the list
+// while updating its value, otherwise does nothing.
+func (lru *LRU) Update(k int, v []byte) {
+	lru.mu.Lock()
+	defer lru.mu.Unlock()
+
+	el, ok := lru.cache[k]
+	if ok {
+		lru.list.MoveToFront(el)
+		el.Value.(*item).v = v
+	}
+}
+
 // debug iterates over all entries in the list and prints them.
 func (lru *LRU) debug() {
 	lru.mu.Lock()

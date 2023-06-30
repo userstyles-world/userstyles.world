@@ -117,7 +117,7 @@ func EditPost(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to re-index style %d: %s\n", s.ID, err)
 	}
 
-	cache.Code.Remove(i)
+	cache.Code.Update(i, []byte(s.Code))
 
 	return c.Redirect("/style/"+id, fiber.StatusSeeOther)
 }
