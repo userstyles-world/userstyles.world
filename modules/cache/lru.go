@@ -4,13 +4,22 @@ import (
 	"container/list"
 	"fmt"
 	"sync"
+	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
+
+	"userstyles.world/modules/log"
 )
 
 // LRU represents a least recently used cache.
 type LRU struct {
 	cap   int
+	name  string
+	done  chan bool
 	list  *list.List
 	cache map[int]*list.Element
+	gauge prometheus.Gauge
+	timer *time.Ticker
 	mu    sync.Mutex
 }
 
@@ -96,6 +105,12 @@ func (lru *LRU) Size() int {
 	return i
 }
 
+func (lru *LRU) Close() {
+	log.Info.Printf("Stopping %q cache.\n", lru.name)
+	lru.done <- true
+	lru.timer.Stop()
+}
+
 // debug iterates over all entries in the list and prints them.
 func (lru *LRU) debug() {
 	lru.mu.Lock()
@@ -107,10 +122,36 @@ func (lru *LRU) debug() {
 }
 
 // newLRU initializes a LRU cache.
-func newLRU(size int) *LRU {
-	return &LRU{
+func newLRU(size int, name ...string) *LRU {
+	lru := &LRU{
 		cap:   size,
 		cache: map[int]*list.Element{},
 		list:  list.New(),
 	}
+
+	if len(name) > 0 {
+		lru.name = name[0]
+		gauge := prometheus.NewGauge(prometheus.GaugeOpts{
+			Name: "cache_" + lru.name + "_size",
+			Help: "Total size of items cached in " + lru.name + " cache.",
+		})
+		prometheus.MustRegister(gauge)
+
+		lru.gauge = gauge
+		lru.done = make(chan bool)
+		lru.timer = time.NewTicker(time.Minute)
+
+		go func() {
+			for {
+				select {
+				case <-lru.done:
+					return
+				case <-lru.timer.C:
+					lru.gauge.Add(float64(lru.Size()))
+				}
+			}
+		}()
+	}
+
+	return lru
 }

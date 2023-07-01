@@ -112,6 +112,7 @@ func main() {
 	log.Info.Println("Shutting down...")
 	t := time.Now()
 	_ = app.Shutdown()
+	cache.Code.Close()
 	cache.InstallStats.Close()
 	cache.ViewStats.Close()
 	cache.SaveStore()

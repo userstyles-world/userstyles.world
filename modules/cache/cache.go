@@ -14,7 +14,7 @@ import (
 var (
 	CacheFile = path.Join(config.CacheDir, "cache")
 	Store     = cache.New(cache.NoExpiration, 5*time.Minute)
-	Code      = newLRU(config.CachedCodeItems)
+	Code      = newLRU(config.CachedCodeItems, "code")
 )
 
 func init() {
