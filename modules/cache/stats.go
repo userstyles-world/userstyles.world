@@ -21,27 +21,27 @@ var ViewStats = newStats("view")
 // stats stores moving parts of a stats cache.
 type stats struct {
 	sync.Mutex
-	name    string
-	done    chan bool
-	m       map[string]string
-	ticker  *time.Ticker
-	counter prometheus.Counter
+	name  string
+	done  chan bool
+	m     map[string]string
+	timer *time.Ticker
+	gauge prometheus.Gauge
 }
 
 // newStats initializes a specific stats cache.
 func newStats(name string) *stats {
 	counter := prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "cache_stats_" + name,
+		Name: "usw_cache_stats_" + name,
 		Help: "Total amount of stats that was cached in " + name + " cache.",
 	})
 	prometheus.MustRegister(counter)
 
 	return &stats{
-		name:    name,
-		done:    make(chan bool),
-		m:       make(map[string]string),
-		ticker:  time.NewTicker(time.Minute),
-		counter: counter,
+		name:  name,
+		done:  make(chan bool),
+		m:     make(map[string]string),
+		timer: time.NewTicker(time.Minute),
+		gauge: counter,
 	}
 }
 
@@ -52,7 +52,7 @@ func (s *stats) Run() {
 			select {
 			case <-s.done:
 				return
-			case <-s.ticker.C:
+			case <-s.timer.C:
 				s.UpsertAndEvict()
 			}
 		}
@@ -63,7 +63,7 @@ func (s *stats) Run() {
 func (s *stats) Close() {
 	log.Info.Printf("Stopping %q cache.\n", s.name)
 	s.done <- true
-	s.ticker.Stop()
+	s.timer.Stop()
 	s.UpsertAndEvict()
 }
 
@@ -103,7 +103,7 @@ func (s *stats) UpsertAndEvict() {
 			log.Database.Printf("Failed to upsert %q: %s\n", s.name, err)
 		} else {
 			s.m = make(map[string]string)
-			s.counter.Add(float64(i))
+			s.gauge.Set(float64(i))
 		}
 	}
 }

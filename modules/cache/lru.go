@@ -132,7 +132,7 @@ func newLRU(size int, name ...string) *LRU {
 	if len(name) > 0 {
 		lru.name = name[0]
 		gauge := prometheus.NewGauge(prometheus.GaugeOpts{
-			Name: "cache_" + lru.name + "_size",
+			Name: "usw_cache_" + lru.name + "_size",
 			Help: "Total size of items cached in " + lru.name + " cache.",
 		})
 		prometheus.MustRegister(gauge)
@@ -147,7 +147,7 @@ func newLRU(size int, name ...string) *LRU {
 				case <-lru.done:
 					return
 				case <-lru.timer.C:
-					lru.gauge.Add(float64(lru.Size()))
+					lru.gauge.Set(float64(lru.Size()))
 				}
 			}
 		}()
