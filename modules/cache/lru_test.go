@@ -64,6 +64,18 @@ func ExampleLRU_Update() {
 	// 2 bar
 }
 
+func ExampleLRU_Size() {
+	lru := newLRU(2)
+
+	lru.Add(1, []byte("foo"))
+	lru.Add(2, []byte("bar"))
+	lru.Add(3, []byte("baz"))
+	fmt.Println(lru.Size())
+
+	// Output:
+	// 6
+}
+
 func BenchmarkLRU(b *testing.B) {
 	cases := []int{2, 50, 100, 500}
 	s := bytes.Repeat([]byte(" "), 1e4)
@@ -79,6 +91,9 @@ func BenchmarkLRU(b *testing.B) {
 			}
 			for i := 0; i < b.N; i++ {
 				lru.Update(i, s)
+			}
+			for i := 0; i < b.N; i++ {
+				lru.Size()
 			}
 			for i := 0; i < b.N; i++ {
 				lru.Remove(i)

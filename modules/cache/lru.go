@@ -83,6 +83,19 @@ func (lru *LRU) Update(k int, v []byte) {
 	}
 }
 
+// Size traverses the list and returns the summed length of all values.
+func (lru *LRU) Size() int {
+	lru.mu.Lock()
+	defer lru.mu.Unlock()
+
+	var i int
+	for e := lru.list.Front(); e != nil; e = e.Next() {
+		i += len(e.Value.(*item).v)
+	}
+
+	return i
+}
+
 // debug iterates over all entries in the list and prints them.
 func (lru *LRU) debug() {
 	lru.mu.Lock()
