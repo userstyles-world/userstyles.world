@@ -174,25 +174,33 @@ func seed() {
 	log.Info.Println("Seeding database mock data.")
 	defer log.Info.Println("Finished seeding mock data.")
 
+	pw := func(s string) string {
+		s, err := util.HashPassword("admin123")
+		if err != nil {
+			log.Warn.Fatal(err)
+		}
+		return s
+	}
+
 	users := []models.User{
 		{
 			Username:  "admin",
 			Email:     "admin@usw.local",
 			Biography: "Admin of USw.",
-			Password:  util.GenerateHashedPassword("admin123"),
+			Password:  pw("admin123"),
 			Role:      models.Admin,
 		},
 		{
 			Username:  "moderator",
 			Email:     "moderator@usw.local",
 			Biography: "I'm a moderator.",
-			Password:  util.GenerateHashedPassword("moderator123"),
+			Password:  pw("moderator123"),
 			Role:      models.Moderator,
 		},
 		{
 			Username: "regular",
 			Email:    "regular@usw.local",
-			Password: util.GenerateHashedPassword("regular123"),
+			Password: pw("regular123"),
 		},
 	}
 

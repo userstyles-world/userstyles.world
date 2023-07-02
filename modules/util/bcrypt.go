@@ -4,25 +4,19 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/modules/log"
 )
 
-var salt = config.Salt
-
-func GenerateHashedPassword(pw string) string {
-	hash, err := bcrypt.GenerateFromPassword([]byte(pw), salt)
+// HashPassword generates a hash out of a password.
+func HashPassword(pw string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(pw), config.Salt)
 	if err != nil {
-		log.Warn.Println(err)
+		return "", err
 	}
 
-	return string(hash)
+	return string(hash), nil
 }
 
-func CompareHashedPassword(user, form string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(user), []byte(form))
-	if err != nil {
-		return err
-	}
-
-	return nil
+// VerifyPassword compares the hash to the password.
+func VerifyPassword(hash, pw string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(pw))
 }

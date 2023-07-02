@@ -55,15 +55,22 @@ func VerifyGet(c *fiber.Ctx) error {
 				"Error": "Internal server error.",
 			})
 	}
-
-	regErr := database.Conn.Create(&models.User{
+	u := &models.User{
 		Username: claims["username"].(string),
-		Password: util.GenerateHashedPassword(claims["password"].(string)),
+		Password: claims["password"].(string),
 		Email:    claims["email"].(string),
-	})
+	}
 
-	if regErr.Error != nil {
-		log.Warn.Printf("Failed to register %s: %s", claims["email"].(string), regErr.Error)
+	pw, err := util.HashPassword(u.Password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Failed to hash password",
+		})
+	}
+	u.Password = pw
+
+	if err = database.Conn.Create(u).Error; err != nil {
+		log.Database.Printf("Failed to register %s: %s\n", u.Email, err)
 
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{

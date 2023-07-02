@@ -107,7 +107,14 @@ func ResetPost(c *fiber.Ctx) error {
 			"Key":    key,
 		})
 	}
-	user.Password = util.GenerateHashedPassword(newPassword)
+
+	pw, err := util.HashPassword(newPassword)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Failed to hash password",
+		})
+	}
+	user.Password = pw
 
 	err = database.Conn.
 		Model(t).

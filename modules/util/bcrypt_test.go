@@ -5,32 +5,49 @@ import (
 	"testing"
 )
 
-func BenchmarkEqual(b *testing.B) {
-	b.StopTimer()
-	passwd := "somepasswordyoulike"
-	hash := GenerateHashedPassword(passwd)
-	b.StartTimer()
-	for i := 0; i < b.N; i++ {
-		_ = CompareHashedPassword(hash, passwd)
-	}
-}
+const pw = "UserStyles.world"
 
-func BenchmarkDefaultCost(b *testing.B) {
-	b.StopTimer()
-	passwd := "mylongpassword1234"
-	b.StartTimer()
-	for i := 0; i < b.N; i++ {
-		GenerateHashedPassword(passwd)
-	}
-}
-
-func TestBcryptingIsCorrect(t *testing.T) {
+func TestHashPassword(t *testing.T) {
 	t.Parallel()
-	pass := "allmine"
-	expectedHash := "$2a$10"
 
-	hash := GenerateHashedPassword(pass)
-	if !strings.HasPrefix(hash, expectedHash) {
-		t.Errorf("%v should be the suffix of %v", hash, expectedHash)
+	got, err := HashPassword(pw)
+	if err != nil {
+		t.Fatalf("bcrypt failed: %s", err)
+	}
+
+	exp := "$2a$10"
+	if !strings.HasPrefix(got, exp) {
+		t.Errorf("%q should have suffix %q", got, exp)
+	}
+}
+
+func BenchmarkHashPassword(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = HashPassword(pw)
+	}
+}
+
+func TestVerifyPassword(t *testing.T) {
+	t.Parallel()
+
+	got, err := HashPassword(pw)
+	if err != nil {
+		t.Fatalf("bcrypt failed: %s", err)
+	}
+
+	err = VerifyPassword(got, pw)
+	if err != nil {
+		t.Errorf("%q should match %q", got, pw)
+	}
+}
+
+func BenchmarkVerifyPassword(b *testing.B) {
+	hash, err := HashPassword(pw)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	for i := 0; i < b.N; i++ {
+		_ = VerifyPassword(hash, pw)
 	}
 }

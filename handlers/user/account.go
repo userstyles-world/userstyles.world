@@ -91,7 +91,7 @@ func EditAccount(c *fiber.Ctx) error {
 	case "password":
 		current := c.FormValue("current")
 		if user.Password != "" {
-			err := util.CompareHashedPassword(user.Password, current)
+			err := util.VerifyPassword(user.Password, current)
 			if err != nil {
 				return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
 					"Title": "Failed to match current password",
@@ -120,7 +120,14 @@ func EditAccount(c *fiber.Ctx) error {
 			})
 		}
 
-		user.Password = util.GenerateHashedPassword(newPassword)
+		pw, err := util.HashPassword(newPassword)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+				"Title": "Failed to hash password",
+				"User":  u,
+			})
+		}
+		user.Password = pw
 		record["password"] = user.Password
 
 	case "biography":

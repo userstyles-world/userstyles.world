@@ -66,7 +66,7 @@ func LoginPost(c *fiber.Ctx) error {
 			})
 	}
 
-	match := util.CompareHashedPassword(user.Password, form.Password)
+	match := util.VerifyPassword(user.Password, form.Password)
 	if match != nil {
 		log.Warn.Println("Failed to match hash for user:", user.Email)
 
