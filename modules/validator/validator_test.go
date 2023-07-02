@@ -1,4 +1,4 @@
-package utils
+package validator
 
 import "testing"
 
@@ -10,14 +10,14 @@ func TestValidatorInit(t *testing.T) {
 			t.Errorf("Panic: %v", err)
 		}
 	}()
-	InitializeValidator()
+	Init()
 }
 
 // Test displayName validation. Which only should allow `^[a-zA-Z0-9-_ ]+$`
 // But shouldn't allow any other weird characters and have a minuium of 5 chars and max 20.
 func TestDisplayName(t *testing.T) {
 	t.Parallel()
-	InitializeValidator()
+	Init()
 
 	type testDisplayName struct {
 		DisplayName string `validate:"displayName,min=5,max=20"`
@@ -37,7 +37,7 @@ func TestDisplayName(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		if err := Validate().StructPartial(c.actual, "DisplayName"); (err == nil) != c.expected {
+		if err := V.StructPartial(c.actual, "DisplayName"); (err == nil) != c.expected {
 			t.Errorf("%s: expected %t, got %s", c.description, c.expected, err)
 		}
 	}
@@ -47,7 +47,7 @@ func TestDisplayName(t *testing.T) {
 // But shouldn't allow any other weird characters and have a minuium of 5 chars and max 20.
 func TestUsername(t *testing.T) {
 	t.Parallel()
-	InitializeValidator()
+	Init()
 
 	type testUsername struct {
 		Username string `validate:"username,min=3,max=32"`
@@ -68,7 +68,7 @@ func TestUsername(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		if err := Validate().StructPartial(c.actual, "Username"); (err == nil) != c.expected {
+		if err := V.StructPartial(c.actual, "Username"); (err == nil) != c.expected {
 			t.Errorf("%s: expected %t, got %s", c.description, c.expected, err)
 		}
 	}

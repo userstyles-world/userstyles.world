@@ -28,6 +28,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/templates"
+	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 	"userstyles.world/web"
 )
@@ -37,7 +38,7 @@ func main() {
 	cache.Initialize()
 	images.CheckVips()
 	utils.InitalizeCrypto()
-	utils.InitializeValidator()
+	validator.Init()
 	database.Initialize()
 	cron.Initialize()
 	search.Initialize()

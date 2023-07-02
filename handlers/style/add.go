@@ -16,6 +16,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
 
@@ -54,7 +55,7 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 	c.Locals("Style", s)
 
-	m, err := s.Validate(utils.Validate(), true)
+	m, err := s.Validate(validator.V, true)
 	if err != nil {
 		c.Locals("err", m)
 		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")

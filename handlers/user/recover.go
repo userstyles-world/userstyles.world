@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	jwtware "userstyles.world/handlers/jwt"
@@ -12,6 +12,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
 
@@ -40,8 +41,8 @@ func RecoverPost(c *fiber.Ctx) error {
 		Email: c.FormValue("email"),
 	}
 
-	if err := utils.Validate().StructPartial(u, "email"); err != nil {
-		var validationError validator.ValidationErrors
+	if err := validator.V.StructPartial(u, "email"); err != nil {
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Warn.Println("Validation errors:", validationError)
 		}

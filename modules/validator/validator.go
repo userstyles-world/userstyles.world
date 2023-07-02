@@ -1,4 +1,4 @@
-package utils
+package validator
 
 import (
 	"regexp"
@@ -10,22 +10,23 @@ import (
 var (
 	usernameRule    = regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9-_]+[a-zA-Z0-9]$`)
 	displayNameRule = regexp.MustCompile(`^[a-zA-Z0-9-_ ]+$`)
-	v               = validator.New()
+	V               = validator.New()
 )
 
-func InitializeValidator() {
-	if err := v.RegisterValidation("username", usernameValidation); err != nil {
+// Init initializes validator and registers our validations.
+func Init() {
+	if err := V.RegisterValidation("username", usernameValidation); err != nil {
 		log.Warn.Println("Cannot register username validation")
 		panic(err)
 	}
 
-	if err := v.RegisterValidation("displayName", displayNameValidation); err != nil {
+	if err := V.RegisterValidation("displayName", displayNameValidation); err != nil {
 		log.Warn.Println("Cannot register displayName validation")
 		panic(err)
 	}
 
-	v.RegisterAlias("Username", "username")
-	v.RegisterAlias("DisplayName", "displayName")
+	V.RegisterAlias("Username", "username")
+	V.RegisterAlias("DisplayName", "displayName")
 }
 
 func usernameValidation(fl validator.FieldLevel) bool {
@@ -34,8 +35,4 @@ func usernameValidation(fl validator.FieldLevel) bool {
 
 func displayNameValidation(fl validator.FieldLevel) bool {
 	return displayNameRule.Match([]byte(fl.Field().String()))
-}
-
-func Validate() *validator.Validate {
-	return v
 }

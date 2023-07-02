@@ -5,12 +5,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
 
@@ -108,8 +109,8 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		UserID: u.ID,
 	}
 
-	if err := utils.Validate().StructPartial(q, "Name", "Description"); err != nil {
-		var validationError validator.ValidationErrors
+	if err := validator.V.StructPartial(q, "Name", "Description"); err != nil {
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Info.Println("Validation errors:", validationError)
 		}

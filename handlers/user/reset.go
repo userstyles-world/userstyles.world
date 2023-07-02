@@ -3,7 +3,7 @@ package user
 import (
 	"errors"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
 
@@ -14,6 +14,7 @@ import (
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
 
@@ -96,8 +97,8 @@ func ResetPost(c *fiber.Ctx) error {
 
 	t := new(models.User)
 	user.Password = newPassword
-	if err := utils.Validate().StructPartial(user, "Password"); err != nil {
-		var validationError validator.ValidationErrors
+	if err := validator.V.StructPartial(user, "Password"); err != nil {
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Info.Println("Password change error:", validationError)
 		}

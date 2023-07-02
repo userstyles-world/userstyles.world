@@ -13,6 +13,7 @@ import (
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/storage"
 	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
 
@@ -96,7 +97,7 @@ func StylePost(c *fiber.Ctx) error {
 	postStyle.Featured = style.Featured
 	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
-	msg, err := postStyle.ValidateCode(utils.Validate(), true)
+	msg, err := postStyle.ValidateCode(validator.V, true)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
 	}
@@ -211,7 +212,7 @@ func NewStyle(c *fiber.Ctx) error {
 	postStyle.Featured = false
 	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
-	msg, err := postStyle.ValidateCode(utils.Validate(), true)
+	msg, err := postStyle.ValidateCode(validator.V, true)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
 	}

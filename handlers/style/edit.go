@@ -12,7 +12,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
+	"userstyles.world/modules/validator"
 )
 
 func EditGet(c *fiber.Ctx) error {
@@ -68,7 +68,7 @@ func EditPost(c *fiber.Ctx) error {
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 	c.Locals("Style", s)
 
-	m, err := s.Validate(utils.Validate(), false)
+	m, err := s.Validate(validator.V, false)
 	if err != nil {
 		c.Locals("err", m)
 		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")

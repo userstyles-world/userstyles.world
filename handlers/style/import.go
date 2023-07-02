@@ -15,7 +15,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
+	"userstyles.world/modules/validator"
 )
 
 func ImportGet(c *fiber.Ctx) error {
@@ -103,7 +103,7 @@ func ImportPost(c *fiber.Ctx) error {
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 
-	m, err := s.Validate(utils.Validate(), true)
+	m, err := s.Validate(validator.V, true)
 	if err != nil {
 		return c.Render("style/import", fiber.Map{
 			"Title": "Import userstyle",

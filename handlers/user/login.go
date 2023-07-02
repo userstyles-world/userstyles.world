@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -14,6 +14,7 @@ import (
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
 
@@ -42,9 +43,9 @@ func LoginPost(c *fiber.Ctx) error {
 	}
 	remember := c.FormValue("remember") == "on"
 
-	err := utils.Validate().StructPartial(form, "Email", "Password")
+	err := validator.V.StructPartial(form, "Email", "Password")
 	if err != nil {
-		var validationError validator.ValidationErrors
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Warn.Println("Validation errors:", validationError)
 		}
