@@ -16,13 +16,11 @@ var (
 // Init initializes validator and registers our validations.
 func Init() {
 	if err := V.RegisterValidation("username", usernameValidation); err != nil {
-		log.Warn.Println("Cannot register username validation")
-		panic(err)
+		log.Warn.Fatalf("Cannot register username validation: %s\n", err)
 	}
 
 	if err := V.RegisterValidation("displayName", displayNameValidation); err != nil {
-		log.Warn.Println("Cannot register displayName validation")
-		panic(err)
+		log.Warn.Fatalf("Cannot register displayName validation: %s\n", err)
 	}
 
 	V.RegisterAlias("Username", "username")

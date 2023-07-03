@@ -8,6 +8,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
+	"userstyles.world/modules/log"
 )
 
 var (
@@ -21,26 +22,21 @@ var (
 
 // InitCrypto initializes cryptographic ciphers.
 func InitCrypto() {
-	var aead cipher.AEAD
 	var err error
-
-	aead, err = chacha20poly1305.NewX([]byte(config.CryptoKey))
+	AEADCrypto, err = chacha20poly1305.NewX([]byte(config.CryptoKey))
 	if err != nil {
-		panic("Cannot create AEAD_CRYPTO chipher, due to " + err.Error())
+		log.Warn.Fatalf("Cannot create AEAD_CRYPTO cipher: %s\n", err)
 	}
-	AEADCrypto = aead
 
-	aead, err = chacha20poly1305.NewX([]byte(config.OAuthKey))
+	AEADOAuth, err = chacha20poly1305.NewX([]byte(config.OAuthKey))
 	if err != nil {
-		panic("Cannot create AEAD_OAUTH chipher, due to " + err.Error())
+		log.Warn.Fatalf("Cannot create AEAD_OAUTH cipher: %s\n", err)
 	}
-	AEADOAuth = aead
 
-	aead, err = chacha20poly1305.NewX([]byte(config.OAuthKey))
+	AEADOAuthp, err = chacha20poly1305.NewX([]byte(config.OAuthKey))
 	if err != nil {
-		panic("Cannot create AEAD_OAUTHP chipher, due to " + err.Error())
+		log.Warn.Fatalf("Cannot create AEAD_OAUTHP cipher: %s\n", err)
 	}
-	AEADOAuthp = aead
 }
 
 func sealText(text string, aead cipher.AEAD, nonceScrambling *config.ScrambleSettings) []byte {
