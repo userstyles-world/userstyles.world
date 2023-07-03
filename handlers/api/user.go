@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/models"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 func roleToString(role models.Role) string {
@@ -24,7 +24,7 @@ func roleToString(role models.Role) string {
 func UserGet(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.ContainsString(u.Scopes, "user") {
+	if !util.ContainsString(u.Scopes, "user") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"user\" scope to do this.",

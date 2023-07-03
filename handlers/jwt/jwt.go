@@ -10,7 +10,6 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
 )
 
 var NormalJWTSigning = func(t *lib.Token) (any, error) {
@@ -34,7 +33,7 @@ var Protected = func(c *fiber.Ctx) error {
 
 var Admin = func(c *fiber.Ctx) error {
 	// Bypass checks if monitor is enabled and request is a local IP address.
-	if config.PerformanceMonitor && utils.IsLocal(config.Production, c.IP()) {
+	if config.PerformanceMonitor && util.IsLocal(config.Production, c.IP()) {
 		return c.Next()
 	}
 

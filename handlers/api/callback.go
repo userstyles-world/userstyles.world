@@ -15,10 +15,9 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/oauthlogin"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
 )
 
-var allowedErrosList = []error{
+var allowedErrors = []error{
 	errors.ErrPrimaryEmailNotVerified,
 	errors.ErrNoServiceDetected,
 }
@@ -57,7 +56,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		// We only allow a certain amount of errors to be displayed to the
 		// user. So we will now check if the error is in the "allowed" list
 		// and if it is, we will display it to the user.
-		if utils.ContainsError(allowedErrosList, err) {
+		if util.ContainsError(allowedErrors, err) {
 			return c.Render("err", fiber.Map{
 				"Title": err.Error(),
 			})

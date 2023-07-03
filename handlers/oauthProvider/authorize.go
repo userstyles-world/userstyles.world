@@ -13,7 +13,6 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
 )
 
 func errorMessage(c *fiber.Ctx, status int, errorMessage string) error {
@@ -67,7 +66,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	}
 
 	// Check if the user has already authorized this OAuth application.
-	if utils.ContainsString(user.AuthorizedOAuth, strconv.Itoa(int(oauth.ID))) {
+	if util.ContainsString(user.AuthorizedOAuth, strconv.Itoa(int(oauth.ID))) {
 		return redirectFunction(c, state, oauth.RedirectURI)
 	}
 
@@ -75,8 +74,8 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	scopes := strings.Split(scope, " ")
 
 	// Just check if the application has actually set if they will request these scopes.
-	if !utils.EveryString(scopes, func(name string) bool {
-		return utils.ContainsString(oauth.Scopes, name)
+	if !util.EveryString(scopes, func(name string) bool {
+		return util.ContainsString(oauth.Scopes, name)
 	}) {
 		return errorMessage(c, 400, "An scope was provided which isn't selected in the OAuth's settings selection.")
 	}

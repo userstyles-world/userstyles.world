@@ -14,13 +14,12 @@ import (
 	"userstyles.world/modules/storage"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
-	"userstyles.world/utils"
 )
 
 func StylesGet(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.ContainsString(u.Scopes, "style") {
+	if !util.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"style\" scope to do this.",
@@ -54,7 +53,7 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
-	if u.StyleID == 0 && !utils.ContainsString(u.Scopes, "style") {
+	if u.StyleID == 0 && !util.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error: You need the \"style\" scope to do this.",
@@ -191,7 +190,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 func NewStyle(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.ContainsString(u.Scopes, "style") {
+	if !util.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"style\" scope to do this.",
