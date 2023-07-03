@@ -10,7 +10,6 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
 )
 
 func VerifyGet(c *fiber.Ctx) error {
@@ -29,7 +28,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := utils.DecryptText(base64Key, utils.AEADCrypto, config.ScrambleConfig)
+	unSealedText, err := util.DecryptText(base64Key, util.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Printf("Failed to decode JWT text: %s\n", err.Error())
 		return c.Render("err", fiber.Map{
@@ -38,7 +37,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	token, err := jwt.Parse(unSealedText, utils.VerifyJwtKeyFunction)
+	token, err := jwt.Parse(unSealedText, util.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Printf("Failed to decode JWT token: %s\n", err.Error())
 		return c.Render("err", fiber.Map{

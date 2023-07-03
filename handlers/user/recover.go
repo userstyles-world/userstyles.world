@@ -12,6 +12,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
@@ -72,13 +73,13 @@ func RecoverPost(c *fiber.Ctx) error {
 		jwtToken, err := utils.NewJWTToken().
 			SetClaim("email", u.Email).
 			SetExpiration(time.Now().Add(time.Hour * 4)).
-			GetSignedString(utils.VerifySigningKey)
+			GetSignedString(util.VerifySigningKey)
 		if err != nil {
 			log.Warn.Printf("Not able to generate JWT token: %v\n", err)
 			return
 		}
 
-		link := config.BaseURL + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
+		link := config.BaseURL + "/reset/" + util.EncryptText(jwtToken, util.AEADCrypto, config.ScrambleConfig)
 
 		args := fiber.Map{
 			"User": user,

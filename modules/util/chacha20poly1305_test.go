@@ -1,4 +1,4 @@
-package utils
+package util
 
 import (
 	"bytes"
@@ -8,14 +8,14 @@ import (
 	"github.com/golang-jwt/jwt"
 
 	"userstyles.world/modules/config"
+	"userstyles.world/utils"
 )
 
 func TestSimpleKey(t *testing.T) {
 	t.Parallel()
+	InitCrypto()
 
-	InitalizeCrypto()
-
-	jwtToken, err := NewJWTToken().
+	jwtToken, err := utils.NewJWTToken().
 		SetClaim("email", "vednoc@usw.local").
 		GetSignedString(VerifySigningKey)
 	if err != nil {
@@ -95,7 +95,7 @@ func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *conf
 }
 
 func BenchmarkPureChaCha20Poly1305(b *testing.B) {
-	InitalizeCrypto()
+	InitCrypto()
 	b.ResetTimer()
 
 	scrambleConfig := &config.ScrambleSettings{
@@ -114,7 +114,7 @@ func BenchmarkPureChaCha20Poly1305(b *testing.B) {
 }
 
 func BenchmarkPrepareText(b *testing.B) {
-	InitalizeCrypto()
+	InitCrypto()
 	b.ResetTimer()
 
 	scrambleConfig := &config.ScrambleSettings{

@@ -1,4 +1,4 @@
-package utils
+package util
 
 import (
 	"bytes"
@@ -6,8 +6,6 @@ import (
 	"time"
 
 	"github.com/ohler55/ojg/oj"
-
-	"userstyles.world/modules/storage"
 )
 
 func TestUnsafeString(t *testing.T) {
@@ -65,6 +63,19 @@ type testStruct struct {
 func TestJSON(t *testing.T) {
 	t.Parallel()
 
+	// Avoids cycled import.
+	type styleCard struct {
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
+		Preview   string    `json:"preview"`
+		Username  string    `json:"username"`
+		Name      string    `json:"name"`
+		ID        int       `json:"id"`
+		Views     int64     `json:"views"`
+		Installs  int64     `json:"installs"`
+		Rating    float64   `json:"rating"`
+	}
+
 	cases := []struct {
 		desc     string
 		a        any
@@ -73,7 +84,7 @@ func TestJSON(t *testing.T) {
 		{"SimpleTest", testStruct{
 			Name: "abcv",
 		}, []byte(`{"Name":"abcv"}`)},
-		{"TestForMinimalStyle", storage.StyleCard{
+		{"TestForMinimalStyle", styleCard{
 			Name:      "abcv",
 			ID:        123,
 			CreatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),

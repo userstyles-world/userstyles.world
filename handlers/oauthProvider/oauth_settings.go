@@ -11,6 +11,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
 	"userstyles.world/utils"
 )
@@ -134,8 +135,8 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	if id != "" {
 		err = models.UpdateOAuth(&q, id)
 	} else {
-		q.ClientID = utils.RandomString(32)
-		q.ClientSecret = utils.RandomString(128)
+		q.ClientID = util.RandomString(32)
+		q.ClientSecret = util.RandomString(128)
 		dbOAuth, err = models.CreateOAuth(&q)
 	}
 

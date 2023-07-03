@@ -1,4 +1,4 @@
-package utils
+package util
 
 import (
 	"crypto/cipher"
@@ -19,7 +19,8 @@ var (
 	signingMethod    = "HS512"
 )
 
-func InitalizeCrypto() {
+// InitCrypto initializes cryptographic ciphers.
+func InitCrypto() {
 	var aead cipher.AEAD
 	var err error
 

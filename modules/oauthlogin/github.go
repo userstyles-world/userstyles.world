@@ -5,7 +5,7 @@ import (
 	"net/url"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 // This is just an empty stub.
@@ -32,7 +32,7 @@ func (github) appendToRedirect(state any) string {
 	// Nonsense state so we later can re-use by decrypting it.
 	// And than have the actual value. Also we use this to specify
 	// From which site the callback was from.
-	return utils.EncryptText(state.(string), utils.AEADOAuth, config.ScrambleConfig) + "/"
+	return util.EncryptText(state.(string), util.AEADOAuth, config.ScrambleConfig) + "/"
 }
 
 func (github) getAuthTokenURL(state any) string {

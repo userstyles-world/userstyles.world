@@ -8,7 +8,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 var (
@@ -133,7 +133,7 @@ func correctLineBreak(message string) string {
 }
 
 func (eb *EmailBuilder) SendEmail(imapServer string) error {
-	eb.boundary = utils.RandomString(30)
+	eb.boundary = util.RandomString(30)
 
 	if eb.from == "" {
 		eb.from = config.EmailAddress

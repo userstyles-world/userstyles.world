@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 // This is just an empty stub.
@@ -58,7 +58,7 @@ func (codeberg) beforeRequest(body authURLPostBody, req *http.Request) error {
 	if err != nil {
 		return err
 	}
-	req.Body = io.NopCloser(strings.NewReader(utils.UnsafeString(bodyString)))
+	req.Body = io.NopCloser(strings.NewReader(util.UnsafeString(bodyString)))
 	req.ContentLength = int64(len(bodyString))
 	req.Header.Set("Content-Type", "application/json")
 	return nil

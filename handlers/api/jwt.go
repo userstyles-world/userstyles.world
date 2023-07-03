@@ -10,14 +10,14 @@ import (
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/errors"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 var ParseAPIJWT = jwtware.New("apiUser", func(t *jwt.Token) (any, error) {
 	if t.Method.Alg() != jwtware.SigningMethod {
 		return nil, errors.UnexpectedSigningMethod(t.Method.Alg())
 	}
-	return utils.OAuthPSigningKey, nil
+	return util.OAuthPSigningKey, nil
 })
 
 func ProtectedAPI(c *fiber.Ctx) error {

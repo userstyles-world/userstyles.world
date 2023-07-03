@@ -9,6 +9,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -21,7 +22,7 @@ var NormalJWTSigning = func(t *lib.Token) (any, error) {
 
 var Protected = func(c *fiber.Ctx) error {
 	if _, ok := User(c); !ok {
-		redirectURI := utils.UnsafeString(c.Request().URI().Path())
+		redirectURI := util.UnsafeString(c.Request().URI().Path())
 		if c.Context().QueryArgs().Len() != 0 {
 			redirectURI += "?" + c.Context().QueryArgs().String()
 		}

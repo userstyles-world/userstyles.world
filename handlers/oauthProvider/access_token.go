@@ -10,6 +10,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -35,13 +36,13 @@ func TokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect client_secret specified")
 	}
 
-	unsealedText, err := utils.DecryptText(tCode, utils.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(tCode, util.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
+	token, err := jwt.Parse(unsealedText, util.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
@@ -86,12 +87,12 @@ func TokenPost(c *fiber.Ctx) error {
 		jwtToken, err = utils.NewJWTToken().
 			SetClaim("styleID", styleID).
 			SetClaim("userID", user.ID).
-			GetSignedString(utils.OAuthPSigningKey)
+			GetSignedString(util.OAuthPSigningKey)
 	} else {
 		jwtToken, err = utils.NewJWTToken().
 			SetClaim("scopes", strings.Join(oauth.Scopes, ",")).
 			SetClaim("userID", user.ID).
-			GetSignedString(utils.OAuthPSigningKey)
+			GetSignedString(util.OAuthPSigningKey)
 	}
 
 	if err != nil {

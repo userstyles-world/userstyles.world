@@ -14,6 +14,7 @@ import (
 	"userstyles.world/modules/errors"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/oauthlogin"
+	"userstyles.world/modules/util"
 	"userstyles.world/utils"
 )
 
@@ -35,7 +36,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	if redirectCode != "codeberg" && redirectCode != "gitlab" {
 		service = "github"
 		// Decode the string so we get our actual information back.
-		code, err := utils.DecryptText(redirectCode, utils.AEADOAuth, config.ScrambleConfig)
+		code, err := util.DecryptText(redirectCode, util.AEADOAuth, config.ScrambleConfig)
 		if err != nil {
 			log.Warn.Println("Failed to decode prepared text.")
 			return c.Next()

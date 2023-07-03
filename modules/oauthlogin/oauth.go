@@ -7,7 +7,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 type Service string
@@ -142,7 +142,7 @@ func OauthMakeURL(serviceType string) string {
 	oauthURL := service.oauthMakeURL()
 	var state string
 	if service.enableState() {
-		state = utils.RandomString(16)
+		state = util.RandomString(16)
 		oauthURL += "&state=" + state
 	}
 	if oauthURL == "" {

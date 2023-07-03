@@ -15,7 +15,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
-	"userstyles.world/utils"
 )
 
 func ResetGet(c *fiber.Ctx) error {
@@ -33,7 +32,7 @@ func ResetGet(c *fiber.Ctx) error {
 		return renderError
 	}
 
-	_, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
+	_, err := util.DecryptText(key, util.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError
@@ -72,13 +71,13 @@ func ResetPost(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
+	unSealedText, err := util.DecryptText(key, util.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError
 	}
 
-	token, err := jwt.Parse(unSealedText, utils.VerifyJwtKeyFunction)
+	token, err := jwt.Parse(unSealedText, util.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return renderError
