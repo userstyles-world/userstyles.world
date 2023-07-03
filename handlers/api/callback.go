@@ -73,7 +73,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	}
 
 	expiration := time.Now().Add(time.Hour * 24 * 14)
-	t, err := utils.NewJWTToken().
+	t, err := util.NewJWT().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
 		SetClaim("role", user.Role).

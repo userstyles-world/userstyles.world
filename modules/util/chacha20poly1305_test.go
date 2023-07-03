@@ -8,14 +8,13 @@ import (
 	"github.com/golang-jwt/jwt"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/utils"
 )
 
 func TestSimpleKey(t *testing.T) {
 	t.Parallel()
 	InitCrypto()
 
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := NewJWT().
 		SetClaim("email", "vednoc@usw.local").
 		GetSignedString(VerifySigningKey)
 	if err != nil {

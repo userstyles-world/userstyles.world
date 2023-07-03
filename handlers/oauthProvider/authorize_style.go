@@ -13,7 +13,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
 )
 
 func OAuthStyleGet(c *fiber.Ctx) error {
@@ -38,7 +37,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 	// Such that this key cannot be replaced by some other user.
 	// And to follow our weird state-less design we include the state.
 	// Thus not storing the state.
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
@@ -125,7 +124,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetClaim("styleID", style.ID).

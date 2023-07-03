@@ -15,7 +15,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
-	"userstyles.world/utils"
 )
 
 func LoginGet(c *fiber.Ctx) error {
@@ -83,7 +82,7 @@ func LoginPost(c *fiber.Ctx) error {
 		// 3 months
 		expiration = time.Now().Add(time.Hour * 24 * 31 * 3)
 	}
-	t, err := utils.NewJWTToken().
+	t, err := util.NewJWT().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
 		SetClaim("email", user.Email).

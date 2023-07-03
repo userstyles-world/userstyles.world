@@ -26,7 +26,7 @@ func errorMessage(c *fiber.Ctx, status int, errorMessage string) error {
 func redirectFunction(c *fiber.Ctx, state, redirectURI string) error {
 	u, _ := jwtware.User(c)
 
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Minute * 10)).
@@ -86,7 +86,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	// Such that this key cannot be replaced by some other user.
 	// And to follow our weird state-less design we include the state.
 	// Thus not storing the state.
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Hour * 2)).

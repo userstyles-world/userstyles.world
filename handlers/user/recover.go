@@ -14,7 +14,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
-	"userstyles.world/utils"
 )
 
 // Only allow an email request to happen every 5 minutes.
@@ -70,7 +69,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			return
 		}
 
-		jwtToken, err := utils.NewJWTToken().
+		jwtToken, err := util.NewJWT().
 			SetClaim("email", u.Email).
 			SetExpiration(time.Now().Add(time.Hour * 4)).
 			GetSignedString(util.VerifySigningKey)

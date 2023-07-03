@@ -11,7 +11,6 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
 )
 
 func TokenPost(c *fiber.Ctx) error {
@@ -84,12 +83,12 @@ func TokenPost(c *fiber.Ctx) error {
 	var jwtToken string
 
 	if styleID := uint(fStyleID); styleID != 0 {
-		jwtToken, err = utils.NewJWTToken().
+		jwtToken, err = util.NewJWT().
 			SetClaim("styleID", styleID).
 			SetClaim("userID", user.ID).
 			GetSignedString(util.OAuthPSigningKey)
 	} else {
-		jwtToken, err = utils.NewJWTToken().
+		jwtToken, err = util.NewJWT().
 			SetClaim("scopes", strings.Join(oauth.Scopes, ",")).
 			SetClaim("userID", user.ID).
 			GetSignedString(util.OAuthPSigningKey)

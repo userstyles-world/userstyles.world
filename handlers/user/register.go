@@ -14,7 +14,6 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
-	"userstyles.world/utils"
 )
 
 func RegisterGet(c *fiber.Ctx) error {
@@ -58,7 +57,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	token, err := utils.NewJWTToken().
+	token, err := util.NewJWT().
 		SetClaim("username", u.Username).
 		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).

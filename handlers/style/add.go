@@ -17,7 +17,6 @@ import (
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
-	"userstyles.world/utils"
 )
 
 func CreateGet(c *fiber.Ctx) error {
@@ -172,7 +171,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetClaim("styleID", style.ID).
