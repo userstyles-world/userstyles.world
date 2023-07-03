@@ -14,10 +14,10 @@ import (
 	"userstyles.world/modules/errors"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/oauthlogin"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
-var allowedErrosList = []error{
+var allowedErrors = []error{
 	errors.ErrPrimaryEmailNotVerified,
 	errors.ErrNoServiceDetected,
 }
@@ -35,7 +35,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	if redirectCode != "codeberg" && redirectCode != "gitlab" {
 		service = "github"
 		// Decode the string so we get our actual information back.
-		code, err := utils.DecryptText(redirectCode, utils.AEADOAuth, config.ScrambleConfig)
+		code, err := util.DecryptText(redirectCode, util.AEADOAuth, config.ScrambleConfig)
 		if err != nil {
 			log.Warn.Println("Failed to decode prepared text.")
 			return c.Next()
@@ -56,7 +56,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		// We only allow a certain amount of errors to be displayed to the
 		// user. So we will now check if the error is in the "allowed" list
 		// and if it is, we will display it to the user.
-		if utils.ContainsError(allowedErrosList, err) {
+		if util.ContainsError(allowedErrors, err) {
 			return c.Render("err", fiber.Map{
 				"Title": err.Error(),
 			})
@@ -72,7 +72,7 @@ func CallbackGet(c *fiber.Ctx) error {
 	}
 
 	expiration := time.Now().Add(time.Hour * 24 * 14)
-	t, err := utils.NewJWTToken().
+	t, err := util.NewJWT().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
 		SetClaim("role", user.Role).

@@ -12,7 +12,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 func errorMessage(c *fiber.Ctx, status int, errorMessage string) error {
@@ -25,17 +25,17 @@ func errorMessage(c *fiber.Ctx, status int, errorMessage string) error {
 func redirectFunction(c *fiber.Ctx, state, redirectURI string) error {
 	u, _ := jwtware.User(c)
 
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Minute * 10)).
-		GetSignedString(utils.OAuthPSigningKey)
+		GetSignedString(util.OAuthPSigningKey)
 	if err != nil {
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	returnCode := "?code=" + utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig)
 	if state != "" {
 		returnCode += "&state=" + state
 	}
@@ -66,7 +66,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	}
 
 	// Check if the user has already authorized this OAuth application.
-	if utils.ContainsString(user.AuthorizedOAuth, strconv.Itoa(int(oauth.ID))) {
+	if util.ContainsString(user.AuthorizedOAuth, strconv.Itoa(int(oauth.ID))) {
 		return redirectFunction(c, state, oauth.RedirectURI)
 	}
 
@@ -74,8 +74,8 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	scopes := strings.Split(scope, " ")
 
 	// Just check if the application has actually set if they will request these scopes.
-	if !utils.EveryString(scopes, func(name string) bool {
-		return utils.ContainsString(oauth.Scopes, name)
+	if !util.EveryString(scopes, func(name string) bool {
+		return util.ContainsString(oauth.Scopes, name)
 	}) {
 		return errorMessage(c, 400, "An scope was provided which isn't selected in the OAuth's settings selection.")
 	}
@@ -85,11 +85,11 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	// Such that this key cannot be replaced by some other user.
 	// And to follow our weird state-less design we include the state.
 	// Thus not storing the state.
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetExpiration(time.Now().Add(time.Hour * 2)).
-		GetSignedString(utils.OAuthPSigningKey)
+		GetSignedString(util.OAuthPSigningKey)
 	if err != nil {
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, Error: Please notify the UserStyles.world admins.")
@@ -98,7 +98,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	arguments := fiber.Map{
 		"User":        u,
 		"OAuth":       oauth,
-		"SecureToken": utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig),
+		"SecureToken": util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig),
 	}
 	for _, v := range oauth.Scopes {
 		arguments["Scope_"+v] = true
@@ -116,13 +116,13 @@ func AuthPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := utils.DecryptText(secureToken, utils.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
+	token, err := jwt.Parse(unsealedText, util.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")

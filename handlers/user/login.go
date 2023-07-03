@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -13,7 +13,8 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 )
 
 func LoginGet(c *fiber.Ctx) error {
@@ -41,9 +42,9 @@ func LoginPost(c *fiber.Ctx) error {
 	}
 	remember := c.FormValue("remember") == "on"
 
-	err := utils.Validate().StructPartial(form, "Email", "Password")
+	err := validator.V.StructPartial(form, "Email", "Password")
 	if err != nil {
-		var validationError validator.ValidationErrors
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Warn.Println("Validation errors:", validationError)
 		}
@@ -65,7 +66,7 @@ func LoginPost(c *fiber.Ctx) error {
 			})
 	}
 
-	match := utils.CompareHashedPassword(user.Password, form.Password)
+	match := util.VerifyPassword(user.Password, form.Password)
 	if match != nil {
 		log.Warn.Println("Failed to match hash for user:", user.Email)
 
@@ -81,7 +82,7 @@ func LoginPost(c *fiber.Ctx) error {
 		// 3 months
 		expiration = time.Now().Add(time.Hour * 24 * 31 * 3)
 	}
-	t, err := utils.NewJWTToken().
+	t, err := util.NewJWT().
 		SetClaim("id", user.ID).
 		SetClaim("name", user.Username).
 		SetClaim("email", user.Email).

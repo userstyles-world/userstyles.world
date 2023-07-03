@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -12,7 +12,8 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 )
 
 func RegisterGet(c *fiber.Ctx) error {
@@ -43,9 +44,9 @@ func RegisterPost(c *fiber.Ctx) error {
 		Email:    c.FormValue("email"),
 	}
 
-	err := utils.Validate().StructPartial(u, "Username", "Email", "Password")
+	err := validator.V.StructPartial(u, "Username", "Email", "Password")
 	if err != nil {
-		var validationError validator.ValidationErrors
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Info.Println("Validation errors:", validationError)
 		}
@@ -56,12 +57,12 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	token, err := utils.NewJWTToken().
+	token, err := util.NewJWT().
 		SetClaim("username", u.Username).
 		SetClaim("password", u.Password).
 		SetClaim("email", u.Email).
 		SetExpiration(time.Now().Add(time.Hour * 4)).
-		GetSignedString(utils.VerifySigningKey)
+		GetSignedString(util.VerifySigningKey)
 	if err != nil {
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return c.Status(fiber.StatusInternalServerError).
@@ -70,7 +71,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/verify/" + utils.EncryptText(token, utils.AEADCrypto, config.ScrambleConfig)
+	link := c.BaseURL() + "/verify/" + util.EncryptText(token, util.AEADCrypto, config.ScrambleConfig)
 	args := fiber.Map{
 		"User": u,
 		"Link": link,

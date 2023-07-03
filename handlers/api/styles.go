@@ -14,13 +14,13 @@ import (
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/storage"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
+	"userstyles.world/modules/validator"
 )
 
 func StylesGet(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.ContainsString(u.Scopes, "style") {
+	if !util.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"style\" scope to do this.",
@@ -54,7 +54,7 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
-	if u.StyleID == 0 && !utils.ContainsString(u.Scopes, "style") {
+	if u.StyleID == 0 && !util.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error: You need the \"style\" scope to do this.",
@@ -97,7 +97,7 @@ func StylePost(c *fiber.Ctx) error {
 	postStyle.Featured = style.Featured
 	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
-	msg, err := postStyle.ValidateCode(utils.Validate(), true)
+	msg, err := postStyle.ValidateCode(validator.V, true)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
 	}
@@ -194,7 +194,7 @@ func DeleteStyle(c *fiber.Ctx) error {
 func NewStyle(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	if !utils.ContainsString(u.Scopes, "style") {
+	if !util.ContainsString(u.Scopes, "style") {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "You need the \"style\" scope to do this.",
@@ -215,7 +215,7 @@ func NewStyle(c *fiber.Ctx) error {
 	postStyle.Featured = false
 	postStyle.Code = util.RemoveUpdateURL(postStyle.Code)
 
-	msg, err := postStyle.ValidateCode(utils.Validate(), true)
+	msg, err := postStyle.ValidateCode(validator.V, true)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"data": msg})
 	}

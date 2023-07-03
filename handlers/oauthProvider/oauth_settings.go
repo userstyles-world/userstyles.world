@@ -5,13 +5,14 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 )
 
 type OAuthSettingMethod uint8
@@ -102,14 +103,14 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		RedirectURI: strings.TrimSuffix(c.FormValue("redirect_uri"), "/"),
-		Scopes: utils.Filter([]string{"style", "user"}, func(name any) bool {
+		Scopes: util.Filter([]string{"style", "user"}, func(name any) bool {
 			return c.FormValue(name.(string)) == "on"
 		}).([]string),
 		UserID: u.ID,
 	}
 
-	if err := utils.Validate().StructPartial(q, "Name", "Description"); err != nil {
-		var validationError validator.ValidationErrors
+	if err := validator.V.StructPartial(q, "Name", "Description"); err != nil {
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Info.Println("Validation errors:", validationError)
 		}
@@ -133,8 +134,8 @@ func OAuthSettingsPost(c *fiber.Ctx) error {
 	if id != "" {
 		err = models.UpdateOAuth(&q, id)
 	} else {
-		q.ClientID = utils.RandomString(32)
-		q.ClientSecret = utils.RandomString(128)
+		q.ClientID = util.RandomString(32)
+		q.ClientSecret = util.RandomString(128)
 		dbOAuth, err = models.CreateOAuth(&q)
 	}
 

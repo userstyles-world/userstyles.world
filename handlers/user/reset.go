@@ -3,7 +3,7 @@ package user
 import (
 	"errors"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
 
@@ -13,7 +13,8 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 )
 
 func ResetGet(c *fiber.Ctx) error {
@@ -31,7 +32,7 @@ func ResetGet(c *fiber.Ctx) error {
 		return renderError
 	}
 
-	_, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
+	_, err := util.DecryptText(key, util.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError
@@ -70,13 +71,13 @@ func ResetPost(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := utils.DecryptText(key, utils.AEADCrypto, config.ScrambleConfig)
+	unSealedText, err := util.DecryptText(key, util.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError
 	}
 
-	token, err := jwt.Parse(unSealedText, utils.VerifyJwtKeyFunction)
+	token, err := jwt.Parse(unSealedText, util.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return renderError
@@ -95,8 +96,8 @@ func ResetPost(c *fiber.Ctx) error {
 
 	t := new(models.User)
 	user.Password = newPassword
-	if err := utils.Validate().StructPartial(user, "Password"); err != nil {
-		var validationError validator.ValidationErrors
+	if err := validator.V.StructPartial(user, "Password"); err != nil {
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Info.Println("Password change error:", validationError)
 		}
@@ -106,7 +107,14 @@ func ResetPost(c *fiber.Ctx) error {
 			"Key":    key,
 		})
 	}
-	user.Password = utils.GenerateHashedPassword(newPassword)
+
+	pw, err := util.HashPassword(newPassword)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Failed to hash password",
+		})
+	}
+	user.Password = pw
 
 	err = database.Conn.
 		Model(t).

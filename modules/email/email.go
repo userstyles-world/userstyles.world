@@ -7,7 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/modules/config"
-	"userstyles.world/utils"
 )
 
 var views fiber.Views
@@ -36,10 +35,10 @@ func Send(tmpl, address, title string, args any) error {
 	// 	log.Info.Printf("\n%s%s\n\n%s", text.String(), divider, html.String())
 	// }
 
-	return utils.NewEmail().
+	return NewEmail().
 		SetTo(address).
 		SetSubject(title).
-		AddPart(*utils.NewPart().SetBody(text.String())).
-		AddPart(*utils.NewPart().SetBody(html.String()).HTML()).
+		AddPart(*NewPart().SetBody(text.String())).
+		AddPart(*NewPart().SetBody(html.String()).HTML()).
 		SendEmail(config.IMAPServer)
 }

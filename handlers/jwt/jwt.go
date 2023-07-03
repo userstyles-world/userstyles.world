@@ -9,7 +9,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/errors"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 var NormalJWTSigning = func(t *lib.Token) (any, error) {
@@ -21,7 +21,7 @@ var NormalJWTSigning = func(t *lib.Token) (any, error) {
 
 var Protected = func(c *fiber.Ctx) error {
 	if _, ok := User(c); !ok {
-		redirectURI := utils.UnsafeString(c.Request().URI().Path())
+		redirectURI := util.UnsafeString(c.Request().URI().Path())
 		if c.Context().QueryArgs().Len() != 0 {
 			redirectURI += "?" + c.Context().QueryArgs().String()
 		}
@@ -33,7 +33,7 @@ var Protected = func(c *fiber.Ctx) error {
 
 var Admin = func(c *fiber.Ctx) error {
 	// Bypass checks if monitor is enabled and request is a local IP address.
-	if config.PerformanceMonitor && utils.IsLocal(config.Production, c.IP()) {
+	if config.PerformanceMonitor && util.IsLocal(config.Production, c.IP()) {
 		return c.Next()
 	}
 

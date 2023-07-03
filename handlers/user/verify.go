@@ -9,7 +9,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 func VerifyGet(c *fiber.Ctx) error {
@@ -28,7 +28,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := utils.DecryptText(base64Key, utils.AEADCrypto, config.ScrambleConfig)
+	unSealedText, err := util.DecryptText(base64Key, util.AEADCrypto, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Printf("Failed to decode JWT text: %s\n", err.Error())
 		return c.Render("err", fiber.Map{
@@ -37,7 +37,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	token, err := jwt.Parse(unSealedText, utils.VerifyJwtKeyFunction)
+	token, err := jwt.Parse(unSealedText, util.VerifyJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Printf("Failed to decode JWT token: %s\n", err.Error())
 		return c.Render("err", fiber.Map{
@@ -54,15 +54,22 @@ func VerifyGet(c *fiber.Ctx) error {
 				"Error": "Internal server error.",
 			})
 	}
-
-	regErr := database.Conn.Create(&models.User{
+	u := &models.User{
 		Username: claims["username"].(string),
-		Password: utils.GenerateHashedPassword(claims["password"].(string)),
+		Password: claims["password"].(string),
 		Email:    claims["email"].(string),
-	})
+	}
 
-	if regErr.Error != nil {
-		log.Warn.Printf("Failed to register %s: %s", claims["email"].(string), regErr.Error)
+	pw, err := util.HashPassword(u.Password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Failed to hash password",
+		})
+	}
+	u.Password = pw
+
+	if err = database.Conn.Create(u).Error; err != nil {
+		log.Database.Printf("Failed to register %s: %s\n", u.Email, err)
 
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{

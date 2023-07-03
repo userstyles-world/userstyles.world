@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	jwtware "userstyles.world/handlers/jwt"
@@ -12,7 +12,8 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 )
 
 // Only allow an email request to happen every 5 minutes.
@@ -40,8 +41,8 @@ func RecoverPost(c *fiber.Ctx) error {
 		Email: c.FormValue("email"),
 	}
 
-	if err := utils.Validate().StructPartial(u, "email"); err != nil {
-		var validationError validator.ValidationErrors
+	if err := validator.V.StructPartial(u, "email"); err != nil {
+		var validationError val.ValidationErrors
 		if ok := errors.As(err, &validationError); ok {
 			log.Warn.Println("Validation errors:", validationError)
 		}
@@ -68,16 +69,16 @@ func RecoverPost(c *fiber.Ctx) error {
 			return
 		}
 
-		jwtToken, err := utils.NewJWTToken().
+		jwtToken, err := util.NewJWT().
 			SetClaim("email", u.Email).
 			SetExpiration(time.Now().Add(time.Hour * 4)).
-			GetSignedString(utils.VerifySigningKey)
+			GetSignedString(util.VerifySigningKey)
 		if err != nil {
 			log.Warn.Printf("Not able to generate JWT token: %v\n", err)
 			return
 		}
 
-		link := config.BaseURL + "/reset/" + utils.EncryptText(jwtToken, utils.AEADCrypto, config.ScrambleConfig)
+		link := config.BaseURL + "/reset/" + util.EncryptText(jwtToken, util.AEADCrypto, config.ScrambleConfig)
 
 		args := fiber.Map{
 			"User": user,

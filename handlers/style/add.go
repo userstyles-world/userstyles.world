@@ -16,7 +16,7 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
-	"userstyles.world/utils"
+	"userstyles.world/modules/validator"
 )
 
 func CreateGet(c *fiber.Ctx) error {
@@ -54,7 +54,7 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 	c.Locals("Style", s)
 
-	m, err := s.Validate(utils.Validate(), true)
+	m, err := s.Validate(validator.V, true)
 	if err != nil {
 		c.Locals("err", m)
 		c.Locals("Error", "Incorrect userstyle data was entered. Please review the fields bellow.")
@@ -119,7 +119,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	unsealedText, err := utils.DecryptText(secureToken, utils.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.ScrambleConfig)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return c.Status(500).
@@ -128,7 +128,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	token, err := jwt.Parse(unsealedText, utils.OAuthPJwtKeyFunction)
+	token, err := jwt.Parse(unsealedText, util.OAuthPJwtKeyFunction)
 	if err != nil || !token.Valid {
 		log.Warn.Println("Failed to unseal JWT token:", err.Error())
 		return c.Status(500).
@@ -171,12 +171,12 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	jwtToken, err := utils.NewJWTToken().
+	jwtToken, err := util.NewJWT().
 		SetClaim("state", state).
 		SetClaim("userID", u.ID).
 		SetClaim("styleID", style.ID).
 		SetExpiration(time.Now().Add(time.Minute * 10)).
-		GetSignedString(utils.OAuthPSigningKey)
+		GetSignedString(util.OAuthPSigningKey)
 	if err != nil {
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return c.Status(500).
@@ -185,7 +185,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	returnCode := "?code=" + utils.EncryptText(jwtToken, utils.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig)
 	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state

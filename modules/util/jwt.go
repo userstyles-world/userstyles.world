@@ -1,4 +1,4 @@
-package utils
+package util
 
 import (
 	"time"
@@ -12,7 +12,7 @@ type JWTTokenBuilder struct {
 	*jwt.Token
 }
 
-func NewJWTToken() *JWTTokenBuilder {
+func NewJWT() *JWTTokenBuilder {
 	return &JWTTokenBuilder{jwt.New(jwt.SigningMethodHS512)}
 }
 

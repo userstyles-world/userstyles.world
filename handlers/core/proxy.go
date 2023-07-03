@@ -14,7 +14,7 @@ import (
 
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 var client = http.Client{
@@ -26,7 +26,7 @@ var client = http.Client{
 		}
 
 		// Make sure it doesn't redirect to a loopback thingy.
-		if config.Production && utils.IsLoopback(string(req.Host)) {
+		if config.Production && util.IsLoopback(string(req.Host)) {
 			return errors.New("*giggles* Mikey Wikey hates you")
 		}
 		return nil
@@ -61,7 +61,7 @@ func Proxy(c *fiber.Ctx) error {
 		}
 
 		// Ensure we're not doing a local host request.
-		if utils.IsLoopback(string(req.Host)) {
+		if util.IsLoopback(string(req.Host)) {
 			log.Info.Println("A local network was requested to be proxied.")
 			return nil
 		}

@@ -28,7 +28,8 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/search"
 	"userstyles.world/modules/templates"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 	"userstyles.world/web"
 )
 
@@ -36,8 +37,8 @@ func main() {
 	log.Initialize()
 	cache.Initialize()
 	images.CheckVips()
-	utils.InitalizeCrypto()
-	utils.InitializeValidator()
+	util.InitCrypto()
+	validator.Init()
 	database.Initialize()
 	cron.Initialize()
 	search.Initialize()
@@ -46,7 +47,7 @@ func main() {
 		Views:       templates.New(http.FS(web.ViewsDir)),
 		ViewsLayout: "layouts/main",
 		ProxyHeader: config.ProxyRealIP,
-		JSONEncoder: utils.JSONEncoder,
+		JSONEncoder: util.JSONEncoder,
 		IdleTimeout: 5 * time.Second,
 
 		// TODO: Explore using this more.

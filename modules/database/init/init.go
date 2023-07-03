@@ -14,7 +14,7 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
 )
 
 var tables = []struct {
@@ -142,7 +142,7 @@ func Close() error {
 }
 
 func generateData(amount int) ([]models.Style, []models.User) {
-	randomData := utils.RandomString(amount * 7 * 4)
+	randomData := util.RandomString(amount * 7 * 4)
 	var styleStructs []models.Style
 	for i := 0; i < amount; i++ {
 		startData := randomData[(i * 7 * 4):]
@@ -160,7 +160,7 @@ func generateData(amount int) ([]models.Style, []models.User) {
 	}
 
 	var userStructs []models.User
-	randomData = utils.RandomString(amount * 4 * 4)
+	randomData = util.RandomString(amount * 4 * 4)
 	for i := 0; i < amount; i++ {
 		startData := randomData[(i * 4 * 4):]
 		userStructs = append(userStructs, models.User{
@@ -178,25 +178,33 @@ func seed() {
 	log.Info.Println("Seeding database mock data.")
 	defer log.Info.Println("Finished seeding mock data.")
 
+	pw := func(s string) string {
+		s, err := util.HashPassword("admin123")
+		if err != nil {
+			log.Warn.Fatal(err)
+		}
+		return s
+	}
+
 	users := []models.User{
 		{
 			Username:  "admin",
 			Email:     "admin@usw.local",
 			Biography: "Admin of USw.",
-			Password:  utils.GenerateHashedPassword("admin123"),
+			Password:  pw("admin123"),
 			Role:      models.Admin,
 		},
 		{
 			Username:  "moderator",
 			Email:     "moderator@usw.local",
 			Biography: "I'm a moderator.",
-			Password:  utils.GenerateHashedPassword("moderator123"),
+			Password:  pw("moderator123"),
 			Role:      models.Moderator,
 		},
 		{
 			Username: "regular",
 			Email:    "regular@usw.local",
-			Password: utils.GenerateHashedPassword("regular123"),
+			Password: pw("regular123"),
 		},
 	}
 

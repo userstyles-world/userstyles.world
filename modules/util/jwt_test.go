@@ -1,4 +1,4 @@
-package utils
+package util
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 // Check if we can create a JWT Token and sign it properly.
 func TestGenerationToken(t *testing.T) {
 	t.Parallel()
-	token, err := NewJWTToken().
+	token, err := NewJWT().
 		SetClaim("sub", "test").
 		SetExpiration(time.Now().Add(time.Minute * 5)).
 		GetSignedString([]byte("secret"))
@@ -26,7 +26,7 @@ func TestGenerationToken(t *testing.T) {
 // Generate a Token and decrypt it again and check if the values are correct.
 func TestDecryptionToken(t *testing.T) {
 	t.Parallel()
-	token, err := NewJWTToken().
+	token, err := NewJWT().
 		SetClaim("sub", "test").
 		SetExpiration(time.Now().Add(time.Minute * 5)).
 		GetSignedString([]byte("secret"))
@@ -56,7 +56,7 @@ func TestDecryptionToken(t *testing.T) {
 // Test invalid expired token.
 func TestExpiredToken(t *testing.T) {
 	t.Parallel()
-	token, err := NewJWTToken().
+	token, err := NewJWT().
 		SetClaim("sub", "test").
 		SetExpiration(time.Now().Add(-time.Minute * 5)).
 		GetSignedString([]byte("secret"))
@@ -77,7 +77,7 @@ func TestExpiredToken(t *testing.T) {
 // Test invalid key signature.
 func TestInvalidSignature(t *testing.T) {
 	t.Parallel()
-	token, err := NewJWTToken().
+	token, err := NewJWT().
 		SetClaim("sub", "test").
 		SetExpiration(time.Now().Add(time.Minute * 5)).
 		GetSignedString([]byte("secret"))
@@ -97,7 +97,7 @@ func TestInvalidSignature(t *testing.T) {
 
 func TestInvalidSignature2(t *testing.T) {
 	t.Parallel()
-	token, err := NewJWTToken().
+	token, err := NewJWT().
 		SetClaim("sub", "test").
 		SetExpiration(time.Now().Add(time.Minute * 5)).
 		GetSignedString([]byte("secret"))

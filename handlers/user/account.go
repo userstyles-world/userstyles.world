@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	val "github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -14,7 +14,8 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
-	"userstyles.world/utils"
+	"userstyles.world/modules/util"
+	"userstyles.world/modules/validator"
 )
 
 func Account(c *fiber.Ctx) error {
@@ -61,8 +62,8 @@ func EditAccount(c *fiber.Ctx) error {
 			break
 		}
 
-		if err := utils.Validate().StructPartial(user, "DisplayName"); err != nil {
-			var validationError validator.ValidationErrors
+		if err := validator.V.StructPartial(user, "DisplayName"); err != nil {
+			var validationError val.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
 				log.Info.Printf("Validation errors for user %d: %v\n", u.ID, validationError)
 			}
@@ -90,7 +91,7 @@ func EditAccount(c *fiber.Ctx) error {
 	case "password":
 		current := c.FormValue("current")
 		if user.Password != "" {
-			err := utils.CompareHashedPassword(user.Password, current)
+			err := util.VerifyPassword(user.Password, current)
 			if err != nil {
 				return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
 					"Title": "Failed to match current password",
@@ -108,8 +109,8 @@ func EditAccount(c *fiber.Ctx) error {
 		}
 
 		user.Password = newPassword
-		if err := utils.Validate().StructPartial(user, "Password"); err != nil {
-			var validationError validator.ValidationErrors
+		if err := validator.V.StructPartial(user, "Password"); err != nil {
+			var validationError val.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
 				log.Info.Println("Password change error:", validationError)
 			}
@@ -119,14 +120,21 @@ func EditAccount(c *fiber.Ctx) error {
 			})
 		}
 
-		user.Password = utils.GenerateHashedPassword(newPassword)
+		pw, err := util.HashPassword(newPassword)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+				"Title": "Failed to hash password",
+				"User":  u,
+			})
+		}
+		user.Password = pw
 		record["password"] = user.Password
 
 	case "biography":
 		user.Biography = strings.TrimSpace(c.FormValue("biography"))
 
-		if err := utils.Validate().StructPartial(user, "Biography"); err != nil {
-			var validationError validator.ValidationErrors
+		if err := validator.V.StructPartial(user, "Biography"); err != nil {
+			var validationError val.ValidationErrors
 			if ok := errors.As(err, &validationError); ok {
 				log.Info.Println("Validation errors:", validationError)
 			}
