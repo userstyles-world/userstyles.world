@@ -10,7 +10,6 @@ import (
 	"userstyles.world/modules/archive"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
 )
 
@@ -128,12 +127,6 @@ func mirror(batch models.Style) {
 		err = models.SaveStyleCode(strconv.Itoa(i), code)
 		if err != nil {
 			log.Warn.Printf("kind=code id=%v err=%q\n", batch.ID, err)
-		}
-
-		// Update search index.
-		err = search.IndexStyle(batch.ID)
-		if err != nil {
-			log.Warn.Printf("Failed to re-index style %d: %s\n", batch.ID, err.Error())
 		}
 
 		cache.Code.Update(i, []byte(code))

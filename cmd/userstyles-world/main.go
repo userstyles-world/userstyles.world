@@ -26,7 +26,6 @@ import (
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/search"
 	"userstyles.world/modules/templates"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
@@ -41,7 +40,6 @@ func main() {
 	validator.Init()
 	database.Initialize()
 	cron.Initialize()
-	search.Initialize()
 
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(http.FS(web.ViewsDir)),
@@ -118,6 +116,5 @@ func main() {
 	cache.ViewStats.Close()
 	cache.SaveStore()
 	_ = database.Close()
-	_ = search.StyleIndex.Close()
 	log.Info.Printf("Done in %s.\n", time.Since(t))
 }

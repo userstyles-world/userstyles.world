@@ -11,7 +11,6 @@ import (
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
 )
@@ -111,10 +110,6 @@ func EditPost(c *fiber.Ctx) error {
 	err = models.SaveStyleCode(id, s.Code)
 	if err != nil {
 		log.Warn.Printf("kind=code id=%s err=%q\n", id, err)
-	}
-
-	if err = search.IndexStyle(s.ID); err != nil {
-		log.Warn.Printf("Failed to re-index style %d: %s\n", s.ID, err)
 	}
 
 	cache.Code.Update(i, []byte(s.Code))

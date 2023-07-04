@@ -14,7 +14,6 @@ import (
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/search"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
 )
@@ -95,10 +94,6 @@ func CreatePost(c *fiber.Ctx) error {
 				log.Warn.Printf("Failed to update preview for %d: %s\n", s.ID, err)
 			}
 		}
-	}
-
-	if err = search.IndexStyle(s.ID); err != nil {
-		log.Warn.Printf("Failed to index style %d: %s\n", s.ID, err)
 	}
 
 	if oauthID != "" {

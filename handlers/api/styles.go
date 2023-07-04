@@ -11,7 +11,6 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
-	"userstyles.world/modules/search"
 	"userstyles.world/modules/storage"
 	"userstyles.world/modules/util"
 	"userstyles.world/modules/validator"
@@ -119,10 +118,6 @@ func StylePost(c *fiber.Ctx) error {
 		cache.Code.Update(id, []byte(postStyle.Code))
 	}
 
-	if err = search.IndexStyle(postStyle.ID); err != nil {
-		log.Warn.Printf("Failed to re-index style %d: %s\n", postStyle.ID, err)
-	}
-
 	return c.JSON(fiber.Map{
 		"data": "Successfully edited style.",
 	})
@@ -173,10 +168,6 @@ func DeleteStyle(c *fiber.Ctx) error {
 			JSON(fiber.Map{
 				"data": "Error: Couldn't delete style",
 			})
-	}
-
-	if err = search.DeleteStyle(style.ID); err != nil {
-		log.Warn.Printf("Failed to delete style %d from index: %s", style.ID, err)
 	}
 
 	err = models.RemoveStyleCode(strconv.Itoa(int(style.ID)))
@@ -255,10 +246,6 @@ func NewStyle(c *fiber.Ctx) error {
 				log.Warn.Printf("Failed to update preview for %d: %s\n", s.ID, err)
 			}
 		}
-	}
-
-	if err = search.IndexStyle(s.ID); err != nil {
-		log.Warn.Printf("Failed to index style %d: %s", s.ID, err)
 	}
 
 	return c.JSON(fiber.Map{
