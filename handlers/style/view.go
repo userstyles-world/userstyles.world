@@ -2,7 +2,6 @@ package style
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -49,9 +48,7 @@ func GetStylePage(c *fiber.Ctx) error {
 	}
 
 	// Upsert style views.
-	ua := strings.ToLower(string(c.Context().UserAgent()))
-	if strings.Contains(ua, "bot") {
-		log.Info.Printf("Ignored a bot on style %s: %q\n", id, ua)
+	if util.IsCrawler(string(c.Context().UserAgent())) {
 		return c.Render("style/view", args)
 	} else {
 		cache.ViewStats.Add(c.IP() + " " + id)

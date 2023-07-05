@@ -92,3 +92,36 @@ func BenchmarkProxyResources(b *testing.B) {
 		})
 	}
 }
+
+var crawlerCases = []struct {
+	name, input string
+	expected    bool
+}{
+	{"random", "Some Random User Agent", false},
+	{"firefox", "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/112.0", false},
+	{"chromium", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36", false},
+	{"uppercase bot", "User Agent Of Some Random Bot V1.0", true},
+	{"lowercase bot", "user agent of some random bot v1.0", true},
+}
+
+func TestIsCrawler(t *testing.T) {
+	for _, c := range crawlerCases {
+		t.Run(c.name, func(t *testing.T) {
+			got := IsCrawler(c.input)
+			if got != c.expected {
+				t.Errorf("got: %t", got)
+				t.Errorf("exp: %t", c.expected)
+			}
+		})
+	}
+}
+
+func BenchmarkIsCrawler(b *testing.B) {
+	for _, c := range crawlerCases {
+		b.Run(c.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				IsCrawler(c.input)
+			}
+		})
+	}
+}

@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"sync"
 	"unsafe"
 )
@@ -54,4 +55,10 @@ func Slug(s string) string {
 func ProxyResources(s, t string, id uint) string {
 	sub := fmt.Sprintf(`src="/proxy?link=$1&type=%s&id=%d" loading="lazy"`, t, id)
 	return linkRe.ReplaceAllString(s, sub)
+}
+
+// IsCrawler ignores crawlers in places where we collect statistics.
+func IsCrawler(ua string) bool {
+	ua = strings.ToLower(ua)
+	return strings.Contains(ua, "bot")
 }
