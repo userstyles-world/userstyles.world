@@ -102,6 +102,12 @@ var crawlerCases = []struct {
 	{"chromium", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36", false},
 	{"uppercase bot", "User Agent Of Some Random Bot V1.0", true},
 	{"lowercase bot", "user agent of some random bot v1.0", true},
+	{"lemmy", "Lemmy/0.17.2; +https://example.com", true},
+	{"pict-rs", "pict-rs v0.3.0-main", true},
+	{"calckey", "Calckey/14.0.0-dev42 (https://example.com)", true},
+	{"misskey", "Misskey/13.12.2 (https://example.com", true},
+	{"friendica", "Friendica 'Giant Rhubarb' 2023.05-1518; https://example.com", true},
+	{"akkoma", "Akkoma 3.9.3-0-deadbeef; https://example.com <user@example.com>", true},
 }
 
 func TestIsCrawler(t *testing.T) {

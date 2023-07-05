@@ -59,5 +59,8 @@ func ProxyResources(s, t string, id uint) string {
 
 // IsCrawler ignores crawlers in places where we collect statistics.
 func IsCrawler(ua string) bool {
-	return strings.Contains(ua, "Bot") || strings.Contains(ua, "bot")
+	return strings.Contains(ua, "Bot") || strings.Contains(ua, "bot") ||
+		strings.Contains(ua, "Lemmy") || strings.Contains(ua, "pict-rs") ||
+		strings.Contains(ua, "Calckey") || strings.Contains(ua, "Misskey") ||
+		strings.Contains(ua, "Friendica") || strings.Contains(ua, "Akkoma")
 }
