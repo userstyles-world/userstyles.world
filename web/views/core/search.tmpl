@@ -43,11 +43,94 @@
 				{{ template "partials/style-card" . }}
 			{{ end }}
 		</div>
-	{{ else if .Error }}
-		<div role="alert" class="err">{{ .Error | unescape }}</div>
 	{{ else }}
-		<div class="ta:c">
-			<p>Please try searching for something.</p>
+		{{ if .Error }}
+			<div role="alert" class="err">{{ .Error | unescape }}</div>
+		{{ else }}
+			<div class="ta:c">
+				<p>Please try searching for something.</p>
+			</div>
+		{{ end }}
+		<h2>Suggestions</h2>
+		<style type="text/css">
+			.List-unstyled {
+				min-width: 155px;
+			}
+		</style>
+		<div class="flex">
+			<ul class="List-unstyled">
+				<li><a href="/search?q=Black+OR+OLED">Black</a></li>
+				<li><a href="/search?q=Catppuccin">Catppuccin</a></li>
+				<li><a href="/search?q=Dark+OR+Night+OR+Midnight+OR+DeepDark">Dark</a></li>
+				<li><a href="/search?q=Dracula">Dracula</a></li>
+				<li><a href="/search?q=Material">Fluent</a></li>
+				<li><a href="/search?q=Gruvbox">Gruvbox</a></li>
+				<li><a href="/search?q=Material">Material</a></li>
+				<li><a href="/search?q=Nord">Nord</a></li>
+				<li><a href="/search?q=Solarized">Solarized</a></li>
+			</ul>
+			<ul class="List-unstyled quarter">
+				<li><a href="/search?q=Fix+OR+Fixes">Fix</a></li>
+				<li><a href="/search?q=Font">Font</a></li>
+				<li><a href="/search?q=Tweak+OR+Tweaks+OR+Tweaked">Tweaks</a></li>
+				<li><a href="/search?q=Fix">Logo</a></li>
+				<li><a href="/search?q=Square">Square</a></li>
+				<li><a href="/search?q=Transparent">Transparent</a></li>
+				<li><a href="/search?q=Wide">Wide</a></li>
+				<li><a href="/search?q=Widescreen+OR+Theater+OR+Theatre">Widescreen</a></li>
+			</ul>
+			<ul class="List-unstyled">
+				<li><a href="/search?q=Bilibili">Bilibili</a></li>
+				<li><a href="/search?q=Discord">Discord</a></li>
+				<li><a href="/search?q=Facebook">Facebook</a></li>
+				<li><a href="/search?q=Instagram">Instagram</a></li>
+				<li><a href="/search?q=Twitch">Twitch</a></li>
+				<li><a href="/search?q=Reddit">Reddit</a></li>
+				<li><a href="/search?q=Telegram">Telegram</a></li>
+				<li><a href="/search?q=Twitter">Twitter</a></li>
+				<li><a href="/search?q=YouTube">YouTube</a></li>
+			</ul>
+			<ul class="List-unstyled">
+				<li><a href="/search?q=Blips">Blips</a></li>
+				<li><a href="/search?q=Cinny">Cinny</a></li>
+				<li><a href="/search?q=Kbin">Kbin</a></li>
+				<li><a href="/search?q=Lemmy">Lemmy</a></li>
+				<li><a href="/search?q=Mastodon">Mastodon</a></li>
+				<li><a href="/search?q=Nitter">Nitter</a></li>
+				<li><a href="/search?q=Odysee">Odysee</a></li>
+				<li><a href="/search?q=OpenVK">OpenVK</a></li>
+				<li><a href="/search?q=PeerTube">PeerTube</a></li>
+			</ul>
+			<ul class="List-unstyled">
+				<li><a href="/search?q=Codeberg">Codeberg</a></li>
+				<li><a href="/search?q=Fandom">Fandom</a></li>
+				<li><a href="/search?q=GitHub">GitHub</a></li>
+				<li><a href="/search?q=GitLab">GitLab</a></li>
+				<li><a href="/search?q=StackOverflow">StackOverflow</a></li>
+				<li><a href="/search?q=Libreddit">Libreddit</a></li>
+				<li><a href="/search?q=Wikipedia">Wikipedia</a></li>
+			</ul>
+			<ul class="List-unstyled">
+				<li><a href="/search?q=ChatGPT">ChatGPT</a></li>
+				<li><a href="/search?q=Gmail">Gmail</a></li>
+				<li><a href="/search?q=Google+Docs">Google Docs</a></li>
+				<li><a href="/search?q=Roblox">Roblox</a></li>
+				<li><a href="/search?q=Lichess">Lichess</a></li>
+				<li><a href="/search?q=Proton">Proton Mail</a></li>
+				<li><a href="/search?q=Translate">Translate</a></li>
+			</ul>
+			<ul class="List-unstyled">
+				<li><a href="/search?q=Bing">Bing</a></li>
+				<li><a href="/search?q=DuckDuckGo">DuckDuckGo</a></li>
+				<li><a href="/search?q=Ecosia">Ecosia</a></li>
+				<li><a href="/search?q=Google+Search">Google Search</a></li>
+				<li><a href="/search?q=StartPage">StartPage</a></li>
+			</ul>
+			<ul class="List-unstyled">
+				<li><a href="/search?q=Greasy+Fork">Greasy Fork</a></li>
+				<li><a href="/search?q=Stylus">Stylus</a></li>
+				<li><a href="/search?q=UserStyles+world">UserStyles.world</a></li>
+			</ul>
 		</div>
 	{{ end }}
 </section>
