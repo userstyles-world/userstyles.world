@@ -10,7 +10,7 @@
 
     <section class="limit mt:l mx:a">
         {{ template "partials/alert" . }}
-        <form class="form-wrapper" method="post" action="/styles/review/{{ .ID }}">
+        <form class="form-wrapper" method="post" {{ with .ID }} action="/styles/review/{{ . }}">{{ end }}
             <label for="alert">Notice ⚠</label>
             <p class="mt:s pb:m">As spam prevention, you're limited to only one review per style every single week. Please proofread your comment since we don't have an edit page yet.</p>
 
@@ -25,8 +25,9 @@
 
             <div class="mt:m">
                 <button class="btn primary mr:s" type="submit">Confirm</button>
-                <a class="fg:1" href="/style/{{ .ID }}">Cancel</a>
+                {{ with .ID }}<a class="fg:1" href="/style/{{ . }}">Cancel</a>{{ end }}
             </div>
+            <!--imaginary delete button for editing reviews-->
         </form>
     </section>
 </div>

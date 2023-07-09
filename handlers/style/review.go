@@ -174,3 +174,51 @@ func ReviewPost(c *fiber.Ctx) error {
 
 	return c.Redirect(fmt.Sprintf("/style/%d", id), fiber.StatusSeeOther)
 }
+
+func EditReviewGet(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	id := c.Params("id")
+
+	return c.Render("style/review", fiber.Map{
+		"Title":    "Edit review",
+		"User":     u,
+		"ID":       nil,
+		"ReviewID": id,
+	})
+}
+
+func EditReviewPost(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	id := c.Params("id")
+
+	return c.Render("style/review", fiber.Map{
+		"Title":    "Edit review",
+		"User":     u,
+		"ID":       nil,
+		"ReviewID": id,
+	})
+}
+
+func DeleteReviewGet(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	id := c.Params("id")
+
+	return c.Render("style/deletereview", fiber.Map{
+		"Title":    "Delete review",
+		"User":     u,
+		"ID":       nil,
+		"ReviewID": id,
+	})
+}
+
+func DeleteReviewPost(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	id := c.Params("id")
+
+	return c.Render("style/deletereview", fiber.Map{
+		"Title":    "Deleted review",
+		"User":     u,
+		"ID":       nil,
+		"ReviewID": id,
+	})
+}
