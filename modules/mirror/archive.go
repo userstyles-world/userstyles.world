@@ -118,17 +118,20 @@ func mirror(batch models.Style) {
 		err := batch.MirrorStyle(fields)
 		if err != nil {
 			log.Warn.Printf("Failed to mirror style %d: %s\n", batch.ID, err.Error())
-		} else {
-			log.Info.Printf("Successfully mirrored style %d\n", batch.ID)
+			return
 		}
 
-		i := int(batch.ID)
-		code := fields["code"].(string)
-		err = models.SaveStyleCode(strconv.Itoa(i), code)
-		if err != nil {
-			log.Warn.Printf("kind=code id=%v err=%q\n", batch.ID, err)
+		code, ok := fields["code"].(string)
+		if ok {
+			i := int(batch.ID)
+			if err = models.SaveStyleCode(strconv.Itoa(i), code); err != nil {
+				log.Warn.Printf("kind=code id=%v err=%q\n", batch.ID, err)
+				return
+			}
+
+			cache.Code.Update(i, []byte(code))
 		}
 
-		cache.Code.Update(i, []byte(code))
+		log.Info.Printf("Successfully mirrored style %d\n", batch.ID)
 	}
 }
