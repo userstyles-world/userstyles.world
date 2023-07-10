@@ -59,10 +59,10 @@ func GetStylePage(c *fiber.Ctx) error {
 			args["CanReview"] = false
 			args["CantReviewReason"] = "An account is required in order to review userstyles."
 		} else {
-			allowed, timeneeded := models.AbleToReview(u.ID, data.ID)
-			if !allowed {
+			dur, ok := models.AbleToReview(u.ID, data.ID)
+			if !ok {
 				args["CanReview"] = false
-				args["CantReviewReason"] = "You can review this style again in " + timeneeded
+				args["CantReviewReason"] = "You can review this style again in " + dur
 			} else {
 				args["CanReview"] = true
 			}

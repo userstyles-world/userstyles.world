@@ -14,163 +14,130 @@ import (
 
 func createPage(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	id := c.Params("id")
+	c.Locals("User", u)
+	c.Locals("Title", "Review style")
 
-	// Check if style exists.
-	style, err := models.GetStyleByID(c.Params("id"))
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "Invalid style ID")
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+	}
+	c.Locals("ID", i)
+
+	s, err := models.GetStyleByID(c.Params("id"))
 	if err != nil {
-		c.Status(fiber.StatusNotFound)
-		return c.Render("err", fiber.Map{
-			"Title": "Style not found",
-			"User":  u,
-		})
+		c.Locals("Title", "Style not found")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
-	// Check if user isn't style's author.
-	if u.ID == style.UserID {
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
-			"Title": "Cannot review own style",
-			"User":  u,
-		})
+	// Prevent authors reviewing their own userstyles.
+	if u.ID == s.UserID {
+		c.Locals("Title", "Can't review your own style")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
 	}
 
-	// Prevent spam.
-	allowed, timeneeded := models.AbleToReview(u.ID, style.ID)
-	if !allowed {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("err", fiber.Map{
-			"Title":    "Cannot review style",
-			"ErrTitle": "You can review this style again in " + timeneeded,
-			"User":     u,
-		})
+	// Prevent spamming reviews.
+	dur, ok := models.AbleToReview(u.ID, s.ID)
+	if !ok {
+		c.Locals("Title", "Cannot review style")
+		c.Locals("ErrTitle", "You can review this style again in "+dur)
+		return c.Status(fiber.StatusTooManyRequests).Render("err", fiber.Map{})
 	}
 
-	return c.Render("style/review", fiber.Map{
-		"Title": "Review style",
-		"User":  u,
-		"ID":    id,
-	})
+	return c.Render("review/create", fiber.Map{})
 }
 
 func createForm(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	c.Locals("User", u)
+	c.Locals("Title", "Review style")
 
-	id, err := strconv.Atoi(c.Params("id"))
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "Invalid style ID")
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+	}
+	c.Locals("ID", i)
+
+	s, err := models.GetStyleByID(c.Params("id"))
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Invalid style ID",
-			"User":  u,
-		})
+		c.Locals("Title", "Style not found")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
-	// Check if style exists.
-	style, err := models.GetStyleByID(c.Params("id"))
-	if err != nil {
-		c.Status(fiber.StatusNotFound)
-		return c.Render("err", fiber.Map{
-			"Title": "Style not found",
-			"User":  u,
-		})
+	// Prevent authors reviewing their own userstyles.
+	if u.ID == s.UserID {
+		c.Locals("Title", "Can't review your own style")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
 	}
 
-	// Check if user isn't style's author.
-	if u.ID == style.UserID {
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{
-			"Title": "Cannot review own style",
-			"User":  u,
-		})
+	// Prevent spamming reviews.
+	dur, ok := models.AbleToReview(u.ID, s.ID)
+	if !ok {
+		c.Locals("Title", "Cannot review style")
+		c.Locals("ErrTitle", "You can review this style again in "+dur)
+		return c.Status(fiber.StatusTooManyRequests).Render("err", fiber.Map{})
 	}
-
-	// Prevent spam.
-	allowed, timeneeded := models.AbleToReview(u.ID, style.ID)
-	if !allowed {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("err", fiber.Map{
-			"Title":    "Cannot review style",
-			"ErrTitle": "You can review this style again in " + timeneeded,
-			"User":     u,
-		})
-	}
-
-	cmt := strings.TrimSpace(c.FormValue("comment"))
 
 	r, err := strconv.Atoi(c.FormValue("rating"))
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Invalid style ID",
-			"User":  u,
-		})
+		c.Locals("Error", "Rating should be a number")
+		return c.Render("review/create", fiber.Map{})
 	}
+	c.Locals("Rating", r)
+
+	cmt := strings.TrimSpace(c.FormValue("comment"))
+	c.Locals("Comment", cmt)
 
 	// Check if rating is out of range.
 	if r < 0 || r > 5 {
-		return c.Render("style/review", fiber.Map{
-			"Title":   "Review style",
-			"User":    u,
-			"ID":      id,
-			"Error":   "Rating is out of range.",
-			"Rating":  r,
-			"Comment": cmt,
-		})
+		c.Locals("Error", "Rating is out of range.")
+		return c.Status(fiber.StatusBadRequest).Render("review/create", fiber.Map{})
 	}
 
 	// Prevent spam.
 	if len(cmt) > 500 {
-		return c.Render("style/review", fiber.Map{
-			"Title":   "Review style",
-			"User":    u,
-			"ID":      id,
-			"Error":   "Comment can't be longer than 500 characters.",
-			"Rating":  r,
-			"Comment": cmt,
-		})
+		c.Locals("Error", "Comment can't be longer than 500 characters.")
+		return c.Status(fiber.StatusBadRequest).Render("review/create", fiber.Map{})
 	}
 
 	if r == 0 && len(cmt) == 0 {
-		return c.Render("style/review", fiber.Map{
-			"Title": "Invalid input",
-			"User":  u,
-			"ID":    id,
-			"Error": "You can't make empty reviews. Please insert a rating and/or a comment.",
-		})
+		c.Locals("Error", "You can't make empty reviews. Please insert a rating and/or a comment.")
+		return c.Status(fiber.StatusBadRequest).Render("review/create", fiber.Map{})
 	}
 
 	// Create review.
 	review := models.Review{
 		Rating:  r,
 		Comment: cmt,
-		StyleID: id,
+		StyleID: i,
 		UserID:  int(u.ID),
 	}
 
 	// Add review to database.
 	if err := review.CreateForStyle(); err != nil {
-		log.Warn.Printf("Failed to add review to style %v: %v\n", id, err)
-		return c.Render("err", fiber.Map{
-			"Title": "Failed to add your review",
-			"User":  u,
-		})
+		log.Warn.Printf("Failed to add review to style %d: %s\n", i, err)
+		c.Locals("Title", "Failed to add your review")
+		return c.Render("err", fiber.Map{})
 	}
 
-	if err = review.FindLastForStyle(id, u.ID); err != nil {
-		log.Warn.Printf("Failed to get review for style %v from user %v: %v\n", id, u.ID, err)
+	if err = review.FindLastForStyle(i, u.ID); err != nil {
+		log.Warn.Printf("Failed to get review for style %d from user %d: %s\n", i, u.ID, err)
 	} else {
 		// Create a notification.
 		notification := models.Notification{
 			Seen:     false,
 			Kind:     models.KindReview,
-			TargetID: int(style.UserID),
+			TargetID: int(s.UserID),
 			UserID:   int(u.ID),
-			StyleID:  id,
+			StyleID:  i,
 			ReviewID: int(review.ID),
 		}
 
-		go func(notification models.Notification) {
-			if err := notification.Create(); err != nil {
-				log.Warn.Printf("Failed to create a notification for review %d: %v\n", review.ID, err)
-			}
-		}(notification)
+		if err := notification.Create(); err != nil {
+			log.Warn.Printf("Failed to create a notification for review %d: %v\n", review.ID, err)
+		}
 	}
 
-	return c.Redirect(fmt.Sprintf("/style/%d", id), fiber.StatusSeeOther)
+	return c.Redirect(fmt.Sprintf("/style/%d", i), fiber.StatusSeeOther)
 }

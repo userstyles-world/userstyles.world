@@ -17,6 +17,7 @@ import (
 	"userstyles.world/handlers/core"
 	jwtware "userstyles.world/handlers/jwt"
 	oauthprovider "userstyles.world/handlers/oauthProvider"
+	"userstyles.world/handlers/review"
 	"userstyles.world/handlers/style"
 	"userstyles.world/handlers/user"
 	"userstyles.world/modules/cache"
@@ -79,6 +80,7 @@ func main() {
 	core.Routes(app)
 	user.Routes(app)
 	style.Routes(app)
+	review.Routes(app)
 	api.Routes(app)
 	oauthprovider.Routes(app)
 
