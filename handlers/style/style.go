@@ -25,12 +25,6 @@ func Routes(app *fiber.App) {
 	r.Get("/styles/promote/:id", jwtware.Protected, Promote)
 	r.Get("/styles/ban/:id", jwtware.Protected, BanGet)
 	r.Post("/styles/ban/:id", jwtware.Protected, BanPost)
-	r.Get("/styles/review/:id", jwtware.Protected, ReviewGet)
-	r.Post("/styles/review/:id", jwtware.Protected, ReviewPost)
-	r.Get("/styles/review/edit/:id", jwtware.Protected, EditReviewGet)
-	r.Post("/styles/review/edit/:id", jwtware.Protected, EditReviewPost)
-	r.Get("/styles/review/delete/:id", jwtware.Protected, DeleteReviewGet)
-	r.Post("/styles/review/delete/:id", jwtware.Protected, DeleteReviewPost)
 	r.Static("/preview", config.PublicDir, fiber.Static{
 		MaxAge: 2678400, // 1 month
 	})
