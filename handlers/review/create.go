@@ -16,14 +16,13 @@ func createPage(c *fiber.Ctx) error {
 	c.Locals("User", u)
 	c.Locals("Title", "Review style")
 
-	i, err := c.ParamsInt("id")
+	i, err := c.ParamsInt("s")
 	if err != nil || i < 1 {
 		c.Locals("Title", "Invalid style ID")
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
-	c.Locals("ID", i)
 
-	s, err := models.GetStyleByID(c.Params("id"))
+	s, err := models.GetStyleByID(c.Params("s"))
 	if err != nil {
 		c.Locals("Title", "Style not found")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
@@ -51,13 +50,13 @@ func createForm(c *fiber.Ctx) error {
 	c.Locals("User", u)
 	c.Locals("Title", "Review style")
 
-	i, err := c.ParamsInt("id")
+	i, err := c.ParamsInt("s")
 	if err != nil || i < 1 {
 		c.Locals("Title", "Invalid style ID")
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 
-	s, err := models.GetStyleByID(c.Params("id"))
+	s, err := models.GetStyleByID(c.Params("s"))
 	if err != nil {
 		c.Locals("Title", "Style not found")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
