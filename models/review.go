@@ -42,12 +42,8 @@ func (Review) FindAllForStyle(id any) (q []Review, err error) {
 	return q, nil
 }
 
-func (r Review) CreateForStyle() error {
-	return db().Create(&r).Error
-}
-
-func (r *Review) FindLastForStyle(styleID, userID any) error {
-	return db().Last(&r, "style_id = ? and user_id = ?", styleID, userID).Error
+func (r *Review) CreateForStyle() error {
+	return db().Create(r).Error
 }
 
 func (r *Review) FindLastFromUser(styleID, userID any) error {

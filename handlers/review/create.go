@@ -92,23 +92,17 @@ func createForm(c *fiber.Ctx) error {
 		return c.Render("err", fiber.Map{})
 	}
 
-	err = r.FindLastForStyle(i, u.ID)
-	if err != nil {
-		log.Warn.Printf("Failed to get review for style %d from user %d: %s\n", i, u.ID, err)
-	} else {
-		// Create a notification.
-		notification := models.Notification{
-			Seen:     false,
-			Kind:     models.KindReview,
-			TargetID: int(s.UserID),
-			UserID:   int(u.ID),
-			StyleID:  i,
-			ReviewID: int(r.ID),
-		}
+	// Create a notification.
+	notification := models.Notification{
+		Kind:     models.KindReview,
+		TargetID: int(s.UserID),
+		UserID:   int(u.ID),
+		StyleID:  i,
+		ReviewID: int(r.ID),
+	}
 
-		if err := notification.Create(); err != nil {
-			log.Warn.Printf("Failed to create a notification for review %d: %v\n", r.ID, err)
-		}
+	if err = notification.Create(); err != nil {
+		log.Warn.Printf("Failed to add notification to review %d: %s\n", r.ID, err)
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", i), fiber.StatusSeeOther)
