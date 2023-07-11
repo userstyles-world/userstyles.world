@@ -21,10 +21,11 @@ func sendPromotionEmail(style *models.APIStyle, user *models.User, mod string) {
 	}
 
 	args := fiber.Map{
-		"User":    user,
-		"Style":   style,
-		"ModName": mod,
-		"ModLink": config.BaseURL + "/user/" + mod,
+		"User":      user,
+		"Style":     style,
+		"StyleLink": config.BaseURL + "/style/" + strconv.Itoa(int(style.ID)),
+		"ModName":   mod,
+		"ModLink":   config.BaseURL + "/user/" + mod,
 	}
 
 	title := "Your style has been featured"
