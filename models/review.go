@@ -2,10 +2,13 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
 	"gorm.io/gorm"
+
+	"userstyles.world/modules/database"
 )
 
 var (
@@ -67,6 +70,22 @@ func (r *Review) Validate() error {
 	default:
 		return nil
 	}
+}
+
+// Permalink returns a link to the review page.
+func (r *Review) Permalink() string {
+	return fmt.Sprintf("/styles/%d/reviews/%d", r.StyleID, r.ID)
+}
+
+// GetReview returns a specific review, or an error if the review doesn't exist.
+func GetReview(id int) (*Review, error) {
+	var r Review
+	err := database.Conn.Preload("User").First(&r, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &r, nil
 }
 
 // NewReview is a helper for creating a new review.

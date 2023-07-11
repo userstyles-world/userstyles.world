@@ -1,7 +1,6 @@
 package review
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -104,5 +103,5 @@ func createForm(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to add notification to review %d: %s\n", r.ID, err)
 	}
 
-	return c.Redirect(fmt.Sprintf("/style/%d", i), fiber.StatusSeeOther)
+	return c.Redirect(r.Permalink(), fiber.StatusSeeOther)
 }

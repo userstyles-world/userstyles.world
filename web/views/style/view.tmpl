@@ -236,6 +236,7 @@
 						{{ .CreatedAt | rel }}
 					</time>
 				</a>
+				<a href="{{ .Permalink }}">Permalink</a>
 				{{ if or (eq .UserID $.User.ID) (gt $.User.Role 0) }}
 					<!--<div>-->
 						<a class="ml:a" href="/styles/review/delete/{{ .ID }}">

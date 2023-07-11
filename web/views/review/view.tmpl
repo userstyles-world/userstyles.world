@@ -1,0 +1,28 @@
+<div class="Box mt:m" id="id-{{ .Review.ID }}">
+	<div class="Box-header"> <!--flex-->
+		<a class="username" href="/user/{{ .Review.User.Username }}"><b>{{ .Review.User.Username }}</b></a>
+		{{ if gt .Review.User.Role 0 }}
+			{{ template "icons/verified" }}
+		{{ end }}
+		reviewed {{ with .Review.Rating }} and rated {{ . }}/5 ⭐ {{ end }}
+		<time datetime="{{ .Review.CreatedAt | iso }}">
+			{{ .Review.CreatedAt | rel }}
+		</time>
+		{{ if or (eq .UserID $.User.ID) (gt $.User.Role 0) }}
+			<!--<div>-->
+				<a class="ml:a" href="/styles/review/{{ .ID }}/delete">
+					Delete
+				</a>
+				{{ if (eq .UserID $.User.ID) }}
+					<a href="/styles/review/{{ .ID }}/update">
+						Edit
+					</a>
+				{{ end }}
+			<!--</div>-->
+		{{ end }}
+	</div>
+
+	{{ with .Review.Comment }}
+		<div class="Box-body mt:m">{{ . }}</div>
+	{{ end }}
+</div>
