@@ -2,7 +2,6 @@ package review
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -57,7 +56,6 @@ func createForm(c *fiber.Ctx) error {
 		c.Locals("Title", "Invalid style ID")
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
-	c.Locals("ID", i)
 
 	s, err := models.GetStyleByID(c.Params("id"))
 	if err != nil {
@@ -79,49 +77,23 @@ func createForm(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusTooManyRequests).Render("err", fiber.Map{})
 	}
 
-	r, err := strconv.Atoi(c.FormValue("rating"))
-	if err != nil {
-		c.Locals("Error", "Rating should be a number")
+	r := models.NewReview(u.ID, s.ID, c.FormValue("rating"), c.FormValue("comment"))
+	c.Locals("Review", r)
+
+	if err = r.Validate(); err != nil {
+		c.Locals("Error", strings.ToTitle(err.Error()[:1])+err.Error()[1:]+".")
 		return c.Render("review/create", fiber.Map{})
-	}
-	c.Locals("Rating", r)
-
-	cmt := strings.TrimSpace(c.FormValue("comment"))
-	c.Locals("Comment", cmt)
-
-	// Check if rating is out of range.
-	if r < 0 || r > 5 {
-		c.Locals("Error", "Rating is out of range.")
-		return c.Status(fiber.StatusBadRequest).Render("review/create", fiber.Map{})
-	}
-
-	// Prevent spam.
-	if len(cmt) > 500 {
-		c.Locals("Error", "Comment can't be longer than 500 characters.")
-		return c.Status(fiber.StatusBadRequest).Render("review/create", fiber.Map{})
-	}
-
-	if r == 0 && len(cmt) == 0 {
-		c.Locals("Error", "You can't make empty reviews. Please insert a rating and/or a comment.")
-		return c.Status(fiber.StatusBadRequest).Render("review/create", fiber.Map{})
-	}
-
-	// Create review.
-	review := models.Review{
-		Rating:  r,
-		Comment: cmt,
-		StyleID: i,
-		UserID:  int(u.ID),
 	}
 
 	// Add review to database.
-	if err := review.CreateForStyle(); err != nil {
+	if err = r.CreateForStyle(); err != nil {
 		log.Warn.Printf("Failed to add review to style %d: %s\n", i, err)
 		c.Locals("Title", "Failed to add your review")
 		return c.Render("err", fiber.Map{})
 	}
 
-	if err = review.FindLastForStyle(i, u.ID); err != nil {
+	err = r.FindLastForStyle(i, u.ID)
+	if err != nil {
 		log.Warn.Printf("Failed to get review for style %d from user %d: %s\n", i, u.ID, err)
 	} else {
 		// Create a notification.
@@ -131,11 +103,11 @@ func createForm(c *fiber.Ctx) error {
 			TargetID: int(s.UserID),
 			UserID:   int(u.ID),
 			StyleID:  i,
-			ReviewID: int(review.ID),
+			ReviewID: int(r.ID),
 		}
 
 		if err := notification.Create(); err != nil {
-			log.Warn.Printf("Failed to create a notification for review %d: %v\n", review.ID, err)
+			log.Warn.Printf("Failed to create a notification for review %d: %v\n", r.ID, err)
 		}
 	}
 
