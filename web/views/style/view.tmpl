@@ -243,7 +243,7 @@
 							Delete
 						</a>
 						{{ if (eq .UserID $.User.ID) }}
-							<a href="/styles/review/edit/{{ .ID }}">
+							<a href="{{ .Permalink }}/edit">
 								Edit
 							</a>
 						{{ end }}

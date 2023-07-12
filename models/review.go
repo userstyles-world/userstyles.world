@@ -77,10 +77,31 @@ func (r *Review) Permalink() string {
 	return fmt.Sprintf("/styles/%d/reviews/%d", r.StyleID, r.ID)
 }
 
+// UpdateFromUser updates review from a specific user.
+func (r *Review) UpdateFromUser(id uint) error {
+	return database.Conn.
+		Select("rating", "comment").
+		Where("id = ? AND user_id = ?", r.ID, id).
+		Updates(r).
+		Error
+}
+
 // GetReview returns a specific review, or an error if the review doesn't exist.
 func GetReview(id int) (*Review, error) {
 	var r Review
 	err := database.Conn.Preload("User").First(&r, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &r, nil
+}
+
+// GetReviewFromUser returns a specific review from a user, or an error if the
+// review doesn't exist.
+func GetReviewFromUser(id, uid int) (*Review, error) {
+	var r Review
+	err := database.Conn.First(&r, "id = ? AND user_id = ?", id, uid).Error
 	if err != nil {
 		return nil, err
 	}
@@ -98,6 +119,22 @@ func NewReview(uid, sid uint, rating, comment string) *Review {
 	return &Review{
 		UserID:  uid,
 		StyleID: sid,
+		Comment: strings.TrimSpace(comment),
+		Rating:  i,
+	}
+}
+
+// NewReviewUpdate is a helper for updating a review.
+func NewReviewUpdate(uid, sid, rid uint, rating, comment string) *Review {
+	i, err := strconv.Atoi(rating)
+	if err != nil {
+		i = -1
+	}
+
+	return &Review{
+		UserID:  uid,
+		StyleID: sid,
+		Model:   gorm.Model{ID: rid},
 		Comment: strings.TrimSpace(comment),
 		Rating:  i,
 	}

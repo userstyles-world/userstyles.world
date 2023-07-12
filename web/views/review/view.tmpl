@@ -13,8 +13,8 @@
 				<a class="ml:a" href="/styles/review/{{ .ID }}/delete">
 					Delete
 				</a>
-				{{ if (eq .UserID $.User.ID) }}
-					<a href="/styles/review/{{ .ID }}/update">
+				{{ if (eq .Review.UserID $.User.ID) }}
+					<a href="{{ .Review.Permalink }}/edit">
 						Edit
 					</a>
 				{{ end }}
