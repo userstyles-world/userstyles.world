@@ -236,6 +236,11 @@
 						{{ .CreatedAt | rel }}
 					</time>
 				</a>
+				{{ if ne .CreatedAt .UpdatedAt }}
+					<time datetime="{{ .UpdatedAt | iso }}">
+						(edited {{ .UpdatedAt | rel }})
+					</time>
+				{{ end }}
 				<a href="{{ .Permalink }}">Permalink</a>
 				{{ if or (eq .UserID $.User.ID) (gt $.User.Role 0) }}
 					<!--<div>-->

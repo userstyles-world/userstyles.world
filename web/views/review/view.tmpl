@@ -8,7 +8,12 @@
 		<time datetime="{{ .Review.CreatedAt | iso }}">
 			{{ .Review.CreatedAt | rel }}
 		</time>
-		{{ if or (eq .UserID $.User.ID) (gt $.User.Role 0) }}
+		{{ if ne .Review.CreatedAt .Review.UpdatedAt }}
+			<time datetime="{{ .Review.UpdatedAt | iso }}">
+				(edited {{ .Review.UpdatedAt | rel }})
+			</time>
+		{{ end }}
+		{{ if eq .Review.UserID $.User.ID }}
 			<!--<div>-->
 				<a class="ml:a" href="{{ .Review.Permalink }}/delete">
 					Delete

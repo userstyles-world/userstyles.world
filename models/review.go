@@ -77,11 +77,11 @@ func (r *Review) Permalink() string {
 	return fmt.Sprintf("/styles/%d/reviews/%d", r.StyleID, r.ID)
 }
 
-// UpdateFromUser updates review from a specific user.
-func (r *Review) UpdateFromUser(id uint) error {
+// UpdateFromUser updates a review from its author.
+func (r *Review) UpdateFromUser() error {
 	return database.Conn.
-		Select("rating", "comment").
-		Where("id = ? AND user_id = ?", r.ID, id).
+		Select("updated_at", "rating", "comment").
+		Where("id = ? AND user_id = ?", r.ID, r.UserID).
 		Updates(r).
 		Error
 }

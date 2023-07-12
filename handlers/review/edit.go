@@ -62,7 +62,7 @@ func editForm(c *fiber.Ctx) error {
 		return c.Render("review/create", fiber.Map{})
 	}
 
-	if err = r.UpdateFromUser(u.ID); err != nil {
+	if err = r.UpdateFromUser(); err != nil {
 		c.Locals("Title", "Failed to update your review")
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
 	}
