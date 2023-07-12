@@ -10,7 +10,7 @@
 		</time>
 		{{ if or (eq .UserID $.User.ID) (gt $.User.Role 0) }}
 			<!--<div>-->
-				<a class="ml:a" href="/styles/review/{{ .ID }}/delete">
+				<a class="ml:a" href="{{ .Review.Permalink }}/delete">
 					Delete
 				</a>
 				{{ if (eq .Review.UserID $.User.ID) }}

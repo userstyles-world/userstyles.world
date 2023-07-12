@@ -109,6 +109,14 @@ func GetReviewFromUser(id, uid int) (*Review, error) {
 	return &r, nil
 }
 
+// DeleteReviewFromUser deletes a review from user, otherwise returns an error.
+func DeleteReviewFromUser(id, uid int) error {
+	return database.Conn.
+		Where("id = ? AND user_id = ?", id, uid).
+		Delete(&Review{}).
+		Error
+}
+
 // NewReview is a helper for creating a new review.
 func NewReview(uid, sid uint, rating, comment string) *Review {
 	i, err := strconv.Atoi(rating)
