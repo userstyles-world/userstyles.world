@@ -1,6 +1,6 @@
 <section>
     <h1>{{ .Title }}</h1>
-	<a href="/style/{{ .Review.StyleID }}">Go back to userstyle page</a>
+	<a href="/style/{{ .Review.StyleID }}">Go back to the userstyle page</a>
 </section>
 
 <style type="text/css">
@@ -36,7 +36,7 @@
 
 			<div class="right iflex ml:a">
 				<a class="iflex ai:c" href="{{ .Review.Permalink }}">
-					{{ template "icons/link" }} Permalink
+					{{ template "icons/link" }} Link
 				</a>
 				{{ if eq .Review.UserID $.User.ID }}
 					<a class="iflex ai:c" href="{{ .Review.Permalink }}/edit">
