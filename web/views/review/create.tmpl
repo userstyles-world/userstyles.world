@@ -1,7 +1,3 @@
-<style type="text/css" media="screen">
-	textarea { min-height: 120px }
-</style>
-
 <section class="ta:c">
 	<h1>{{ .Title }}</h1>
 	<p>Your review will be publicly visible.</p>
@@ -20,7 +16,7 @@
 			min="0"
 			max="5"
 			inputmode="numeric"
-			value="{{ .Rating }}"
+			value="{{ .Review.Rating }}"
 			aria-describedby="rating-hint"
 			placeholder="Choose a rating on a scale from 0 to 5">
 
@@ -30,12 +26,14 @@
 			type="text"
 			name="comment"
 			id="comment"
+			maxlength="500"
+			style="min-height: 120px"
 			aria-describedby="comment-hint"
-		>{{ .Comment }}</textarea>
+		>{{ .Review.Comment }}</textarea>
 
 		<div class="mt:m">
 			<button class="btn primary mr:s" type="submit">Confirm</button>
-			<a class="fg:1" href="/style/{{ .ID }}">Cancel</a>
+			<a class="fg:1" href="/style/{{ .Review.ID }}">Cancel</a>
 		</div>
 	</form>
 </section>
