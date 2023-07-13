@@ -8,11 +8,10 @@ import (
 
 // Routes provides routes for Fiber's router.
 func Routes(app *fiber.App) {
-	r := app.Group("/styles/:s/reviews", jwt.Protected)
-	r.Get("/create", createPage)
-	r.Post("/create", createForm)
+	r := app.Group("/styles/:s/reviews")
+	r.Get("/create", jwt.Protected, createPage)
+	r.Post("/create", jwt.Protected, createForm)
 
-	r = nil // Clear previous sub-router.
 	r = app.Group("/styles/:s/reviews/:r")
 	r.Get("/", viewPage)
 	r.Use(jwt.Protected)
