@@ -11,9 +11,13 @@ func Routes(app *fiber.App) {
 	r := app.Group("/styles/:s/reviews", jwt.Protected)
 	r.Get("/create", createPage)
 	r.Post("/create", createForm)
-	r.Get("/:r", viewPage)
-	r.Get("/:r/edit", editPage)
-	r.Post("/:r/edit", editForm)
-	r.Get("/:r/delete", deletePage)
-	r.Post("/:r/delete", deleteForm)
+
+	r = nil // Clear previous sub-router.
+	r = app.Group("/styles/:s/reviews/:r")
+	r.Get("/", viewPage)
+	r.Use(jwt.Protected)
+	r.Get("/edit", editPage)
+	r.Post("/edit", editForm)
+	r.Get("/delete", deletePage)
+	r.Post("/delete", deleteForm)
 }
