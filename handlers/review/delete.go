@@ -26,7 +26,12 @@ func deletePage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 
-	r, err := models.GetReviewFromUser(rid, int(u.ID))
+	if ok := models.MatchReviewUser(rid, int(u.ID)); !ok {
+		c.Locals("Title", "Can't delete another user's review")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	r, err := models.GetReview(rid)
 	if err != nil {
 		c.Locals("Title", "Failed to find review")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
@@ -51,6 +56,11 @@ func deleteForm(c *fiber.Ctx) error {
 	if err != nil || rid < 1 {
 		c.Locals("Title", "Invalid review ID")
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+	}
+
+	if ok := models.MatchReviewUser(rid, int(u.ID)); !ok {
+		c.Locals("Title", "Can't delete another user's review")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
 	}
 
 	if err = models.DeleteReviewFromUser(rid, int(u.ID)); err != nil {

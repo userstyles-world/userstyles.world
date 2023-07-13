@@ -97,24 +97,24 @@ func GetReview(id int) (*Review, error) {
 	return &r, nil
 }
 
-// GetReviewFromUser returns a specific review from a user, or an error if the
-// review doesn't exist.
-func GetReviewFromUser(id, uid int) (*Review, error) {
-	var r Review
-	err := database.Conn.First(&r, "id = ? AND user_id = ?", id, uid).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return &r, nil
-}
-
 // DeleteReviewFromUser deletes a review from user, otherwise returns an error.
 func DeleteReviewFromUser(id, uid int) error {
 	return database.Conn.
 		Where("id = ? AND user_id = ?", id, uid).
 		Delete(&Review{}).
 		Error
+}
+
+// MatchReviewUser returns whether or not current user matches review's user.
+func MatchReviewUser(id, uid int) bool {
+	var i int64
+	err := database.Conn.Debug().
+		Model(modelReview).
+		Where("id = ? AND user_id = ?", id, uid).
+		Count(&i).
+		Error
+
+	return err == nil && i > 0
 }
 
 // NewReview is a helper for creating a new review.
