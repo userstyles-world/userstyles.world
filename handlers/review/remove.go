@@ -9,7 +9,10 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/email"
+	"userstyles.world/modules/log"
 )
 
 func removePage(c *fiber.Ctx) error {
@@ -78,12 +81,35 @@ func removeForm(c *fiber.Ctx) error {
 		TargetUserName: r.User.Username,
 		TargetData:     strconv.Itoa(int(r.ID)),
 		Reason:         strings.TrimSpace(c.FormValue("reason")),
+		Message:        strings.TrimSpace(c.FormValue("message")),
 		Censor:         c.FormValue("censor") == "on",
 	}
 
 	if err = database.Conn.Create(&l).Error; err != nil {
 		c.Locals("Title", "Failed to add mod log entry")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
+	}
+
+	n := models.Notification{
+		Kind:     models.KindRemovedReview,
+		TargetID: int(r.UserID),
+		UserID:   int(u.ID),
+		StyleID:  sid,
+	}
+	if err = n.Create(); err != nil {
+		c.Locals("Title", "Failed to add notification")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
+	}
+
+	args := fiber.Map{
+		"User": r.User,
+		"Log":  l,
+		"Link": config.BaseURL + "/modlog#id-" + strconv.Itoa(int(l.ID)),
+	}
+
+	title := "Your review has been removed"
+	if err := email.Send("review/remove", r.User.Email, title, args); err != nil {
+		log.Warn.Printf("Failed to email author for review %d: %s\n", rid, err)
 	}
 
 	return c.Redirect(fmt.Sprintf("/style/%d", sid), fiber.StatusSeeOther)

@@ -14,6 +14,12 @@
 			type="text" name="reason"
 			placeholder="Your reason to remove this review">
 
+		<label for="message">Private message for the author</label>
+		<i class="fg:3">For example, a hint about was done wrong and what can be done now. Will be included in the email.</i>
+		<textarea
+			type="text" name="message" maxlength="5000"
+			placeholder="Your message to the author of this review"></textarea>
+
 		<div class="checkbox flex">
 			<input type="checkbox" name="censor" id="censor">
 			{{ template "partials/checkboxes" }}

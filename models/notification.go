@@ -10,6 +10,7 @@ const (
 	KindReview Kind = iota
 	KindStylePromotion
 	KindBannedStyle
+	KindRemovedReview
 )
 
 type Notification struct {
