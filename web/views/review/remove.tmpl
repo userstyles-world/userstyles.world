@@ -1,0 +1,29 @@
+<section class="ta:c">
+	<h1>{{ .Title }}</h1>
+	<p>This action is irreversible.</p>
+</section>
+
+<section class="limit">
+	<form class="form-wrapper" method="post">
+		<label class="mb:m f:b">Are you sure you want to remove this review?</label>
+
+		<label for="reason">Reason for removal</label>
+		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
+		<input
+			required
+			type="text" name="reason"
+			placeholder="Your reason to remove this review">
+
+		<div class="checkbox flex">
+			<input type="checkbox" name="censor" id="censor">
+			{{ template "partials/checkboxes" }}
+			<label class="ml:s" for="censor">Censor review's information</label>
+		</div>
+		<i class="fg:3">This will censor the review's information with a spoiler, use this if the review is inappropriate.</i>
+
+		<div class="mt:m">
+			<button class="btn primary mr:s" type="submit">Confirm</button>
+			<a class="fg:1" href="{{ .Review.Permalink }}">Cancel</a>
+		</div>
+	</form>
+</section>

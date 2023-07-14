@@ -99,10 +99,19 @@ func GetReview(id int) (*Review, error) {
 
 // DeleteReviewFromUser deletes a review from user, otherwise returns an error.
 func DeleteReviewFromUser(id, uid int) error {
-	return database.Conn.
-		Where("id = ? AND user_id = ?", id, uid).
-		Delete(&Review{}).
-		Error
+	return database.Conn.Transaction(func(tx *gorm.DB) error {
+		err := tx.Where("id = ? AND user_id = ?", id, uid).Delete(&Review{}).Error
+		if err != nil {
+			return err
+		}
+
+		err = tx.Where("id = ?", id).Delete(&Notification{}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 // MatchReviewUser returns whether or not current user matches review's user.

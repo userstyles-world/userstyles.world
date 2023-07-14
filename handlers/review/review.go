@@ -19,4 +19,6 @@ func Routes(app *fiber.App) {
 	r.Post("/edit", editForm)
 	r.Get("/delete", deletePage)
 	r.Post("/delete", deleteForm)
+	r.Get("/remove", removePage)
+	r.Post("/remove", removeForm)
 }
