@@ -105,7 +105,7 @@ func DeleteReviewFromUser(id, uid int) error {
 			return err
 		}
 
-		err = tx.Where("id = ?", id).Delete(&Notification{}).Error
+		err = tx.Where("review_id = ?", id).Delete(&Notification{}).Error
 		if err != nil {
 			return err
 		}
