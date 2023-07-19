@@ -2,11 +2,13 @@ package review
 
 import (
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 )
 
 func editPage(c *fiber.Ctx) error {
@@ -77,5 +79,8 @@ func editForm(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
 	}
 
-	return c.Redirect(r.Permalink(), fiber.StatusSeeOther)
+	a := models.NewSuccessAlert("Review has been updated.")
+	cache.Store.Add("alert "+u.Username, a, time.Minute)
+
+	return c.Redirect(r.Permalink())
 }

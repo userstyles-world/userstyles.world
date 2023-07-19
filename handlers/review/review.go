@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
+	"userstyles.world/handlers/middleware"
 )
 
 // Routes provides routes for Fiber's router.
@@ -12,7 +13,7 @@ func Routes(app *fiber.App) {
 	r.Get("/create", jwt.Protected, createPage)
 	r.Post("/create", jwt.Protected, createForm)
 
-	r = app.Group("/styles/:s/reviews/:r")
+	r = app.Group("/styles/:s/reviews/:r", middleware.Alert)
 	r.Get("/", viewPage)
 	r.Use(jwt.Protected)
 	r.Get("/edit", editPage)
