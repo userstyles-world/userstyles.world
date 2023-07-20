@@ -3,6 +3,8 @@
 {{ end }}
 
 <section id="preview">
+	{{ template "partials/alert" . }}
+
 	<h1 class="mb:m">{{ .Style.Name }}
 		<span class="fg:4"> by {{ .Style.Username }}</span>
 	</h1>
@@ -113,7 +115,7 @@
 				{{ if .CanReview }}
 					target="_blank"
 					rel="noopener"
-					href="/styles/{{ $.Style.ID }}/reviews/create"
+					href="/styles/{{ .Style.ID }}-{{ .Slug }}/reviews/create"
 				{{ else }}
 					disabled
 					data-tooltip="{{ .CantReviewReason }}"
@@ -227,7 +229,7 @@
 <section id="reviews">
 	<h2 class="td:d">Reviews</h2>
 	{{ if and (.User.ID) (ne .Style.UserID .User.ID) }}
-		<a href="/styles/{{ $.Style.ID }}/reviews/create">Add your review</a>
+		<a href="/styles/{{ .Style.ID }}-{{ .Slug }}/reviews/create">Add your review</a>
 	{{ end }}
 
 	{{ range .Reviews }}

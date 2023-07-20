@@ -7,8 +7,10 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/util"
 )
 
 var (
@@ -29,10 +31,9 @@ type Review struct {
 	StyleID uint
 }
 
-func (Review) FindAllForStyle(id any) (q []Review, err error) {
+func FindAllForStyle(id any) (q []Review, err error) {
 	err = db().
-		// Preload(clause.Associations).
-		Preload("User").
+		Preload(clause.Associations).
 		Model(modelReview).
 		Order("id DESC").
 		Find(&q, "style_id = ? ", id).
@@ -74,7 +75,8 @@ func (r *Review) Validate() error {
 
 // Permalink returns a link to the review page.
 func (r *Review) Permalink() string {
-	return fmt.Sprintf("/styles/%d/reviews/%d", r.StyleID, r.ID)
+	slug := util.Slug(r.Style.Name)
+	return fmt.Sprintf("/styles/%d-%s/reviews/%d", r.StyleID, slug, r.ID)
 }
 
 // UpdateFromUser updates a review from its author.
@@ -89,7 +91,7 @@ func (r *Review) UpdateFromUser() error {
 // GetReview returns a specific review, or an error if the review doesn't exist.
 func GetReview(id int) (*Review, error) {
 	var r Review
-	err := database.Conn.Preload("User").First(&r, "id = ?", id).Error
+	err := database.Conn.Preload(clause.Associations).First(&r, "id = ?", id).Error
 	if err != nil {
 		return nil, err
 	}

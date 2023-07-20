@@ -2,11 +2,13 @@ package review
 
 import (
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/log"
 )
 
@@ -103,5 +105,8 @@ func createForm(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to add notification to review %d: %s\n", r.ID, err)
 	}
 
-	return c.Redirect(r.Permalink(), fiber.StatusSeeOther)
+	a := models.NewSuccessAlert("Review has been created.")
+	cache.Store.Add("alert "+u.Username, a, time.Minute)
+
+	return c.Redirect(r.Permalink())
 }

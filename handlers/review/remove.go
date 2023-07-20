@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
@@ -112,5 +114,8 @@ func removeForm(c *fiber.Ctx) error {
 		log.Warn.Printf("Failed to email author for review %d: %s\n", rid, err)
 	}
 
-	return c.Redirect(fmt.Sprintf("/style/%d", sid), fiber.StatusSeeOther)
+	a := models.NewSuccessAlert("Review successfully removed.")
+	cache.Store.Add("alert "+u.Username, a, time.Minute)
+
+	return c.Redirect(fmt.Sprintf("/modlog#id-%d", l.ID))
 }

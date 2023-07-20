@@ -9,11 +9,11 @@ import (
 
 // Routes provides routes for Fiber's router.
 func Routes(app *fiber.App) {
-	r := app.Group("/styles/:s/reviews")
+	r := app.Group("/styles/:s-:slug/reviews")
 	r.Get("/create", jwt.Protected, createPage)
 	r.Post("/create", jwt.Protected, createForm)
 
-	r = app.Group("/styles/:s/reviews/:r", middleware.Alert)
+	r = app.Group("/styles/:s-:slug/reviews/:r", middleware.Alert)
 	r.Get("/", viewPage)
 	r.Use(jwt.Protected)
 	r.Get("/edit", editPage)

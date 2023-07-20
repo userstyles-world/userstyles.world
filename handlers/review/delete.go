@@ -2,11 +2,13 @@ package review
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/cache"
 )
 
 func deletePage(c *fiber.Ctx) error {
@@ -68,5 +70,8 @@ func deleteForm(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
-	return c.Redirect(fmt.Sprintf("/style/%d", sid), fiber.StatusSeeOther)
+	a := models.NewSuccessAlert("Review successfully deleted.")
+	cache.Store.Add("alert "+u.Username, a, time.Minute)
+
+	return c.Redirect(fmt.Sprintf("/style/%d/%s", sid, c.Params("slug")))
 }
