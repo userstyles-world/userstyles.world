@@ -28,9 +28,18 @@ func GetModLog(c *fiber.Ctx) error {
 		})
 	}
 
+	reviews, err := models.GetLogOfKind(models.LogRemoveReview)
+	if err != nil {
+		return c.Render("err", fiber.Map{
+			"Title": "Internal Server error",
+			"User":  u,
+		})
+	}
+
 	return c.Render("core/modlog", fiber.Map{
 		"BannedUsers":   bannedUsers,
 		"RemovedStyles": removedStyles,
+		"Reviews":       reviews,
 		"User":          u,
 		"Title":         "Moderation Log",
 		"Canonical":     "modlog",

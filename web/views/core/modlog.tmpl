@@ -63,3 +63,33 @@
 		</tbody>
 	</table>
 </section>
+
+<section id="styles" class="u-TableScrollX">
+	<h2 class="td:d">Removed reviews</h2>
+	<p class="fg:3 mb:m">{{ len .Reviews }} removed reviews in total.</p>
+
+	<table>
+		<thead>
+			<th>Moderator</th>
+			<th class="u-TableNum">Date and time</th>
+			<th>Removed review</th>
+			<th>Owner of removed review</th>
+			<th>Reason</th>
+		</thead>
+		<tbody>
+			{{ range .Reviews }}
+				<tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
+					<td><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
+					<td class="u-TableMin">
+						<a href="#id-{{ .ID }}">
+							<time datetime="{{ .CreatedAt | iso }}">{{ .CreatedAt | rel }}</time>
+						</a>
+					</td>
+					<td class="u-Truncate">{{ .TargetData }}</td>
+					<td><a href="/user/{{ .TargetUserName }}">{{ .TargetUserName }}</a></td>
+					<td class="u-Truncate M">{{ .Reason }}</td>
+				</tr>
+			{{ end }}
+		</tbody>
+	</table>
+</section>
