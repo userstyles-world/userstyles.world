@@ -8,13 +8,16 @@ import (
 
 type History struct {
 	gorm.Model
-	StyleID       uint `gorm:"index"`
-	DailyViews    int64
-	DailyInstalls int64
-	DailyUpdates  int64
-	TotalViews    int64
-	TotalInstalls int64
-	TotalUpdates  int64
+	StyleID        uint `gorm:"index"`
+	DailyViews     int64
+	DailyInstalls  int64
+	DailyUpdates   int64
+	WeeklyViews    int64
+	WeeklyInstalls int64
+	WeeklyUpdates  int64
+	TotalViews     int64
+	TotalInstalls  int64
+	TotalUpdates   int64
 }
 
 func GetStyleHistory(id string) (h []History, err error) {

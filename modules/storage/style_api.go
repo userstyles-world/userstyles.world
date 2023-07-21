@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	selectWeeklyInstalls = "(SELECT COUNT(*) FROM stats s WHERE s.style_id = styles.id AND s.install > DATETIME('now', '-7 days') AND s.created_at > DATETIME('now', '-7 days')) AS WeeklyInstalls"
+	selectTotalInstalls  = "(SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS TotalInstalls"
+	selectWeeklyInstalls = "(SELECT weekly_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS WeeklyInstalls"
 	selectUSoRatings     = "(SELECT ROUND(AVG(rating)*0.6, 1) FROM reviews r WHERE r.style_id = styles.id AND rating > 0 AND r.deleted_at IS NULL) AS Rating"
 )
 
@@ -19,7 +20,7 @@ var (
 	selectCompactIndex = strings.Join([]string{
 		"styles.id", "styles.name", "styles.preview", "styles.category",
 		"STRFTIME('%s', styles.updated_at) AS updated_at",
-		selectAuthor, selectInstalls, selectWeeklyInstalls, selectUSoRatings,
+		selectAuthor, selectTotalInstalls, selectWeeklyInstalls, selectUSoRatings,
 	}, ", ")
 )
 

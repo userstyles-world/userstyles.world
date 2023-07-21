@@ -120,6 +120,11 @@ func Initialize() {
 		log.Info.Fatal(err)
 	}
 
+	var h models.History
+	if err = database.Conn.Migrator().AutoMigrate(h); err != nil {
+		log.Info.Fatal(err)
+	}
+
 	if shouldSeed {
 		seed()
 	}
