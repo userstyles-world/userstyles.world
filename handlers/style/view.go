@@ -17,6 +17,14 @@ import (
 
 func GetStylePage(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
+			"Title": "Invalid style ID",
+			"User":  u,
+		})
+	}
 	id := c.Params("id")
 
 	// Check if style exists.
@@ -43,6 +51,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		"Title":      data.Name,
 		"Style":      data,
 		"URL":        c.BaseURL() + c.Path(),
+		"Slug":       slug,
 		"Canonical":  "style/" + id + "/" + slug,
 		"RenderMeta": true,
 	}
@@ -59,10 +68,10 @@ func GetStylePage(c *fiber.Ctx) error {
 			args["CanReview"] = false
 			args["CantReviewReason"] = "An account is required in order to review userstyles."
 		} else {
-			allowed, timeneeded := models.AbleToReview(u.ID, data.ID)
-			if !allowed {
+			dur, ok := models.AbleToReview(u.ID, data.ID)
+			if !ok {
 				args["CanReview"] = false
-				args["CantReviewReason"] = "You can review this style again in " + timeneeded
+				args["CantReviewReason"] = "You can review this style again in " + dur
 			} else {
 				args["CanReview"] = true
 			}
@@ -87,7 +96,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		args["TotalHistory"] = totalHistory
 	*/
 
-	reviews, err := new(models.Review).FindAllForStyle(id)
+	reviews, err := models.FindAllForStyle(id)
 	if err != nil {
 		log.Warn.Printf("Failed to get reviews for style %s: %v\n", id, err.Error())
 	}

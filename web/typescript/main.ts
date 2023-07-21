@@ -68,6 +68,10 @@ function pageSpecificFunctions(settings: UserSettings) {
         checkMaxLength();
     }
 
+    if (location.pathname.endsWith('/create') || location.pathname.endsWith('/edit')) {
+        checkMaxLength();
+    }
+
     if (location.pathname.startsWith('/search') || location.pathname.startsWith('/explore') || location.pathname.startsWith('/user/')) {
         form_sort();
     }

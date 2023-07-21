@@ -13,6 +13,7 @@ type LogKind = uint8
 const (
 	LogBanUser LogKind = iota + 1
 	LogRemoveStyle
+	LogRemoveReview
 )
 
 // Log struct has all the relavant information for a log entry.

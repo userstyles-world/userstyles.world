@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	jwtware "userstyles.world/handlers/jwt"
+	"userstyles.world/handlers/middleware"
 	"userstyles.world/modules/config"
 )
 
@@ -12,7 +13,7 @@ import (
 func Routes(app *fiber.App) {
 	r := app.Group("/")
 	r.Get("/explore", GetExplore)
-	r.Get("/style/:id/:name?", GetStylePage)
+	r.Get("/style/:id/:name?", middleware.Alert, GetStylePage)
 	r.Get("/add", jwtware.Protected, CreateGet)
 	r.Post("/add", jwtware.Protected, CreatePost)
 	r.Get("/delete/:id", jwtware.Protected, DeleteGet)
@@ -25,8 +26,6 @@ func Routes(app *fiber.App) {
 	r.Get("/styles/promote/:id", jwtware.Protected, Promote)
 	r.Get("/styles/ban/:id", jwtware.Protected, BanGet)
 	r.Post("/styles/ban/:id", jwtware.Protected, BanPost)
-	r.Get("/styles/review/:id", jwtware.Protected, ReviewGet)
-	r.Post("/styles/review/:id", jwtware.Protected, ReviewPost)
 	r.Static("/preview", config.PublicDir, fiber.Static{
 		MaxAge: 2678400, // 1 month
 	})

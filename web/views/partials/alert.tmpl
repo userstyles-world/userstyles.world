@@ -18,3 +18,20 @@
 		{{ end }}
 	</div>
 {{ end }}
+
+{{ if .alert.Success }}
+	<style type="text/css">
+		.success {
+			padding: 1rem;
+			margin-bottom: 1rem;
+			border-radius: var(--br-3);
+			text-align: center;
+			color: #69d05a;
+			border: 1px solid #32842680;
+			background-color: #3284261a;
+		}
+	</style>
+	<div role="status" class="success">
+		{{ .alert.Message }}
+	</div>
+{{ end }}

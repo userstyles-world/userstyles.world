@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	jwtware "userstyles.world/handlers/jwt"
+	"userstyles.world/handlers/middleware"
 )
 
 // Routes provides routes for Fiber's router.
@@ -14,7 +15,7 @@ func Routes(app *fiber.App) {
 	r.Get("/proxy", Proxy)
 	r.Get("/search", Search)
 	r.Get("/docs/*", GetDocs)
-	r.Get("/modlog", GetModLog)
+	r.Get("/modlog", middleware.Alert, GetModLog)
 	r.Get("/link/:site", GetLinkedSite)
 	r.Get("/security-policy", Redirect("/docs/security"))
 	r.Get("/sitemap.xml", GetSiteMap)

@@ -1,0 +1,63 @@
+<section>
+	{{ template "partials/alert" . }}
+
+    <h1>{{ .Title }}</h1>
+	<a href="/style/{{ .Review.StyleID }}">Go back to the userstyle page</a>
+</section>
+
+<style type="text/css">
+	.right { gap: 1rem }
+	.right a { color: var(--fg-2); gap: 0.4rem }
+	.right a:hover { color: var(--fg-1) }
+</style>
+
+<section class="mt:m">
+	<div class="Box">
+		<div class="Box-header flex">
+			<div class="left">
+				<a class="username" href="/user/{{ .Review.User.Username }}">
+					<b>{{ .Review.User.Username }}</b>
+				</a>
+				{{ if gt .Review.User.Role 0 }}
+					{{ template "icons/verified" }}
+				{{ end }}
+				{{ with .Review.Rating }}
+					rated {{ . }}/5 ⭐
+				{{ else }}
+					commented
+				{{ end }}
+				<time datetime="{{ .Review.CreatedAt | iso }}">
+					{{ .Review.CreatedAt | rel }}
+				</time>
+				{{ if ne .Review.CreatedAt .Review.UpdatedAt }}
+					<time datetime="{{ .Review.UpdatedAt | iso }}">
+						(edited {{ .Review.UpdatedAt | rel }})
+					</time>
+				{{ end }}
+			</div>
+
+			<div class="right iflex ml:a">
+				<a class="iflex ai:c" href="{{ .Review.Permalink }}">
+					{{ template "icons/link" }} Link
+				</a>
+				{{ if eq .Review.UserID $.User.ID }}
+					<a class="iflex ai:c" href="{{ .Review.Permalink }}/edit">
+						{{ template "icons/edit" }} Edit
+					</a>
+					<a class="iflex ai:c" href="{{ .Review.Permalink }}/delete">
+						{{ template "icons/trash" }} Delete
+					</a>
+				{{ end }}
+				{{ if gt $.User.Role 1 }}
+					<a class="iflex ai:c" href="{{ .Review.Permalink }}/remove">
+						{{ template "icons/ban" }} Remove
+					</a>
+				{{ end }}
+			</div>
+		</div>
+
+		{{ with .Review.Comment }}
+			<div class="Box-body mt:m">{{ . }}</div>
+		{{ end }}
+	</div>
+</section>

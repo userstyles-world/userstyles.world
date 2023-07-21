@@ -224,7 +224,7 @@ func (s *APIStyle) GetSourceCodeCRC32() string {
 	return fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
-func AbleToReview(uid, sid uint) (bool, string) {
+func AbleToReview(uid, sid uint) (string, bool) {
 	reviewSpam := new(Review)
 	// Collecting of the error is not needed.
 	// As we simply check "valid" data by checking if ID is a positive integer.
@@ -232,10 +232,10 @@ func AbleToReview(uid, sid uint) (bool, string) {
 		t := time.Now().Sub(reviewSpam.CreatedAt)
 		if t < 7*24*time.Hour {
 			t = -7*24*time.Hour + t
-			return false, util.RelDuration(t)
+			return util.RelDuration(t), false
 		}
 	}
-	return true, ""
+	return "", true
 }
 
 // GetStyleFromAuthor tries to fetch a userstyle made by logged in user.
