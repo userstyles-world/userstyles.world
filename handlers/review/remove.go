@@ -71,7 +71,7 @@ func removeForm(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
-	if err = models.DeleteReviewFromUser(int(r.ID), int(u.ID)); err != nil {
+	if err = models.DeleteReviewFromUser(int(r.ID), int(r.UserID)); err != nil {
 		c.Locals("Title", "Failed to delete review")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
