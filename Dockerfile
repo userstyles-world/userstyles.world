@@ -1,10 +1,11 @@
 FROM docker.io/library/golang:1.20.6-alpine3.18
 WORKDIR /src
-RUN apk add --no-cache build-base sassc vips-tools
+RUN apk add --no-cache build-base sassc
 COPY go.sum go.mod ./
 RUN  go mod download && go mod tidy
 COPY . /src
 RUN set -x \
+ && mkdir -p web/static/css \
  && for f in web/scss/*.scss; do sassc --style nested --sourcemap=inline -l "$f" "web/static/css/$(basename $f .scss).css";done \
  && go build -v -o bin/userstyles-fonts cmd/userstyles-fonts/main.go \
  && go build -v -o bin/userstyles-ts cmd/userstyles-ts/main.go \
