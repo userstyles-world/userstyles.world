@@ -269,7 +269,7 @@
 							{{ template "icons/trash" }} Delete
 						</a>
 					{{ end }}
-					{{ if gt $.User.Role 0 }}
+					{{ if $.User.IsModOrAdmin }}
 						<a class="iflex ai:c" href="{{ .Permalink }}/remove">
 							{{ template "icons/ban" }} Remove
 						</a>
