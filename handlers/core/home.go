@@ -34,6 +34,14 @@ func Home(c *fiber.Ctx) error {
 
 Styles:
 	featured, found := cache.Store.Get("featuredStyles")
+	updatedStyles, err := storage.FindStyleCardsPaginated(1, 40, "styles.updated_at DESC")
+	if err != nil {
+		//idk
+	}
+	addedStyles, err := storage.FindStyleCardsPaginated(1, 40, "styles.created_at DESC")
+	if err != nil {
+		//idk
+	}
 	if !found {
 		styles, err := storage.FindStyleCardsFeatured()
 		if err != nil {
@@ -50,9 +58,11 @@ Styles:
 	}
 
 	return c.Render("core/home", fiber.Map{
-		"Title":  "Website themes and skins",
-		"User":   u,
-		"Styles": featured,
+		"Title":         "Website themes and skins",
+		"User":          u,
+		"Styles":        featured,
+		"UpdatedStyles": updatedStyles,
+		"AddedStyles":   addedStyles,
 		// "Stats":  stats,
 	})
 }
