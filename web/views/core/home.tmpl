@@ -157,7 +157,7 @@
 		</div>
 		<div class="flex ai:c">
 			<h2>Recently Updated</h2>
-			<a class="ml:a" href="/explore">More -> (not vertically centered)</a>
+			<a class="ml:a" href="/explore?sort=recentlyupdated">More -> (not vertically centered)</a>
 		</div>
 		<div class="grid flex rwrap mx:r mt:m">
 			{{ range .UpdatedStyles }}
@@ -166,7 +166,7 @@
 		</div>
 		<div class="flex ai:c">
 			<h2>Recently Added</h2>
-			<a class="ml:a">More -> (not vertically centered)</a>
+			<a class="ml:a" href="/explore?sort=newest">More -> (not vertically centered)</a>
 		</div>
 		<div class="grid flex rwrap mx:r mt:m">
 			{{ range .AddedStyles }}
