@@ -34,11 +34,11 @@ func Home(c *fiber.Ctx) error {
 
 Styles:
 	featured, found := cache.Store.Get("featuredStyles")
-	updatedStyles, err := storage.FindStyleCardsPaginated(1, 40, "styles.updated_at DESC")
+	updatedStyles, err := storage.FindStyleCardsPaginated(1, 4, "styles.updated_at DESC")
 	if err != nil {
 		//idk
 	}
-	addedStyles, err := storage.FindStyleCardsPaginated(1, 40, "styles.created_at DESC")
+	addedStyles, err := storage.FindStyleCardsPaginated(1, 4, "styles.created_at DESC")
 	if err != nil {
 		//idk
 	}
