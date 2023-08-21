@@ -5,7 +5,7 @@ import "userstyles.world/modules/database"
 func InitStyleSearch() error {
 	init := `
 DROP TABLE IF EXISTS fts_styles;
-CREATE VIRTUAL TABLE fts_styles USING FTS5(id, name, description, notes, tokenize="trigram");
+CREATE VIRTUAL TABLE fts_styles USING FTS5(id, name, description, notes);
 INSERT INTO fts_styles(id, name, description, notes) SELECT id, name, description, notes FROM styles;
 
 DROP TRIGGER IF EXISTS fts_styles_insert;

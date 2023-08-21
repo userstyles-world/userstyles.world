@@ -19,10 +19,6 @@ func Search(c *fiber.Ctx) error {
 	c.Locals("Canonical", "search")
 
 	keyword := strings.TrimSpace(c.Query("q"))
-	if len(keyword) < 3 {
-		c.Locals("Error", "Keywords need to be in a group of three or more characters.")
-		return c.Render("core/search", fiber.Map{})
-	}
 	c.Locals("Keyword", keyword)
 
 	page, err := models.IsValidPage(c.Query("page"))
