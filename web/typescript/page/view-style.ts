@@ -11,6 +11,7 @@ function shareButton() {
     if (!shareButton) {
         return;
     }
+    shareButton.removeAttribute("hidden");
     shareButton.addEventListener('click', () => {
         navigator.clipboard.writeText(urlValue).then(() => {
             shareButton.classList.add('copied');
