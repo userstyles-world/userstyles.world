@@ -70,7 +70,8 @@ func FindSearchStyles(query, sort string, page int) ([]*StyleCard, error) {
 (SELECT username FROM users WHERE users.id = styles.user_id AND deleted_at IS NULL) AS username,
 (SELECT total_views FROM histories WHERE histories.style_id = fts.id ORDER BY id DESC LIMIT 1) AS views,
 (SELECT total_installs FROM histories WHERE histories.style_id = fts.id ORDER BY id DESC LIMIT 1) AS installs,
-(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = fts.id AND r.rating > 0 AND r.deleted_at IS NULL) AS rating
+(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = fts.id AND r.rating > 0 AND r.deleted_at IS NULL) AS rating,
+(SELECT COUNT(rating) FROM reviews r WHERE r.style_id = fts.id AND r.rating > 0 AND r.deleted_at IS NULL) AS ReviewCount
 FROM fts_styles AS fts
 JOIN styles ON styles.id = fts.id
 WHERE fts_styles

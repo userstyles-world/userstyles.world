@@ -35,8 +35,10 @@
 		</small>
 		<small class="fg:3 flex ai:c ml:s rating score-{{ .Rating | floor }}">
 			{{ template "icons/star" }}
-			<span class="ml:s">
-				{{ with .Rating }}{{ . }}{{ else }}-{{ end }}/5
+			<span
+				class="ml:s"
+				data-tooltip="{{ if .Rating }}Based on {{ .ReviewCount }} review{{ if gt .ReviewCount 1 }}s{{ end }}{{ else }}No rating{{ end }}"
+			>{{ with .Rating }}{{ . }}{{ else }}-{{ end }}/5
 			</span>
 		</small>
 	</div>
