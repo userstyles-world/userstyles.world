@@ -3,6 +3,7 @@ import {doDomOperation} from 'utils/dom';
 export const initViewStyle = () => doDomOperation(() => {
     shareButton();
     checkIfStyleInstalled();
+    removeStylusTooltip();
 });
 
 function shareButton() {
@@ -46,4 +47,9 @@ function checkIfStyleInstalled() {
         data: {type: 'usw-style-info-request', requestType: 'installed', styleID},
         origin: 'https://userstyles.world'
     }));
+}
+
+function removeStylusTooltip() {
+    const Stylus = document.querySelector('a#stylus');
+    Stylus.removeAttribute("data-tooltip");
 }
