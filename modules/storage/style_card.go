@@ -11,35 +11,37 @@ import (
 )
 
 const (
-	selectAuthor   = "(SELECT username FROM users WHERE user_id = users.id AND deleted_at IS NULL) AS Username"
-	selectInstalls = "(SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS installs"
-	selectViews    = "(SELECT total_views FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS views"
-	selectRatings  = "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND rating > 0 AND r.deleted_at IS NULL) AS Rating"
-	notDeleted     = "deleted_at IS NULL"
+	selectAuthor      = "(SELECT username FROM users WHERE user_id = users.id AND deleted_at IS NULL) AS Username"
+	selectInstalls    = "(SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS installs"
+	selectViews       = "(SELECT total_views FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS views"
+	selectRatings     = "(SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.rating > 0 AND r.deleted_at IS NULL) AS Rating"
+	selectReviewCount = "(SELECT COUNT(rating) FROM reviews r WHERE r.style_id = styles.id AND r.rating > 0 AND r.deleted_at IS NULL) AS ReviewCount"
+	notDeleted        = "deleted_at IS NULL"
 )
 
 var (
 	selectCards = strings.Join([]string{
 		"id", "updated_at", "name", "preview",
-		selectAuthor, selectInstalls, selectViews, selectRatings,
+		selectAuthor, selectInstalls, selectViews, selectRatings, selectReviewCount,
 	}, ", ")
 	selectSearchCards = strings.Join([]string{
 		"id", "created_at", "updated_at", "name", "preview",
-		selectAuthor, selectInstalls, selectViews, selectRatings,
+		selectAuthor, selectInstalls, selectViews, selectRatings, selectReviewCount,
 	}, ", ")
 )
 
 // StyleCard is a field-aligned struct optimized for style cards.
 type StyleCard struct {
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Preview   string    `json:"preview"`
-	Username  string    `json:"username"`
-	Name      string    `json:"name"`
-	ID        int       `json:"id"`
-	Views     int64     `json:"views"`
-	Installs  int64     `json:"installs"`
-	Rating    float64   `json:"rating"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	Preview     string    `json:"preview"`
+	Username    string    `json:"username"`
+	Name        string    `json:"name"`
+	ID          int       `json:"id"`
+	Views       int64     `json:"views"`
+	Installs    int64     `json:"installs"`
+	Rating      float64   `json:"rating"`
+	ReviewCount int       `json:"reviewcount"`
 }
 
 // TableName returns which table in database to use with GORM.
