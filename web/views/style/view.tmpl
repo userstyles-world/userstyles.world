@@ -46,7 +46,7 @@
 
 <section class="header flex mt:m ai:c">
 	<div class="share flex ai:c mr:m">
-		<span id="share" class="bg:2 input-like">{{ .URL }}</span>
+		<span id="share" class="bg:2 input-like" slug="/{{ .Slug }}">{{ .URL }}</span>
 		<button
 			aria-label="Copy Style URL to clipboard"
 			data-tooltip="Style URL has been copied to your clipboard."

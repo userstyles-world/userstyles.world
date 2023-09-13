@@ -50,7 +50,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		"User":       u,
 		"Title":      data.Name,
 		"Style":      data,
-		"URL":        c.BaseURL() + c.Path(),
+		"URL":        c.BaseURL() + "/style/" + id,
 		"Slug":       slug,
 		"Canonical":  "style/" + id + "/" + slug,
 		"RenderMeta": true,

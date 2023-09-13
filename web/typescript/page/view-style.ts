@@ -6,14 +6,15 @@ export const initViewStyle = () => doDomOperation(() => {
 });
 
 function shareButton() {
-    const urlValue = document.getElementById('share').textContent;
+    const urlBar = document.getElementById('share');
     const shareButton = document.getElementById('btn-share') as HTMLButtonElement;
     if (!shareButton) {
         return;
     }
+    urlBar.textContent += urlBar.getAttribute("slug");
     shareButton.removeAttribute("hidden");
     shareButton.addEventListener('click', () => {
-        navigator.clipboard.writeText(urlValue).then(() => {
+        navigator.clipboard.writeText(urlBar.textContent).then(() => {
             shareButton.classList.add('copied');
         }, () => {
             shareButton.classList.add('copied-failed');
