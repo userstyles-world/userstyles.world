@@ -7,12 +7,19 @@
 	<form class="Form Form-inline jc:c" method="get" action="/search">
 		<div class="Form-section Form-row">
 			<label for="q">Search keyword</label>
-			<div class="Form-row">
+			<div class="Form-row mr:m">
 				<input
 					type="search" {{ if and .flags.SearchAutofocus (not .Styles) }}autofocus{{ end }} name="q" id="q"
 					value="{{ .Keyword }}"
-					required pattern=".+"
 					placeholder="e.g. dark">
+			</div>
+
+			<label for="category">Category</label>
+			<div class="Form-row">
+				<input
+					type="text" name="category" id="category"
+					value="{{ .Category }}"
+					placeholder="e.g. github">
 			</div>
 		</div>
 

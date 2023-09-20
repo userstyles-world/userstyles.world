@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -21,6 +22,14 @@ func Search(c *fiber.Ctx) error {
 	keyword := strings.TrimSpace(c.Query("q"))
 	c.Locals("Keyword", keyword)
 
+	category := strings.TrimSpace(c.Query("category"))
+	c.Locals("Category", category)
+
+	query := keyword
+	if category != "" {
+		query += fmt.Sprintf(" category:%s", category)
+	}
+
 	page, err := models.IsValidPage(c.Query("page"))
 	if err != nil || page < 1 {
 		c.Locals("Title", "Invalid page size")
@@ -32,7 +41,7 @@ func Search(c *fiber.Ctx) error {
 
 	t := time.Now()
 
-	total, err := storage.TotalSearchStyles(keyword, sort)
+	total, err := storage.TotalSearchStyles(query, sort)
 	if err != nil {
 		log.Database.Println(err)
 		c.Locals("Title", "Failed to count userstyles")
@@ -46,7 +55,7 @@ func Search(c *fiber.Ctx) error {
 	}
 	c.Locals("Pagination", p)
 
-	s, err := storage.FindSearchStyles(keyword, p.SortStyles(), page)
+	s, err := storage.FindSearchStyles(query, p.SortStyles(), page)
 	if err != nil {
 		log.Database.Println(err)
 		c.Locals("Title", "Failed to search for userstyles")
