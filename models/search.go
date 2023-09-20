@@ -9,7 +9,8 @@ CREATE VIRTUAL TABLE fts_styles USING FTS5(id, name, description, notes, categor
 
 INSERT INTO fts_styles(id, name, description, notes, category)
 SELECT id, name, description, notes, category
-FROM styles;
+FROM styles
+WHERE deleted_at IS NULL;
 
 DROP TRIGGER IF EXISTS fts_styles_insert;
 CREATE TRIGGER fts_styles_insert AFTER INSERT ON styles
