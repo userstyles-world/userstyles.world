@@ -13,6 +13,7 @@ import (
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 func BanGet(c *fiber.Ctx) error {
@@ -116,6 +117,10 @@ func BanPost(c *fiber.Ctx) error {
 			"Title": "Internal server error",
 			"User":  u,
 		})
+	}
+
+	if err = storage.DeleteSearchStyle(i); err != nil {
+		log.Warn.Printf("Failed to remove %d from search: %v\n", i, err)
 	}
 
 	if err = models.RemoveStyleCode(strconv.Itoa(int(s.ID))); err != nil {
