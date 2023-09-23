@@ -51,9 +51,9 @@ func (DashStats) GetCounts(t string) (q []DashStats, err error) {
 	return q, nil
 }
 
-// Delete will remove stats for a given style ID.
-func (*Stats) Delete(id any) error {
-	return db().Delete(&modelStats, "style_id = ?", id).Error
+// DeleteStats removes stats from database.
+func DeleteStats(db *gorm.DB, id int) error {
+	return db.Delete(&modelStats, "style_id = ?", id).Error
 }
 
 func GetHomepageStatistics() *SiteStats {

@@ -9,6 +9,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 )
@@ -105,8 +106,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	}
 
 	// Add banned user log entry.
-	modlog := new(models.Log)
-	if err := modlog.AddLog(&logEntry); err != nil {
+	if err := models.CreateLog(database.Conn, &logEntry); err != nil {
 		log.Warn.Printf("Failed to add user %d to ModLog: %s\n", targetUser.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",

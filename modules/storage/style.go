@@ -67,3 +67,8 @@ func FindStyleForMirror(id int) (models.Style, error) {
 
 	return s, nil
 }
+
+// DeleteUserstyle removes userstyle from database.
+func DeleteUserstyle(db *gorm.DB, id int) error {
+	return db.Delete(&models.Style{}, "id = ?", id).Error
+}

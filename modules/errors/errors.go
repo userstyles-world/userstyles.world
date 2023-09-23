@@ -74,9 +74,6 @@ var (
 	// ErrFailedLogRetrieval errors that it couldn't retrieve all the logs.
 	ErrFailedLogRetrieval = errors.New("failed to find all logs")
 
-	// ErrFailedLogAddition errors that it couldn't add the log.
-	ErrFailedLogAddition = errors.New("failed to add the log")
-
 	// ErrOnlyRemovedStyle errors that this function only allows to remove style kind.
 	ErrOnlyRemovedStyle = errors.New("only remove style kind is allowed")
 

@@ -45,16 +45,9 @@ type APILog struct {
 	TargetUserName string
 }
 
-// AddLog adds a new log to the database.
-func (*Log) AddLog(logEntry *Log) (err error) {
-	err = db().
-		Model(modelLog).
-		Create(logEntry).
-		Error
-	if err != nil {
-		return errors.ErrFailedLogAddition
-	}
-	return nil
+// CreateLog inserts a new log entry into the database.
+func CreateLog(db *gorm.DB, log *Log) (err error) {
+	return db.Model(modelLog).Create(log).Error
 }
 
 // GetLogOfKind returns all the logs of the specified kind and
