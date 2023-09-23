@@ -53,12 +53,6 @@
 	{{ else }}
 		{{ if .Error }}
 			<div role="alert" class="err">{{ .Error | unescape }}</div>
-		{{ else }}
-			{{ if or .Keyword .Category }}
-				<div class="ta:c">
-					<p>Please try searching for something.</p>
-				</div>
-			{{ end }}
 		{{ end }}
 		<h2>Suggestions</h2>
 		<style type="text/css">
