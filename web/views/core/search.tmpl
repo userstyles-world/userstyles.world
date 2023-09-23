@@ -30,7 +30,7 @@
 			>{{ template "icons/search" }} Search</button>
 		</div>
 
-		{{ if and .Keyword .Styles }}
+		{{ if .Styles }}
 			{{ template "partials/form-sort" . }}
 		{{ end }}
 	</form>
