@@ -30,7 +30,7 @@
 			>{{ template "icons/search" }} Search</button>
 		</div>
 
-		{{ if and .Keyword .Styles }}
+		{{ if .Styles }}
 			{{ template "partials/form-sort" . }}
 		{{ end }}
 	</form>
@@ -54,9 +54,11 @@
 		{{ if .Error }}
 			<div role="alert" class="err">{{ .Error | unescape }}</div>
 		{{ else }}
-			<div class="ta:c">
-				<p>Please try searching for something.</p>
-			</div>
+			{{ if or .Keyword .Category }}
+				<div class="ta:c">
+					<p>Please try searching for something.</p>
+				</div>
+			{{ end }}
 		{{ end }}
 		<h2>Suggestions</h2>
 		<style type="text/css">
