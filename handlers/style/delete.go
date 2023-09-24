@@ -1,8 +1,6 @@
 package style
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -79,10 +77,7 @@ func DeletePost(c *fiber.Ctx) error {
 		if err = storage.DeleteSearchData(tx, i); err != nil {
 			return err
 		}
-		if err = models.RemoveStyleCode(strconv.Itoa(int(s.ID))); err != nil {
-			return err
-		}
-		return nil
+		return models.RemoveStyleCode(id)
 	})
 	if err != nil {
 		log.Database.Printf("Failed to delete %d: %s\n", i, err)

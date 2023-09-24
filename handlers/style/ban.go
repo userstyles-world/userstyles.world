@@ -102,10 +102,7 @@ func BanPost(c *fiber.Ctx) error {
 		if err = models.CreateLog(tx, &logEntry); err != nil {
 			return err
 		}
-		if err = models.RemoveStyleCode(strconv.Itoa(int(s.ID))); err != nil {
-			return err
-		}
-		return nil
+		return models.RemoveStyleCode(id)
 	})
 	if err != nil {
 		log.Database.Printf("Failed to remove %d: %s\n", i, err)
