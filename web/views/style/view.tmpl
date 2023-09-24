@@ -46,11 +46,11 @@
 
 <section class="header flex mt:m ai:c">
 	<div class="share flex ai:c mr:m">
-		<span id="share" class="bg:2 input-like">{{ .URL }}</span>
+		<span id="share" class="bg:2 input-like" slug="/{{ .Slug }}">{{ .URL }}</span>
 		<button
 			aria-label="Copy Style URL to clipboard"
 			data-tooltip="Style URL has been copied to your clipboard."
-			id="btn-share" class="btn icon iflex ai:c">
+			id="btn-share" class="btn icon iflex ai:c" hidden>
 			{{ template "icons/copy" }} Copy
 		</button>
 	</div>
@@ -133,6 +133,7 @@
 			target="_blank"
 			rel="noopener"
 			href="https://github.com/openstyles/stylus/#readme"
+			data-tooltip="Stylus detection only works with JS enabled"
 			id="stylus" class="btn icon stylus"
 		>{{ template "icons/brush" }} Get Stylus</a>
 	</div>

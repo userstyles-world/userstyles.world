@@ -18,12 +18,7 @@ func runMigration(db *gorm.DB) {
 
 	// Wrap in a transaction to allow rollbacks.
 	db.Transaction(func(tx *gorm.DB) error {
-		var l models.Log
-		if err := tx.Migrator().AddColumn(l, "Message"); err != nil {
-			log.Database.Fatalf("Failed to add column message: %s\n", err)
-		}
-
-		return nil
+		return models.InitStyleSearch()
 	})
 
 	log.Database.Printf("Done in %s.\n", time.Since(t).Round(time.Microsecond))

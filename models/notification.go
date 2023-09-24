@@ -29,6 +29,7 @@ type Notification struct {
 	ReviewID int `gorm:"default:null"`
 }
 
-func (n Notification) Create() error {
-	return db().Create(&n).Error
+// CreateNotification inserts a new notification.
+func CreateNotification(db *gorm.DB, n *Notification) error {
+	return db.Create(&n).Error
 }

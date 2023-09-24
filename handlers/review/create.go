@@ -9,6 +9,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 )
 
@@ -92,8 +93,7 @@ func createForm(c *fiber.Ctx) error {
 		return c.Render("err", fiber.Map{})
 	}
 
-	// Create a notification.
-	notification := models.Notification{
+	n := models.Notification{
 		Kind:     models.KindReview,
 		TargetID: int(s.UserID),
 		UserID:   int(u.ID),
@@ -101,7 +101,7 @@ func createForm(c *fiber.Ctx) error {
 		ReviewID: int(r.ID),
 	}
 
-	if err = notification.Create(); err != nil {
+	if err = models.CreateNotification(database.Conn, &n); err != nil {
 		log.Warn.Printf("Failed to add notification to review %d: %s\n", r.ID, err)
 	}
 

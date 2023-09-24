@@ -110,21 +110,6 @@ func Initialize() {
 		}
 	}
 
-	q := "DELETE FROM fts_styles WHERE id IN (SELECT id FROM styles WHERE deleted_at IS NOT NULL)"
-	if err = database.Conn.Exec(q).Error; err != nil {
-		log.Info.Fatal(err)
-	}
-
-	q = "UPDATE styles SET user_id = 1592 WHERE id = 10653"
-	if err = database.Conn.Debug().Exec(q).Error; err != nil {
-		log.Info.Fatal(err)
-	}
-
-	var h models.History
-	if err = database.Conn.Migrator().AutoMigrate(h); err != nil {
-		log.Info.Fatal(err)
-	}
-
 	if shouldSeed {
 		seed()
 	}

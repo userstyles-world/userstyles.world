@@ -1,15 +1,15 @@
 package style
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
+	"userstyles.world/modules/storage"
 )
 
 func DeleteGet(c *fiber.Ctx) error {
@@ -67,28 +67,24 @@ func DeletePost(c *fiber.Ctx) error {
 		})
 	}
 
-	// Delete style from database.
-	q := new(models.Style)
-	if err = database.Conn.Delete(q, "styles.id = ?", id).Error; err != nil {
-		log.Warn.Printf("Failed to delete style %d: %s\n", s.ID, err.Error())
+	err = database.Conn.Transaction(func(tx *gorm.DB) error {
+		if err = storage.DeleteUserstyle(tx, i); err != nil {
+			return err
+		}
+		if err = models.DeleteStats(tx, i); err != nil {
+			return err
+		}
+		if err = storage.DeleteSearchData(tx, i); err != nil {
+			return err
+		}
+		return models.RemoveStyleCode(id)
+	})
+	if err != nil {
+		log.Database.Printf("Failed to delete %d: %s\n", i, err)
 		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
+			"Title": "Failed to remove userstyle",
 			"User":  u,
 		})
-	}
-
-	// Delete stats from database.
-	if err = new(models.Stats).Delete(s.ID); err != nil {
-		log.Warn.Printf("Failed to delete stats for style %d: %s\n", s.ID, err.Error())
-		c.Status(fiber.StatusInternalServerError)
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"User":  u,
-		})
-	}
-
-	if err = models.RemoveStyleCode(strconv.Itoa(int(s.ID))); err != nil {
-		log.Warn.Printf("kind=removecode id=%v err=%q\n", s.ID, err)
 	}
 
 	cache.Code.Remove(i)

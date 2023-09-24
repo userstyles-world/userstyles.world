@@ -98,7 +98,7 @@ func removeForm(c *fiber.Ctx) error {
 		UserID:   int(u.ID),
 		StyleID:  sid,
 	}
-	if err = n.Create(); err != nil {
+	if err = models.CreateNotification(database.Conn, &n); err != nil {
 		c.Locals("Title", "Failed to add notification")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}

@@ -101,3 +101,8 @@ MATCH ?`)
 
 	return s, nil
 }
+
+// DeleteSearchData removes a userstyle from FTS table.
+func DeleteSearchData(db *gorm.DB, id int) error {
+	return db.Exec("DELETE FROM fts_styles WHERE id = ?", id).Error
+}

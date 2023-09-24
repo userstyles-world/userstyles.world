@@ -93,8 +93,7 @@ func Promote(c *fiber.Ctx) error {
 	if !style.Featured {
 		go sendPromotionEmail(style, user, u.Username)
 
-		// Create a notification.
-		notification := models.Notification{
+		n := models.Notification{
 			Seen:     false,
 			Kind:     models.KindStylePromotion,
 			TargetID: int(style.UserID),
@@ -102,11 +101,9 @@ func Promote(c *fiber.Ctx) error {
 			StyleID:  id,
 		}
 
-		go func(notification models.Notification) {
-			if err := notification.Create(); err != nil {
-				log.Warn.Printf("Failed to create a notification for %d, err: %v", id, err.Error())
-			}
-		}(notification)
+		if err := models.CreateNotification(database.Conn, &n); err != nil {
+			log.Warn.Printf("Failed to create a notification for %d: %s\n", id, err)
+		}
 	}
 
 	return c.Redirect("/style/"+p, fiber.StatusSeeOther)
