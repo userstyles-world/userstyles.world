@@ -161,7 +161,7 @@ func FindStyleCardsPaginated(page, size int, order string) ([]StyleCard, error) 
 	case strings.HasPrefix(order, "installs"):
 		stmt = "id, (SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS installs"
 	case strings.HasPrefix(order, "rating"):
-		stmt = "id, (SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating"
+		stmt = "id, (SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating"
 	}
 
 	var nums []struct{ ID int }
@@ -197,7 +197,7 @@ func FindStyleCardsPaginatedForUserID(page, size int, order string, id uint) ([]
 	case strings.HasPrefix(order, "installs"):
 		stmt = "id, (SELECT total_installs FROM histories h WHERE h.style_id = styles.id ORDER BY id DESC LIMIT 1) AS installs"
 	case strings.HasPrefix(order, "rating"):
-		stmt = "id, (SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id) AS rating"
+		stmt = "id, (SELECT ROUND(AVG(rating), 1) FROM reviews r WHERE r.style_id = styles.id AND r.deleted_at IS NULL) AS rating"
 	}
 
 	offset := (page - 1) * size
