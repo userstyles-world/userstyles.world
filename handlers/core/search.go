@@ -50,6 +50,7 @@ func Search(c *fiber.Ctx) error {
 
 	p := models.NewPagination(page, total, sort, c.Path())
 	p.Query = keyword
+	p.Category = category
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)
 	}

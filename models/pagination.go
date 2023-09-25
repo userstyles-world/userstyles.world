@@ -10,9 +10,11 @@ import (
 
 // Pagination is a field-aligned struct optimized for pagination.
 type Pagination struct {
-	Path  string
-	Sort  string
-	Query string
+	Path     string
+	Sort     string
+	Query    string
+	Category string
+
 	Prev3 int
 	Prev2 int
 	Prev1 int
@@ -46,6 +48,10 @@ func (p Pagination) URL(page int) string {
 
 	if p.Query != "" {
 		s += fmt.Sprintf("&q=%s", url.QueryEscape(p.Query))
+	}
+
+	if p.Category != "" {
+		s += fmt.Sprintf("&category=%s", url.QueryEscape(p.Category))
 	}
 
 	return s
