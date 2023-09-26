@@ -169,7 +169,7 @@ func seed() {
 	defer log.Info.Println("Finished seeding mock data.")
 
 	pw := func(s string) string {
-		s, err := util.HashPassword("admin123")
+		s, err := util.HashPassword(s)
 		if err != nil {
 			log.Warn.Fatal(err)
 		}

@@ -27,8 +27,10 @@
 				{{ if .User }}
 					<li><a href="/user/{{ .User.Username }}">{{ template "icons/user" }} Profile</a></li>
 					<li><a href="/account">{{ template "icons/settings" }} Settings</a></li>
-					{{ if .User.IsAdmin }}
+					{{ if .User.IsModOrAdmin }}
 						<li><a href="/dashboard">{{ template "icons/pie-chart" }} Dashboard</a></li>
+					{{ end }}
+					{{ if .User.IsAdmin }}
 						<li><a href="/monitor">{{ template "icons/gauge" }} Monitor</a></li>
 					{{ end }}
 					<li><a href="/logout">{{ template "icons/log-out" }} Log out</a></li>
