@@ -13,16 +13,27 @@ import (
 	"userstyles.world/modules/storage"
 )
 
+func wrapQuery(s string) string {
+	switch {
+	case strings.HasPrefix(s, `"`) && strings.HasSuffix(s, `"`):
+		return s
+	case strings.Contains(s, "-") || strings.Contains(s, "."):
+		return `"` + s + `"`
+	default:
+		return s
+	}
+}
+
 func Search(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	c.Locals("User", u)
 	c.Locals("Title", "Search userstyles")
 	c.Locals("Canonical", "search")
 
-	keyword := strings.TrimSpace(c.Query("q"))
+	keyword := wrapQuery(strings.TrimSpace(c.Query("q")))
 	c.Locals("Keyword", keyword)
 
-	category := strings.TrimSpace(c.Query("category"))
+	category := wrapQuery(strings.TrimSpace(c.Query("category")))
 	c.Locals("Category", category)
 
 	query := keyword
