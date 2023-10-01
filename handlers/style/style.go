@@ -13,6 +13,7 @@ import (
 func Routes(app *fiber.App) {
 	r := app.Group("/")
 	r.Get("/explore", GetExplore)
+	r.Get("/category/:category?", GetCategory)
 	r.Get("/style/:id/:name?", middleware.Alert, GetStylePage)
 	r.Get("/add", jwtware.Protected, CreateGet)
 	r.Post("/add", jwtware.Protected, CreatePost)
