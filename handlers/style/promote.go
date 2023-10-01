@@ -14,12 +14,6 @@ import (
 )
 
 func sendPromotionEmail(style *models.APIStyle, user *models.User, mod string) {
-	user, err := models.FindUserByID(strconv.Itoa(int(style.UserID)))
-	if err != nil {
-		log.Warn.Printf("Couldn't find user %d: %s\n", style.UserID, err)
-		return
-	}
-
 	args := fiber.Map{
 		"User":      user,
 		"Style":     style,
@@ -29,9 +23,8 @@ func sendPromotionEmail(style *models.APIStyle, user *models.User, mod string) {
 	}
 
 	title := "Your style has been featured"
-	err = email.Send("style/promote", user.Email, title, args)
-	if err != nil {
-		log.Warn.Printf("Failed to send an email: %s\n", err)
+	if err := email.Send("style/promote", user.Email, title, args); err != nil {
+		log.Warn.Printf("Failed to email %d: %s\n", user.ID, err)
 	}
 }
 

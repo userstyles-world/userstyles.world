@@ -147,6 +147,6 @@ func sendRemovalEmail(user *storage.User, style *models.APIStyle, entry models.L
 
 	title := "Your style has been removed"
 	if err := email.Send("style/ban", user.Email, title, args); err != nil {
-		log.Warn.Printf("Failed to email author for style %d: %s\n", style.ID, err)
+		log.Warn.Printf("Failed to email %d: %s\n", user.ID, err)
 	}
 }
