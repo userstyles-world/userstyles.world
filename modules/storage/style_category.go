@@ -12,7 +12,7 @@ type Category struct {
 
 // URL returns a link to a category page.
 func (c *Category) URL() string {
-	return "/category/" + c.Category
+	return "/search?category=" + c.Category
 }
 
 // Categories is an alias for a slice of Category structs.
