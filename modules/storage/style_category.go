@@ -23,9 +23,9 @@ func GetStyleCategories(page, size int) (c Categories, err error) {
 	offset := (page - 1) * size
 
 	err = database.Conn.
-		Select("category, COUNT(category) AS count").
+		Select("LOWER(category) AS category, COUNT(LOWER(category)) AS count").
 		Table("styles").
-		Group("category").
+		Group("LOWER(category)").
 		Order("count DESC").
 		Offset(offset).
 		Limit(size).
@@ -41,7 +41,7 @@ func GetStyleCategories(page, size int) (c Categories, err error) {
 // CountStyleCategories returns a count of unique categories for pagination.
 func CountStyleCategories() (i int, err error) {
 	err = database.Conn.
-		Select("COUNT(DISTINCT category)").
+		Select("COUNT(DISTINCT LOWER(category))").
 		Table("styles").
 		Where(notDeleted).
 		Scan(&i).
