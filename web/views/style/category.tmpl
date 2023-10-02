@@ -21,3 +21,7 @@
 		<p class="ta:c">No categories found.</p>
 	{{ end }}
 </section>
+
+{{ if .Pagination.Show }}
+	{{ template "partials/pagination" .Pagination }}
+{{ end }}

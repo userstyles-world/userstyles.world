@@ -19,12 +19,16 @@ func (c *Category) URL() string {
 type Categories []*Category
 
 // GetStyleCategories returns a slice of categories for category page.
-func GetStyleCategories() (c Categories, err error) {
+func GetStyleCategories(page, size int) (c Categories, err error) {
+	offset := (page - 1) * size
+
 	err = database.Conn.
 		Select("category, COUNT(category) AS count").
 		Table("styles").
 		Group("category").
 		Order("count DESC").
+		Offset(offset).
+		Limit(size).
 		Find(&c, notDeleted).
 		Error
 	if err != nil {
@@ -32,4 +36,19 @@ func GetStyleCategories() (c Categories, err error) {
 	}
 
 	return c, err
+}
+
+// CountStyleCategories returns a count of unique categories for pagination.
+func CountStyleCategories() (i int, err error) {
+	err = database.Conn.
+		Select("COUNT(DISTINCT category)").
+		Table("styles").
+		Where(notDeleted).
+		Scan(&i).
+		Error
+	if err != nil {
+		return 0, err
+	}
+
+	return i, nil
 }
