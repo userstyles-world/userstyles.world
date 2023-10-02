@@ -19,32 +19,6 @@ type StyleSearch struct {
 	ID          int    `json:"id"`
 }
 
-// FindStyleForSearch returns a style for search index or an error.
-func FindStyleForSearch(id uint) (StyleSearch, error) {
-	var res StyleSearch
-	err := database.Conn.
-		Table("styles").Select("id, name, description, notes", selectAuthor).
-		Find(&res, "id = ?", id).Error
-	if err != nil {
-		return StyleSearch{}, err
-	}
-
-	return res, nil
-}
-
-// FindStylesForSearch queries for styles in batches, and runs a passed action
-// that might return an error.
-func FindStylesForSearch(action func([]StyleSearch) error) error {
-	var res []StyleSearch
-	fn := func(tx *gorm.DB, batch int) error {
-		return action(res)
-	}
-
-	return database.Conn.
-		Table("styles").Select("id, name, description, notes", selectAuthor).
-		Where("deleted_at IS NULL").FindInBatches(&res, 250, fn).Error
-}
-
 // TotalSearchStyles returns total amount of userstyles for search page.
 func TotalSearchStyles(query, sort string) (int, error) {
 	q := "SELECT COUNT(*) FROM fts_styles WHERE fts_styles MATCH ?"

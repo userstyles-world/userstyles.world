@@ -1,0 +1,27 @@
+<section class="ta:c">
+	<h1>{{ .Title }}</h1>
+	<p class="fg:3">Browse all available categories.</p>
+</section>
+
+<section>
+	{{ if .Categories }}
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range .Categories }}
+				<div class="card col gap">
+					<div class="card-header p:m">
+						<a href="{{ .URL }}">{{ .Category }}</a>
+					</div>
+					<div class="card-footer p:m">
+						{{ .Count }} userstyle{{ if gt .Count 1 }}s{{ end }}
+					</div>
+				</div>
+			{{ end }}
+		</div>
+	{{ else }}
+		<p class="ta:c">No categories found.</p>
+	{{ end }}
+</section>
+
+{{ if .Pagination.Show }}
+	{{ template "partials/pagination" .Pagination }}
+{{ end }}
