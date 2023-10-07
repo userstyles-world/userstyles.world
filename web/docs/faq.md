@@ -1,6 +1,6 @@
 ---
 Title: Frequently Asked Questions
-UpdatedAt: 2023-05-17T19:00:00+02:00
+UpdatedAt: 2023-10-07T15:00:00+02:00
 ---
 
 <!-- markdown-toc start - Don't edit this section. -->
@@ -12,6 +12,7 @@ UpdatedAt: 2023-05-17T19:00:00+02:00
     - [How can I contact the admins?](#how-can-i-contact-the-admins)
 - [Userstyles](#userstyles)
     - [Why are `@updateURL` fields overriden?](#why-are-updateurl-fields-overriden)
+    - [Why my userstyle doesn't show up in Stylus inline search?](#why-my-userstyle-doesnt-show-up-in-stylus-inline-search)
     - [Why are ratings different in Stylus' search?](#why-are-ratings-different-in-stylus-search)
     - [How do view/install/update statistics work?](#how-do-viewinstallupdate-statistics-work)
     - [How do I remove the `Get Stylus` button?](#how-do-i-remove-the-get-stylus-button)
@@ -64,6 +65,15 @@ Questions regarding userstyles.
 ### Why are `@updateURL` fields overriden?
 
 It's done in order to avoid the possibility of tracking, as well as broken URLs.
+
+
+### Why my userstyle doesn't show up in Stylus inline search?
+
+Because of how inline search works, it may take up to 15 minutes for your style
+to show up or get metadata updated.
+
+Make sure that you have set the category for your style properly. It may be the
+name of the service or a domain name (with subdomain part included).
 
 
 ### Why are ratings different in Stylus' search?
