@@ -20,7 +20,8 @@
 			</time>
 		</p>
 		{{ if ne .Profile.ID .User.ID }}
-			<a href="/user/ban/{{ .Profile.ID }}">Ban this user</a>
+			<p><a href="/user/ban/{{ .Profile.ID }}">Ban this user</a></p>
+			<p><a href="/styles/bulk-ban/{{ .Profile.ID }}">Style bulk-removal</a></p>
 		{{ end }}
 	{{ end }}
 </section>
