@@ -34,9 +34,8 @@ func BulkBanGet(c *fiber.Ctx) error {
 		})
 	}
 
-	// fixme: this check is not working
-	user, _ := storage.FindUser(uint(userid))
-	if user == nil {
+	_, err = storage.FindUser(uint(userid))
+	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
 			"User":  u,
@@ -71,9 +70,8 @@ func BulkBanPost(c *fiber.Ctx) error {
 		})
 	}
 
-	// fixme: this check is not working
-	user, _ := storage.FindUser(uint(userid))
-	if user == nil {
+	user, err := storage.FindUser(uint(userid))
+	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
 			"User":  u,
