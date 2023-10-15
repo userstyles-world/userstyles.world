@@ -146,7 +146,9 @@
 			aria-describedby="biography-hint">
 			{{- .Params.Biography -}}
 		</textarea>
-		{{ with .errBio }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+		<p class="danger biography" role="alert">
+			{{ with .errBio }}{{ . }}{{ end }}
+		</p>
 		<div class="Form-control">
 			<button
 				type="submit"

@@ -30,6 +30,9 @@
 			style="min-height: 120px"
 			aria-describedby="comment-hint"
 		>{{ .Review.Comment }}</textarea>
+		<p class="danger comment" role="alert" style="margin-top: -1rem">
+			{{ with .Error }}{{ . }}{{ end }}
+		</p>
 
 		<div class="mt:m">
 			<button class="btn primary mr:s" type="submit">Confirm</button>

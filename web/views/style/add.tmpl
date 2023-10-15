@@ -29,8 +29,10 @@
 		required maxlength="50"
 		type="text" name="name" id="name" value="{{ .Style.Name }}"
 		placeholder="e.g. UserStyles.world tweaks">
-	{{ with .err.Name }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
-	{{ with .dupName }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	<p class="danger name" role="alert">
+		{{ with .err.Name }}{{ . }}{{ end }}
+	</p>
+	{{ with .dupName }}<p class="danger name" role="alert">{{ . }}</p>{{ end }}
 
 	<label for="description">Description</label>
 	<i class="fg:3" id="description-hint">Short description of what your userstyle does in plain text. Will be used for SEO and rich embeds.</i>
@@ -40,7 +42,9 @@
 		aria-describedby="description-hint"
 		placeholder="e.g. UI experiments for UserStyles.world."
 	>{{ .Style.Description }}</textarea>
-	{{ with .err.Description }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	<p class="danger description" role="alert">
+		{{ with .err.Description }}{{ . }}{{ end }}
+	</p>
 
 	<label for="notes">Notes</label>
 	<i class="fg:3" id="notes-hint">Features, requirements, instructions, links, changelog, etc. Supports {{ template "partials/markdown" . }} syntax.</i>
@@ -50,7 +54,9 @@
 		aria-describedby="notes-hint"
 		placeholder="e.g. Please raise issues in the GitHub repository."
 	>{{ .Style.Notes }}</textarea>
-	{{ with .err.Notes }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	<p class="danger notes" role="alert">
+		{{ with .err.Notes }}{{ . }}{{ end }}
+	</p>
 
 	<label for="homepage">Homepage</label>
 	<i class="fg:3" id="homepage-hint">Link to userstyle's homepage, bug tracker, etc.</i>
@@ -93,7 +99,9 @@
 		aria-describedby="category-hint"
 		value="{{ .Style.Category }}"
 		placeholder="e.g. test.userstyles.world -> userstyles">
-	{{ with .err.Category }}<p class="danger" role="alert">{{ . }}</p>{{ end }}
+	<p class="danger category" role="alert">
+		{{ with .err.Category }}{{ . }}{{ end }}
+	</p>
 
 	<label for="code">Source code</label>
 	<textarea
