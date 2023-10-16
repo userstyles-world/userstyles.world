@@ -16,127 +16,94 @@ import (
 
 func BulkBanGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	c.Locals("User", u)
 
-	// Check if logged-in user has permissions.
 	if !u.IsModOrAdmin() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("err", fiber.Map{
-			"Title": "You are not authorized to perform this action",
-			"User":  u,
-		})
+		c.Locals("Title", "You are not authorized to perform this action")
+		return c.Status(fiber.StatusUnauthorized).Render("err", fiber.Map{})
 	}
 
-	userid, err := c.ParamsInt("userid")
-	if err != nil || userid < 1 {
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Invalid user ID",
-		})
+	id, err := c.ParamsInt("userid")
+	if err != nil || id < 1 {
+		c.Locals("Title", "Invalid user ID")
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 
-	_, err = storage.FindUser(uint(userid))
-	if err != nil {
-		c.Status(fiber.StatusInternalServerError)
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Could not find such user",
-		})
+	if _, err = storage.FindUser(uint(id)); err != nil {
+		c.Locals("Title", "Could not find such user")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
-	return c.Render("style/bulkban", fiber.Map{
-		"Title":  "Perform a bulk ban",
-		"User":   u,
-		"UserID": userid,
-	})
+	c.Locals("UserID", id)
+	c.Locals("Title", "Perform a bulk userstyle removal")
+
+	return c.Render("style/bulkban", fiber.Map{})
 }
 
 func BulkBanPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	c.Locals("User", u)
 
-	// Check if logged-in user has permissions.
 	if !u.IsModOrAdmin() {
-		c.Status(fiber.StatusUnauthorized)
-		return c.Render("err", fiber.Map{
-			"Title": "You are not authorized to perform this action",
-			"User":  u,
-		})
+		c.Locals("Title", "You are not authorized to perform this action")
+		return c.Status(fiber.StatusUnauthorized).Render("err", fiber.Map{})
 	}
 
-	userid, err := c.ParamsInt("userid")
-	if err != nil || userid < 1 {
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Invalid user ID",
-		})
+	uid, err := c.ParamsInt("userid")
+	if err != nil || uid < 1 {
+		c.Locals("Title", "Invalid user ID")
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
 
-	user, err := storage.FindUser(uint(userid))
+	user, err := storage.FindUser(uint(uid))
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError)
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
-			"User":  u,
-			"Title": "Could not find such user",
-		})
+		c.Locals("Title", "Could not find such user")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
-	styles := []models.APIStyle{}
-	ids := strings.Split(c.FormValue("ids"), ",")
+	var styles []*models.Style
 
 	// Process all IDs for problems not to have any errors in between of removal
-	for _, element := range ids {
-		id := strings.TrimSpace(element)
-
-		style, err := models.GetStyleByID(id)
+	for _, val := range strings.Split(c.FormValue("ids"), ",") {
+		val := strings.TrimSpace(val)
+		id, err := strconv.Atoi(val)
 		if err != nil {
-			c.Status(fiber.StatusNotFound)
-			return c.Render("err", fiber.Map{
-				"Title":    "Operation failed",
-				"ErrTitle": "Style " + id + " was not found",
-				"User":     u,
-			})
+			c.Locals("Title", "Operation failed")
+			c.Locals("ErrTitle", val+" is not a valid number")
+			return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 		}
-		if int(style.UserID) != userid {
-			c.Status(fiber.StatusNotFound)
-			return c.Render("err", fiber.Map{
-				"Title":    "Operation failed",
-				"ErrTitle": "User " + strconv.Itoa(int(style.UserID)) + " is not the author of style " + id,
-				"User":     u,
-			})
-		}
-		styles = append(styles, *style)
 
-		_, err = strconv.Atoi(id)
+		style, err := models.GetStyleFromAuthor(id, uid)
 		if err != nil {
-			c.Status(fiber.StatusNotFound)
-			return c.Render("err", fiber.Map{
-				"Title":    "Operation failed",
-				"ErrTitle": id + " is not a string",
-				"User":     u,
-			})
+			c.Locals("Title", "Operation failed")
+			c.Locals("ErrTitle", "User isn't the author of style with ID "+val)
+			return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 		}
+
+		styles = append(styles, &style)
 	}
 
-	// lastevent is used to link to the newest event in the modlog
+	// lastEvent is used to link to the newest event in the modlog
 	// so the user will be presented with all of them on the screen.
-	var lastevent models.Log
+	var lastEvent *models.Log
 	for index, style := range styles {
 		event, _ := BanStyle(style, u, user, int(style.ID), strconv.Itoa(int(style.ID)), c)
 		if index == len(styles)-1 {
-			lastevent = event
+			lastEvent = event
 		}
 	}
 
-	go sendBulkRemovalEmail(user, styles, lastevent)
+	go sendBulkRemovalEmail(user, styles, lastEvent)
 
 	return c.Redirect("/modlog", fiber.StatusSeeOther)
 }
 
-func sendBulkRemovalEmail(user *storage.User, styles []models.APIStyle, firstentry models.Log) {
+func sendBulkRemovalEmail(user *storage.User, styles []*models.Style, event *models.Log) {
 	args := fiber.Map{
 		"User":   user,
 		"Styles": styles,
-		"Log":    firstentry,
-		"Link":   config.BaseURL + "/modlog#id-" + strconv.Itoa(int(firstentry.ID)),
+		"Log":    event,
+		"Link":   config.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
 	}
 
 	title := strconv.Itoa(len(styles)) + " of your style have been removed"

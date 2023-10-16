@@ -46,13 +46,12 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func BanStyle(style models.APIStyle, u *models.APIUser, user *storage.User, i int, id string, c *fiber.Ctx) (models.Log, error) {
-
-	event := models.Log{
+func BanStyle(style *models.Style, u *models.APIUser, user *storage.User, i int, id string, c *fiber.Ctx) (*models.Log, error) {
+	event := &models.Log{
 		UserID:         u.ID,
 		Username:       u.Username,
 		Kind:           models.LogRemoveStyle,
-		TargetUserName: style.Username,
+		TargetUserName: style.User.Username,
 		TargetData:     style.Name,
 		Reason:         strings.TrimSpace(c.FormValue("reason")),
 		Message:        strings.TrimSpace(c.FormValue("message")),
@@ -66,7 +65,6 @@ func BanStyle(style models.APIStyle, u *models.APIUser, user *storage.User, i in
 		StyleID:  int(style.ID),
 	}
 
-	// INSERT INTO `logs`
 	err := database.Conn.Transaction(func(tx *gorm.DB) error {
 		if err := storage.DeleteUserstyle(tx, i); err != nil {
 			return err
@@ -77,7 +75,7 @@ func BanStyle(style models.APIStyle, u *models.APIUser, user *storage.User, i in
 		if err := storage.DeleteSearchData(tx, i); err != nil {
 			return err
 		}
-		if err := models.CreateLog(tx, &event); err != nil {
+		if err := models.CreateLog(tx, event); err != nil {
 			return err
 		}
 		if err := models.CreateNotification(tx, &notification); err != nil {
@@ -115,7 +113,7 @@ func BanPost(c *fiber.Ctx) error {
 	}
 	id := c.Params("id")
 
-	style, err := models.GetStyleByID(id)
+	style, err := models.TempGetStyleByID(i)
 	if err != nil {
 		c.Status(fiber.StatusNotFound)
 		return c.Render("err", fiber.Map{
@@ -133,7 +131,7 @@ func BanPost(c *fiber.Ctx) error {
 		})
 	}
 
-	event, err := BanStyle(*style, u, user, i, id, c)
+	event, err := BanStyle(style, u, user, i, id, c)
 	if err != nil {
 		log.Database.Printf("Failed to remove %d: %s\n", i, err)
 		return c.Render("err", fiber.Map{
@@ -147,12 +145,12 @@ func BanPost(c *fiber.Ctx) error {
 	return c.Redirect("/modlog", fiber.StatusSeeOther)
 }
 
-func sendRemovalEmail(user *storage.User, style *models.APIStyle, entry models.Log) {
+func sendRemovalEmail(user *storage.User, style *models.Style, event *models.Log) {
 	args := fiber.Map{
 		"User":  user,
 		"Style": style,
-		"Log":   entry,
-		"Link":  config.BaseURL + "/modlog#id-" + strconv.Itoa(int(entry.ID)),
+		"Log":   event,
+		"Link":  config.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
 	}
 
 	title := "Your style has been removed"
