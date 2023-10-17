@@ -4,16 +4,32 @@
 </section>
 
 <style>
-	textarea[name="ids"] { min-height: 100px; }
+	select[multiple] {
+		width: 100% !important;
+		border-radius: var(--br-3);
+		background-color: var(--bg-3);
+	}
+	select[multiple] option {
+		padding: 0.5rem;
+		font-feature-settings: 'tnum' 1;
+	}
+	select[multiple] option:checked {
+		color: var(--inverse);
+		background-color: var(--ac-3);
+	}
 </style>
 
 <section class="limit">
 	<form class="form-wrapper" method="post" action="/styles/bulk-ban/{{ .UserID }}">
-		<label class="mb:m f:b">Enter IDs of styles to remove bellow</label>
-
-		<textarea
-			type="text" name="ids" maxlength="5000"
-			placeholder="9425,9709,12363"></textarea>
+		<label for="ids">Select which styles to remove</label>
+		<i class="fg:3">Hold <kbd>CTRL</kbd> to select multiple styles.</i>
+		<select id="" name="ids" multiple>
+			{{ range .Styles }}
+				<option value="{{ .ID }}">
+					{{ .ID }} - {{ .GetSourceCodeCRC32 }} - {{ .Name }}
+				</option>
+			{{ end }}
+		</select>
 
 		<label for="reason">Reason for ban</label>
 		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>

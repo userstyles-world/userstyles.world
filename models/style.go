@@ -68,6 +68,9 @@ type APIStyle struct {
 	MirrorPrivate  bool      `json:"-"`
 }
 
+// TableName returns which table in database to use with GORM.
+func (APIStyle) TableName() string { return "styles" }
+
 type StyleSiteMap struct {
 	ID int
 }

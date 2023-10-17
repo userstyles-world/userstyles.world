@@ -2,7 +2,6 @@ package style
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -15,6 +14,10 @@ import (
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
 )
+
+type bulkReq struct {
+	IDs []string
+}
 
 func BulkBanGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
@@ -35,6 +38,14 @@ func BulkBanGet(c *fiber.Ctx) error {
 		c.Locals("Title", "Could not find such user")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
+
+	var styles []models.APIStyle
+	err = database.Conn.Find(&styles, "user_id = ? AND deleted_at IS NULL", id).Error
+	if err != nil || len(styles) == 0 {
+		c.Locals("Title", "Could not find any userstyles")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
+	}
+	c.Locals("Styles", styles)
 
 	c.Locals("UserID", id)
 	c.Locals("Title", "Perform a bulk userstyle removal")
@@ -63,11 +74,16 @@ func BulkBanPost(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
+	var req bulkReq
+	if err = c.BodyParser(&req); err != nil {
+		c.Locals("Title", "Failed to process request body")
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+	}
+
 	var styles []*models.Style
 
 	// Process all IDs for problems not to have any errors in between of removal
-	for _, val := range strings.Split(c.FormValue("ids"), ",") {
-		val := strings.TrimSpace(val)
+	for _, val := range req.IDs {
 		id, err := strconv.Atoi(val)
 		if err != nil {
 			c.Locals("Title", "Operation failed")
