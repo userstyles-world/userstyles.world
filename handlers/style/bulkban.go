@@ -5,10 +5,12 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/email"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
@@ -86,11 +88,23 @@ func BulkBanPost(c *fiber.Ctx) error {
 	// lastEvent is used to link to the newest event in the modlog
 	// so the user will be presented with all of them on the screen.
 	var lastEvent *models.Log
-	for index, style := range styles {
-		event, _ := BanStyle(style, u, user, int(style.ID), strconv.Itoa(int(style.ID)), c)
-		if index == len(styles)-1 {
-			lastEvent = event
+	err = database.Conn.Transaction(func(tx *gorm.DB) error {
+		for index, style := range styles {
+			event, err := BanStyle(tx, style, u, user, c)
+			if err != nil {
+				return err
+			}
+
+			if index == len(styles)-1 {
+				lastEvent = event
+			}
 		}
+
+		return nil
+	})
+	if err != nil {
+		c.Locals("Title", "Failed to ban styles")
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
 	}
 
 	go sendBulkRemovalEmail(user, styles, lastEvent)

@@ -46,7 +46,7 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
-func BanStyle(style *models.Style, u *models.APIUser, user *storage.User, i int, id string, c *fiber.Ctx) (*models.Log, error) {
+func BanStyle(db *gorm.DB, style *models.Style, u *models.APIUser, user *storage.User, c *fiber.Ctx) (*models.Log, error) {
 	event := &models.Log{
 		UserID:         u.ID,
 		Username:       u.Username,
@@ -58,33 +58,31 @@ func BanStyle(style *models.Style, u *models.APIUser, user *storage.User, i int,
 		Censor:         c.FormValue("censor") == "on",
 	}
 
-	notification := models.Notification{
+	n := &models.Notification{
 		Kind:     models.KindBannedStyle,
 		TargetID: int(event.ID),
 		UserID:   int(user.ID),
 		StyleID:  int(style.ID),
 	}
 
-	err := database.Conn.Transaction(func(tx *gorm.DB) error {
-		if err := storage.DeleteUserstyle(tx, i); err != nil {
-			return err
-		}
-		if err := models.DeleteStats(tx, i); err != nil {
-			return err
-		}
-		if err := storage.DeleteSearchData(tx, i); err != nil {
-			return err
-		}
-		if err := models.CreateLog(tx, event); err != nil {
-			return err
-		}
-		if err := models.CreateNotification(tx, &notification); err != nil {
-			return err
-		}
-		return models.RemoveStyleCode(id)
-	})
-	if err != nil {
-		return event, err
+	i := int(style.ID)
+	if err := storage.DeleteUserstyle(db, i); err != nil {
+		return nil, err
+	}
+	if err := models.DeleteStats(db, i); err != nil {
+		return nil, err
+	}
+	if err := storage.DeleteSearchData(db, i); err != nil {
+		return nil, err
+	}
+	if err := models.CreateLog(db, event); err != nil {
+		return nil, err
+	}
+	if err := models.CreateNotification(db, n); err != nil {
+		return nil, err
+	}
+	if err := models.RemoveStyleCode(strconv.Itoa(i)); err != nil {
+		return nil, err
 	}
 
 	cache.Code.Remove(i)
@@ -111,7 +109,6 @@ func BanPost(c *fiber.Ctx) error {
 			"Title": "Invalid style ID",
 		})
 	}
-	id := c.Params("id")
 
 	style, err := models.TempGetStyleByID(i)
 	if err != nil {
@@ -131,9 +128,18 @@ func BanPost(c *fiber.Ctx) error {
 		})
 	}
 
-	event, err := BanStyle(style, u, user, i, id, c)
+	var event *models.Log
+	err = database.Conn.Transaction(func(tx *gorm.DB) error {
+		event, err = BanStyle(tx, style, u, user, c)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 	if err != nil {
 		log.Database.Printf("Failed to remove %d: %s\n", i, err)
+		c.Status(fiber.StatusInternalServerError)
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to remove userstyle",
 			"User":  u,
