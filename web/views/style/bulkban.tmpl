@@ -4,34 +4,24 @@
 </section>
 
 <style>
-	select[multiple] {
-		width: 100% !important;
-		border-radius: var(--br-3);
-		background-color: var(--bg-3);
-	}
-	select[multiple] option {
-		padding: 0.5rem;
-		font-feature-settings: 'tnum' 1;
-	}
-	select[multiple] option:checked {
-		color: var(--inverse);
-		background-color: var(--ac-3);
-	}
+	.tnum { font-feature-settings: 'tnum' 1 }
 </style>
 
 <section class="limit">
 	<form class="form-wrapper" method="post" action="/styles/bulk-ban/{{ .UserID }}">
-		<label for="ids">Select which styles to remove</label>
-		<i class="fg:3">Hold <kbd>CTRL</kbd> to select multiple styles.</i>
-		<select id="" name="ids" multiple>
-			{{ range .Styles }}
-				<option value="{{ .ID }}">
+		<label for="ids" class="mb:s">Select which styles to remove</label>
+		{{ range .Styles }}
+			<div class="checkbox iflex tnum">
+				<input type="checkbox" name="ids" id="id-{{ .ID }}" value="{{ .ID }}">
+				{{ template "partials/checkboxes" }}
+				<label for="id-{{ .ID }}">
 					{{ .ID }} - {{ .GetSourceCodeCRC32 }} - {{ .Name }}
-				</option>
-			{{ end }}
+				</label>
+			</div>
+		{{ end }}
 		</select>
 
-		<label for="reason">Reason for ban</label>
+		<label for="reason" class="mt:m">Reason for ban</label>
 		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
 		<input
 		required
@@ -45,9 +35,9 @@
 			placeholder="Your message to the author of this style"></textarea>
 
 		<div class="checkbox flex">
-			<input type="checkbox" name="censor">
+			<input type="checkbox" name="censor" id="censor">
 			{{ template "partials/checkboxes" }}
-			<label class="ml:s" for="censor">Censor style's information</label>
+			<label for="censor">Censor style's information</label>
 		</div>
 		<i class="fg:3">This will censor the information about the styles with a spoiler, use this if the style has an innapropiate name.</i>
 

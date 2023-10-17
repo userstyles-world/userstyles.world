@@ -136,7 +136,12 @@ func sendBulkRemovalEmail(user *storage.User, styles []*models.Style, event *mod
 		"Link":   config.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
 	}
 
-	title := strconv.Itoa(len(styles)) + " of your style have been removed"
+	var title string
+	if len(styles) == 1 {
+		title = strconv.Itoa(len(styles)) + " of your styles has been removed"
+	} else {
+		title = strconv.Itoa(len(styles)) + " of your styles have been removed"
+	}
 	if err := email.Send("style/bulkban", user.Email, title, args); err != nil {
 		log.Warn.Printf("Failed to email %d: %s\n", user.ID, err)
 	}

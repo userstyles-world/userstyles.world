@@ -51,7 +51,7 @@ func BanStyle(db *gorm.DB, style *models.Style, u *models.APIUser, user *storage
 		UserID:         u.ID,
 		Username:       u.Username,
 		Kind:           models.LogRemoveStyle,
-		TargetUserName: style.User.Username,
+		TargetUserName: user.Username,
 		TargetData:     style.Name,
 		Reason:         strings.TrimSpace(c.FormValue("reason")),
 		Message:        strings.TrimSpace(c.FormValue("message")),
