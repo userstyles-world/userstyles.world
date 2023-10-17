@@ -10,7 +10,7 @@ require (
 	github.com/go-co-op/gocron v1.17.0
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/gofiber/adaptor/v2 v2.1.32
-	github.com/gofiber/fiber/v2 v2.49.2
+	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/gofiber/template v1.7.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jarcoal/httpmock v1.2.0
@@ -55,7 +55,7 @@ require (
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
-	github.com/valyala/fasthttp v1.49.0 // indirect
+	github.com/valyala/fasthttp v1.50.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
