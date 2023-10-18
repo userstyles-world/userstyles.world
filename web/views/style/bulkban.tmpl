@@ -4,7 +4,10 @@
 </section>
 
 <style>
-	.tnum { font-feature-settings: 'tnum' 1 }
+	.tnum {
+		width: 100%;
+		font-feature-settings: 'tnum' 1;
+	}
 </style>
 
 <section class="limit">
@@ -24,9 +27,9 @@
 		<label for="reason" class="mt:m">Reason for ban</label>
 		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
 		<input
-		required
-		type="text" name="reason"
-		placeholder="Your reason to ban these styles">
+			required
+			type="text" name="reason"
+			placeholder="Your reason to ban these styles">
 
 		<label for="message">Private message for the author</label>
 		<i class="fg:3">For example, a hint about was done wrong and what can be done now. Will be included in the email.</i>

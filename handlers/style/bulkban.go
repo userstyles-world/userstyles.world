@@ -108,6 +108,7 @@ func BulkBanPost(c *fiber.Ctx) error {
 		for index, style := range styles {
 			event, err := BanStyle(tx, style, u, user, c)
 			if err != nil {
+				log.Database.Printf("Failed to remove %d: %s\n", style.ID, err)
 				return err
 			}
 

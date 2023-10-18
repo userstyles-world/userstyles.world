@@ -7,16 +7,11 @@
 	{{ .Log.Reason }}
 </p>
 
-<p>
-	Styles that were removed:
-	<ul>
-	{{ range .Styles -}}
-		<li>
-			{{ .Name }}
-		</li>
-	{{ end }}
-	</ul>
-</p>
+<p>Styles that were removed:</p>
+
+<ul>
+	{{ range .Styles -}}<li>{{ .Name }}</li>{{ end }}
+</ul>
 
 {{ with .Log.Message -}}
 	<p>Additional message from the moderator:<br> {{ . }}</p>
