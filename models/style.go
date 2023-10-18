@@ -14,6 +14,7 @@ import (
 	"gorm.io/gorm"
 
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/errors"
 	"userstyles.world/modules/util"
 )
@@ -66,6 +67,9 @@ type APIStyle struct {
 	ImportPrivate  bool      `json:"-"`
 	MirrorPrivate  bool      `json:"-"`
 }
+
+// TableName returns which table in database to use with GORM.
+func (APIStyle) TableName() string { return "styles" }
 
 type StyleSiteMap struct {
 	ID int
@@ -236,6 +240,15 @@ func AbleToReview(uid, sid uint) (string, bool) {
 		}
 	}
 	return "", true
+}
+
+func TempGetStyleByID(id int) (s *Style, err error) {
+	err = database.Conn.
+		Select("styles.*, u.username").
+		Joins("JOIN users u ON u.id = styles.user_id").
+		First(&s, "styles.id = ?", id).
+		Error
+	return s, err
 }
 
 // GetStyleFromAuthor tries to fetch a userstyle made by logged in user.

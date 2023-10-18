@@ -32,7 +32,7 @@ func FindUsersCreatedOn(date time.Time) ([]User, error) {
 
 // FindUser returns a user.
 func FindUser(id uint) (u *User, err error) {
-	err = database.Conn.Find(&u, "id = ?", id).Error
+	err = database.Conn.First(&u, "id = ?", id).Error
 	if err != nil {
 		return nil, err
 	}

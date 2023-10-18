@@ -1,0 +1,52 @@
+<section class="ta:c">
+	<h1>{{ .Title }}</h1>
+	<p>This action is irreversible.</p>
+</section>
+
+<style>
+	.tnum {
+		width: 100%;
+		font-feature-settings: 'tnum' 1;
+	}
+</style>
+
+<section class="limit">
+	<form class="form-wrapper" method="post" action="/styles/bulk-ban/{{ .UserID }}">
+		<label for="ids" class="mb:s">Select which styles to remove</label>
+		{{ range .Styles }}
+			<div class="checkbox iflex tnum">
+				<input type="checkbox" name="ids" id="id-{{ .ID }}" value="{{ .ID }}">
+				{{ template "partials/checkboxes" }}
+				<label for="id-{{ .ID }}">
+					{{ .ID }} - {{ .GetSourceCodeCRC32 }} - {{ .Name }}
+				</label>
+			</div>
+		{{ end }}
+		</select>
+
+		<label for="reason" class="mt:m">Reason for ban</label>
+		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
+		<input
+			required
+			type="text" name="reason"
+			placeholder="Your reason to ban these styles">
+
+		<label for="message">Private message for the author</label>
+		<i class="fg:3">For example, a hint about was done wrong and what can be done now. Will be included in the email.</i>
+		<textarea
+			type="text" name="message" maxlength="5000"
+			placeholder="Your message to the author of this style"></textarea>
+
+		<div class="checkbox flex">
+			<input type="checkbox" name="censor" id="censor">
+			{{ template "partials/checkboxes" }}
+			<label for="censor">Censor style's information</label>
+		</div>
+		<i class="fg:3">This will censor the information about the styles with a spoiler, use this if the style has an innapropiate name.</i>
+
+		<div class="mt:m">
+			<button class="btn primary mr:s" type="submit">Confirm</button>
+			<a class="fg:1" href="/style/{{ .Style.ID }}">Cancel</a>
+		</div>
+	</form>
+</section>

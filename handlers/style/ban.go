@@ -46,6 +46,50 @@ func BanGet(c *fiber.Ctx) error {
 	})
 }
 
+func BanStyle(db *gorm.DB, style *models.Style, u *models.APIUser, user *storage.User, c *fiber.Ctx) (*models.Log, error) {
+	event := &models.Log{
+		UserID:         u.ID,
+		Username:       u.Username,
+		Kind:           models.LogRemoveStyle,
+		TargetUserName: user.Username,
+		TargetData:     style.Name,
+		Reason:         strings.TrimSpace(c.FormValue("reason")),
+		Message:        strings.TrimSpace(c.FormValue("message")),
+		Censor:         c.FormValue("censor") == "on",
+	}
+
+	n := &models.Notification{
+		Kind:     models.KindBannedStyle,
+		TargetID: int(event.ID),
+		UserID:   int(user.ID),
+		StyleID:  int(style.ID),
+	}
+
+	i := int(style.ID)
+	if err := storage.DeleteUserstyle(db, i); err != nil {
+		return nil, err
+	}
+	if err := models.DeleteStats(db, i); err != nil {
+		return nil, err
+	}
+	if err := storage.DeleteSearchData(db, i); err != nil {
+		return nil, err
+	}
+	if err := models.CreateLog(db, event); err != nil {
+		return nil, err
+	}
+	if err := models.CreateNotification(db, n); err != nil {
+		return nil, err
+	}
+	if err := models.RemoveStyleCode(strconv.Itoa(i)); err != nil {
+		return nil, err
+	}
+
+	cache.Code.Remove(i)
+
+	return event, nil
+}
+
 func BanPost(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 
@@ -65,9 +109,8 @@ func BanPost(c *fiber.Ctx) error {
 			"Title": "Invalid style ID",
 		})
 	}
-	id := c.Params("id")
 
-	style, err := models.GetStyleByID(id)
+	style, err := models.TempGetStyleByID(i)
 	if err != nil {
 		c.Status(fiber.StatusNotFound)
 		return c.Render("err", fiber.Map{
@@ -85,64 +128,35 @@ func BanPost(c *fiber.Ctx) error {
 		})
 	}
 
-	event := models.Log{
-		UserID:         u.ID,
-		Username:       u.Username,
-		Kind:           models.LogRemoveStyle,
-		TargetUserName: style.Username,
-		TargetData:     style.Name,
-		Reason:         strings.TrimSpace(c.FormValue("reason")),
-		Message:        strings.TrimSpace(c.FormValue("message")),
-		Censor:         c.FormValue("censor") == "on",
-	}
-
-	notification := models.Notification{
-		Kind:     models.KindBannedStyle,
-		TargetID: int(event.ID),
-		UserID:   int(user.ID),
-		StyleID:  int(style.ID),
-	}
-
-	// INSERT INTO `logs`
+	var event *models.Log
 	err = database.Conn.Transaction(func(tx *gorm.DB) error {
-		if err = storage.DeleteUserstyle(tx, i); err != nil {
+		event, err = BanStyle(tx, style, u, user, c)
+		if err != nil {
 			return err
 		}
-		if err = models.DeleteStats(tx, i); err != nil {
-			return err
-		}
-		if err = storage.DeleteSearchData(tx, i); err != nil {
-			return err
-		}
-		if err = models.CreateLog(tx, &event); err != nil {
-			return err
-		}
-		if err = models.CreateNotification(tx, &notification); err != nil {
-			return err
-		}
-		return models.RemoveStyleCode(id)
+
+		return nil
 	})
 	if err != nil {
 		log.Database.Printf("Failed to remove %d: %s\n", i, err)
+		c.Status(fiber.StatusInternalServerError)
 		return c.Render("err", fiber.Map{
 			"Title": "Failed to remove userstyle",
 			"User":  u,
 		})
 	}
 
-	cache.Code.Remove(i)
-
 	go sendRemovalEmail(user, style, event)
 
 	return c.Redirect("/modlog", fiber.StatusSeeOther)
 }
 
-func sendRemovalEmail(user *storage.User, style *models.APIStyle, entry models.Log) {
+func sendRemovalEmail(user *storage.User, style *models.Style, event *models.Log) {
 	args := fiber.Map{
 		"User":  user,
 		"Style": style,
-		"Log":   entry,
-		"Link":  config.BaseURL + "/modlog#id-" + strconv.Itoa(int(entry.ID)),
+		"Log":   event,
+		"Link":  config.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
 	}
 
 	title := "Your style has been removed"

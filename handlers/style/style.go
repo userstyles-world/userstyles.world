@@ -27,6 +27,8 @@ func Routes(app *fiber.App) {
 	r.Get("/styles/promote/:id", jwtware.Protected, Promote)
 	r.Get("/styles/ban/:id", jwtware.Protected, BanGet)
 	r.Post("/styles/ban/:id", jwtware.Protected, BanPost)
+	r.Get("/styles/bulk-ban/:userid", jwtware.Protected, BulkBanGet)
+	r.Post("/styles/bulk-ban/:userid", jwtware.Protected, BulkBanPost)
 	r.Static("/preview", config.PublicDir, fiber.Static{
 		MaxAge: 2678400, // 1 month
 	})
