@@ -1,0 +1,8 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+    <ShortName>USw Search</ShortName>
+    <Description>Search for userstyles on UserStyles.world</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Image width="16" height="16" type="image/x-icon">/mascot.svg</Image>
+    <Url type="text/html" template="/search?q={searchTerms}"/>
+    <moz:SearchForm>/search</moz:SearchForm>
+</OpenSearchDescription>
