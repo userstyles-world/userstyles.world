@@ -4,5 +4,8 @@
 	{{ else }}
 		<h1>{{ .Title }}</h1>
 	{{ end }}
+	{{ with .Error }}
+		<p class="mb:l">{{ . }}</p>
+	{{ end }}
 	<p>Go to <a class="prev-page" data-javascript>previous page</a> or visit our <a href="/">home page</a>.</p>
 </section>
