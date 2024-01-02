@@ -175,7 +175,7 @@ func EditAccount(c *fiber.Ctx) error {
 			Name:     "flags",
 			Value:    v,
 			Path:     "/",
-			Expires:  time.Now().Add(time.Hour * 24 * 30),
+			Expires:  time.Now().Add(time.Hour * 24 * 30 * 6),
 			Secure:   config.Production,
 			HTTPOnly: true,
 			SameSite: fiber.CookieSameSiteLaxMode,
