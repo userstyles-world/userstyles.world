@@ -33,8 +33,7 @@ func decodeImage(src, out string, imageType imageKind) error {
 	var args []string
 	switch imageType {
 	case imageFullWebP:
-		args = []string{"vips", "webpsave", "--strip", "--reduction-effort",
-			"4", "-n", "--Q", "80", src, out}
+		args = []string{"vips", "webpsave", "--strip", "--Q", "80", src, out}
 
 	case imageFullJPEG:
 		args = []string{"vips", "jpegsave", "--strip", "--Q", "80",
