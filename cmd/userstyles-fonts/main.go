@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	releaseURL = "https://api.github.com/repos/rsms/inter/releases/latest"
+	releaseURL = "https://api.github.com/repos/rsms/inter/releases/44888689" // v3.19
 	distDir    = path.Join("web", "static", "fonts")
 )
 
