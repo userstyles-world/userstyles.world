@@ -53,6 +53,10 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 	c.Locals("Style", s)
 
+	// Get previewURL
+	preview := c.FormValue("previewURL")
+	c.Locals("PreviewURL", preview)
+
 	m, err := s.Validate(validator.V, true)
 	if err != nil {
 		c.Locals("err", m)
@@ -82,7 +86,6 @@ func CreatePost(c *fiber.Ctx) error {
 
 	// Check preview image.
 	file, _ := c.FormFile("preview")
-	preview := c.FormValue("previewURL")
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
 	if file != nil || preview != "" {
 		if err = images.Generate(file, styleID, "0", "", preview); err != nil {

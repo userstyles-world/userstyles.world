@@ -102,14 +102,18 @@ func ImportPost(c *fiber.Ctx) error {
 	s.MirrorCode = c.FormValue("mirrorCode") == "on"
 	s.MirrorMeta = c.FormValue("mirrorMeta") == "on"
 
+	// Get previewURL
+	preview := c.FormValue("previewURL", s.Preview)
+
 	m, err := s.Validate(validator.V, true)
 	if err != nil {
 		return c.Render("style/import", fiber.Map{
-			"Title": "Import userstyle",
-			"User":  u,
-			"Style": s,
-			"err":   m,
-			"Error": "Incorrect userstyle data was entered. Please review the fields bellow.",
+			"Title":      "Import userstyle",
+			"User":       u,
+			"Style":      s,
+			"PreviewURL": preview,
+			"err":        m,
+			"Error":      "Incorrect userstyle data was entered. Please review the fields bellow.",
 		})
 	}
 
@@ -140,7 +144,6 @@ func ImportPost(c *fiber.Ctx) error {
 
 	// Check preview image.
 	file, _ := c.FormFile("preview")
-	preview := c.FormValue("previewURL", s.Preview)
 	styleID := strconv.FormatUint(uint64(s.ID), 10)
 	if file != nil || preview != "" {
 		if err := images.Generate(file, styleID, "0", "", preview); err != nil {
