@@ -1,11 +1,54 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"path"
 	"strings"
 	"time"
 )
+
+type config struct {
+	Debug        bool
+	Production   bool
+	Addr         string
+	BaseURL      string
+	DatabaseName string
+}
+
+var Config *config
+
+var defaultConfig = &config{
+	Addr:         ":3000",
+	BaseURL:      "http://localhost:3000",
+	DatabaseName: "dev.db",
+}
+
+func New(path string) error {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	c := defaultConfig
+	err = json.Unmarshal(b, &c)
+	if err != nil {
+		return err
+	}
+
+	Config = c
+
+	return nil
+}
+
+func PrintConfig(c *config) (string, error) {
+	b, err := json.MarshalIndent(c, "", "\t")
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
+}
 
 type ScrambleSettings struct {
 	StepSize       int
@@ -16,8 +59,7 @@ var (
 	GitCommit  string
 	GitVersion string
 
-	Port                 = getEnv("PORT", ":3000")
-	BaseURL              = getEnv("BASE_URL", "http://localhost"+Port)
+	// BaseURL              = getEnv("BASE_URL", "http://localhost"+Port)
 	DB                   = getEnv("DB", "dev.db")
 	DBDebug              = getEnv("DB_DEBUG", "silent")
 	DBColor              = getEnvBool("DB_COLOR", false)
@@ -84,7 +126,7 @@ var (
 
 // OAuthURL returns the proper callback URL depending on the environment.
 func OAuthURL() string {
-	return BaseURL + "/api/callback/"
+	return Config.BaseURL + "/api/callback/"
 }
 
 // raw tweaks allowed URLs to make them work seamlessly in both environments.

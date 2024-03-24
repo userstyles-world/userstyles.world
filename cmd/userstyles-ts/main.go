@@ -32,7 +32,7 @@ func main() {
 	// TODO: Remove this code?
 	if shouldWatch {
 		// Ensure we're seeing the error messages in stdout.
-		config.Production = false
+		config.Config.Production = false
 		log.Initialize()
 		watch = &api.WatchMode{
 			OnRebuild: func(result api.BuildResult) {

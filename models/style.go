@@ -281,7 +281,7 @@ func (s *Style) UpdateColumn(col string, val any) error {
 
 // SetPreview will set preview image URL.
 func (s *Style) SetPreview() {
-	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.BaseURL, s.ID, s.PreviewVersion)
+	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.Config.BaseURL, s.ID, s.PreviewVersion)
 }
 
 var (
@@ -369,7 +369,7 @@ func (s Style) ValidateCode(v *validator.Validate, addPage bool) (string, error)
 
 // SetPreview will set preview image URL.
 func (s *APIStyle) SetPreview() {
-	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.BaseURL, s.ID, s.PreviewVersion)
+	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.Config.BaseURL, s.ID, s.PreviewVersion)
 }
 
 // SelectUpdateStyle will update specific fields in the styles table.

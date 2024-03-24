@@ -33,7 +33,7 @@ var Protected = func(c *fiber.Ctx) error {
 
 var Admin = func(c *fiber.Ctx) error {
 	// Bypass checks if monitor is enabled and request is a local IP address.
-	if config.PerformanceMonitor && util.IsLocal(config.Production, c.IP()) {
+	if config.PerformanceMonitor && util.IsLocal(config.Config.Production, c.IP()) {
 		return c.Next()
 	}
 

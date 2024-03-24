@@ -133,9 +133,9 @@ func New(views http.FileSystem) *html.Engine {
 
 	engine.AddFunc("canonical", func(url any) template.HTML {
 		if url == nil {
-			return template.HTML(config.BaseURL)
+			return template.HTML(config.Config.BaseURL)
 		}
-		return template.HTML(config.BaseURL + "/" + url.(string))
+		return template.HTML(config.Config.BaseURL + "/" + url.(string))
 	})
 
 	engine.AddFunc("Elapsed", func(dur time.Duration) template.HTML {
@@ -160,7 +160,7 @@ func New(views http.FileSystem) *html.Engine {
 		return string(b)
 	})
 
-	if !config.Production {
+	if !config.Config.Production {
 		engine.Reload(true)
 	}
 

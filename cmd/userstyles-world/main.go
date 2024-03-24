@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -34,6 +35,12 @@ import (
 )
 
 func main() {
+	err := config.New("config.json")
+	if err != nil {
+		fmt.Printf("Failed to load config: %s\n", err)
+		os.Exit(1)
+	}
+
 	log.Initialize()
 	cache.Initialize()
 	images.CheckVips()
@@ -41,6 +48,7 @@ func main() {
 	validator.Init()
 	database.Initialize()
 	cron.Initialize()
+	web.Init()
 
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(http.FS(web.ViewsDir)),
@@ -55,7 +63,7 @@ func main() {
 
 	email.SetRenderer(app)
 
-	if !config.Production {
+	if !config.Config.Production {
 		app.Use(logger.New())
 	}
 
@@ -91,7 +99,7 @@ func main() {
 	}))
 
 	// TODO: Investigate how to "truly" inline sourcemaps in Sass.
-	if !config.Production {
+	if !config.Config.Production {
 		app.Static("/scss", "web/scss")
 	}
 
@@ -99,7 +107,7 @@ func main() {
 	app.Use(core.NotFound)
 
 	go func() {
-		if err := app.Listen(config.Port); err != nil {
+		if err := app.Listen(config.Config.Addr); err != nil {
 			log.Warn.Fatal(err)
 		}
 	}()

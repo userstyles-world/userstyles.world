@@ -17,7 +17,7 @@ var (
 )
 
 func setOutput(f *os.File) io.Writer {
-	if config.Production {
+	if config.Config.Production {
 		return io.MultiWriter(f)
 	}
 

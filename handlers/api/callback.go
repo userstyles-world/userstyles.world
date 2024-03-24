@@ -95,7 +95,7 @@ func CallbackGet(c *fiber.Ctx) error {
 		Value:    t,
 		Path:     "/",
 		Expires:  expiration,
-		Secure:   config.Production,
+		Secure:   config.Config.Production,
 		HTTPOnly: true,
 		SameSite: fiber.CookieSameSiteLaxMode,
 	})
