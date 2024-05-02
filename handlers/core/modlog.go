@@ -15,7 +15,7 @@ func GetModLog(c *fiber.Ctx) error {
 	bannedUsers, err := models.GetLogOfKind(models.LogBanUser)
 	if err != nil {
 		return c.Render("err", fiber.Map{
-			"Title": "Internal Server error",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}
@@ -23,7 +23,7 @@ func GetModLog(c *fiber.Ctx) error {
 	removedStyles, err := models.GetLogOfKind(models.LogRemoveStyle)
 	if err != nil {
 		return c.Render("err", fiber.Map{
-			"Title": "Internal Server error",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}
@@ -31,7 +31,7 @@ func GetModLog(c *fiber.Ctx) error {
 	reviews, err := models.GetLogOfKind(models.LogRemoveReview)
 	if err != nil {
 		return c.Render("err", fiber.Map{
-			"Title": "Internal Server error",
+			"Title": "Internal server error",
 			"User":  u,
 		})
 	}
