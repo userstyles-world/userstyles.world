@@ -147,7 +147,7 @@ func RelDuration(d time.Duration) string {
 		return "just now"
 	}
 
-	b = append(b[:len(b)-2])
+	b = b[:len(b)-2]
 	if int(d) > 0 {
 		b = append(b, " ago"...)
 	}
