@@ -1,6 +1,6 @@
 ---
 Title: Frequently Asked Questions
-UpdatedAt: 2023-10-07T15:00:00+02:00
+UpdatedAt: 2024-05-25T16:53:00+02:00
 ---
 
 <!-- markdown-toc start - Don't edit this section. -->
@@ -73,7 +73,11 @@ Because of how inline search works, it may take up to 15 minutes for your style
 to show up or get metadata updated.
 
 Make sure that you have set the category for your style properly. It may be the
-name of the service or a domain name (with subdomain part included).
+name of the service or a domain name. If the domain TLD is either .org or .com,
+you must omit it. If the TLD is something else, you must indicate both the domain
+and the TLD.
+
+The subdomain part must also be included.
 
 
 ### Why are ratings different in Stylus' search?
