@@ -19,8 +19,8 @@ It's unlikely that you'll need to build them from scratch, but it's possible.
 ### Install Go
 
 Our codebase uses the [Go](https://go.dev/) programming language. With Go
-installed, you will need to install [air](https://github.com/cosmtrek/air) by
-running `go install github.com/cosmtrek/air@latest` if you want to use `run
+installed, you will need to install [air](https://github.com/air-verse/air) by
+running `go install github.com/air-verse/air@latest` if you want to use `run
 watch` command.
 
 ### Install Sass
