@@ -21,7 +21,7 @@ took() {
 check() {
     hint() {
         case "$1" in
-            air) printf "Install it with 'go install github.com/cosmtrek/air@latest'.\n" ;;
+            air) printf "Install it with 'go install github.com/air-verse/air@latest'.\n" ;;
             [bd]c) printf "Install 'bc' with your package manager.\n" ;;
             go) printf "Install 'go' with your package manager.\n" ;;
             git) printf "Install 'git' with your package manager.\n" ;;
