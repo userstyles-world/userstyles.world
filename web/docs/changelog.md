@@ -4,7 +4,9 @@ Title: Changelog
 
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+Please note that the content on this page is out of date. For latest changes, see [commit history](https://github.com/userstyles-world/userstyles.world/commits/dev/) in the repository instead.
+
+See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 <!-- markdown-toc start - Don't edit this section. -->
 **Table of Contents**
