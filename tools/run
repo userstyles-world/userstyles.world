@@ -42,6 +42,14 @@ check() {
 # Jobs.
 
 build() {
+    : "${flags:=""}"
+    : "${config:="userstyles.world/modules/config"}"
+
+    setBuildInfo() {
+        flags="$flags -X ${config}.GitCommit=$(git rev-list -1 HEAD)"
+        flags="$flags -X ${config}.GitVersion=$(git describe --tags)"
+    }
+
     case "$1" in
         fonts)
             log "Downloading fonts."
@@ -50,21 +58,23 @@ build() {
         go-dev)
             : "Setting BIN to ${BIN:=bin/userstyles-dev}."
             log "Compiling development executable to ${BIN}."
-            go build -v -o "$BIN" -tags "fts5" cmd/userstyles-world/main.go
+
+            setBuildInfo
+            go build -v \
+                -o "$BIN" \
+                -ldflags "$flags" \
+                -tags "fts5" \
+                cmd/userstyles-world/main.go
             ;;
         go-prod)
             : "Setting BIN to ${BIN:=bin/userstyles-prod}."
             log "Compiling production executable to ${BIN}."
 
-            c="$(git rev-list -1 HEAD)"
-            v="$(git describe --tags)"
-            f="-s -w -extldflags '-fno-PIC -static'"
-            f="$f -X userstyles.world/modules/config.GitCommit=${c}"
-            f="$f -X userstyles.world/modules/config.GitVersion=${v}"
-
+            flags="-s -w -extldflags '-fno-PIC -static'"
+            setBuildInfo
             go build -v \
                 -o "$BIN" \
-                -ldflags "$f" \
+                -ldflags "$flags" \
                 -buildmode pie \
                 -tags 'osusergo netgo static_build fts5' \
                 cmd/userstyles-world/main.go

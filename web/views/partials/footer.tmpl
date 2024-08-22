@@ -7,13 +7,9 @@
 			</li>
 			<li><span class="copyright">© 2020–{{ config "copyright" }} {{ config "appName" }}</span></li>
 			<li>
-				{{ if (config "appVersion") }}
-					<a class="version" href="{{ config "appLatestCommit" }}">
-						{{- printf "%s (%s)" (config "appVersion") (config "appCodeName") -}}
-					</a>
-				{{ else }}
-					<span class="version">DevEnv</span>
-				{{ end }}
+				<a class="version" href="{{ config "appLatestCommit" }}">
+					{{ config "appVersion" }} ({{ config "appCodeName" }})
+				</a>
 			</li>
 		</ul>
 
