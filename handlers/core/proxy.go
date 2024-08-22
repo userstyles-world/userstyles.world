@@ -26,7 +26,7 @@ var client = http.Client{
 		}
 
 		// Make sure it doesn't redirect to a loopback thingy.
-		if config.Config.Production && util.IsLoopback(string(req.Host)) {
+		if config.App.Production && util.IsLoopback(string(req.Host)) {
 			return errors.New("*giggles* Mikey Wikey hates you")
 		}
 		return nil

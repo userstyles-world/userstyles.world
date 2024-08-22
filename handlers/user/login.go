@@ -102,7 +102,7 @@ func LoginPost(c *fiber.Ctx) error {
 		Value:    t,
 		Path:     "/",
 		Expires:  expiration,
-		Secure:   config.Config.Production,
+		Secure:   config.App.Production,
 		HTTPOnly: true,
 		SameSite: fiber.CookieSameSiteLaxMode,
 	}

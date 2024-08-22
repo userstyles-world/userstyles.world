@@ -117,7 +117,7 @@ func ConfirmBan(c *fiber.Ctx) error {
 	args := fiber.Map{
 		"User":   user,
 		"Reason": logEntry.Reason,
-		"Link":   config.Config.BaseURL + "/modlog#id-" + strconv.Itoa(int(logEntry.ID)),
+		"Link":   config.App.BaseURL + "/modlog#id-" + strconv.Itoa(int(logEntry.ID)),
 	}
 	err = email.Send("user/ban", user.Email, "You have been banned", args)
 	if err != nil {

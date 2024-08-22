@@ -106,7 +106,7 @@ func removeForm(c *fiber.Ctx) error {
 	args := fiber.Map{
 		"User": r.User,
 		"Log":  l,
-		"Link": config.Config.BaseURL + "/modlog#id-" + strconv.Itoa(int(l.ID)),
+		"Link": config.App.BaseURL + "/modlog#id-" + strconv.Itoa(int(l.ID)),
 	}
 
 	title := "Your review has been removed"

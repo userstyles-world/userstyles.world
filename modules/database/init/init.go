@@ -79,7 +79,7 @@ func Initialize() {
 
 	shouldSeed := false
 	// Generate data for development.
-	if config.DBDrop && !config.Config.Production {
+	if config.DBDrop && !config.App.Production {
 		for _, table := range tables {
 			if err := drop(table.model); err != nil {
 				log.Warn.Fatalf("Failed to drop %s, err: %s\n", table.name, err.Error())

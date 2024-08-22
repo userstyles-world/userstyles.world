@@ -96,7 +96,7 @@ func BenchmarkGetStyleCompactIndex(b *testing.B) {
 						UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
 					},
 					Name:    "test " + id,
-					Preview: config.Config.BaseURL + "/preview/" + id + "/0.webp",
+					Preview: config.App.BaseURL + "/preview/" + id + "/0.webp",
 				})
 			}
 

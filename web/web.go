@@ -22,17 +22,17 @@ var (
 
 func Init() {
 	var err error
-	DocsDir, err = util.EmbedFS(files, "web/docs", config.Config.Production)
+	DocsDir, err = util.EmbedFS(files, "web/docs", config.App.Production)
 	if err != nil {
 		log.Fatalf("Failed to set docs directory: %s\n", err)
 	}
 
-	StaticDir, err = util.EmbedFS(files, "web/static", config.Config.Production)
+	StaticDir, err = util.EmbedFS(files, "web/static", config.App.Production)
 	if err != nil {
 		log.Fatalf("Failed to set static directory: %s\n", err)
 	}
 
-	ViewsDir, err = util.EmbedFS(files, "web/views", config.Config.Production)
+	ViewsDir, err = util.EmbedFS(files, "web/views", config.App.Production)
 	if err != nil {
 		log.Fatalf("Failed to set views directory: %s\n", err)
 	}

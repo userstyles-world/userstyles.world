@@ -35,7 +35,7 @@ import (
 )
 
 func main() {
-	err := config.New("config.json")
+	err := config.Load("config.json")
 	if err != nil {
 		fmt.Printf("Failed to load config: %s\n", err)
 		os.Exit(1)
@@ -63,7 +63,7 @@ func main() {
 
 	email.SetRenderer(app)
 
-	if !config.Config.Production {
+	if !config.App.Production {
 		app.Use(logger.New())
 	}
 
@@ -99,7 +99,7 @@ func main() {
 	}))
 
 	// TODO: Investigate how to "truly" inline sourcemaps in Sass.
-	if !config.Config.Production {
+	if !config.App.Production {
 		app.Static("/scss", "web/scss")
 	}
 
@@ -107,7 +107,7 @@ func main() {
 	app.Use(core.NotFound)
 
 	go func() {
-		if err := app.Listen(config.Config.Addr); err != nil {
+		if err := app.Listen(config.App.Addr); err != nil {
 			log.Warn.Fatal(err)
 		}
 	}()

@@ -1,53 +1,67 @@
+// Package config provides configuration options.
 package config
 
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"strings"
 	"time"
 )
 
-type config struct {
-	Debug        bool
-	Production   bool
-	Addr         string
-	BaseURL      string
-	DatabaseName string
+type (
+	AppConfig struct {
+		Debug      bool
+		Production bool
+		Addr       string
+		BaseURL    string
+	}
+
+	config struct {
+		App AppConfig
+	}
+)
+
+var (
+	// App stores general configuration.
+	App *AppConfig
+)
+
+func defaultConfig() *config {
+	return &config{
+		App: AppConfig{
+			Addr:    ":3000",
+			BaseURL: "http://localhost:3000",
+		},
+	}
 }
 
-var Config *config
-
-var defaultConfig = &config{
-	Addr:         ":3000",
-	BaseURL:      "http://localhost:3000",
-	DatabaseName: "dev.db",
-}
-
-func New(path string) error {
+// Load tries to load configuration from a given path.
+func Load(path string) error {
 	b, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
 
-	c := defaultConfig
-	err = json.Unmarshal(b, &c)
-	if err != nil {
+	c := defaultConfig()
+	if err = json.Unmarshal(b, &c); err != nil {
 		return err
 	}
 
-	Config = c
+	if c.App.Debug {
+		b, err := json.MarshalIndent(c, "", "\t")
+		if err != nil {
+			return err
+		}
+
+		log.Println("config:", string(b))
+	}
+
+	App = &c.App
 
 	return nil
-}
-
-func PrintConfig(c *config) (string, error) {
-	b, err := json.MarshalIndent(c, "", "\t")
-	if err != nil {
-		return "", err
-	}
-	return string(b), nil
 }
 
 type ScrambleSettings struct {
@@ -59,7 +73,6 @@ var (
 	GitCommit  string
 	GitVersion string
 
-	// BaseURL              = getEnv("BASE_URL", "http://localhost"+Port)
 	DB                   = getEnv("DB", "dev.db")
 	DBDebug              = getEnv("DB_DEBUG", "silent")
 	DBColor              = getEnvBool("DB_COLOR", false)
@@ -88,9 +101,6 @@ var (
 	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
 	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
 	SearchReindex        = getEnvBool("SEARCH_REINDEX", false)
-
-	// Production is used for various "feature flags".
-	Production = DB != "dev.db"
 
 	ScrambleConfig = &ScrambleSettings{
 		StepSize:       getEnvInt("NONCE_SCRAMBLE_STEP", 2),
@@ -124,14 +134,14 @@ var (
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")
 )
 
-// OAuthURL returns the proper callback URL depending on the environment.
+// OAuthURL returns an environment-specific callback URL used for OAuth services.
 func OAuthURL() string {
-	return Config.BaseURL + "/api/callback/"
+	return App.BaseURL + "/api/callback/"
 }
 
 // raw tweaks allowed URLs to make them work seamlessly in both environments.
 func raw(s string) string {
-	if !Production {
+	if !App.Production {
 		s += "|userstyles.world"
 	}
 	r := strings.NewReplacer("http://", "", "https://", "")

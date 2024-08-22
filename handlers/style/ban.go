@@ -156,7 +156,7 @@ func sendRemovalEmail(user *storage.User, style *models.Style, event *models.Log
 		"User":  user,
 		"Style": style,
 		"Log":   event,
-		"Link":  config.Config.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
+		"Link":  config.App.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
 	}
 
 	title := "Your style has been removed"

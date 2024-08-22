@@ -78,7 +78,7 @@ func RecoverPost(c *fiber.Ctx) error {
 			return
 		}
 
-		link := config.Config.BaseURL + "/reset/" + util.EncryptText(jwtToken, util.AEADCrypto, config.ScrambleConfig)
+		link := config.App.BaseURL + "/reset/" + util.EncryptText(jwtToken, util.AEADCrypto, config.ScrambleConfig)
 
 		args := fiber.Map{
 			"User": user,
