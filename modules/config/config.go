@@ -22,7 +22,7 @@ type (
 		Description  string
 		Codename     string
 		Copyright    string
-		Started      time.Time
+		Started      time.Time `json:"-"`
 		EmailRe      string
 		PageMaxItems int
 
@@ -31,9 +31,9 @@ type (
 		Matrix         string
 		OpenCollective string
 
-		BuildCommit    string
-		BuildCommitSHA string
-		BuildSignature string
+		BuildCommit    string `json:"-"`
+		BuildCommitSHA string `json:"-"`
+		BuildSignature string `json:"-"`
 	}
 
 	config struct {
