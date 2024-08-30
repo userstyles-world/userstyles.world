@@ -83,8 +83,8 @@ func (p *Pagination) calcItems(total int) {
 	}
 
 	// Calculate max page and remainder.
-	p.Max = total / config.AppPageMaxItems
-	if total%config.AppPageMaxItems > 0 {
+	p.Max = total / config.App.PageMaxItems
+	if total%config.App.PageMaxItems > 0 {
 		p.Max++
 	}
 

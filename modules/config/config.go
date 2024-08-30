@@ -17,6 +17,23 @@ type (
 		Production bool
 		Addr       string
 		BaseURL    string
+
+		Name         string
+		Description  string
+		Codename     string
+		Copyright    string
+		Started      time.Time
+		EmailRe      string
+		PageMaxItems int
+
+		Repository     string
+		Discord        string
+		Matrix         string
+		OpenCollective string
+
+		BuildCommit    string
+		BuildCommitSHA string
+		BuildSignature string
 	}
 
 	config struct {
@@ -30,10 +47,29 @@ var (
 )
 
 func defaultConfig() *config {
+	repo := "https://github.com/userstyles-world/userstyles.world"
+	started := time.Now()
+
 	return &config{
 		App: AppConfig{
-			Addr:    ":3000",
-			BaseURL: "http://localhost:3000",
+			Addr:         ":3000",
+			BaseURL:      "http://localhost:3000",
+			Name:         "UserStyles.world",
+			Description:  "A free and open-source, community-driven website for browsing and sharing UserCSS userstyles.",
+			Codename:     "Fennec Fox",
+			Copyright:    started.Format("2006"),
+			Started:      started,
+			EmailRe:      `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`,
+			PageMaxItems: 36,
+
+			Repository:     repo,
+			Discord:        "https://discord.gg/P5zra4nFS2",
+			Matrix:         "https://matrix.to/#/#userstyles:matrix.org",
+			OpenCollective: "https://opencollective.com/userstyles",
+
+			BuildCommit:    repo + "/commit/" + GitCommit,
+			BuildCommitSHA: fmt.Sprintf("%.8s", GitCommit),
+			BuildSignature: GitVersion,
 		},
 	}
 }
@@ -115,20 +151,6 @@ var (
 	PublicDir = path.Join(DataDir, "public")
 
 	LogFile = path.Join(DataDir, "userstyles.log")
-
-	AppName         = "UserStyles.world"
-	AppCodeName     = "Fennec Fox"
-	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
-	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
-	AppCommitSHA    = fmt.Sprintf("%.7s", GitCommit)
-	AppUptime       = time.Now()
-	AppPageMaxItems = 36
-
-	AppLinkChatDiscord    = "https://discord.gg/P5zra4nFS2"
-	AppLinkChatMatrix     = "https://matrix.to/#/#userstyles:matrix.org"
-	AppLinkOpenCollective = "https://opencollective.com/userstyles"
-
-	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
 
 	CachedCodeItems = getEnvInt("CACHED_CODE_ITEMS", 250)
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")

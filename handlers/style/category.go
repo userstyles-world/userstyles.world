@@ -33,7 +33,7 @@ func GetCategory(c *fiber.Ctx) error {
 	}
 	c.Locals("Pagination", p)
 
-	cat, err := storage.GetStyleCategories(page, config.AppPageMaxItems)
+	cat, err := storage.GetStyleCategories(page, config.App.PageMaxItems)
 	if err != nil {
 		c.Locals("Title", "Failed to find categories")
 		return c.Render("err", fiber.Map{})

@@ -22,7 +22,7 @@
 		<div class="Form-section Form-full">
 			<label for="email">Email address</label>
 			<input
-				required pattern="{{ config "allowedEmailsRe" }}"
+				required pattern="{{ .App.EmailRe }}"
 				type="email" name="email" id="email"
 				placeholder="username@example.org"
 				title="Must be an email address">

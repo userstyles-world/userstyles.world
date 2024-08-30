@@ -42,7 +42,7 @@ func Profile(c *fiber.Ctx) error {
 	}
 	c.Locals("Count", count)
 
-	size := config.AppPageMaxItems
+	size := config.App.PageMaxItems
 	p := models.NewPagination(page, count, c.Query("sort"), c.Path())
 	if p.OutOfBounds() {
 		return c.Redirect(p.URL(p.Now), 302)

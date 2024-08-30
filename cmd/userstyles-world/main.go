@@ -69,6 +69,10 @@ func main() {
 
 	api.FastRoutes(app)
 
+	app.Use(func(c *fiber.Ctx) error {
+		c.Locals("App", &config.App)
+		return c.Next()
+	})
 	app.Use(core.HSTSMiddleware)
 	app.Use(core.CSPMiddleware)
 	app.Use(core.FlagsMiddleware)

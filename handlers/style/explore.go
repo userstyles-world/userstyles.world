@@ -39,7 +39,7 @@ func GetExplore(c *fiber.Ctx) error {
 	c.Locals("Pagination", p)
 
 	// Query for [sorted] styles.
-	s, err := storage.FindStyleCardsPaginated(p.Now, config.AppPageMaxItems, p.SortStyles())
+	s, err := storage.FindStyleCardsPaginated(p.Now, config.App.PageMaxItems, p.SortStyles())
 	if err != nil {
 		log.Database.Println("Failed to get styles:", err)
 		c.Locals("Title", "Styles not found")
