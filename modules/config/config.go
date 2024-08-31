@@ -36,14 +36,29 @@ type (
 		BuildSignature string `json:"-"`
 	}
 
+	DatabaseConfig struct {
+		Name             string
+		Debug            string
+		Colorful         bool
+		Migrate          bool
+		Drop             bool
+		RandomData       bool
+		RandomDataAmount int
+		MaxOpenConns     int
+	}
+
 	config struct {
-		App AppConfig
+		App      AppConfig
+		Database DatabaseConfig
 	}
 )
 
 var (
 	// App stores general configuration.
 	App *AppConfig
+
+	// Database stores database configuration.
+	Database *DatabaseConfig
 )
 
 func defaultConfig() *config {
@@ -71,6 +86,12 @@ func defaultConfig() *config {
 			BuildCommitSHA: fmt.Sprintf("%.8s", GitCommit),
 			BuildSignature: GitVersion,
 		},
+		Database: DatabaseConfig{
+			Name:         "dev.db",
+			Debug:        "info",
+			Colorful:     true,
+			MaxOpenConns: 10,
+		},
 	}
 }
 
@@ -96,6 +117,7 @@ func Load(path string) error {
 	}
 
 	App = &c.App
+	Database = &c.Database
 
 	return nil
 }
@@ -108,15 +130,6 @@ type ScrambleSettings struct {
 var (
 	GitCommit  string
 	GitVersion string
-
-	DB                   = getEnv("DB", "dev.db")
-	DBDebug              = getEnv("DB_DEBUG", "silent")
-	DBColor              = getEnvBool("DB_COLOR", false)
-	DBMigrate            = getEnvBool("DB_MIGRATE", false)
-	DBDrop               = getEnvBool("DB_DROP", false)
-	DBRandomData         = getEnvBool("DB_RANDOM_DATA", false)
-	DBRandomDataAmount   = getEnvInt("DB_RANDOM_DATA_AMOUNT", 100)
-	DBMaxOpenConns       = getEnvInt("DB_MAX_OPEN_CONNS", 10)
 	Salt                 = getEnvInt("SALT", 10)
 	JWTSigningKey        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
 	VerifyJWTSigningKey  = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")
