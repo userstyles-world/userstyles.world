@@ -16,7 +16,7 @@ func (github) oauthMakeURL() string {
 	// Base URL.
 	oauthURL := "https://github.com/login/oauth/authorize"
 	// Add our app client ID.
-	oauthURL += "?client_id=" + config.GitHubClientID
+	oauthURL += "?client_id=" + config.OpenAuth.GitHubID
 	// Add email scope.
 	oauthURL += "&scope=" + url.QueryEscape("user:email")
 
@@ -37,8 +37,8 @@ func (github) appendToRedirect(state any) string {
 
 func (github) getAuthTokenURL(state any) string {
 	authURL := "https://github.com/login/oauth/access_token"
-	authURL += "?client_id=" + config.GitHubClientID
-	authURL += "&client_secret=" + config.GitHubClientSecret
+	authURL += "?client_id=" + config.OpenAuth.GitHubID
+	authURL += "&client_secret=" + config.OpenAuth.GitHubSecret
 	// Add the nonsense state we uses earlier.
 	authURL += "&state=" + state.(string)
 

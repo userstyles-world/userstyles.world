@@ -47,9 +47,19 @@ type (
 		MaxOpenConns     int
 	}
 
+	OpenAuthConfig struct {
+		GitHubID       string
+		GitHubSecret   string
+		GitLabID       string
+		GitLabSecret   string
+		CodebergID     string
+		CodebergSecret string
+	}
+
 	config struct {
 		App      AppConfig
 		Database DatabaseConfig
+		OpenAuth OpenAuthConfig
 	}
 )
 
@@ -59,6 +69,9 @@ var (
 
 	// Database stores database configuration.
 	Database *DatabaseConfig
+
+	// OpenAuth stores configuration needed for connecting to external services.
+	OpenAuth *OpenAuthConfig
 )
 
 func defaultConfig() *config {
@@ -118,6 +131,7 @@ func Load(path string) error {
 
 	App = &c.App
 	Database = &c.Database
+	OpenAuth = &c.OpenAuth
 
 	return nil
 }
@@ -140,12 +154,6 @@ var (
 	OAuthpKey            = getEnv("OAUTHP_KEY", "(✿◠‿◠＾◡＾)っ✂❤")
 	EmailAddress         = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
 	EmailPassword        = getEnv("EMAIL_PWD", "hahah_not_your_password")
-	GitHubClientID       = getEnv("GITHUB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
-	GitHubClientSecret   = getEnv("GITHUB_CLIENT_SECRET", "OurSecretHere?_www.youtube.com/watch?v=dQw4w9WgXcQ")
-	GitlabClientID       = getEnv("GITLAB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
-	GitlabClientSecret   = getEnv("GITLAB_CLIENT_SECRET", "www.youtube.com/watch?v=dQw4w9WgXcQ")
-	CodebergClientID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
-	CodebergClientSecret = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
 	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
 	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
 	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
