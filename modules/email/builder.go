@@ -12,9 +12,13 @@ import (
 )
 
 var (
-	auth = sasl.NewPlainClient("", config.EmailAddress, config.EmailPassword)
+	auth sasl.Client
 	clrf = "\r\n"
 )
+
+func Init() {
+	auth = sasl.NewPlainClient("", config.Secrets.EmailAddress, config.Secrets.EmailPassword)
+}
 
 type EmailBuilder struct {
 	to       string
@@ -136,7 +140,7 @@ func (eb *EmailBuilder) SendEmail(imapServer string) error {
 	eb.boundary = util.RandomString(30)
 
 	if eb.from == "" {
-		eb.from = config.EmailAddress
+		eb.from = config.Secrets.EmailAddress
 	}
 
 	if eb.to == "" {

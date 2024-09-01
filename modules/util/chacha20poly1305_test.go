@@ -21,9 +21,9 @@ func TestSimpleKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	scrambleConfig := &config.ScrambleSettings{
-		StepSize:       3,
-		BytesPerInsert: 2,
+	scrambleConfig := &config.SecretsConfig{
+		ScrambleStepSize:       3,
+		ScrambleBytesPerInsert: 2,
 	}
 
 	sealedText := sealText(jwtToken, AEADCrypto, scrambleConfig)
@@ -41,7 +41,7 @@ func TestSimpleKey(t *testing.T) {
 	}
 }
 
-func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
+func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *config.SecretsConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -53,7 +53,7 @@ func benchamarkChaCha20Poly1305Seal(b *testing.B, buf []byte, scrambleConfig *co
 	}
 }
 
-func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
+func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *config.SecretsConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -67,7 +67,7 @@ func benchamarkChaCha20Poly1305Open(b *testing.B, buf []byte, scrambleConfig *co
 	}
 }
 
-func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
+func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.SecretsConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -79,7 +79,7 @@ func benchamarkPrepareText(b *testing.B, buf []byte, scrambleConfig *config.Scra
 	}
 }
 
-func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *config.ScrambleSettings) {
+func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *config.SecretsConfig) {
 	b.Helper()
 
 	b.ReportAllocs()
@@ -97,9 +97,9 @@ func BenchmarkPureChaCha20Poly1305(b *testing.B) {
 	InitCrypto()
 	b.ResetTimer()
 
-	scrambleConfig := &config.ScrambleSettings{
-		StepSize:       2,
-		BytesPerInsert: 4,
+	scrambleConfig := &config.SecretsConfig{
+		ScrambleStepSize:       2,
+		ScrambleBytesPerInsert: 4,
 	}
 
 	for _, length := range []int{215, 1350, 8 * 1024} {
@@ -116,9 +116,9 @@ func BenchmarkPrepareText(b *testing.B) {
 	InitCrypto()
 	b.ResetTimer()
 
-	scrambleConfig := &config.ScrambleSettings{
-		StepSize:       2,
-		BytesPerInsert: 4,
+	scrambleConfig := &config.SecretsConfig{
+		ScrambleStepSize:       2,
+		ScrambleBytesPerInsert: 4,
 	}
 
 	for _, length := range []int{215, 1350, 8 * 1024} {

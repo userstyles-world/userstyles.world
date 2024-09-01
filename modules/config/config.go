@@ -56,10 +56,29 @@ type (
 		CodebergSecret string
 	}
 
+	SecretsConfig struct {
+		PasswordCost           int
+		ScrambleStepSize       int
+		ScrambleBytesPerInsert int
+
+		SessionTokenKey  string
+		RecoverTokenKey  string
+		ProviderTokenKey string
+
+		CryptoKey        string
+		StatsKey         string
+		OAuthClientKey   string
+		OAuthProviderKey string
+		EmailAddress     string
+		EmailPassword    string
+		EmailServer      string
+	}
+
 	config struct {
 		App      AppConfig
 		Database DatabaseConfig
 		OpenAuth OpenAuthConfig
+		Secrets  SecretsConfig
 	}
 )
 
@@ -72,6 +91,9 @@ var (
 
 	// OpenAuth stores configuration needed for connecting to external services.
 	OpenAuth *OpenAuthConfig
+
+	// Secrets stores cryptographic keys and related configuration.
+	Secrets *SecretsConfig
 )
 
 func defaultConfig() *config {
@@ -105,6 +127,18 @@ func defaultConfig() *config {
 			Colorful:     true,
 			MaxOpenConns: 10,
 		},
+		Secrets: SecretsConfig{
+			PasswordCost:           10,
+			ScrambleStepSize:       2,
+			ScrambleBytesPerInsert: 3,
+			SessionTokenKey:        "ABigSecretPassword",
+			RecoverTokenKey:        "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337",
+			ProviderTokenKey:       "ImNotACatButILikeUnicorns",
+			CryptoKey:              "ABigSecretPasswordWhichIsExact32",
+			StatsKey:               "KeyUsedForHashingStatistics",
+			OAuthClientKey:         "AnotherStringLetstrySomethΦΦΦ",
+			OAuthProviderKey:       "(✿◠‿◠＾◡＾)っ✂❤",
+		},
 	}
 }
 
@@ -132,37 +166,18 @@ func Load(path string) error {
 	App = &c.App
 	Database = &c.Database
 	OpenAuth = &c.OpenAuth
+	Secrets = &c.Secrets
 
 	return nil
-}
-
-type ScrambleSettings struct {
-	StepSize       int
-	BytesPerInsert int
 }
 
 var (
 	GitCommit  string
 	GitVersion string
-	Salt                 = getEnvInt("SALT", 10)
-	JWTSigningKey        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
-	VerifyJWTSigningKey  = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")
-	OAuthpJWTSigningKey  = getEnv("OAUTHP_JWT_SIGNING_KEY", "ImNotACatButILikeUnicorns")
-	CryptoKey            = getEnv("CRYPTO_KEY", "ABigSecretPasswordWhichIsExact32")
-	StatsKey             = getEnv("STATS_KEY", "KeyUsedForHashingStatistics")
-	OAuthKey             = getEnv("OAUTH_KEY", "AnotherStringLetstrySomethΦΦΦ")
-	OAuthpKey            = getEnv("OAUTHP_KEY", "(✿◠‿◠＾◡＾)っ✂❤")
-	EmailAddress         = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
-	EmailPassword        = getEnv("EMAIL_PWD", "hahah_not_your_password")
+
 	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
-	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
 	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
 	SearchReindex        = getEnvBool("SEARCH_REINDEX", false)
-
-	ScrambleConfig = &ScrambleSettings{
-		StepSize:       getEnvInt("NONCE_SCRAMBLE_STEP", 2),
-		BytesPerInsert: getEnvInt("NONCE_SCRAMBLE_BYTES_PER_INSERT", 3),
-	}
 
 	DataDir   = path.Join(getEnv("DATA_DIR", "data"))
 	CacheDir  = path.Join(DataDir, "cache")

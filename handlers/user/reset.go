@@ -32,7 +32,7 @@ func ResetGet(c *fiber.Ctx) error {
 		return renderError
 	}
 
-	_, err := util.DecryptText(key, util.AEADCrypto, config.ScrambleConfig)
+	_, err := util.DecryptText(key, util.AEADCrypto, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError
@@ -71,7 +71,7 @@ func ResetPost(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := util.DecryptText(key, util.AEADCrypto, config.ScrambleConfig)
+	unSealedText, err := util.DecryptText(key, util.AEADCrypto, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return renderError

@@ -20,7 +20,7 @@ var (
 	}
 	hmacPool = sync.Pool{
 		New: func() interface{} {
-			return hmac.New(sha512.New, []byte(config.StatsKey))
+			return hmac.New(sha512.New, []byte(config.Secrets.StatsKey))
 		},
 	}
 )

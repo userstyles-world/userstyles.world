@@ -45,6 +45,8 @@ func main() {
 	cache.Initialize()
 	images.CheckVips()
 	util.InitCrypto()
+	jwtware.Init()
+	email.Init()
 	validator.Init()
 	database.Initialize()
 	cron.Initialize()

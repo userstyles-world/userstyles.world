@@ -40,5 +40,5 @@ func Send(tmpl, address, title string, args any) error {
 		SetSubject(title).
 		AddPart(*NewPart().SetBody(text.String())).
 		AddPart(*NewPart().SetBody(html.String()).HTML()).
-		SendEmail(config.IMAPServer)
+		SendEmail(config.Secrets.EmailServer)
 }

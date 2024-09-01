@@ -28,7 +28,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		})
 	}
 
-	unSealedText, err := util.DecryptText(base64Key, util.AEADCrypto, config.ScrambleConfig)
+	unSealedText, err := util.DecryptText(base64Key, util.AEADCrypto, config.Secrets)
 	if err != nil {
 		log.Warn.Printf("Failed to decode JWT text: %s\n", err.Error())
 		return c.Render("err", fiber.Map{

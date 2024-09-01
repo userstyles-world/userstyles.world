@@ -46,7 +46,7 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 		log.Warn.Println("Failed to create a JWT Token:", err.Error())
 		return errorMessage(c, 500, "Couldn't make JWT Token, Error: Please notify the UserStyles.world admins.")
 	}
-	secureToken := util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig)
+	secureToken := util.EncryptText(jwtToken, util.AEADOAuthp, config.Secrets)
 
 	styles, err := storage.FindStyleCardsForUsername(u.Username)
 	if err != nil {
@@ -83,7 +83,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
@@ -135,7 +135,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.Secrets)
 	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state
@@ -153,7 +153,7 @@ func OAuthStyleNewPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
