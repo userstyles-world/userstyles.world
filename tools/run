@@ -48,7 +48,7 @@ build() {
     setBuildInfo() {
         flags="$flags -X ${config}.GoVersion=$(go version | cut -d ' ' -f 3 | cut -c 3-)"
         flags="$flags -X ${config}.GitCommit=$(git rev-list -1 HEAD)"
-        flags="$flags -X ${config}.GitSignature=$(git describe --tags)"
+        flags="$flags -X ${config}.GitSignature=$(git describe --tags --dirty)"
     }
 
     case "$1" in
