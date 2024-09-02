@@ -119,7 +119,7 @@ func defaultConfig() *config {
 
 			BuildCommit:    repo + "/commit/" + GitCommit,
 			BuildCommitSHA: fmt.Sprintf("%.8s", GitCommit),
-			BuildSignature: GitVersion,
+			BuildSignature: GitSignature,
 		},
 		Database: DatabaseConfig{
 			Name:         "dev.db",
@@ -172,8 +172,9 @@ func Load(path string) error {
 }
 
 var (
-	GitCommit  string
-	GitVersion string
+	GoVersion    string
+	GitCommit    string
+	GitSignature string
 
 	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
 	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")

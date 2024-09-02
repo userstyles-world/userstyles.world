@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -35,6 +36,16 @@ import (
 )
 
 func main() {
+	version := flag.Bool("version", false, "print build info")
+	flag.Parse()
+
+	if *version {
+		fmt.Println("Go version:", config.GoVersion)
+		fmt.Println("Git commit:", config.GitCommit)
+		fmt.Println("Git signature:", config.GitSignature)
+		return
+	}
+
 	err := config.Load("config.json")
 	if err != nil {
 		fmt.Printf("Failed to load config: %s\n", err)
