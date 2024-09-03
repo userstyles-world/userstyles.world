@@ -386,11 +386,11 @@ func SelectUpdateStyle(s Style) error {
 }
 
 func SaveStyleCode(id, s string) error {
-	return os.WriteFile(filepath.Join(config.StyleDir, id), []byte(s), 0o644)
+	return os.WriteFile(filepath.Join(config.Storage.StyleDir, id), []byte(s), 0o644)
 }
 
 func RemoveStyleCode(id string) error {
-	return os.Remove(filepath.Join(config.StyleDir, id))
+	return os.Remove(filepath.Join(config.Storage.StyleDir, id))
 }
 
 // mirrorEnabled returns whether or not mirroring is enabled.

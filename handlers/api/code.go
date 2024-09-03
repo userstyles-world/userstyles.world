@@ -31,7 +31,7 @@ func GetStyleCode(c *fiber.Ctx) error {
 
 	code := cache.Code.Get(i)
 	if code == nil {
-		code, err = os.ReadFile(filepath.Join(config.StyleDir, id))
+		code, err = os.ReadFile(filepath.Join(config.Storage.StyleDir, id))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "userstyle not found",

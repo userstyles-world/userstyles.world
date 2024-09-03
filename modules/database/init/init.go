@@ -44,7 +44,7 @@ func connect() (*gorm.DB, error) {
 		),
 	}
 
-	file := path.Join(config.DataDir, config.Database.Name)
+	file := path.Join(config.Storage.DataDir, config.Database.Name)
 	conn, err := gorm.Open(sqlite.Open(file), gormConfig)
 	if err != nil {
 		return nil, err

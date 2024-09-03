@@ -42,7 +42,7 @@ func Proxy(c *fiber.Ctx) error {
 	}
 
 	// Set resource location and name.
-	dir := path.Join(config.ProxyDir, path.Clean(t), path.Clean(id))
+	dir := path.Join(config.Storage.ProxyDir, path.Clean(t), path.Clean(id))
 	name := path.Join(dir, url.PathEscape(link))
 
 	// Check if image exists.

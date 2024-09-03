@@ -53,7 +53,7 @@ func main() {
 	}
 
 	log.Initialize()
-	cache.Initialize()
+	cache.Init()
 	images.CheckVips()
 	util.InitCrypto()
 	jwtware.Init()

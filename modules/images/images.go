@@ -69,13 +69,13 @@ func fixRawURL(url string) string {
 }
 
 func processImages(id, version, url string, data []byte) error {
-	original := path.Join(config.ImageDir, id+".original")
+	original := path.Join(config.Storage.ImageDir, id+".original")
 	if err := os.WriteFile(original, data, 0o600); err != nil {
 		return fmt.Errorf("failed to save image for %s from %q: %s",
 			id, url, err)
 	}
 
-	dir := path.Join(config.PublicDir, id)
+	dir := path.Join(config.Storage.PublicDir, id)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			log.Warn.Printf("Failed to create %q for %s: %s\n", dir, id, err)

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path"
 	"strings"
 	"time"
 )
@@ -74,11 +73,22 @@ type (
 		EmailServer      string
 	}
 
+	StorageConfig struct {
+		DataDir   string
+		CacheDir  string
+		ImageDir  string
+		StyleDir  string
+		ProxyDir  string
+		PublicDir string
+		LogFile   string
+	}
+
 	config struct {
 		App      AppConfig
 		Database DatabaseConfig
 		OpenAuth OpenAuthConfig
 		Secrets  SecretsConfig
+		Storage  StorageConfig
 	}
 )
 
@@ -94,6 +104,9 @@ var (
 
 	// Secrets stores cryptographic keys and related configuration.
 	Secrets *SecretsConfig
+
+	// Storage stores paths to directories and files.
+	Storage *StorageConfig
 )
 
 func defaultConfig() *config {
@@ -139,6 +152,15 @@ func defaultConfig() *config {
 			OAuthClientKey:         "AnotherStringLetstrySomethΦΦΦ",
 			OAuthProviderKey:       "(✿◠‿◠＾◡＾)っ✂❤",
 		},
+		Storage: StorageConfig{
+			DataDir:   "data",
+			CacheDir:  "data/cache",
+			ImageDir:  "data/images",
+			StyleDir:  "data/styles",
+			ProxyDir:  "data/proxy",
+			PublicDir: "data/public",
+			LogFile:   "data/userstyles.log",
+		},
 	}
 }
 
@@ -167,6 +189,7 @@ func Load(path string) error {
 	Database = &c.Database
 	OpenAuth = &c.OpenAuth
 	Secrets = &c.Secrets
+	Storage = &c.Storage
 
 	return nil
 }
@@ -179,15 +202,6 @@ var (
 	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
 	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
 	SearchReindex        = getEnvBool("SEARCH_REINDEX", false)
-
-	DataDir   = path.Join(getEnv("DATA_DIR", "data"))
-	CacheDir  = path.Join(DataDir, "cache")
-	ImageDir  = path.Join(DataDir, "images")
-	StyleDir  = path.Join(DataDir, "styles")
-	ProxyDir  = path.Join(DataDir, "proxy")
-	PublicDir = path.Join(DataDir, "public")
-
-	LogFile = path.Join(DataDir, "userstyles.log")
 
 	CachedCodeItems = getEnvInt("CACHED_CODE_ITEMS", 250)
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")

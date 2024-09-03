@@ -58,7 +58,7 @@ func getAsset() (Asset, error) {
 	}
 
 	asset := release.Assets[0]
-	asset.Path = path.Join(config.DataDir, asset.Name)
+	asset.Path = path.Join(config.Storage.DataDir, asset.Name)
 
 	return asset, nil
 }
