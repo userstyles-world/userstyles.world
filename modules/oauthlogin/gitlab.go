@@ -39,7 +39,7 @@ func (gitlab) getAuthTokenURL(any) string {
 	// Define we log in trough the temp code.
 	authURL += "&grant_type=authorization_code"
 	// Specify the the redirect uri, because it is required
-	authURL += "&redirect_uri=" + url.PathEscape(config.OAuthURL()+gitlabStr+"/")
+	authURL += "&redirect_uri=" + url.PathEscape(config.App.BaseURL+"/api/callback/"+gitlabStr+"/")
 
 	return authURL
 }

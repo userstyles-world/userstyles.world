@@ -149,7 +149,7 @@ func OauthMakeURL(serviceType string) string {
 		return ""
 	}
 
-	oauthURL += "&redirect_uri=" + config.OAuthURL() + service.appendToRedirect(state)
+	oauthURL += "&redirect_uri=" + config.App.BaseURL + "/api/callback/" + service.appendToRedirect(state)
 	return oauthURL
 }
 

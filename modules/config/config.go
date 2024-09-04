@@ -207,11 +207,6 @@ var (
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")
 )
 
-// OAuthURL returns an environment-specific callback URL used for OAuth services.
-func OAuthURL() string {
-	return App.BaseURL + "/api/callback/"
-}
-
 // raw tweaks allowed URLs to make them work seamlessly in both environments.
 func raw(s string) string {
 	if !App.Production {

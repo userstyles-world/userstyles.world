@@ -49,7 +49,7 @@ func (codeberg) getAuthTokenPostBody(data any) authURLPostBody {
 		ClientSecret: config.OpenAuth.CodebergSecret,
 		Code:         data.(string),
 		GrantType:    "authorization_code",
-		RedirectURI:  config.OAuthURL() + "codeberg/",
+		RedirectURI:  config.App.BaseURL + "/api/callback/codeberg/",
 	}
 }
 
