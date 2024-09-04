@@ -200,7 +200,6 @@ var (
 
 	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
 	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
-	SearchReindex        = getEnvBool("SEARCH_REINDEX", false)
 
 	CachedCodeItems = getEnvInt("CACHED_CODE_ITEMS", 250)
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")
