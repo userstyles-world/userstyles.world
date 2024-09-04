@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -206,12 +205,3 @@ var (
 	CachedCodeItems = getEnvInt("CACHED_CODE_ITEMS", 250)
 	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")
 )
-
-// raw tweaks allowed URLs to make them work seamlessly in both environments.
-func raw(s string) string {
-	if !App.Production {
-		s += "|userstyles.world"
-	}
-	r := strings.NewReplacer("http://", "", "https://", "")
-	return r.Replace(s)
-}
