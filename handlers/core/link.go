@@ -16,7 +16,7 @@ func GetLinkedSite(c *fiber.Ctx) error {
 	case "opencollective":
 		return c.Redirect(config.App.OpenCollective, fiber.StatusSeeOther)
 	case "source":
-		return c.Redirect(config.App.Repository, fiber.StatusSeeOther)
+		return c.Redirect(config.App.GitRepository, fiber.StatusSeeOther)
 	default:
 		u, _ := jwt.User(c)
 		return c.Render("err", fiber.Map{

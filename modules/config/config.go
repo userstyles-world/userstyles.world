@@ -29,14 +29,16 @@ type (
 		PageMaxItems int
 		CodeMaxItems int
 
-		Repository     string
+		// External links.
 		Discord        string
 		Matrix         string
 		OpenCollective string
+		GitRepository  string
 
-		BuildCommit    string `json:"-"`
-		BuildCommitSHA string `json:"-"`
-		BuildSignature string `json:"-"`
+		// Git info.
+		GitCommitURL string `json:"-"`
+		GitCommitSHA string `json:"-"`
+		GitSignature string `json:"-"`
 	}
 
 	DatabaseConfig struct {
@@ -113,8 +115,19 @@ var (
 	Storage *StorageConfig
 )
 
+
+// UpdateGitInfo updates dynamic Git-specific fields.
+func (app *AppConfig) UpdateGitInfo() {
+	if app.GitRepository == "" {
+		log.Fatal("config: App.Repository can't be an empty string")
+	}
+
+	app.GitCommitURL = fmt.Sprintf("%s/commit/%s", app.GitRepository, GitCommit)
+	app.GitCommitSHA = fmt.Sprintf("%.8s", GitCommit)
+	app.GitSignature = GitSignature
+}
+
 func defaultConfig() *config {
-	repo := "https://github.com/userstyles-world/userstyles.world"
 	started := time.Now()
 
 	return &config{
@@ -130,14 +143,10 @@ func defaultConfig() *config {
 			PageMaxItems: 36,
 			CodeMaxItems: 250,
 
-			Repository:     repo,
 			Discord:        "https://discord.gg/P5zra4nFS2",
 			Matrix:         "https://matrix.to/#/#userstyles:matrix.org",
 			OpenCollective: "https://opencollective.com/userstyles",
-
-			BuildCommit:    repo + "/commit/" + GitCommit,
-			BuildCommitSHA: fmt.Sprintf("%.8s", GitCommit),
-			BuildSignature: GitSignature,
+			GitRepository:  "https://github.com/userstyles-world/userstyles.world",
 		},
 		Database: DatabaseConfig{
 			Name:         "dev.db",
@@ -180,6 +189,8 @@ func Load(path string) error {
 	if err = json.Unmarshal(b, &c); err != nil {
 		return err
 	}
+
+	c.App.UpdateGitInfo()
 
 	if c.App.Debug {
 		b, err := json.MarshalIndent(c, "", "\t")

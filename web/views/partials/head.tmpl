@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="{{ canonical .Canonical }}">
 <link rel="search" type="application/opensearchdescription+xml" title="UserStyles.world search" href="/opensearch.xml">
-<link rel="stylesheet" href="/css/main.css?v={{ .App.BuildCommitSHA }}" type="text/css" media="screen">
+<link rel="stylesheet" href="/css/main.css?v={{ .App.GitCommitSHA }}" type="text/css" media="screen">
 <link rel="mask-icon" href="/mascot.svg" color="blue">
 <link rel="icon" href="/mascot.svg">
 <title>{{ .Title }} — {{ .App.Name }}</title>
@@ -29,4 +29,4 @@
 {{ with .Style.Preview }}<meta property="twitter:image" content="{{ fullImage . }}">{{ end }}
 <meta property="twitter:card" content="summary_large_image">
 {{ end }}
-<script defer src="/js/main.js?v={{ .App.BuildCommitSHA }}"></script>
+<script defer src="/js/main.js?v={{ .App.GitCommitSHA }}"></script>
