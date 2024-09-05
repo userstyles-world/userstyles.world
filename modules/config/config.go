@@ -12,9 +12,13 @@ import (
 type (
 	AppConfig struct {
 		Debug      bool
+		Profiling  bool
 		Production bool
-		Addr       string
-		BaseURL    string
+
+		Addr        string
+		BaseURL     string
+		MonitorURL  string
+		ProxyHeader string
 
 		Name         string
 		Description  string
@@ -23,6 +27,7 @@ type (
 		Started      time.Time `json:"-"`
 		EmailRe      string
 		PageMaxItems int
+		CodeMaxItems int
 
 		Repository     string
 		Discord        string
@@ -123,6 +128,7 @@ func defaultConfig() *config {
 			Started:      started,
 			EmailRe:      `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`,
 			PageMaxItems: 36,
+			CodeMaxItems: 250,
 
 			Repository:     repo,
 			Discord:        "https://discord.gg/P5zra4nFS2",
@@ -197,10 +203,4 @@ var (
 	GoVersion    string
 	GitCommit    string
 	GitSignature string
-
-	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
-	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
-
-	CachedCodeItems = getEnvInt("CACHED_CODE_ITEMS", 250)
-	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")
 )

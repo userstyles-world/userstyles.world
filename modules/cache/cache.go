@@ -14,7 +14,7 @@ import (
 var (
 	CacheFile string
 	Store     = cache.New(cache.NoExpiration, 5*time.Minute)
-	Code      = newLRU(config.CachedCodeItems, "code")
+	Code      *LRU
 )
 
 func Init() {
@@ -45,6 +45,7 @@ func Init() {
 	ViewStats.Run()
 
 	CacheFile = path.Join(config.Storage.CacheDir, "cache")
+	Code = newLRU(config.App.CodeMaxItems, "code")
 
 	if err := Store.LoadFile(CacheFile); err != nil {
 		log.Warn.Println("Failed to read cache:", err)

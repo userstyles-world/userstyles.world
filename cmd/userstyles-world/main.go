@@ -66,7 +66,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(http.FS(web.ViewsDir)),
 		ViewsLayout: "layouts/main",
-		ProxyHeader: config.ProxyRealIP,
+		ProxyHeader: config.App.ProxyHeader,
 		JSONEncoder: util.JSONEncoder,
 		IdleTimeout: 5 * time.Second,
 
@@ -91,7 +91,7 @@ func main() {
 	app.Use(core.FlagsMiddleware)
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
-	if config.PerformanceMonitor {
+	if config.App.Profiling {
 		perf := app.Group("/debug")
 		perf.Use(jwtware.Admin)
 		perf.Use(pprof.New())
