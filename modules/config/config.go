@@ -115,6 +115,13 @@ var (
 	Storage *StorageConfig
 )
 
+func (app *AppConfig) UpdateCopyright() {
+	if app.Name == "" {
+		log.Fatal("config: App.Name can't be an empty string")
+	}
+
+	app.Copyright = fmt.Sprintf("© 2020–%d %s", time.Now().Year(), app.Name)
+}
 
 // UpdateGitInfo updates dynamic Git-specific fields.
 func (app *AppConfig) UpdateGitInfo() {
@@ -127,9 +134,8 @@ func (app *AppConfig) UpdateGitInfo() {
 	app.GitSignature = GitSignature
 }
 
+// defaultConfig is a set of default configs used in development environment.
 func defaultConfig() *config {
-	started := time.Now()
-
 	return &config{
 		App: AppConfig{
 			Addr:         ":3000",
@@ -137,8 +143,7 @@ func defaultConfig() *config {
 			Name:         "UserStyles.world",
 			Description:  "A free and open-source, community-driven website for browsing and sharing UserCSS userstyles.",
 			Codename:     "Fennec Fox",
-			Copyright:    started.Format("2006"),
-			Started:      started,
+			Started:      time.Now(),
 			EmailRe:      `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`,
 			PageMaxItems: 36,
 			CodeMaxItems: 250,
@@ -191,6 +196,7 @@ func Load(path string) error {
 	}
 
 	c.App.UpdateGitInfo()
+	c.App.UpdateCopyright()
 
 	if c.App.Debug {
 		b, err := json.MarshalIndent(c, "", "\t")
