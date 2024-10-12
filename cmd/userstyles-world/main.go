@@ -37,16 +37,17 @@ import (
 
 func main() {
 	version := flag.Bool("version", false, "print build info")
+	custom := flag.String("config", "data/config.json", "path to custom config.json")
 	flag.Parse()
 
 	if *version {
 		fmt.Println("Go version:", config.GoVersion)
 		fmt.Println("Git commit:", config.GitCommit)
 		fmt.Println("Git signature:", config.GitSignature)
-		return
+		os.Exit(0)
 	}
 
-	err := config.Load("config.json")
+	err := config.Load(*custom)
 	if err != nil {
 		fmt.Printf("Failed to load config: %s\n", err)
 		os.Exit(1)
