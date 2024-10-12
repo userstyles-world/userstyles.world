@@ -99,6 +99,15 @@ type (
 )
 
 var (
+	// GoVersion is the version of Go compiler used to build this program.
+	GoVersion string
+
+	// GitCommit is the latest Git commit used to build this program.
+	GitCommit string
+
+	// GitSignature is the Git version string used to build this program.
+	GitSignature string
+
 	// App stores general configuration.
 	App *AppConfig
 
@@ -215,9 +224,3 @@ func Load(path string) error {
 
 	return nil
 }
-
-var (
-	GoVersion    string
-	GitCommit    string
-	GitSignature string
-)
