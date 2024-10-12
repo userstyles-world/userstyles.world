@@ -10,9 +10,11 @@ import (
 	"userstyles.world/modules/config"
 )
 
+var c = config.DefaultConfig()
+
 func TestSimpleKey(t *testing.T) {
 	t.Parallel()
-	InitCrypto()
+	InitCrypto(&c.Secrets)
 
 	jwtToken, err := NewJWT().
 		SetClaim("email", "vednoc@usw.local").
@@ -21,13 +23,8 @@ func TestSimpleKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	scrambleConfig := &config.SecretsConfig{
-		ScrambleStepSize:       3,
-		ScrambleBytesPerInsert: 2,
-	}
-
-	sealedText := sealText(jwtToken, AEADCrypto, scrambleConfig)
-	unSealedText, err := openText(UnsafeString(sealedText), AEADCrypto, scrambleConfig)
+	sealedText := sealText(jwtToken, AEADCrypto, &c.Secrets)
+	unSealedText, err := openText(UnsafeString(sealedText), AEADCrypto, &c.Secrets)
 	if err != nil {
 		t.Error(err)
 	}
@@ -94,7 +91,7 @@ func benchamarkDecodePreparedText(b *testing.B, buf []byte, scrambleConfig *conf
 }
 
 func BenchmarkPureChaCha20Poly1305(b *testing.B) {
-	InitCrypto()
+	InitCrypto(&c.Secrets)
 	b.ResetTimer()
 
 	scrambleConfig := &config.SecretsConfig{
@@ -113,7 +110,7 @@ func BenchmarkPureChaCha20Poly1305(b *testing.B) {
 }
 
 func BenchmarkPrepareText(b *testing.B) {
-	InitCrypto()
+	InitCrypto(&c.Secrets)
 	b.ResetTimer()
 
 	scrambleConfig := &config.SecretsConfig{

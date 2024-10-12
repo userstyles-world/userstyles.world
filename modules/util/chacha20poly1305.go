@@ -21,22 +21,22 @@ var (
 )
 
 // InitCrypto initializes cryptographic ciphers.
-func InitCrypto() {
-	VerifySigningKey = []byte(config.Secrets.RecoverTokenKey)
-	OAuthPSigningKey = []byte(config.Secrets.ProviderTokenKey)
+func InitCrypto(secrets *config.SecretsConfig) {
+	VerifySigningKey = []byte(secrets.RecoverTokenKey)
+	OAuthPSigningKey = []byte(secrets.ProviderTokenKey)
 
 	var err error
-	AEADCrypto, err = chacha20poly1305.NewX([]byte(config.Secrets.CryptoKey))
+	AEADCrypto, err = chacha20poly1305.NewX([]byte(secrets.CryptoKey))
 	if err != nil {
 		log.Warn.Fatalf("Cannot create AEAD_CRYPTO cipher: %s\n", err)
 	}
 
-	AEADOAuth, err = chacha20poly1305.NewX([]byte(config.Secrets.OAuthClientKey))
+	AEADOAuth, err = chacha20poly1305.NewX([]byte(secrets.OAuthClientKey))
 	if err != nil {
 		log.Warn.Fatalf("Cannot create AEAD_OAUTH cipher: %s\n", err)
 	}
 
-	AEADOAuthp, err = chacha20poly1305.NewX([]byte(config.Secrets.OAuthProviderKey))
+	AEADOAuthp, err = chacha20poly1305.NewX([]byte(secrets.OAuthProviderKey))
 	if err != nil {
 		log.Warn.Fatalf("Cannot create AEAD_OAUTHP cipher: %s\n", err)
 	}

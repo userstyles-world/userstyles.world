@@ -60,7 +60,7 @@ func VerifyGet(c *fiber.Ctx) error {
 		Email:    claims["email"].(string),
 	}
 
-	pw, err := util.HashPassword(u.Password)
+	pw, err := util.HashPassword(u.Password, config.Secrets)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
 			"Title": "Failed to hash password",

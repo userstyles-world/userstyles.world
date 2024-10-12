@@ -18,12 +18,16 @@ var (
 			return &b
 		},
 	}
+	hmacPool sync.Pool
+)
+
+func InitPool(secrets *config.SecretsConfig) {
 	hmacPool = sync.Pool{
 		New: func() interface{} {
-			return hmac.New(sha512.New, []byte(config.Secrets.StatsKey))
+			return hmac.New(sha512.New, []byte(secrets.StatsKey))
 		},
 	}
-)
+}
 
 // HashIP generates a unique hash for stats.
 func HashIP(key string) (string, error) {

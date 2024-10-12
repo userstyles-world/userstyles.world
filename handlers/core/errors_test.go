@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
+
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/templates"
 )
 
@@ -53,8 +55,10 @@ func Test404Normal(t *testing.T) {
 func Test404Pages(t *testing.T) {
 	t.Parallel()
 
+	c := &config.AppConfig{Production: true}
+
 	app := fiber.New(fiber.Config{
-		Views: templates.New(http.Dir("../../web/views")),
+		Views: templates.New(http.Dir("../../web/views"), c),
 	})
 	app.Get("/", func(c *fiber.Ctx) error {
 		c.Response().Header.SetContentType(fiber.MIMETextHTMLCharsetUTF8)

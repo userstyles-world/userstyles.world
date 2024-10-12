@@ -124,6 +124,7 @@ var (
 	Storage *StorageConfig
 )
 
+// UpdateGitInfo updates copyright year at the start of every year.
 func (app *AppConfig) UpdateCopyright() {
 	if app.Name == "" {
 		log.Fatal("config: App.Name can't be an empty string")
@@ -143,8 +144,9 @@ func (app *AppConfig) UpdateGitInfo() {
 	app.GitSignature = GitSignature
 }
 
-// defaultConfig is a set of default configs used in development environment.
-func defaultConfig() *config {
+// DefaultConfig is a set of default configurations used for development and
+// testing environments.
+func DefaultConfig() *config {
 	return &config{
 		App: AppConfig{
 			Addr:         ":3000",
@@ -199,7 +201,7 @@ func Load(path string) error {
 		return err
 	}
 
-	c := defaultConfig()
+	c := DefaultConfig()
 	if err = json.Unmarshal(b, &c); err != nil {
 		return err
 	}

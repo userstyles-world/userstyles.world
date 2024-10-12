@@ -56,7 +56,8 @@ func main() {
 	log.Initialize()
 	cache.Init()
 	images.CheckVips()
-	util.InitCrypto()
+	util.InitCrypto(config.Secrets)
+	util.InitPool(config.Secrets)
 	jwtware.Init()
 	email.Init()
 	validator.Init()
@@ -65,7 +66,7 @@ func main() {
 	web.Init()
 
 	app := fiber.New(fiber.Config{
-		Views:       templates.New(http.FS(web.ViewsDir)),
+		Views:       templates.New(http.FS(web.ViewsDir), config.App),
 		ViewsLayout: "layouts/main",
 		ProxyHeader: config.App.ProxyHeader,
 		JSONEncoder: util.JSONEncoder,

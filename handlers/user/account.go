@@ -120,7 +120,7 @@ func EditAccount(c *fiber.Ctx) error {
 			})
 		}
 
-		pw, err := util.HashPassword(newPassword)
+		pw, err := util.HashPassword(newPassword, config.Secrets)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
 				"Title": "Failed to hash password",

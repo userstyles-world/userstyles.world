@@ -15,6 +15,7 @@ var hashCases = []struct {
 
 func TestHashIP(t *testing.T) {
 	t.Parallel()
+	InitPool(&c.Secrets)
 
 	for _, c := range hashCases {
 		actual, err := HashIP(c.ip + " " + c.id)

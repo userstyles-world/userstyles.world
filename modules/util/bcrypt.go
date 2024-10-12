@@ -7,8 +7,8 @@ import (
 )
 
 // HashPassword generates a hash out of a password.
-func HashPassword(pw string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(pw), config.Secrets.PasswordCost)
+func HashPassword(pw string, secrets *config.SecretsConfig) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(pw), secrets.PasswordCost)
 	if err != nil {
 		return "", err
 	}

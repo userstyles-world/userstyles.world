@@ -39,7 +39,7 @@ func status() sys {
 	}
 }
 
-func New(views http.FileSystem) *html.Engine {
+func New(views http.FileSystem, app *config.AppConfig) *html.Engine {
 	engine := html.NewFileSystem(views, ".tmpl")
 
 	engine.AddFunc("sys", status)
@@ -145,7 +145,7 @@ func New(views http.FileSystem) *html.Engine {
 		return string(b)
 	})
 
-	if !config.App.Production {
+	if !app.Production {
 		engine.Reload(true)
 	}
 
