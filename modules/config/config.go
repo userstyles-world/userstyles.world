@@ -1,97 +1,226 @@
+// Package config provides configuration options.
 package config
 
 import (
+	"encoding/json"
 	"fmt"
-	"path"
-	"strings"
+	"log"
+	"os"
 	"time"
 )
 
-type ScrambleSettings struct {
-	StepSize       int
-	BytesPerInsert int
-}
+type (
+	AppConfig struct {
+		Debug      bool
+		Profiling  bool
+		Production bool
 
-var (
-	GitCommit  string
-	GitVersion string
+		Addr        string
+		BaseURL     string
+		MonitorURL  string
+		ProxyHeader string
 
-	Port                 = getEnv("PORT", ":3000")
-	BaseURL              = getEnv("BASE_URL", "http://localhost"+Port)
-	DB                   = getEnv("DB", "dev.db")
-	DBDebug              = getEnv("DB_DEBUG", "silent")
-	DBColor              = getEnvBool("DB_COLOR", false)
-	DBMigrate            = getEnvBool("DB_MIGRATE", false)
-	DBDrop               = getEnvBool("DB_DROP", false)
-	DBRandomData         = getEnvBool("DB_RANDOM_DATA", false)
-	DBRandomDataAmount   = getEnvInt("DB_RANDOM_DATA_AMOUNT", 100)
-	DBMaxOpenConns       = getEnvInt("DB_MAX_OPEN_CONNS", 10)
-	Salt                 = getEnvInt("SALT", 10)
-	JWTSigningKey        = getEnv("JWT_SIGNING_KEY", "ABigSecretPassword")
-	VerifyJWTSigningKey  = getEnv("VERIFY_JWT_SIGNING_KEY", "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337")
-	OAuthpJWTSigningKey  = getEnv("OAUTHP_JWT_SIGNING_KEY", "ImNotACatButILikeUnicorns")
-	CryptoKey            = getEnv("CRYPTO_KEY", "ABigSecretPasswordWhichIsExact32")
-	StatsKey             = getEnv("STATS_KEY", "KeyUsedForHashingStatistics")
-	OAuthKey             = getEnv("OAUTH_KEY", "AnotherStringLetstrySomethΦΦΦ")
-	OAuthpKey            = getEnv("OAUTHP_KEY", "(✿◠‿◠＾◡＾)っ✂❤")
-	EmailAddress         = getEnv("EMAIL_ADDRESS", "test@userstyles.world")
-	EmailPassword        = getEnv("EMAIL_PWD", "hahah_not_your_password")
-	GitHubClientID       = getEnv("GITHUB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
-	GitHubClientSecret   = getEnv("GITHUB_CLIENT_SECRET", "OurSecretHere?_www.youtube.com/watch?v=dQw4w9WgXcQ")
-	GitlabClientID       = getEnv("GITLAB_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
-	GitlabClientSecret   = getEnv("GITLAB_CLIENT_SECRET", "www.youtube.com/watch?v=dQw4w9WgXcQ")
-	CodebergClientID     = getEnv("CODEBERG_CLIENT_ID", "SOmeOneGiVeMeIdEaSwHaTtOpUtHeRe")
-	CodebergClientSecret = getEnv("CODEBERG_CLIENT_SECRET", "IMgettinggboredd")
-	PerformanceMonitor   = getEnvBool("PERFORMANCE_MONITOR", false)
-	IMAPServer           = getEnv("IMAP_SERVER", "mail.userstyles.world:587")
-	ProxyMonitor         = getEnv("PROXY_MONITOR", "unset")
-	SearchReindex        = getEnvBool("SEARCH_REINDEX", false)
+		Name         string
+		Description  string
+		Codename     string
+		Copyright    string
+		Started      time.Time `json:"-"`
+		EmailRe      string
+		PageMaxItems int
+		CodeMaxItems int
 
-	// Production is used for various "feature flags".
-	Production = DB != "dev.db"
+		// External links.
+		Discord        string
+		Matrix         string
+		OpenCollective string
+		GitRepository  string
 
-	ScrambleConfig = &ScrambleSettings{
-		StepSize:       getEnvInt("NONCE_SCRAMBLE_STEP", 2),
-		BytesPerInsert: getEnvInt("NONCE_SCRAMBLE_BYTES_PER_INSERT", 3),
+		// Git info.
+		GitCommitURL string `json:"-"`
+		GitCommitSHA string `json:"-"`
+		GitSignature string `json:"-"`
 	}
 
-	DataDir   = path.Join(getEnv("DATA_DIR", "data"))
-	CacheDir  = path.Join(DataDir, "cache")
-	ImageDir  = path.Join(DataDir, "images")
-	StyleDir  = path.Join(DataDir, "styles")
-	ProxyDir  = path.Join(DataDir, "proxy")
-	PublicDir = path.Join(DataDir, "public")
+	DatabaseConfig struct {
+		Name             string
+		Debug            string
+		Colorful         bool
+		Migrate          bool
+		Drop             bool
+		RandomData       bool
+		RandomDataAmount int
+		MaxOpenConns     int
+	}
 
-	LogFile = path.Join(DataDir, "userstyles.log")
+	OpenAuthConfig struct {
+		GitHubID       string
+		GitHubSecret   string
+		GitLabID       string
+		GitLabSecret   string
+		CodebergID     string
+		CodebergSecret string
+	}
 
-	AppName         = "UserStyles.world"
-	AppCodeName     = "Fennec Fox"
-	AppSourceCode   = "https://github.com/userstyles-world/userstyles.world"
-	AppLatestCommit = AppSourceCode + "/commit/" + GitCommit
-	AppCommitSHA    = fmt.Sprintf("%.7s", GitCommit)
-	AppUptime       = time.Now()
-	AppPageMaxItems = 36
+	SecretsConfig struct {
+		PasswordCost           int
+		ScrambleStepSize       int
+		ScrambleBytesPerInsert int
 
-	AppLinkChatDiscord    = "https://discord.gg/P5zra4nFS2"
-	AppLinkChatMatrix     = "https://matrix.to/#/#userstyles:matrix.org"
-	AppLinkOpenCollective = "https://opencollective.com/userstyles"
+		SessionTokenKey  string
+		RecoverTokenKey  string
+		ProviderTokenKey string
 
-	AllowedEmailsRe = `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`
+		CryptoKey        string
+		StatsKey         string
+		OAuthClientKey   string
+		OAuthProviderKey string
+		EmailAddress     string
+		EmailPassword    string
+		EmailServer      string
+	}
 
-	CachedCodeItems = getEnvInt("CACHED_CODE_ITEMS", 250)
-	ProxyRealIP     = getEnv("PROXY_REAL_IP", "")
+	StorageConfig struct {
+		DataDir   string
+		CacheDir  string
+		ImageDir  string
+		StyleDir  string
+		ProxyDir  string
+		PublicDir string
+		LogFile   string
+	}
+
+	config struct {
+		App      AppConfig
+		Database DatabaseConfig
+		OpenAuth OpenAuthConfig
+		Secrets  SecretsConfig
+		Storage  StorageConfig
+	}
 )
 
-// OAuthURL returns the proper callback URL depending on the environment.
-func OAuthURL() string {
-	return BaseURL + "/api/callback/"
+var (
+	// GoVersion is the version of Go compiler used to build this program.
+	GoVersion string
+
+	// GitCommit is the latest Git commit used to build this program.
+	GitCommit string
+
+	// GitSignature is the Git version string used to build this program.
+	GitSignature string
+
+	// App stores general configuration.
+	App *AppConfig
+
+	// Database stores database configuration.
+	Database *DatabaseConfig
+
+	// OpenAuth stores configuration needed for connecting to external services.
+	OpenAuth *OpenAuthConfig
+
+	// Secrets stores cryptographic keys and related configuration.
+	Secrets *SecretsConfig
+
+	// Storage stores paths to directories and files.
+	Storage *StorageConfig
+)
+
+func (app *AppConfig) UpdateCopyright() {
+	if app.Name == "" {
+		log.Fatal("config: App.Name can't be an empty string")
+	}
+
+	app.Copyright = fmt.Sprintf("© 2020–%d %s", time.Now().Year(), app.Name)
 }
 
-// raw tweaks allowed URLs to make them work seamlessly in both environments.
-func raw(s string) string {
-	if !Production {
-		s += "|userstyles.world"
+// UpdateGitInfo updates dynamic Git-specific fields.
+func (app *AppConfig) UpdateGitInfo() {
+	if app.GitRepository == "" {
+		log.Fatal("config: App.Repository can't be an empty string")
 	}
-	r := strings.NewReplacer("http://", "", "https://", "")
-	return r.Replace(s)
+
+	app.GitCommitURL = fmt.Sprintf("%s/commit/%s", app.GitRepository, GitCommit)
+	app.GitCommitSHA = fmt.Sprintf("%.8s", GitCommit)
+	app.GitSignature = GitSignature
+}
+
+// defaultConfig is a set of default configs used in development environment.
+func defaultConfig() *config {
+	return &config{
+		App: AppConfig{
+			Addr:         ":3000",
+			BaseURL:      "http://localhost:3000",
+			Name:         "UserStyles.world",
+			Description:  "A free and open-source, community-driven website for browsing and sharing UserCSS userstyles.",
+			Codename:     "Fennec Fox",
+			Started:      time.Now(),
+			EmailRe:      `^[a-zA-Z0-9.!#$%&’*+/=?^_\x60{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$`,
+			PageMaxItems: 36,
+			CodeMaxItems: 250,
+
+			Discord:        "https://discord.gg/P5zra4nFS2",
+			Matrix:         "https://matrix.to/#/#userstyles:matrix.org",
+			OpenCollective: "https://opencollective.com/userstyles",
+			GitRepository:  "https://github.com/userstyles-world/userstyles.world",
+		},
+		Database: DatabaseConfig{
+			Name:         "dev.db",
+			Debug:        "info",
+			Colorful:     true,
+			MaxOpenConns: 10,
+		},
+		Secrets: SecretsConfig{
+			PasswordCost:           10,
+			ScrambleStepSize:       2,
+			ScrambleBytesPerInsert: 3,
+			SessionTokenKey:        "ABigSecretPassword",
+			RecoverTokenKey:        "OhNoWeCantUseTheSameAsJWTBeCaUseSeCuRiTy1337",
+			ProviderTokenKey:       "ImNotACatButILikeUnicorns",
+			CryptoKey:              "ABigSecretPasswordWhichIsExact32",
+			StatsKey:               "KeyUsedForHashingStatistics",
+			OAuthClientKey:         "AnotherStringLetstrySomethΦΦΦ",
+			OAuthProviderKey:       "(✿◠‿◠＾◡＾)っ✂❤",
+		},
+		Storage: StorageConfig{
+			DataDir:   "data",
+			CacheDir:  "data/cache",
+			ImageDir:  "data/images",
+			StyleDir:  "data/styles",
+			ProxyDir:  "data/proxy",
+			PublicDir: "data/public",
+			LogFile:   "data/userstyles.log",
+		},
+	}
+}
+
+// Load tries to load configuration from a given path.
+func Load(path string) error {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	c := defaultConfig()
+	if err = json.Unmarshal(b, &c); err != nil {
+		return err
+	}
+
+	c.App.UpdateGitInfo()
+	c.App.UpdateCopyright()
+
+	if c.App.Debug {
+		b, err := json.MarshalIndent(c, "", "\t")
+		if err != nil {
+			return err
+		}
+
+		log.Println("config:", string(b))
+	}
+
+	App = &c.App
+	Database = &c.Database
+	OpenAuth = &c.OpenAuth
+	Secrets = &c.Secrets
+	Storage = &c.Storage
+
+	return nil
 }

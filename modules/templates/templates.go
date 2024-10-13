@@ -17,17 +17,6 @@ import (
 	"userstyles.world/modules/util"
 )
 
-var appConfig = map[string]string{
-	"copyright":       time.Now().Format("2006"),
-	"appName":         config.AppName,
-	"appCodeName":     config.AppCodeName,
-	"appVersion":      config.GitVersion,
-	"appSourceCode":   config.AppSourceCode,
-	"appLatestCommit": config.AppLatestCommit,
-	"appCommitSHA":    config.AppCommitSHA,
-	"allowedEmailsRe": config.AllowedEmailsRe,
-}
-
 type sys struct {
 	Uptime     string
 	GoRoutines int
@@ -39,7 +28,7 @@ type sys struct {
 func status() sys {
 	m := new(runtime.MemStats)
 	runtime.ReadMemStats(m)
-	uptime := time.Since(config.AppUptime).Round(time.Second)
+	uptime := time.Since(config.App.Started).Round(time.Second)
 
 	return sys{
 		Uptime:     uptime.String(),
@@ -52,10 +41,6 @@ func status() sys {
 
 func New(views http.FileSystem) *html.Engine {
 	engine := html.NewFileSystem(views, ".tmpl")
-
-	engine.AddFunc("config", func(key string) string {
-		return appConfig[key]
-	})
 
 	engine.AddFunc("sys", status)
 
@@ -133,9 +118,9 @@ func New(views http.FileSystem) *html.Engine {
 
 	engine.AddFunc("canonical", func(url any) template.HTML {
 		if url == nil {
-			return template.HTML(config.BaseURL)
+			return template.HTML(config.App.BaseURL)
 		}
-		return template.HTML(config.BaseURL + "/" + url.(string))
+		return template.HTML(config.App.BaseURL + "/" + url.(string))
 	})
 
 	engine.AddFunc("Elapsed", func(dur time.Duration) template.HTML {
@@ -160,7 +145,7 @@ func New(views http.FileSystem) *html.Engine {
 		return string(b)
 	})
 
-	if !config.Production {
+	if !config.App.Production {
 		engine.Reload(true)
 	}
 

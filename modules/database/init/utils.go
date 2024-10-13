@@ -8,7 +8,7 @@ import (
 )
 
 func logLevel() logger.LogLevel {
-	switch config.DBDebug {
+	switch config.Database.Debug {
 	case "error":
 		return logger.Error
 	case "warn":

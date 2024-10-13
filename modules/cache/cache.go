@@ -12,18 +12,18 @@ import (
 )
 
 var (
-	CacheFile = path.Join(config.CacheDir, "cache")
+	CacheFile string
 	Store     = cache.New(cache.NoExpiration, 5*time.Minute)
-	Code      = newLRU(config.CachedCodeItems, "code")
+	Code      *LRU
 )
 
-func init() {
+func Init() {
 	dirs := [...]string{
-		config.CacheDir,
-		config.ImageDir,
-		config.ProxyDir,
-		config.PublicDir,
-		config.StyleDir,
+		config.Storage.CacheDir,
+		config.Storage.ImageDir,
+		config.Storage.ProxyDir,
+		config.Storage.PublicDir,
+		config.Storage.StyleDir,
 	}
 
 	// Create dir if it doesn't exist.
@@ -43,9 +43,10 @@ func init() {
 	// Run install/view stats.
 	InstallStats.Run()
 	ViewStats.Run()
-}
 
-func Initialize() {
+	CacheFile = path.Join(config.Storage.CacheDir, "cache")
+	Code = newLRU(config.App.CodeMaxItems, "code")
+
 	if err := Store.LoadFile(CacheFile); err != nil {
 		log.Warn.Println("Failed to read cache:", err)
 	}

@@ -117,7 +117,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return c.Status(500).
@@ -183,7 +183,7 @@ func handleAPIStyle(c *fiber.Ctx, secureToken, oauthID, styleID string, style *m
 			})
 	}
 
-	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.Secrets)
 	returnCode += "&style_id=" + styleID
 	if state != "" {
 		returnCode += "&state=" + state

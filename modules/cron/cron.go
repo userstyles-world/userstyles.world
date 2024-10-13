@@ -8,6 +8,7 @@ import (
 	// "userstyles.world/models"
 	// "userstyles.world/modules/cache"
 	"userstyles.world/modules/cache"
+	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
 	"userstyles.world/modules/database/snapshot"
 	"userstyles.world/modules/log"
@@ -65,5 +66,12 @@ func Initialize() {
 	})
 	if err != nil {
 		log.Warn.Println("Failed to set compact index job:", err)
+	}
+
+	_, err = s.Cron("0 0 1 1 *").Do(func() {
+		config.App.UpdateCopyright()
+	})
+	if err != nil {
+		log.Warn.Println("Failed to set update copyright job:", err)
 	}
 }

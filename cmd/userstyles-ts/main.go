@@ -1,12 +1,10 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/evanw/esbuild/pkg/api"
-
-	"userstyles.world/modules/config"
-	"userstyles.world/modules/log"
 )
 
 var (
@@ -31,15 +29,12 @@ func main() {
 
 	// TODO: Remove this code?
 	if shouldWatch {
-		// Ensure we're seeing the error messages in stdout.
-		config.Production = false
-		log.Initialize()
 		watch = &api.WatchMode{
 			OnRebuild: func(result api.BuildResult) {
 				if len(result.Errors) > 0 {
-					log.Info.Printf("Watch build failed: %d errors\n", len(result.Errors))
+					log.Printf("Watch build failed: %d errors\n", len(result.Errors))
 				} else {
-					log.Info.Printf("Watch build succeeded: %d warnings\n", len(result.Warnings))
+					log.Printf("Watch build succeeded: %d warnings\n", len(result.Warnings))
 				}
 			},
 		}

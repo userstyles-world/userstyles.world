@@ -61,7 +61,7 @@ func getSystemStatus() {
 	systemMutex.Lock()
 	defer systemMutex.Unlock()
 
-	uptime := time.Since(config.AppUptime).Round(time.Second)
+	uptime := time.Since(config.App.Started).Round(time.Second)
 
 	system.Uptime = uptime.String()
 	system.GoRoutines = runtime.NumGoroutine()

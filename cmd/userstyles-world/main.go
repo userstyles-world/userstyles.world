@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -34,18 +36,38 @@ import (
 )
 
 func main() {
+	version := flag.Bool("version", false, "print build info")
+	custom := flag.String("config", "data/config.json", "path to custom config.json")
+	flag.Parse()
+
+	if *version {
+		fmt.Println("Go version:", config.GoVersion)
+		fmt.Println("Git commit:", config.GitCommit)
+		fmt.Println("Git signature:", config.GitSignature)
+		os.Exit(0)
+	}
+
+	err := config.Load(*custom)
+	if err != nil {
+		fmt.Printf("Failed to load config: %s\n", err)
+		os.Exit(1)
+	}
+
 	log.Initialize()
-	cache.Initialize()
+	cache.Init()
 	images.CheckVips()
 	util.InitCrypto()
+	jwtware.Init()
+	email.Init()
 	validator.Init()
 	database.Initialize()
 	cron.Initialize()
+	web.Init()
 
 	app := fiber.New(fiber.Config{
 		Views:       templates.New(http.FS(web.ViewsDir)),
 		ViewsLayout: "layouts/main",
-		ProxyHeader: config.ProxyRealIP,
+		ProxyHeader: config.App.ProxyHeader,
 		JSONEncoder: util.JSONEncoder,
 		IdleTimeout: 5 * time.Second,
 
@@ -55,18 +77,22 @@ func main() {
 
 	email.SetRenderer(app)
 
-	if !config.Production {
+	if !config.App.Production {
 		app.Use(logger.New())
 	}
 
 	api.FastRoutes(app)
 
+	app.Use(func(c *fiber.Ctx) error {
+		c.Locals("App", &config.App)
+		return c.Next()
+	})
 	app.Use(core.HSTSMiddleware)
 	app.Use(core.CSPMiddleware)
 	app.Use(core.FlagsMiddleware)
 	app.Use(jwtware.New("user", jwtware.NormalJWTSigning))
 
-	if config.PerformanceMonitor {
+	if config.App.Profiling {
 		perf := app.Group("/debug")
 		perf.Use(jwtware.Admin)
 		perf.Use(pprof.New())
@@ -91,7 +117,7 @@ func main() {
 	}))
 
 	// TODO: Investigate how to "truly" inline sourcemaps in Sass.
-	if !config.Production {
+	if !config.App.Production {
 		app.Static("/scss", "web/scss")
 	}
 
@@ -99,7 +125,7 @@ func main() {
 	app.Use(core.NotFound)
 
 	go func() {
-		if err := app.Listen(config.Port); err != nil {
+		if err := app.Listen(config.App.Addr); err != nil {
 			log.Warn.Fatal(err)
 		}
 	}()

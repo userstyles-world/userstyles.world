@@ -71,7 +71,7 @@ func RegisterPost(c *fiber.Ctx) error {
 			})
 	}
 
-	link := c.BaseURL() + "/verify/" + util.EncryptText(token, util.AEADCrypto, config.ScrambleConfig)
+	link := c.BaseURL() + "/verify/" + util.EncryptText(token, util.AEADCrypto, config.Secrets)
 	args := fiber.Map{
 		"User": u,
 		"Link": link,

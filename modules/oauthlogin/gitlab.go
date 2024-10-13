@@ -16,7 +16,7 @@ const gitlabStr = "gitlab"
 func (gitlab) oauthMakeURL() string {
 	oauthURL := "https://gitlab.com/oauth/authorize"
 	// Add our app client ID.
-	oauthURL += "?client_id=" + config.GitlabClientID
+	oauthURL += "?client_id=" + config.OpenAuth.GitLabID
 	// Define we want a code back
 	oauthURL += "&response_type=code"
 	// Add read_user scope.
@@ -34,12 +34,12 @@ func (gitlab) appendToRedirect(any) string {
 
 func (gitlab) getAuthTokenURL(any) string {
 	authURL := "https://gitlab.com/oauth/token"
-	authURL += "?client_id=" + config.GitlabClientID
-	authURL += "&client_secret=" + config.GitlabClientSecret
+	authURL += "?client_id=" + config.OpenAuth.GitLabID
+	authURL += "&client_secret=" + config.OpenAuth.GitLabSecret
 	// Define we log in trough the temp code.
 	authURL += "&grant_type=authorization_code"
 	// Specify the the redirect uri, because it is required
-	authURL += "&redirect_uri=" + url.PathEscape(config.OAuthURL()+gitlabStr+"/")
+	authURL += "&redirect_uri=" + url.PathEscape(config.App.BaseURL+"/api/callback/"+gitlabStr+"/")
 
 	return authURL
 }

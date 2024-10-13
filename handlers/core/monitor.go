@@ -9,8 +9,6 @@ import (
 	"userstyles.world/modules/config"
 )
 
-var addr = []byte(config.ProxyMonitor)
-
 func Monitor(c *fiber.Ctx) error {
 	u, ok := jwt.User(c)
 
@@ -30,7 +28,7 @@ func Monitor(c *fiber.Ctx) error {
 	}
 
 	// Proxy requests.
-	url := addr
+	url := []byte(config.App.MonitorURL)
 	url = append(url, c.Request().URI().Path()[8:]...)
 	url = append(url, 63)
 	url = append(url, c.Context().URI().QueryArgs().QueryString()...)

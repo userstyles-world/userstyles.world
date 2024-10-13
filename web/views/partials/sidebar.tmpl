@@ -1,7 +1,7 @@
 <nav id="navbar">
 	<a class="logo" href="/">
 		{{- template "partials/mascot" -}}
-		<span class="name">{{ config "appName" }}</span>
+		<span class="name">{{ .App.Name }}</span>
 	</a>
 
 	<input class="menu-btn" type="checkbox" id="menu-btn" title="Menu">

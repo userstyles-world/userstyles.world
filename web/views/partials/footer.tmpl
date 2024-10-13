@@ -2,19 +2,9 @@
 	<div class="Footer-wrapper u-LayoutMaxWidth py:l flex jc:b">
 		<ul class="Footer-list half mr:a">
 			<li><b class="mb:s">About</b></li>
-			<li class="about" style="max-width: 420px">
-				<span>A free and open-source, community-driven website for browsing and sharing UserCSS userstyles.</span>
-			</li>
-			<li><span class="copyright">© 2020–{{ config "copyright" }} {{ config "appName" }}</span></li>
-			<li>
-				{{ if (config "appVersion") }}
-					<a class="version" href="{{ config "appLatestCommit" }}">
-						{{- printf "%s (%s)" (config "appVersion") (config "appCodeName") -}}
-					</a>
-				{{ else }}
-					<span class="version">DevEnv</span>
-				{{ end }}
-			</li>
+			<li class="about" style="max-width: 420px"><span>{{ .App.Description }}</span></li>
+			<li><span class="copyright">{{ .App.Copyright }}</span></li>
+			<li><a class="version" href="{{ .App.GitCommitURL }}">{{ .App.GitSignature }} ({{ .App.Codename }})</a></li>
 		</ul>
 
 		<ul class="Footer-list quarter">
@@ -29,9 +19,8 @@
 
 		<ul class="Footer-list quarter">
 			<li><b class="mb:s">Support and links</b></li>
-			<li>{{ template "icons/github" }}<a target="_blank" rel="noopener" href="{{ config "appSourceCode" }}">Source code</a></li>
-			<li>{{ template "icons/github" }}<a target="_blank" rel="noopener" href="https://github.com/userstyles-world/userstyles.world/commits/dev/">Changelog</a></li>
-			<li>{{ template "icons/github" }}<a target="_blank" rel="noopener" href="{{ config "appSourceCode" }}/issues/new/choose">Open an issue</a></li>
+			<li>{{ template "icons/github" }}<a target="_blank" rel="noopener" href="{{ .App.GitRepository }}">Source code</a></li>
+			<li>{{ template "icons/github" }}<a target="_blank" rel="noopener" href="{{ .App.GitRepository }}/issues/new/choose">Open an issue</a></li>
 			<li>{{ template "icons/github" }}<a target="_blank" rel="noopener" href="https://github.com/orgs/userstyles-world/projects/1">Project roadmap</a></li>
 			<li>{{ template "icons/element" }} <a target="_blank" rel="noopener" href="/link/matrix">Chat on Matrix</a></li>
 			<li>{{ template "icons/discord" }} <a target="_blank" rel="noopener" href="/link/discord">Chat on Discord</a></li>

@@ -1,16 +1,16 @@
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<meta name="title" content="{{ config "appName" }}">
+<meta name="title" content="{{ .App.Name }}">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#679cd0">
 <meta name="description" content="A new free and open-source, community-driven, modern alternative to userstyles.org.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="{{ canonical .Canonical }}">
 <link rel="search" type="application/opensearchdescription+xml" title="UserStyles.world search" href="/opensearch.xml">
-<link rel="stylesheet" href="/css/main.css?v={{ config "appCommitSHA" }}" type="text/css" media="screen">
+<link rel="stylesheet" href="/css/main.css?v={{ .App.GitCommitSHA }}" type="text/css" media="screen">
 <link rel="mask-icon" href="/mascot.svg" color="blue">
 <link rel="icon" href="/mascot.svg">
-<title>{{ .Title }} — {{ config "appName" }}</title>
+<title>{{ .Title }} — {{ .App.Name }}</title>
 {{ with .Profile }}
 <meta property="og:type" content="profile">
 <meta property="og:url" content="{{ printf `https://userstyles.world/user/%s` .Username }}">
@@ -29,4 +29,4 @@
 {{ with .Style.Preview }}<meta property="twitter:image" content="{{ fullImage . }}">{{ end }}
 <meta property="twitter:card" content="summary_large_image">
 {{ end }}
-<script defer src="/js/main.js?v={{ config "appCommitSHA" }}"></script>
+<script defer src="/js/main.js?v={{ .App.GitCommitSHA }}"></script>

@@ -20,19 +20,19 @@ var (
 	ViewsDir  fs.FS
 )
 
-func init() {
+func Init() {
 	var err error
-	DocsDir, err = util.EmbedFS(files, "web/docs", config.Production)
+	DocsDir, err = util.EmbedFS(files, "web/docs", config.App.Production)
 	if err != nil {
 		log.Fatalf("Failed to set docs directory: %s\n", err)
 	}
 
-	StaticDir, err = util.EmbedFS(files, "web/static", config.Production)
+	StaticDir, err = util.EmbedFS(files, "web/static", config.App.Production)
 	if err != nil {
 		log.Fatalf("Failed to set static directory: %s\n", err)
 	}
 
-	ViewsDir, err = util.EmbedFS(files, "web/views", config.Production)
+	ViewsDir, err = util.EmbedFS(files, "web/views", config.App.Production)
 	if err != nil {
 		log.Fatalf("Failed to set views directory: %s\n", err)
 	}

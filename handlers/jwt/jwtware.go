@@ -10,9 +10,13 @@ import (
 )
 
 var (
-	JWTSigningKey = []byte(config.JWTSigningKey)
+	JWTSigningKey []byte
 	SigningMethod = "HS512"
 )
+
+func Init() {
+	JWTSigningKey = []byte(config.Secrets.SessionTokenKey)
+}
 
 func New(local string, keyFunction func(t *jwt.Token) (any, error)) fiber.Handler {
 	extractors := []func(c *fiber.Ctx) (string, bool){

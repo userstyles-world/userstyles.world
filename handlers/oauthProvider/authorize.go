@@ -35,7 +35,7 @@ func redirectFunction(c *fiber.Ctx, state, redirectURI string) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig)
+	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.Secrets)
 	if state != "" {
 		returnCode += "&state=" + state
 	}
@@ -98,7 +98,7 @@ func AuthorizeGet(c *fiber.Ctx) error {
 	arguments := fiber.Map{
 		"User":        u,
 		"OAuth":       oauth,
-		"SecureToken": util.EncryptText(jwtToken, util.AEADOAuthp, config.ScrambleConfig),
+		"SecureToken": util.EncryptText(jwtToken, util.AEADOAuthp, config.Secrets),
 	}
 	for _, v := range oauth.Scopes {
 		arguments["Scope_"+v] = true
@@ -116,7 +116,7 @@ func AuthPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")

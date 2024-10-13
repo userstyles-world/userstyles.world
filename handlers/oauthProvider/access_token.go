@@ -35,7 +35,7 @@ func TokenPost(c *fiber.Ctx) error {
 		return errorMessage(c, 400, "Incorrect client_secret specified")
 	}
 
-	unsealedText, err := util.DecryptText(tCode, util.AEADOAuthp, config.ScrambleConfig)
+	unsealedText, err := util.DecryptText(tCode, util.AEADOAuthp, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")

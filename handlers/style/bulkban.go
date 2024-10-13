@@ -134,7 +134,7 @@ func sendBulkRemovalEmail(user *storage.User, styles []*models.Style, event *mod
 		"User":   user,
 		"Styles": styles,
 		"Log":    event,
-		"Link":   config.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
+		"Link":   config.App.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
 	}
 
 	var title string

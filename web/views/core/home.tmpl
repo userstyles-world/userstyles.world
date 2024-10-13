@@ -1,7 +1,7 @@
 {{ if not .User.ID }}
 	<section class="Hero md flex f-col ta:c">
 		<div class="mascot">{{ template "partials/mascot" }}</div>
-		<h1>{{ config "appName" }}</h1>
+		<h1>{{ .App.Name }}</h1>
 		<p>Free and open-source, community-driven platform for sharing and browsing UserCSS userstyles, and a replacement for <code>UserStyles.org</code>, made by the userstyles community.</p>
 		<span class="flex mt:m">
 			<a class="btn icon primary mx:s" href="/explore">

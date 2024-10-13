@@ -39,12 +39,12 @@ func connect() (*gorm.DB, error) {
 			logger.Config{
 				SlowThreshold: time.Second,
 				LogLevel:      logLevel(),
-				Colorful:      config.DBColor,
+				Colorful:      config.Database.Colorful,
 			},
 		),
 	}
 
-	file := path.Join(config.DataDir, config.DB)
+	file := path.Join(config.Storage.DataDir, config.Database.Name)
 	conn, err := gorm.Open(sqlite.Open(file), gormConfig)
 	if err != nil {
 		return nil, err
@@ -75,11 +75,11 @@ func Initialize() {
 	}
 
 	// GORM doesn't set a maximum of open connections by default.
-	db.SetMaxOpenConns(config.DBMaxOpenConns)
+	db.SetMaxOpenConns(config.Database.MaxOpenConns)
 
 	shouldSeed := false
 	// Generate data for development.
-	if config.DBDrop && !config.Production {
+	if config.Database.Drop && !config.App.Production {
 		for _, table := range tables {
 			if err := drop(table.model); err != nil {
 				log.Warn.Fatalf("Failed to drop %s, err: %s\n", table.name, err.Error())
@@ -96,7 +96,7 @@ func Initialize() {
 	}
 
 	// Migrate tables.
-	if config.DBMigrate {
+	if config.Database.Migrate {
 		for _, table := range tables {
 			if err := migrate(table.model); err != nil {
 				log.Warn.Fatalf("Failed to migrate %s, err: %s\n", table.name, err.Error())
@@ -115,7 +115,7 @@ func Initialize() {
 	}
 
 	// TODO: Simplify the entire process, including dropping and seeding data.
-	if config.DBMigrate {
+	if config.Database.Migrate {
 		log.Info.Println("Database migration complete.")
 		os.Exit(0)
 	}
@@ -279,8 +279,8 @@ func seed() {
 		},
 	}
 
-	if config.DBRandomData {
-		s, u := generateData(config.DBRandomDataAmount)
+	if config.Database.RandomData {
+		s, u := generateData(config.Database.RandomDataAmount)
 		styles = append(styles, s...)
 		users = append(users, u...)
 	}

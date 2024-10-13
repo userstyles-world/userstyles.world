@@ -26,7 +26,7 @@ var client = http.Client{
 		}
 
 		// Make sure it doesn't redirect to a loopback thingy.
-		if config.Production && util.IsLoopback(string(req.Host)) {
+		if config.App.Production && util.IsLoopback(string(req.Host)) {
 			return errors.New("*giggles* Mikey Wikey hates you")
 		}
 		return nil
@@ -42,7 +42,7 @@ func Proxy(c *fiber.Ctx) error {
 	}
 
 	// Set resource location and name.
-	dir := path.Join(config.ProxyDir, path.Clean(t), path.Clean(id))
+	dir := path.Join(config.Storage.ProxyDir, path.Clean(t), path.Clean(id))
 	name := path.Join(dir, url.PathEscape(link))
 
 	// Check if image exists.

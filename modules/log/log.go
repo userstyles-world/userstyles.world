@@ -17,7 +17,7 @@ var (
 )
 
 func setOutput(f *os.File) io.Writer {
-	if config.Production {
+	if config.App.Production {
 		return io.MultiWriter(f)
 	}
 
@@ -26,9 +26,9 @@ func setOutput(f *os.File) io.Writer {
 
 func Initialize() {
 	flags := os.O_APPEND | os.O_CREATE | os.O_WRONLY
-	f, err := os.OpenFile(config.LogFile, flags, 0o666)
+	f, err := os.OpenFile(config.Storage.LogFile, flags, 0o666)
 	if err != nil {
-		log.Fatalf("Failed to open %v: %s\n", config.LogFile, err)
+		log.Fatalf("Failed to open %v: %s\n", config.Storage.LogFile, err)
 	}
 
 	// Configure output.
