@@ -162,7 +162,7 @@ setup() {
             if [ "$BUILD" -eq 1 ]; then build sass-dev; fi
             ;;
         all)
-            setup fonts; setup ts; setup sass
+            setup fonts; setup ts; setup sass; setup go
             ;;
     esac
 }

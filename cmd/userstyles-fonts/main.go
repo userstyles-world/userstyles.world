@@ -12,8 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-
-	"userstyles.world/modules/config"
 )
 
 var (
@@ -58,7 +56,7 @@ func getAsset() (Asset, error) {
 	}
 
 	asset := release.Assets[0]
-	asset.Path = path.Join(config.Storage.DataDir, asset.Name)
+	asset.Path = path.Join("data", asset.Name)
 
 	return asset, nil
 }
