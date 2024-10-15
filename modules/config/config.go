@@ -136,7 +136,7 @@ func (app *AppConfig) UpdateCopyright() {
 // UpdateGitInfo updates dynamic Git-specific fields.
 func (app *AppConfig) UpdateGitInfo() {
 	if app.GitRepository == "" {
-		log.Fatal("config: App.Repository can't be an empty string")
+		log.Fatal("config: App.GitRepository can't be an empty string")
 	}
 
 	app.GitCommitURL = fmt.Sprintf("%s/commit/%s", app.GitRepository, GitCommit)
