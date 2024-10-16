@@ -71,6 +71,11 @@ type APIStyle struct {
 // TableName returns which table in database to use with GORM.
 func (APIStyle) TableName() string { return "styles" }
 
+// Permalink returns a link to the style page.
+func (s APIStyle) Permalink() string {
+	return fmt.Sprintf("/style/%d/%s", s.ID, util.Slug(s.Name))
+}
+
 type StyleSiteMap struct {
 	ID int
 }

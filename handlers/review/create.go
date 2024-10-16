@@ -29,6 +29,7 @@ func createPage(c *fiber.Ctx) error {
 		c.Locals("Title", "Style not found")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
+	c.Locals("Style", s)
 
 	// Prevent authors reviewing their own userstyles.
 	if u.ID == s.UserID {
@@ -79,6 +80,7 @@ func createForm(c *fiber.Ctx) error {
 	}
 
 	r := models.NewReview(u.ID, s.ID, c.FormValue("rating"), c.FormValue("comment"))
+	r.Style.Name = s.Name // HACK: Set a proper slug in the review permalink.
 	c.Locals("Review", r)
 
 	if err = r.Validate(); err != nil {

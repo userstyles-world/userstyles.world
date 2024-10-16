@@ -36,7 +36,7 @@
 
 		<div class="mt:m">
 			<button class="btn primary mr:s" type="submit">Confirm</button>
-			<a class="fg:1" href="/style/{{ .Review.ID }}">Cancel</a>
+			<a class="fg:1" href="{{ or .Style.Permalink .Review.Permalink }}">Cancel</a>
 		</div>
 	</form>
 </section>
