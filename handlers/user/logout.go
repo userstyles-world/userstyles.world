@@ -7,5 +7,5 @@ import (
 func Logout(c *fiber.Ctx) error {
 	c.ClearCookie(fiber.HeaderAuthorization)
 
-	return c.Redirect("/login", fiber.StatusSeeOther)
+	return c.Redirect("/signin", fiber.StatusSeeOther)
 }

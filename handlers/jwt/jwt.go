@@ -26,7 +26,7 @@ var Protected = func(c *fiber.Ctx) error {
 			redirectURI += "?" + c.Context().QueryArgs().String()
 		}
 
-		return c.Redirect("/login?r=" + url.QueryEscape(redirectURI))
+		return c.Redirect("/signin?r=" + url.QueryEscape(redirectURI))
 	}
 	return c.Next()
 }
@@ -39,7 +39,7 @@ var Admin = func(c *fiber.Ctx) error {
 
 	u, ok := User(c)
 	if !ok || !u.IsAdmin() {
-		return c.Redirect("/login?r=" + url.QueryEscape(c.Path()))
+		return c.Redirect("/signin?r=" + url.QueryEscape(c.Path()))
 	}
 
 	return c.Next()

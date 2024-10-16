@@ -23,8 +23,8 @@ func LoginGet(c *fiber.Ctx) error {
 		return c.Redirect("/account", fiber.StatusSeeOther)
 	}
 	arguments := fiber.Map{
-		"Title":     "Login",
-		"Canonical": "login",
+		"Title":     "Sign in",
+		"Canonical": "signin",
 	}
 
 	if r := c.Query("r"); r != "" {
@@ -50,8 +50,8 @@ func LoginPost(c *fiber.Ctx) error {
 		}
 
 		return c.Render("user/login", fiber.Map{
-			"Title": "Login failed",
-			"Error": "Failed to login. Please provide valid data.",
+			"Title": "Sign in failed",
+			"Error": "Failed to sign in. Please provide valid data.",
 		})
 	}
 
@@ -61,7 +61,7 @@ func LoginPost(c *fiber.Ctx) error {
 
 		return c.Status(fiber.StatusUnauthorized).
 			Render("user/login", fiber.Map{
-				"Title": "Login failed",
+				"Title": "Sign in failed",
 				"Error": "Invalid credentials.",
 			})
 	}
@@ -72,7 +72,7 @@ func LoginPost(c *fiber.Ctx) error {
 
 		return c.Status(fiber.StatusInternalServerError).
 			Render("user/login", fiber.Map{
-				"Title": "Login failed",
+				"Title": "Sign in failed",
 				"Error": "Invalid credentials.",
 			})
 	}

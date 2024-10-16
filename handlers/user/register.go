@@ -23,8 +23,8 @@ func RegisterGet(c *fiber.Ctx) error {
 	}
 
 	return c.Render("user/register", fiber.Map{
-		"Title":     "Register",
-		"Canonical": "register",
+		"Title":     "Sign up",
+		"Canonical": "signup",
 	})
 }
 
@@ -33,7 +33,7 @@ func RegisterPost(c *fiber.Ctx) error {
 	if confirm != password {
 		return c.Status(fiber.StatusForbidden).
 			Render("user/register", fiber.Map{
-				"Title": "Register failed",
+				"Title": "Sign up failed",
 				"Error": "Your passwords don't match.",
 			})
 	}
@@ -52,8 +52,8 @@ func RegisterPost(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusInternalServerError).
 			Render("user/register", fiber.Map{
-				"Title": "Register failed",
-				"Error": "Failed to register. Make sure your input is correct.",
+				"Title": "Sign up failed",
+				"Error": "Failed to sign up. Make sure your input is correct.",
 			})
 	}
 

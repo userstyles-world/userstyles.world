@@ -40,7 +40,7 @@ function pageSpecificFunctions(settings: UserSettings) {
         case '/modlog':
             changeEntriesBehavior(settings.entriesBehavior);
             break;
-        case '/login':
+        case '/signin':
             saveRedirect();
             break;
         case '/add':

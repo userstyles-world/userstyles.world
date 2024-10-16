@@ -1,6 +1,6 @@
 <section class="ta:c">
-	<h1>Register</h1>
-	<p>Note: Logging in uses your email address, not username.</p>
+	<h1>Sign up</h1>
+	<p>Note: Signing in uses your email address, not username.</p>
 </section>
 
 {{ template "partials/alert" . }}
@@ -8,7 +8,7 @@
 <section class="register limit">
 	{{ template "partials/btn-oauth" "sign up" }}
 
-	<form class="Form Form-box" method="post" action="/register">
+	<form class="Form Form-box" method="post" action="/signup">
 		<div class="Form-section Form-full">
 			<label for="username">Username</label>
 			<input
@@ -50,12 +50,12 @@
 
 		<div class="Form-control">
 			<button class="btn icon primary" type="submit">
-				{{ template "icons/sign-in" }} Register
+				{{ template "icons/sign-in" }} Sign up
 			</button>
 		</div>
 	</form>
 
 	<p class="form-tip ta:c">
-		<i class="fg:3">Already have an account? Continue to <a href="/login">log in page</a>.</i>
+		<i class="fg:3">Already have an account? Continue to <a href="/signin">sign in page</a>.</i>
 	</p>
 </section>

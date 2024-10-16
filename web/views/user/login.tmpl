@@ -1,6 +1,6 @@
 <section class="ta:c">
-	<h1>Log in</h1>
-	<p>Note: Logging in using usernames is disabled.</p>
+	<h1>Sign in</h1>
+	<p>Note: Signing in using usernames is disabled.</p>
 </section>
 
 {{ template "partials/alert" . }}
@@ -8,7 +8,7 @@
 <section class="login limit">
 	{{ template "partials/btn-oauth" "sign in" }}
 
-	<form class="Form Form-box" method="post" action="/login{{- .Redirect -}}">
+	<form class="Form Form-box" method="post" action="/signin{{- .Redirect -}}">
 		<div class="Form-section Form-full">
 			<label for="email">Email address</label>
 			<input
@@ -46,6 +46,6 @@
 	</form>
 
 	<p class="form-tip ta:c">
-		<i class="fg:3">Don't have an account? Continue to <a href="/register">register page</a>.</i>
+		<i class="fg:3">Don't have an account? Continue to <a href="/signup">sign up page</a>.</i>
 	</p>
 </section>

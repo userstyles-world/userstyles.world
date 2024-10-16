@@ -28,8 +28,8 @@ var (
 
 var hardCodedEntries = []string{
 	"https://userstyles.world/",
-	"https://userstyles.world/login",
-	"https://userstyles.world/register",
+	"https://userstyles.world/signin",
+	"https://userstyles.world/signup",
 	"https://userstyles.world/search",
 	"https://userstyles.world/explore",
 	"https://userstyles.world/docs/security",

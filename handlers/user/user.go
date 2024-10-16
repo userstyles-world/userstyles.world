@@ -10,10 +10,14 @@ import (
 // Routes provides routes for Fiber's router.
 func Routes(app *fiber.App) {
 	r := app.Group("/")
-	r.Get("/login", LoginGet)
-	r.Post("/login", LoginPost)
-	r.Get("/register", RegisterGet)
-	r.Post("/register", RegisterPost)
+	r.Get("/login", loginGet)
+	r.Post("/login", loginPost)
+	r.Get("/register", registerGet)
+	r.Post("/register", registerPost)
+	r.Get("/signin", LoginGet)
+	r.Post("/signin", LoginPost)
+	r.Get("/signup", RegisterGet)
+	r.Post("/signup", RegisterPost)
 	r.Get("/oauth/:type", AuthLoginGet)
 	r.Get("/verify/:key", VerifyGet)
 	r.Get("/recover", RecoverGet)

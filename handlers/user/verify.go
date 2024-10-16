@@ -50,7 +50,7 @@ func VerifyGet(c *fiber.Ctx) error {
 	if !ok {
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
-				"Title": "Register failed",
+				"Title": "Sign up failed",
 				"Error": "Internal server error.",
 			})
 	}
@@ -69,11 +69,11 @@ func VerifyGet(c *fiber.Ctx) error {
 	u.Password = pw
 
 	if err = database.Conn.Create(u).Error; err != nil {
-		log.Database.Printf("Failed to register %s: %s\n", u.Email, err)
+		log.Database.Printf("Failed to sign up %s: %s\n", u.Email, err)
 
 		return c.Status(fiber.StatusInternalServerError).
 			Render("err", fiber.Map{
-				"Title": "Register failed",
+				"Title": "Sign up failed",
 				"Error": "Internal server error.",
 			})
 	}

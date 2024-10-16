@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	Spam *log.Logger
 	Info *log.Logger
 	Warn *log.Logger
 
@@ -35,6 +36,7 @@ func Initialize() {
 	mw := setOutput(f)
 
 	// Initialize loggers.
+	Spam = log.New(mw, "SPAM ", log.Ldate|log.Ltime|log.Lshortfile)
 	Info = log.New(mw, "INFO ", log.Ldate|log.Ltime|log.Lshortfile)
 	Warn = log.New(mw, "WARN ", log.Ldate|log.Ltime|log.Lshortfile)
 	Database = log.New(mw, "DBMS ", log.Ldate|log.Ltime)
