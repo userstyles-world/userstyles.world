@@ -14,9 +14,16 @@ import (
 
 func DeleteGet(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
-	p := c.Params("id")
 
-	s, err := models.GetStyleByID(p)
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
+			"Title": "Invalid style ID",
+			"User":  u,
+		})
+	}
+
+	s, err := models.GetStyleByID(i)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -49,9 +56,8 @@ func DeletePost(c *fiber.Ctx) error {
 			"Title": "Invalid style ID",
 		})
 	}
-	id := c.Params("id")
 
-	s, err := models.GetStyleByID(id)
+	s, err := models.GetStyleByID(i)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -77,7 +83,7 @@ func DeletePost(c *fiber.Ctx) error {
 		if err = storage.DeleteSearchData(tx, i); err != nil {
 			return err
 		}
-		return models.RemoveStyleCode(id)
+		return models.RemoveStyleCode(c.Params("id"))
 	})
 	if err != nil {
 		log.Database.Printf("Failed to delete %d: %s\n", i, err)

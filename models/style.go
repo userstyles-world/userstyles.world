@@ -144,8 +144,8 @@ func GetStyleCount() (int, error) {
 	return int(c), nil
 }
 
-// GetStyleByID note: Using ID as a string is fine in this case.
-func GetStyleByID(id string) (s *Style, err error) {
+// GetStyleByID tries to fetch a userstyle with id from the database.
+func GetStyleByID(id int) (s *Style, err error) {
 	err = database.Conn.Joins("User").Find(&s, "styles.id = ?", id).Error
 	return s, err
 }

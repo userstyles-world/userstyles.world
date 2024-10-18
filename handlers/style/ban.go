@@ -29,8 +29,16 @@ func BanGet(c *fiber.Ctx) error {
 		})
 	}
 
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
+			"Title": "Invalid style ID",
+			"User":  u,
+		})
+	}
+
 	// Check if style exists.
-	s, err := models.GetStyleByID(c.Params("id"))
+	s, err := models.GetStyleByID(i)
 	if err != nil {
 		c.Status(fiber.StatusNotFound)
 		return c.Render("err", fiber.Map{
