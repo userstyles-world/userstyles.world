@@ -72,7 +72,7 @@ type APIStyle struct {
 func (APIStyle) TableName() string { return "styles" }
 
 // Permalink returns a link to the style page.
-func (s APIStyle) Permalink() string {
+func (s Style) Permalink() string {
 	return fmt.Sprintf("/style/%d/%s", s.ID, util.Slug(s.Name))
 }
 
@@ -81,7 +81,7 @@ type StyleSiteMap struct {
 }
 
 // TruncateCode returns if it should the style, to prevent long loading times.
-func (s APIStyle) TruncateCode() bool {
+func (s Style) TruncateCode() bool {
 	return len(s.Code) > 10_000
 }
 
@@ -145,20 +145,9 @@ func GetStyleCount() (int, error) {
 }
 
 // GetStyleByID note: Using ID as a string is fine in this case.
-func GetStyleByID(id string) (*APIStyle, error) {
-	q := new(APIStyle)
-	err := db().
-		Model(modelStyle).
-		Select("styles.*,  u.username").
-		Joins("join users u on u.id = styles.user_id").
-		Find(q, "styles.id = ?", id).
-		Error
-
-	if err != nil || q.ID == 0 {
-		return nil, errors.ErrStyleNotFound
-	}
-
-	return q, nil
+func GetStyleByID(id string) (s *Style, err error) {
+	err = database.Conn.Joins("User").Find(&s, "styles.id = ?", id).Error
+	return s, err
 }
 
 func CreateStyle(s *Style) (*Style, error) {
@@ -225,11 +214,11 @@ func GetStyle(id string) (Style, error) {
 	return s, err
 }
 
-func (s *APIStyle) GetSourceCodeSize() uint64 {
+func (s Style) GetSourceCodeSize() uint64 {
 	return uint64(len(s.Code))
 }
 
-func (s *APIStyle) GetSourceCodeCRC32() string {
+func (s Style) GetSourceCodeCRC32() string {
 	return fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
@@ -399,24 +388,24 @@ func RemoveStyleCode(id string) error {
 }
 
 // mirrorEnabled returns whether or not mirroring is enabled.
-func (s *APIStyle) mirrorEnabled() bool {
+func (s Style) mirrorEnabled() bool {
 	return s.MirrorCode || s.MirrorMeta
 }
 
 // sameMirrorURL returns whether or not mirror URL matches import URL.
-func (s *APIStyle) sameMirrorURL() bool {
+func (s Style) sameMirrorURL() bool {
 	return s.MirrorURL == "" || s.Original == s.MirrorURL
 }
 
 // isImportedAndMirrored returns whether or not a userstyle is imported and
 // mirrored from the same URLs.
-func (s *APIStyle) isImportedAndMirrored() bool {
+func (s Style) isImportedAndMirrored() bool {
 	return s.isImported() && s.mirrorEnabled() && s.sameMirrorURL()
 }
 
 // ImportedAndMirrored returns from which location a userstyle is imported and
 // mirrored.
-func (s *APIStyle) ImportedAndMirrored() string {
+func (s Style) ImportedAndMirrored() string {
 	if !s.isImportedAndMirrored() {
 		return ""
 	}
@@ -427,12 +416,12 @@ func (s *APIStyle) ImportedAndMirrored() string {
 }
 
 // isImported returns whether or not a userstyle is isImported.
-func (s *APIStyle) isImported() bool {
+func (s Style) isImported() bool {
 	return s.Original != ""
 }
 
 // Imported returns from which location a userstyle is imported.
-func (s *APIStyle) Imported() string {
+func (s Style) Imported() string {
 	if !s.isImported() {
 		return ""
 	}
@@ -443,12 +432,12 @@ func (s *APIStyle) Imported() string {
 }
 
 // isMirrored returns whether or not a userstyle is isMirrored.
-func (s *APIStyle) isMirrored() bool {
+func (s Style) isMirrored() bool {
 	return s.MirrorURL != "" && s.mirrorEnabled()
 }
 
 // Mirrored returns from which location a userstyle is mirrored.
-func (s *APIStyle) Mirrored() string {
+func (s Style) Mirrored() string {
 	if !s.isMirrored() {
 		return ""
 	}

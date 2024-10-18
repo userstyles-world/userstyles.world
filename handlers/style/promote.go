@@ -13,7 +13,7 @@ import (
 	"userstyles.world/modules/log"
 )
 
-func sendPromotionEmail(style *models.APIStyle, user *models.User, mod string) {
+func sendPromotionEmail(style *models.Style, user *models.User, mod string) {
 	args := fiber.Map{
 		"User":      user,
 		"Style":     style,

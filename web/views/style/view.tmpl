@@ -6,7 +6,7 @@
 	{{ template "partials/alert" . }}
 
 	<h1 class="mb:m">{{ .Style.Name }}
-		<span class="fg:4"> by {{ .Style.Username }}</span>
+		<span class="fg:4"> by {{ .Style.User.Username }}</span>
 	</h1>
 
 	{{ with .Style.ImportedAndMirrored }}
@@ -141,7 +141,7 @@
 
 <section id="details">
 	<h2 class="td:d">Details</h2>
-	<p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
+	<p><span class="minw">Author</span><a href="/user/{{ .Style.User.Username }}">{{ .Style.User.Username }}</a></p>
 	<p><span class="minw">License</span>{{ .Style.License }}</p>
 	<p><span class="minw">Category</span>{{ .Style.Category }}</p>
 	<p><span class="minw">Created</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
