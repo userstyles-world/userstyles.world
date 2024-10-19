@@ -48,6 +48,15 @@
 				autocomplete="new-password">
 		</div>
 
+		<div class="Form-section">
+			<label>Are you a bot?</label>
+			<div class="Form-checkbox">
+				<input type="checkbox" name="bot" id="bot">
+				{{ template "partials/checkboxes" }}
+				<label for="bot">I'm not a bot</label>
+			</div>
+		</div>
+
 		<div class="Form-control">
 			<button class="btn icon primary" type="submit">
 				{{ template "icons/sign-in" }} Sign up

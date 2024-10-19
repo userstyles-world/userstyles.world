@@ -29,6 +29,16 @@ func RegisterGet(c *fiber.Ctx) error {
 }
 
 func RegisterPost(c *fiber.Ctx) error {
+	bot := c.FormValue("bot") != "on"
+	if bot {
+		username := c.FormValue("username")
+		password := c.FormValue("password")
+		email := c.FormValue("email")
+		log.Spam.Printf("kind=botRegisterPost ip=%q un=%q email=%q password=%d ua=%q",
+			c.IP(), username, email, len(password), c.Context().UserAgent())
+		return c.Render("err", fiber.Map{"Title": "Bots aren't allowed"})
+	}
+
 	password, confirm := c.FormValue("password"), c.FormValue("confirm")
 	if confirm != password {
 		return c.Status(fiber.StatusForbidden).
