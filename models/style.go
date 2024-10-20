@@ -159,24 +159,14 @@ func GetStyleByID(id int) (s *Style, err error) {
 func CreateStyle(s *Style) (*Style, error) {
 	s.Prepare()
 
-	if err := db().Create(&s).Error; err != nil {
-		return s, err
-	}
-
-	return s, nil
+	err := database.Conn.Create(&s).Error
+	return s, err
 }
 
 func UpdateStyle(s *Style) error {
-	err := db().
-		Model(modelStyle).
-		Where("id", s.ID).
-		Updates(s).
-		Error
-	if err != nil {
-		return err
-	}
+	s.Prepare()
 
-	return nil
+	return database.Conn.Where("id = ?", s.ID).Updates(s).Error
 }
 
 func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
@@ -378,16 +368,11 @@ func (s *APIStyle) SetPreview() {
 func SelectUpdateStyle(s Style) error {
 	s.Prepare()
 
-	fields := []string{"name", "description", "notes", "code", "homepage",
-		"license", "category", "preview", "preview_version", "mirror_url",
-		"mirror_code", "mirror_meta", "import_private", "mirror_private",
-		"slug"}
+	const f = "name, description, notes, code, homepage, " +
+		"license, category, slug, preview, preview_version, " +
+		"mirror_url, mirror_code, mirror_meta, import_private, mirror_private"
 
-	return db().
-		Model(modelStyle).
-		Select(fields).
-		Where("id = ?", s.ID).
-		Updates(s).Error
+	return database.Conn.Select(f).Where("id = ?", s.ID).UpdateColumns(s).Error
 }
 
 func SaveStyleCode(id, s string) error {
