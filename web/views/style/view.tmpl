@@ -46,7 +46,7 @@
 
 <section class="header flex mt:m ai:c">
 	<div class="share flex ai:c mr:m">
-		<span id="share" class="bg:2 input-like" slug="/{{ .Slug }}">{{ .URL }}</span>
+		<span id="share" class="bg:2 input-like" slug="/{{ .Style.Slug }}">{{ .URL }}</span>
 		<button
 			aria-label="Copy Style URL to clipboard"
 			data-tooltip="Style URL has been copied to your clipboard."
@@ -115,7 +115,7 @@
 				{{ if .CanReview }}
 					target="_blank"
 					rel="noopener"
-					href="/styles/{{ .Style.ID }}-{{ .Slug }}/reviews/create"
+					href="/styles/{{ .Style.ID }}-{{ .Style.Slug }}/reviews/create"
 				{{ else }}
 					disabled
 					data-tooltip="{{ .CantReviewReason }}"
@@ -230,7 +230,7 @@
 <section id="reviews">
 	<h2 class="td:d">Reviews</h2>
 	{{ if and (.User.ID) (ne .Style.UserID .User.ID) }}
-		<a href="/styles/{{ .Style.ID }}-{{ .Slug }}/reviews/create">Add your review</a>
+		<a href="/styles/{{ .Style.ID }}-{{ .Style.Slug }}/reviews/create">Add your review</a>
 	{{ end }}
 
 	{{ range .Reviews }}

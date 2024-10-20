@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"userstyles.world/modules/database"
-	"userstyles.world/modules/util"
 )
 
 const (
@@ -21,11 +20,11 @@ const (
 
 var (
 	selectCards = strings.Join([]string{
-		"id", "updated_at", "name", "preview",
+		"id", "updated_at", "name", "preview", "slug",
 		selectAuthor, selectInstalls, selectViews, selectRatings, selectReviewCount,
 	}, ", ")
 	selectSearchCards = strings.Join([]string{
-		"id", "created_at", "updated_at", "name", "preview",
+		"id", "created_at", "updated_at", "name", "preview", "slug",
 		selectAuthor, selectInstalls, selectViews, selectRatings, selectReviewCount,
 	}, ", ")
 )
@@ -37,6 +36,7 @@ type StyleCard struct {
 	Preview     string    `json:"preview"`
 	Username    string    `json:"username"`
 	Name        string    `json:"name"`
+	Slug        string    `json:"slug"`
 	ID          int       `json:"id"`
 	Views       int64     `json:"views"`
 	Installs    int64     `json:"installs"`
@@ -47,14 +47,9 @@ type StyleCard struct {
 // TableName returns which table in database to use with GORM.
 func (StyleCard) TableName() string { return "styles" }
 
-// Slug returns a user- and SEO-friendly URL.
-func (x StyleCard) Slug() string {
-	return util.Slug(x.Name)
-}
-
 // StyleURL returns an absolute path to a style.
 func (x StyleCard) StyleURL() string {
-	return fmt.Sprintf("/style/%d/%s", x.ID, x.Slug())
+	return fmt.Sprintf("/style/%d/%s", x.ID, x.Slug)
 }
 
 // FindStyleCardsForSearch returns style cards for search page.

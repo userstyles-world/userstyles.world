@@ -31,15 +31,16 @@ type Style struct {
 	Code           string `validate:"max=10000000"`
 	License        string
 	Preview        string
-	User           User `gorm:"foreignKey:ID"`
-	UserID         uint `gorm:"index"`
-	Archived       bool `gorm:"default:false"`
-	Featured       bool `gorm:"default:false"`
-	MirrorCode     bool `gorm:"default:false"`
-	MirrorMeta     bool `gorm:"default:false"`
-	PreviewVersion int  `gorm:"default:0"`
-	ImportPrivate  bool `gorm:"default:false"`
-	MirrorPrivate  bool `gorm:"default:false"`
+	Slug           string `json:"-"`
+	User           User   `gorm:"foreignKey:ID"`
+	UserID         uint   `gorm:"index"`
+	Archived       bool   `gorm:"default:false"`
+	Featured       bool   `gorm:"default:false"`
+	MirrorCode     bool   `gorm:"default:false"`
+	MirrorMeta     bool   `gorm:"default:false"`
+	PreviewVersion int    `gorm:"default:0"`
+	ImportPrivate  bool   `gorm:"default:false"`
+	MirrorPrivate  bool   `gorm:"default:false"`
 }
 
 type APIStyle struct {
@@ -73,7 +74,12 @@ func (APIStyle) TableName() string { return "styles" }
 
 // Permalink returns a link to the style page.
 func (s Style) Permalink() string {
-	return fmt.Sprintf("/style/%d/%s", s.ID, util.Slug(s.Name))
+	return fmt.Sprintf("/style/%d/%s", s.ID, s.Slug)
+}
+
+// Prepare sets dynamic fields to their respective values.
+func (s *Style) Prepare() {
+	s.Slug = util.Slug(s.Name)
 }
 
 type StyleSiteMap struct {
@@ -151,6 +157,8 @@ func GetStyleByID(id int) (s *Style, err error) {
 }
 
 func CreateStyle(s *Style) (*Style, error) {
+	s.Prepare()
+
 	if err := db().Create(&s).Error; err != nil {
 		return s, err
 	}
@@ -368,9 +376,12 @@ func (s *APIStyle) SetPreview() {
 
 // SelectUpdateStyle will update specific fields in the styles table.
 func SelectUpdateStyle(s Style) error {
+	s.Prepare()
+
 	fields := []string{"name", "description", "notes", "code", "homepage",
 		"license", "category", "preview", "preview_version", "mirror_url",
-		"mirror_code", "mirror_meta", "import_private", "mirror_private"}
+		"mirror_code", "mirror_meta", "import_private", "mirror_private",
+		"slug"}
 
 	return db().
 		Model(modelStyle).

@@ -1,8 +1,6 @@
 package style
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -36,14 +34,9 @@ func GetStylePage(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create slugged URL.
-	// TODO: Refactor after GetStyleByID switches away from APIStyle.
-	slug := util.Slug(s.Name)
-
 	// Always redirect to correct slugged URL.
-	if c.Params("name") != slug {
-		url := fmt.Sprintf("/style/%s/%s", id, slug)
-		return c.Redirect(url, fiber.StatusSeeOther)
+	if util.Slug(c.Params("name")) != s.Slug {
+		return c.Redirect(s.Permalink(), fiber.StatusSeeOther)
 	}
 
 	args := fiber.Map{
@@ -51,8 +44,7 @@ func GetStylePage(c *fiber.Ctx) error {
 		"Title":      s.Name,
 		"Style":      s,
 		"URL":        c.BaseURL() + "/style/" + id,
-		"Slug":       slug,
-		"Canonical":  "style/" + id + "/" + slug,
+		"Canonical":  s.Permalink(),
 		"RenderMeta": true,
 	}
 
