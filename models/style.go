@@ -29,6 +29,7 @@ type Style struct {
 	Description    string `validate:"required,min=1,max=160"`
 	Notes          string `validate:"min=0,max=50000"`
 	Code           string `validate:"max=10000000"`
+	CodeChecksum   string `json:"-"`
 	License        string
 	Preview        string
 	Slug           string `json:"-"`
@@ -80,6 +81,7 @@ func (s Style) Permalink() string {
 // Prepare sets dynamic fields to their respective values.
 func (s *Style) Prepare() {
 	s.Slug = util.Slug(s.Name)
+	s.CodeChecksum = fmt.Sprintf("%x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
 type StyleSiteMap struct {
@@ -214,10 +216,6 @@ func GetStyle(id string) (Style, error) {
 
 func (s Style) GetSourceCodeSize() uint64 {
 	return uint64(len(s.Code))
-}
-
-func (s Style) GetSourceCodeCRC32() string {
-	return fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
 func AbleToReview(uid, sid uint) (string, bool) {
@@ -369,7 +367,7 @@ func SelectUpdateStyle(s Style) error {
 	s.Prepare()
 
 	const f = "name, description, notes, code, homepage, " +
-		"license, category, slug, preview, preview_version, " +
+		"license, category, slug, preview, preview_version, code_checksum, " +
 		"mirror_url, mirror_code, mirror_meta, import_private, mirror_private"
 
 	return database.Conn.Select(f).Where("id = ?", s.ID).UpdateColumns(s).Error
