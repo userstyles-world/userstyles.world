@@ -42,6 +42,7 @@ type Style struct {
 	PreviewVersion int    `gorm:"default:0"`
 	ImportPrivate  bool   `gorm:"default:false"`
 	MirrorPrivate  bool   `gorm:"default:false"`
+	CodeSize       uint64 `json:"-"`
 }
 
 type APIStyle struct {
@@ -81,6 +82,7 @@ func (s Style) Permalink() string {
 // Prepare sets dynamic fields to their respective values.
 func (s *Style) Prepare() {
 	s.Slug = util.Slug(s.Name)
+	s.CodeSize = uint64(len(s.Code))
 	s.CodeChecksum = fmt.Sprintf("%x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
@@ -366,7 +368,7 @@ func (s *APIStyle) SetPreview() {
 func SelectUpdateStyle(s Style) error {
 	s.Prepare()
 
-	const f = "name, description, notes, code, homepage, " +
+	const f = "name, description, notes, code, homepage, code_size, " +
 		"license, category, slug, preview, preview_version, code_checksum, " +
 		"mirror_url, mirror_code, mirror_meta, import_private, mirror_private"
 

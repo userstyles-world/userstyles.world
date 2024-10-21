@@ -146,7 +146,7 @@
 	<p><span class="minw">Category</span>{{ .Style.Category }}</p>
 	<p><span class="minw">Created</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
 	<p><span class="minw">Updated</span><time datetime="{{ .Style.UpdatedAt | iso }}">{{ .Style.UpdatedAt | rel }}</time></p>
-	<p><span class="minw">Size</span><span data-tooltip="{{ .Style.GetSourceCodeSize }} bytes">{{ size .Style.GetSourceCodeSize }}</span></p>
+	<p><span class="minw">Code size</span><span data-tooltip="{{ .Style.CodeSize }} bytes">{{ size .Style.CodeSize }}</span></p>
 	<p><span class="minw">Code checksum</span>{{ .Style.CodeChecksum }}</p>
 </section>
 
