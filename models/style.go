@@ -257,14 +257,11 @@ func (*Style) BanWhereUserID(id any) error {
 	return db().Delete(&Style{}, "user_id = ?", id).Error
 }
 
-// MirrorStyle will update fields depending on which mirror option is used.
-func (*Style) MirrorStyle(f map[string]any) error {
-	err := db().Model(modelStyle).Where("id", f["id"]).Updates(f).Error
-	if err != nil {
-		return err
-	}
+// MirrorStyle tries to update fields depending on which mirror option is used.
+func MirrorStyle(s *Style, fields []string) error {
+	s.Prepare()
 
-	return nil
+	return database.Conn.Model(s).Select(fields).Updates(s).Error
 }
 
 func (s *Style) UpdateColumn(col string, val any) error {

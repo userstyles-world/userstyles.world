@@ -55,9 +55,7 @@ func mirrorWG(wg *sync.WaitGroup, s models.Style) {
 }
 
 func mirror(batch models.Style) {
-	// Select which fields to update.
-	fields := make(map[string]any)
-	fields["id"] = batch.ID
+	style := &models.Style{ID: batch.ID}
 
 	// Don't update database record if nothing changed.
 	var updateReady bool
@@ -75,6 +73,9 @@ func mirror(batch models.Style) {
 		return
 	}
 
+	// Select which database fields should be updated.
+	var f []string
+
 	// Set new source code.
 	if batch.MirrorCode {
 		old := new(usercss.UserCSS)
@@ -83,7 +84,8 @@ func mirror(batch models.Style) {
 			return
 		}
 		if uc.Version != old.Version {
-			fields["code"] = util.RemoveUpdateURL(uc.SourceCode)
+			style.Code = util.RemoveUpdateURL(uc.SourceCode)
+			f = append(f, "code")
 			updateReady = true
 		}
 	}
@@ -100,38 +102,40 @@ func mirror(batch models.Style) {
 			}
 
 			if updateArchiveMeta(&batch, s) {
-				fields["name"] = s.Name
-				fields["notes"] = s.Notes
-				fields["description"] = s.Description
+				f = append(f, "name", "description", "notes")
+				style.Name = s.Name
+				style.Description = s.Description
+				style.Notes = s.Notes
 				updateReady = true
 			}
 		} else if updateMeta(&batch, uc) {
-			fields["name"] = uc.Name
-			fields["description"] = uc.Description
-			fields["homepage"] = uc.HomepageURL
+			f = append(f, "name", "description", "homepage")
+			style.Name = uc.Name
+			style.Description = uc.Description
+			style.Homepage = uc.HomepageURL
 			updateReady = true
 		}
 	}
 
 	if updateReady {
 		// Update database record.
-		err := batch.MirrorStyle(fields)
+		err := models.MirrorStyle(style, f)
 		if err != nil {
-			log.Warn.Printf("Failed to mirror style %d: %s\n", batch.ID, err.Error())
+			log.Database.Printf("Failed to mirror %d: %s\n", style.ID, err)
 			return
 		}
 
-		code, ok := fields["code"].(string)
-		if ok {
-			i := int(batch.ID)
-			if err = models.SaveStyleCode(strconv.Itoa(i), code); err != nil {
-				log.Warn.Printf("kind=code id=%v err=%q\n", batch.ID, err)
+		if style.Code != "" {
+			i := int(style.ID)
+			err = models.SaveStyleCode(strconv.Itoa(i), style.Code)
+			if err != nil {
+				log.Warn.Printf("kind=code id=%v err=%q\n", style.ID, err)
 				return
 			}
 
-			cache.Code.Update(i, []byte(code))
+			cache.Code.Update(i, []byte(style.Code))
 		}
 
-		log.Info.Printf("Successfully mirrored style %d\n", batch.ID)
+		log.Info.Printf("Successfully mirrored style %d\n", style.ID)
 	}
 }
