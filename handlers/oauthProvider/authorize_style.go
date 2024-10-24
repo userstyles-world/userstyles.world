@@ -2,6 +2,7 @@ package oauthprovider
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -76,14 +77,18 @@ func OAuthStyleGet(c *fiber.Ctx) error {
 
 func OAuthStylePost(c *fiber.Ctx) error {
 	u, _ := jwtware.User(c)
-	styleID, oauthID, secureToken := c.Query("styleID"), c.Query("oauthID"), c.Query("token")
 
-	oauth, err := models.GetOAuthByID(oauthID)
+	i := c.QueryInt("styleID")
+	if i < 1 {
+		return errorMessage(c, 400, "Invalid style ID")
+	}
+
+	oauth, err := models.GetOAuthByID(c.Query("oauthID"))
 	if err != nil || oauth.ID == 0 {
 		return errorMessage(c, 400, "Incorrect oauthID specified")
 	}
 
-	unsealedText, err := util.DecryptText(secureToken, util.AEADOAuthp, config.Secrets)
+	unsealedText, err := util.DecryptText(c.Query("token"), util.AEADOAuthp, config.Secrets)
 	if err != nil {
 		log.Warn.Println("Failed to unseal JWT text:", err.Error())
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
@@ -113,9 +118,9 @@ func OAuthStylePost(c *fiber.Ctx) error {
 		return errorMessage(c, 500, "Error: Please notify the UserStyles.world admins.")
 	}
 
-	style, err := models.GetStyleByID(styleID)
+	style, err := models.GetStyleByID(i)
 	if err != nil {
-		log.Warn.Printf("Failed to find style %v: %v\n", styleID, err)
+		log.Warn.Printf("Failed to find style %d: %s\n", i, err)
 		return errorMessage(c, 500, "Couldn't retrieve style of user")
 	}
 
@@ -136,7 +141,7 @@ func OAuthStylePost(c *fiber.Ctx) error {
 	}
 
 	returnCode := "?code=" + util.EncryptText(jwtToken, util.AEADOAuthp, config.Secrets)
-	returnCode += "&style_id=" + styleID
+	returnCode += "&style_id=" + strconv.Itoa(i)
 	if state != "" {
 		returnCode += "&state=" + state
 	}

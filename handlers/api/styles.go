@@ -8,7 +8,6 @@ import (
 
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/images"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
@@ -45,7 +44,7 @@ var JSONParser = &oj.Parser{Reuse: true}
 func StylePost(c *fiber.Ctx) error {
 	u, _ := User(c)
 
-	id, err := c.ParamsInt("id")
+	i, err := c.ParamsInt("id")
 	if err != nil {
 		return c.Status(403).
 			JSON(fiber.Map{
@@ -60,14 +59,14 @@ func StylePost(c *fiber.Ctx) error {
 			})
 	}
 
-	if u.StyleID != 0 && uint(id) != u.StyleID {
+	if u.StyleID != 0 && uint(i) != u.StyleID {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Error: This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
 			})
 	}
 
-	style, err := models.GetStyleByID(c.Params("id"))
+	style, err := models.GetStyleByID(i)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -115,7 +114,7 @@ func StylePost(c *fiber.Ctx) error {
 		if err != nil {
 			log.Warn.Printf("kind=code id=%v err=%q\n", postStyle.ID, err)
 		}
-		cache.Code.Update(id, []byte(postStyle.Code))
+		cache.Code.Update(i, []byte(postStyle.Code))
 	}
 
 	return c.JSON(fiber.Map{
@@ -125,17 +124,16 @@ func StylePost(c *fiber.Ctx) error {
 
 func DeleteStyle(c *fiber.Ctx) error {
 	u, _ := User(c)
-	id := c.Params("id")
 
-	i, err := strconv.Atoi(id)
-	if err != nil {
+	i, err := c.ParamsInt(c.Params("id"))
+	if err != nil || i < 1 {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "Couldn't parse param \"id\"",
 			})
 	}
 
-	style, err := models.GetStyleByID(id)
+	s, err := models.GetStyleByID(i)
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -150,29 +148,25 @@ func DeleteStyle(c *fiber.Ctx) error {
 			})
 	}
 
-	if style.UserID != u.ID {
+	if s.UserID != u.ID {
 		return c.Status(403).
 			JSON(fiber.Map{
 				"data": "This style doesn't belong to you! ╰༼⇀︿⇀༽つ-]═──",
 			})
 	}
 
-	styleModel := new(models.Style)
-	err = database.Conn.
-		Delete(styleModel, "styles.id = ?", id).
-		Error
-
+	err = models.DeleteStyle(s)
 	if err != nil {
-		log.Warn.Println("Failed to delete style from database:", err.Error())
+		log.Database.Printf("Failed to delete style %d: %s\n", s.ID, err)
 		return c.Status(500).
 			JSON(fiber.Map{
 				"data": "Error: Couldn't delete style",
 			})
 	}
 
-	err = models.RemoveStyleCode(strconv.Itoa(int(style.ID)))
+	err = models.RemoveStyleCode(strconv.Itoa(int(s.ID)))
 	if err != nil {
-		log.Warn.Printf("kind=removecode id=%v err=%q\n", style.ID, err)
+		log.Warn.Printf("kind=removecode id=%v err=%q\n", s.ID, err)
 	}
 
 	cache.Code.Remove(i)

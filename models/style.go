@@ -20,29 +20,32 @@ import (
 )
 
 type Style struct {
-	gorm.Model
-	Original       string
-	MirrorURL      string
-	Homepage       string
-	Category       string `validate:"required,min=1,max=255" gorm:"not null"`
-	Name           string `validate:"required,min=1,max=50"`
-	Description    string `validate:"required,min=1,max=160"`
-	Notes          string `validate:"min=0,max=50000"`
-	Code           string `validate:"max=10000000"`
-	CodeChecksum   string `json:"-"`
-	License        string
-	Preview        string
-	Slug           string `json:"-"`
-	User           User   `gorm:"foreignKey:ID"`
-	UserID         uint   `gorm:"index"`
-	Archived       bool   `gorm:"default:false"`
-	Featured       bool   `gorm:"default:false"`
-	MirrorCode     bool   `gorm:"default:false"`
-	MirrorMeta     bool   `gorm:"default:false"`
-	PreviewVersion int    `gorm:"default:0"`
-	ImportPrivate  bool   `gorm:"default:false"`
-	MirrorPrivate  bool   `gorm:"default:false"`
-	CodeSize       uint64 `json:"-"`
+	ID             uint           `json:"id" gorm:"primarykey"`
+	CreatedAt      time.Time      `json:"created_at"`
+	UpdatedAt      time.Time      `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt `json:"-" gorm:"index"`
+	Original       string         `json:"-"`
+	MirrorURL      string         `json:"-"`
+	Homepage       string         `json:"homepage"`
+	Category       string         `json:"category" validate:"required,min=1,max=255" gorm:"not null"`
+	Name           string         `json:"name" validate:"required,min=1,max=50"`
+	Description    string         `json:"description" validate:"required,min=1,max=160"`
+	Notes          string         `json:"notes" validate:"min=0,max=50000"`
+	Code           string         `json:"code" validate:"max=10000000"`
+	CodeChecksum   string         `json:"-"`
+	License        string         `json:"license"`
+	Preview        string         `json:"preview_url"`
+	Slug           string         `json:"-"`
+	User           *User          `gorm:"foreignKey:UserID"`
+	UserID         uint           `json:"user_id" gorm:"index"`
+	Archived       bool           `json:"-" gorm:"default:false"`
+	Featured       bool           `json:"-" gorm:"default:false"`
+	MirrorCode     bool           `json:"-" gorm:"default:false"`
+	MirrorMeta     bool           `json:"-" gorm:"default:false"`
+	ImportPrivate  bool           `json:"-" gorm:"default:false"`
+	MirrorPrivate  bool           `json:"-" gorm:"default:false"`
+	PreviewVersion int            `json:"-" gorm:"default:0"`
+	CodeSize       uint64         `json:"-"`
 }
 
 type APIStyle struct {
@@ -165,6 +168,10 @@ func CreateStyle(s *Style) (*Style, error) {
 
 	err := database.Conn.Create(&s).Error
 	return s, err
+}
+
+func DeleteStyle(s *Style) error {
+	return database.Conn.Delete(&s, "id = ?", s.ID).Error
 }
 
 func UpdateStyle(s *Style) error {
