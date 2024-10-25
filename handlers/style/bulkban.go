@@ -39,7 +39,7 @@ func BulkBanGet(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
 
-	var styles []models.APIStyle
+	var styles []models.Style
 	err = database.Conn.Find(&styles, "user_id = ? AND deleted_at IS NULL", id).Error
 	if err != nil || len(styles) == 0 {
 		c.Locals("Title", "Could not find any userstyles")
