@@ -30,7 +30,7 @@ func viewPage(c *fiber.Ctx) error {
 	}
 	c.Locals("Review", r)
 
-	s, err := models.GetStyle(c.Params("s"))
+	s, err := models.GetStyleByID(sid)
 	c.Locals("Title", "Review for "+s.Name)
 
 	return c.Render("review/view", fiber.Map{})

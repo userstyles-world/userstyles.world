@@ -99,7 +99,7 @@ func GetStyleCount() (int, error) {
 
 // GetStyleByID tries to fetch a userstyle with id from the database.
 func GetStyleByID(id int) (s *Style, err error) {
-	err = database.Conn.Joins("User").Find(&s, "styles.id = ?", id).Error
+	err = database.Conn.Joins("User").First(&s, "styles.id = ?", id).Error
 	return s, err
 }
 
@@ -143,16 +143,6 @@ func CheckDuplicateStyle(s *Style) error {
 	}
 }
 
-// GetStyle tries to fetch a userstyle.
-func GetStyle(id string) (Style, error) {
-	var s Style
-	err := db().
-		Select("styles.*, u.username").
-		Joins("JOIN users u ON u.id = styles.user_id").
-		First(&s, "styles.id = ?", id).Error
-	return s, err
-}
-
 func (s Style) GetSourceCodeSize() uint64 {
 	return uint64(len(s.Code))
 }
@@ -169,15 +159,6 @@ func AbleToReview(uid, sid uint) (string, bool) {
 		}
 	}
 	return "", true
-}
-
-func TempGetStyleByID(id int) (s *Style, err error) {
-	err = database.Conn.
-		Select("styles.*, u.username").
-		Joins("JOIN users u ON u.id = styles.user_id").
-		First(&s, "styles.id = ?", id).
-		Error
-	return s, err
 }
 
 // GetStyleFromAuthor tries to fetch a userstyle made by logged in user.

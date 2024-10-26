@@ -118,7 +118,7 @@ func BanPost(c *fiber.Ctx) error {
 		})
 	}
 
-	style, err := models.TempGetStyleByID(i)
+	style, err := models.GetStyleByID(i)
 	if err != nil {
 		c.Status(fiber.StatusNotFound)
 		return c.Render("err", fiber.Map{
