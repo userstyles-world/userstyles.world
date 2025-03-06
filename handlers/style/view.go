@@ -1,8 +1,6 @@
 package style
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/handlers/jwt"
@@ -28,7 +26,7 @@ func GetStylePage(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	// Check if style exists.
-	data, err := models.GetStyleByID(id)
+	s, err := models.GetStyleByID(i)
 	if err != nil {
 		return c.Render("err", fiber.Map{
 			"Title": "Style not found",
@@ -36,23 +34,17 @@ func GetStylePage(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create slugged URL.
-	// TODO: Refactor after GetStyleByID switches away from APIStyle.
-	slug := util.Slug(data.Name)
-
 	// Always redirect to correct slugged URL.
-	if c.Params("name") != slug {
-		url := fmt.Sprintf("/style/%s/%s", id, slug)
-		return c.Redirect(url, fiber.StatusSeeOther)
+	if util.Slug(c.Params("name")) != s.Slug {
+		return c.Redirect(s.Permalink(), fiber.StatusSeeOther)
 	}
 
 	args := fiber.Map{
 		"User":       u,
-		"Title":      data.Name,
-		"Style":      data,
+		"Title":      s.Name,
+		"Style":      s,
 		"URL":        c.BaseURL() + "/style/" + id,
-		"Slug":       slug,
-		"Canonical":  "style/" + id + "/" + slug,
+		"Canonical":  s.Permalink(),
 		"RenderMeta": true,
 	}
 
@@ -63,12 +55,12 @@ func GetStylePage(c *fiber.Ctx) error {
 		cache.ViewStats.Add(c.IP() + " " + id)
 	}
 
-	if u.ID != data.UserID {
+	if u.ID != s.UserID {
 		if u.ID == 0 {
 			args["CanReview"] = false
 			args["CantReviewReason"] = "An account is required in order to review userstyles."
 		} else {
-			dur, ok := models.AbleToReview(u.ID, data.ID)
+			dur, ok := models.AbleToReview(u.ID, s.ID)
 			if !ok {
 				args["CanReview"] = false
 				args["CantReviewReason"] = "You can review this style again in " + dur

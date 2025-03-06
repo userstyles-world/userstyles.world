@@ -1,8 +1,6 @@
 package api
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 
 	"userstyles.world/models"
@@ -19,7 +17,7 @@ func StyleGet(c *fiber.Ctx) error {
 			})
 	}
 
-	currentStyle, err := models.GetStyleByID(strconv.FormatUint(uint64(u.StyleID), 10))
+	s, err := models.GetStyleByID(int(u.StyleID))
 	if err != nil {
 		return c.Status(500).
 			JSON(fiber.Map{
@@ -28,6 +26,6 @@ func StyleGet(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"data": currentStyle,
+		"data": s,
 	})
 }

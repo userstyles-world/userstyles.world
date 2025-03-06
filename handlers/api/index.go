@@ -32,7 +32,7 @@ func getFullIndex(c *fiber.Ctx) error {
 	styles, err := models.GetAllStylesForIndexAPI()
 	if err != nil {
 		return c.JSON(fiber.Map{
-			"data": "styles not found",
+			"data": err.Error(),
 		})
 	}
 

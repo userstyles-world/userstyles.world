@@ -6,7 +6,7 @@
 	{{ template "partials/alert" . }}
 
 	<h1 class="mb:m">{{ .Style.Name }}
-		<span class="fg:4"> by {{ .Style.Username }}</span>
+		<span class="fg:4"> by {{ .Style.User.Username }}</span>
 	</h1>
 
 	{{ with .Style.ImportedAndMirrored }}
@@ -46,7 +46,7 @@
 
 <section class="header flex mt:m ai:c">
 	<div class="share flex ai:c mr:m">
-		<span id="share" class="bg:2 input-like" slug="/{{ .Slug }}">{{ .URL }}</span>
+		<span id="share" class="bg:2 input-like" slug="/{{ .Style.Slug }}">{{ .URL }}</span>
 		<button
 			aria-label="Copy Style URL to clipboard"
 			data-tooltip="Style URL has been copied to your clipboard."
@@ -115,7 +115,7 @@
 				{{ if .CanReview }}
 					target="_blank"
 					rel="noopener"
-					href="/styles/{{ .Style.ID }}-{{ .Slug }}/reviews/create"
+					href="/styles/{{ .Style.ID }}-{{ .Style.Slug }}/reviews/create"
 				{{ else }}
 					disabled
 					data-tooltip="{{ .CantReviewReason }}"
@@ -141,15 +141,13 @@
 
 <section id="details">
 	<h2 class="td:d">Details</h2>
-	<p><span class="minw">Author</span><a href="/user/{{ .Style.Username }}">{{ .Style.Username }}</a></p>
+	<p><span class="minw">Author</span><a href="/user/{{ .Style.User.Username }}">{{ .Style.User.Username }}</a></p>
 	<p><span class="minw">License</span>{{ .Style.License }}</p>
 	<p><span class="minw">Category</span>{{ .Style.Category }}</p>
 	<p><span class="minw">Created</span><time datetime="{{ .Style.CreatedAt | iso }}">{{ .Style.CreatedAt | rel }}</time></p>
 	<p><span class="minw">Updated</span><time datetime="{{ .Style.UpdatedAt | iso }}">{{ .Style.UpdatedAt | rel }}</time></p>
-	<p><span class="minw">Size</span><span data-tooltip="{{ .Style.GetSourceCodeSize }} bytes">{{ size .Style.GetSourceCodeSize }}</span></p>
-	{{ if .User.IsModOrAdmin }}
-		<p><span class="minw">CRC32</span>{{ .Style.GetSourceCodeCRC32 }}</p>
-	{{ end }}
+	<p><span class="minw">Code size</span><span data-tooltip="{{ .Style.CodeSize }} bytes">{{ size .Style.CodeSize }}</span></p>
+	<p><span class="minw">Code checksum</span>{{ .Style.CodeChecksum }}</p>
 </section>
 
 <section id="stats">
@@ -230,7 +228,7 @@
 <section id="reviews">
 	<h2 class="td:d">Reviews</h2>
 	{{ if and (.User.ID) (ne .Style.UserID .User.ID) }}
-		<a href="/styles/{{ .Style.ID }}-{{ .Slug }}/reviews/create">Add your review</a>
+		<a href="/styles/{{ .Style.ID }}-{{ .Style.Slug }}/reviews/create">Add your review</a>
 	{{ end }}
 
 	{{ range .Reviews }}

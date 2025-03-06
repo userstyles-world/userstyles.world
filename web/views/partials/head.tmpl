@@ -20,11 +20,11 @@
 {{ if .RenderMeta }}
 <meta property="og:type" content="article">
 <meta property="og:url" content="{{ .URL }}">
-<meta property="og:title" content="{{ .Style.Name }} by {{ .Style.Username }}">
+<meta property="og:title" content="{{ .Style.Name }} by {{ .Style.User.Username }}">
 <meta property="og:description" content="{{ .Style.Description | descMax }}">
 {{ with .Style.Preview }}<meta property="og:image" content="{{ fullImage . }}">{{ end }}
 <meta property="twitter:url" content="{{ .URL }}">
-<meta property="twitter:title" content="{{ .Style.Name }} by {{ .Style.Username }}">
+<meta property="twitter:title" content="{{ .Style.Name }} by {{ .Style.User.Username }}">
 <meta property="twitter:description" content="{{ .Style.Description | descMax }}">
 {{ with .Style.Preview }}<meta property="twitter:image" content="{{ fullImage . }}">{{ end }}
 <meta property="twitter:card" content="summary_large_image">

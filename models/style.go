@@ -20,60 +20,44 @@ import (
 )
 
 type Style struct {
-	gorm.Model
-	Original       string
-	MirrorURL      string
-	Homepage       string
-	Category       string `validate:"required,min=1,max=255" gorm:"not null"`
-	Name           string `validate:"required,min=1,max=50"`
-	Description    string `validate:"required,min=1,max=160"`
-	Notes          string `validate:"min=0,max=50000"`
-	Code           string `validate:"max=10000000"`
-	License        string
-	Preview        string
-	User           User `gorm:"foreignKey:ID"`
-	UserID         uint `gorm:"index"`
-	Archived       bool `gorm:"default:false"`
-	Featured       bool `gorm:"default:false"`
-	MirrorCode     bool `gorm:"default:false"`
-	MirrorMeta     bool `gorm:"default:false"`
-	PreviewVersion int  `gorm:"default:0"`
-	ImportPrivate  bool `gorm:"default:false"`
-	MirrorPrivate  bool `gorm:"default:false"`
+	ID             uint           `json:"id" gorm:"primarykey"`
+	CreatedAt      time.Time      `json:"created_at"`
+	UpdatedAt      time.Time      `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt `json:"-" gorm:"index"`
+	Original       string         `json:"-"`
+	MirrorURL      string         `json:"-"`
+	Homepage       string         `json:"homepage"`
+	Category       string         `json:"category" validate:"required,min=1,max=255" gorm:"not null"`
+	Name           string         `json:"name" validate:"required,min=1,max=50"`
+	Description    string         `json:"description" validate:"required,min=1,max=160"`
+	Notes          string         `json:"notes" validate:"min=0,max=50000"`
+	Code           string         `json:"code" validate:"max=10000000"`
+	CodeChecksum   string         `json:"-"`
+	License        string         `json:"license"`
+	Preview        string         `json:"preview_url"`
+	Slug           string         `json:"-"`
+	User           *User          `gorm:"foreignKey:UserID"`
+	UserID         uint           `json:"user_id" gorm:"index"`
+	Archived       bool           `json:"-" gorm:"default:false"`
+	Featured       bool           `json:"-" gorm:"default:false"`
+	MirrorCode     bool           `json:"-" gorm:"default:false"`
+	MirrorMeta     bool           `json:"-" gorm:"default:false"`
+	ImportPrivate  bool           `json:"-" gorm:"default:false"`
+	MirrorPrivate  bool           `json:"-" gorm:"default:false"`
+	PreviewVersion int            `json:"-" gorm:"default:0"`
+	CodeSize       uint64         `json:"-"`
 }
-
-type APIStyle struct {
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
-	Category       string    `json:"category"`
-	Name           string    `json:"name"`
-	Description    string    `json:"description"`
-	Notes          string    `json:"notes"`
-	Code           string    `json:"-"`
-	License        string    `json:"license"`
-	Preview        string    `json:"preview_url"`
-	Homepage       string    `json:"homepage"`
-	Username       string    `json:"username"`
-	Original       string    `json:"original"`
-	MirrorURL      string    `json:"mirror_url"`
-	DisplayName    string    `json:"display_name"`
-	UserID         uint      `json:"user_id"`
-	ID             uint      `json:"id"`
-	Featured       bool      `json:"-"`
-	MirrorCode     bool      `json:"-"`
-	MirrorMeta     bool      `json:"-"`
-	Archived       bool      `json:"-"`
-	PreviewVersion int       `json:"-"`
-	ImportPrivate  bool      `json:"-"`
-	MirrorPrivate  bool      `json:"-"`
-}
-
-// TableName returns which table in database to use with GORM.
-func (APIStyle) TableName() string { return "styles" }
 
 // Permalink returns a link to the style page.
-func (s APIStyle) Permalink() string {
-	return fmt.Sprintf("/style/%d/%s", s.ID, util.Slug(s.Name))
+func (s Style) Permalink() string {
+	return fmt.Sprintf("/style/%d/%s", s.ID, s.Slug)
+}
+
+// Prepare sets dynamic fields to their respective values.
+func (s *Style) Prepare() {
+	s.Slug = util.Slug(s.Name)
+	s.CodeSize = uint64(len(s.Code))
+	s.CodeChecksum = fmt.Sprintf("%x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
 type StyleSiteMap struct {
@@ -81,7 +65,7 @@ type StyleSiteMap struct {
 }
 
 // TruncateCode returns if it should the style, to prevent long loading times.
-func (s APIStyle) TruncateCode() bool {
+func (s Style) TruncateCode() bool {
 	return len(s.Code) > 10_000
 }
 
@@ -100,39 +84,8 @@ func GetAllSitesSiteMap() ([]StyleSiteMap, error) {
 	return *q, nil
 }
 
-func GetAllStyleIDs() ([]APIStyle, error) {
-	q := new([]APIStyle)
-	err := db().
-		Model(modelStyle).
-		Select("styles.id").
-		Find(q).
-		Error
-	if err != nil {
-		return nil, errors.ErrStylesNotFound
-	}
-
-	return *q, nil
-}
-
-func GetAllStylesForIndexAPI() (*[]APIStyle, error) {
-	q := new([]APIStyle)
-
-	s := "styles.id, styles.name, styles.created_at, styles.updated_at, "
-	s += "styles.description, styles.notes, styles.license, styles.homepage, "
-	s += "styles.original, styles.category, styles.preview, styles.user_id, "
-	s += "styles.homepage, styles.mirror_url, u.username, u.display_name"
-
-	err := db().
-		Model(modelStyle).
-		Select(s).
-		Joins("join users u on u.id = styles.user_id").
-		Find(q).
-		Error
-	if err != nil {
-		return nil, errors.ErrStylesNotFound
-	}
-
-	return q, nil
+func GetAllStylesForIndexAPI() (*[]Style, error) {
+	return nil, stderrors.New("endpoint is disabled temporarily")
 }
 
 func GetStyleCount() (int, error) {
@@ -144,57 +97,32 @@ func GetStyleCount() (int, error) {
 	return int(c), nil
 }
 
-// GetStyleByID note: Using ID as a string is fine in this case.
-func GetStyleByID(id string) (*APIStyle, error) {
-	q := new(APIStyle)
-	err := db().
-		Model(modelStyle).
-		Select("styles.*,  u.username").
-		Joins("join users u on u.id = styles.user_id").
-		Find(q, "styles.id = ?", id).
-		Error
-
-	if err != nil || q.ID == 0 {
-		return nil, errors.ErrStyleNotFound
-	}
-
-	return q, nil
+// GetStyleByID tries to fetch a userstyle with id from the database.
+func GetStyleByID(id int) (s *Style, err error) {
+	err = database.Conn.Joins("User").First(&s, "styles.id = ?", id).Error
+	return s, err
 }
 
 func CreateStyle(s *Style) (*Style, error) {
-	if err := db().Create(&s).Error; err != nil {
-		return s, err
-	}
+	s.Prepare()
 
-	return s, nil
+	err := database.Conn.Create(&s).Error
+	return s, err
+}
+
+func DeleteStyle(s *Style) error {
+	return database.Conn.Delete(&s, "id = ?", s.ID).Error
 }
 
 func UpdateStyle(s *Style) error {
-	err := db().
-		Model(modelStyle).
-		Where("id", s.ID).
-		Updates(s).
-		Error
-	if err != nil {
-		return err
-	}
+	s.Prepare()
 
-	return nil
+	return database.Conn.Where("id = ?", s.ID).Updates(s).Error
 }
 
-func GetStyleSourceCodeAPI(id string) (*APIStyle, error) {
-	q := new(APIStyle)
-	err := db().
-		Model(modelStyle).
-		Select("styles.*, u.username").
-		Joins("join users u on u.id = styles.user_id").
-		First(q, "styles.id = ?", id).
-		Error
-	if err != nil {
-		return q, err
-	}
-
-	return q, nil
+func GetStyleSourceCodeAPI(id int) (s *Style, err error) {
+	err = database.Conn.First(&s, "id = ?", id).Error
+	return s, err
 }
 
 func CheckDuplicateStyle(s *Style) error {
@@ -215,22 +143,8 @@ func CheckDuplicateStyle(s *Style) error {
 	}
 }
 
-// GetStyle tries to fetch a userstyle.
-func GetStyle(id string) (Style, error) {
-	var s Style
-	err := db().
-		Select("styles.*, u.username").
-		Joins("JOIN users u ON u.id = styles.user_id").
-		First(&s, "styles.id = ?", id).Error
-	return s, err
-}
-
-func (s *APIStyle) GetSourceCodeSize() uint64 {
+func (s Style) GetSourceCodeSize() uint64 {
 	return uint64(len(s.Code))
-}
-
-func (s *APIStyle) GetSourceCodeCRC32() string {
-	return fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(s.Code)))
 }
 
 func AbleToReview(uid, sid uint) (string, bool) {
@@ -247,15 +161,6 @@ func AbleToReview(uid, sid uint) (string, bool) {
 	return "", true
 }
 
-func TempGetStyleByID(id int) (s *Style, err error) {
-	err = database.Conn.
-		Select("styles.*, u.username").
-		Joins("JOIN users u ON u.id = styles.user_id").
-		First(&s, "styles.id = ?", id).
-		Error
-	return s, err
-}
-
 // GetStyleFromAuthor tries to fetch a userstyle made by logged in user.
 func GetStyleFromAuthor(id, uid int) (Style, error) {
 	var s Style
@@ -270,14 +175,11 @@ func (*Style) BanWhereUserID(id any) error {
 	return db().Delete(&Style{}, "user_id = ?", id).Error
 }
 
-// MirrorStyle will update fields depending on which mirror option is used.
-func (*Style) MirrorStyle(f map[string]any) error {
-	err := db().Model(modelStyle).Where("id", f["id"]).Updates(f).Error
-	if err != nil {
-		return err
-	}
+// MirrorStyle tries to update fields depending on which mirror option is used.
+func MirrorStyle(s *Style, fields []string) error {
+	s.Prepare()
 
-	return nil
+	return database.Conn.Model(s).Select(fields).Updates(s).Error
 }
 
 func (s *Style) UpdateColumn(col string, val any) error {
@@ -372,22 +274,15 @@ func (s Style) ValidateCode(v *validator.Validate, addPage bool) (string, error)
 	return "", nil
 }
 
-// SetPreview will set preview image URL.
-func (s *APIStyle) SetPreview() {
-	s.Preview = fmt.Sprintf("%s/preview/%d/%dt.webp", config.App.BaseURL, s.ID, s.PreviewVersion)
-}
-
 // SelectUpdateStyle will update specific fields in the styles table.
 func SelectUpdateStyle(s Style) error {
-	fields := []string{"name", "description", "notes", "code", "homepage",
-		"license", "category", "preview", "preview_version", "mirror_url",
-		"mirror_code", "mirror_meta", "import_private", "mirror_private"}
+	s.Prepare()
 
-	return db().
-		Model(modelStyle).
-		Select(fields).
-		Where("id = ?", s.ID).
-		Updates(s).Error
+	const f = "name, description, notes, code, homepage, code_size, " +
+		"license, category, slug, preview, preview_version, code_checksum, " +
+		"mirror_url, mirror_code, mirror_meta, import_private, mirror_private"
+
+	return database.Conn.Select(f).Where("id = ?", s.ID).UpdateColumns(s).Error
 }
 
 func SaveStyleCode(id, s string) error {
@@ -399,24 +294,24 @@ func RemoveStyleCode(id string) error {
 }
 
 // mirrorEnabled returns whether or not mirroring is enabled.
-func (s *APIStyle) mirrorEnabled() bool {
+func (s Style) mirrorEnabled() bool {
 	return s.MirrorCode || s.MirrorMeta
 }
 
 // sameMirrorURL returns whether or not mirror URL matches import URL.
-func (s *APIStyle) sameMirrorURL() bool {
+func (s Style) sameMirrorURL() bool {
 	return s.MirrorURL == "" || s.Original == s.MirrorURL
 }
 
 // isImportedAndMirrored returns whether or not a userstyle is imported and
 // mirrored from the same URLs.
-func (s *APIStyle) isImportedAndMirrored() bool {
+func (s Style) isImportedAndMirrored() bool {
 	return s.isImported() && s.mirrorEnabled() && s.sameMirrorURL()
 }
 
 // ImportedAndMirrored returns from which location a userstyle is imported and
 // mirrored.
-func (s *APIStyle) ImportedAndMirrored() string {
+func (s Style) ImportedAndMirrored() string {
 	if !s.isImportedAndMirrored() {
 		return ""
 	}
@@ -427,12 +322,12 @@ func (s *APIStyle) ImportedAndMirrored() string {
 }
 
 // isImported returns whether or not a userstyle is isImported.
-func (s *APIStyle) isImported() bool {
+func (s Style) isImported() bool {
 	return s.Original != ""
 }
 
 // Imported returns from which location a userstyle is imported.
-func (s *APIStyle) Imported() string {
+func (s Style) Imported() string {
 	if !s.isImported() {
 		return ""
 	}
@@ -443,12 +338,12 @@ func (s *APIStyle) Imported() string {
 }
 
 // isMirrored returns whether or not a userstyle is isMirrored.
-func (s *APIStyle) isMirrored() bool {
+func (s Style) isMirrored() bool {
 	return s.MirrorURL != "" && s.mirrorEnabled()
 }
 
 // Mirrored returns from which location a userstyle is mirrored.
-func (s *APIStyle) Mirrored() string {
+func (s Style) Mirrored() string {
 	if !s.isMirrored() {
 		return ""
 	}

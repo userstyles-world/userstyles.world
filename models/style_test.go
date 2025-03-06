@@ -4,7 +4,7 @@ import "testing"
 
 var importAndMirrorCases = []struct {
 	name     string
-	input    APIStyle
+	input    Style
 	branch   bool
 	combined string
 	imported string
@@ -12,7 +12,7 @@ var importAndMirrorCases = []struct {
 }{
 	{
 		name: "mirrored import public",
-		input: APIStyle{
+		input: Style{
 			Original:   "x",
 			MirrorCode: true,
 		},
@@ -21,7 +21,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "mirrored import private due to import",
-		input: APIStyle{
+		input: Style{
 			Original:      "x",
 			ImportPrivate: true,
 			MirrorCode:    true,
@@ -31,7 +31,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "mirrored import private due to mirror",
-		input: APIStyle{
+		input: Style{
 			Original:      "x",
 			MirrorPrivate: true,
 			MirrorCode:    true,
@@ -41,7 +41,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "both public",
-		input: APIStyle{
+		input: Style{
 			Original:   "x",
 			MirrorURL:  "x",
 			MirrorCode: true,
@@ -51,7 +51,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "both private due to import",
-		input: APIStyle{
+		input: Style{
 			Original:      "x",
 			ImportPrivate: true,
 			MirrorURL:     "x",
@@ -62,7 +62,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "both private due to mirror",
-		input: APIStyle{
+		input: Style{
 			Original:      "x",
 			MirrorURL:     "x",
 			MirrorPrivate: true,
@@ -73,7 +73,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "different URLs public",
-		input: APIStyle{
+		input: Style{
 			Original:   "x",
 			MirrorURL:  "y",
 			MirrorCode: true,
@@ -84,7 +84,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "different URLs private",
-		input: APIStyle{
+		input: Style{
 			Original:      "x",
 			ImportPrivate: true,
 			MirrorURL:     "y",
@@ -97,7 +97,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "different URLs private import",
-		input: APIStyle{
+		input: Style{
 			Original:      "x",
 			ImportPrivate: true,
 			MirrorURL:     "y",
@@ -109,7 +109,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "different URLs private mirror",
-		input: APIStyle{
+		input: Style{
 			Original:      "x",
 			MirrorURL:     "y",
 			MirrorPrivate: true,
@@ -121,7 +121,7 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "has import URL but not mirrored",
-		input: APIStyle{
+		input: Style{
 			Original: "x",
 		},
 		branch:   false,
@@ -129,18 +129,18 @@ var importAndMirrorCases = []struct {
 	},
 	{
 		name: "has mirror URL but not mirrored",
-		input: APIStyle{
+		input: Style{
 			MirrorURL: "y",
 		},
 		branch: false,
 	},
 	{
 		name:  "empty",
-		input: APIStyle{},
+		input: Style{},
 	},
 }
 
-func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
+func TestStyle_ImportedAndMirrored(t *testing.T) {
 	for _, c := range importAndMirrorCases {
 		t.Run(c.name, func(t *testing.T) {
 			if c.branch {
@@ -168,7 +168,7 @@ func TestAPIStyle_ImportedAndMirrored(t *testing.T) {
 	}
 }
 
-func BenchmarkAPIStyle_ImportedAndMirrored(b *testing.B) {
+func BenchmarkStyle_ImportedAndMirrored(b *testing.B) {
 	for _, c := range importAndMirrorCases {
 		b.Run(c.name, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
@@ -183,22 +183,22 @@ func BenchmarkAPIStyle_ImportedAndMirrored(b *testing.B) {
 	}
 }
 
-func TestAPIStyle_Imported(t *testing.T) {
+func TestStyle_Imported(t *testing.T) {
 	cases := []struct {
 		name     string
-		input    APIStyle
+		input    Style
 		expected string
 	}{
 		{
 			name: "public",
-			input: APIStyle{
+			input: Style{
 				Original: "x",
 			},
 			expected: "Imported from <code>x</code>",
 		},
 		{
 			name: "private",
-			input: APIStyle{
+			input: Style{
 				Original:      "x",
 				ImportPrivate: true,
 			},
@@ -219,15 +219,15 @@ func TestAPIStyle_Imported(t *testing.T) {
 	}
 }
 
-func TestAPIStyle_Mirrored(t *testing.T) {
+func TestStyle_Mirrored(t *testing.T) {
 	cases := []struct {
 		name     string
-		input    APIStyle
+		input    Style
 		expected string
 	}{
 		{
 			name: "public",
-			input: APIStyle{
+			input: Style{
 				MirrorURL:  "x",
 				MirrorCode: true,
 			},
@@ -235,7 +235,7 @@ func TestAPIStyle_Mirrored(t *testing.T) {
 		},
 		{
 			name: "private",
-			input: APIStyle{
+			input: Style{
 				MirrorURL:     "x",
 				MirrorPrivate: true,
 				MirrorCode:    true,

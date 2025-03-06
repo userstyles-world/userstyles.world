@@ -46,10 +46,8 @@ func TestGetStyleCompactIndex(t *testing.T) {
 			var s []models.Style
 			for i := 1; i <= c.size; i++ {
 				s = append(s, models.Style{
-					Model: gorm.Model{
-						UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
-					},
-					Name: "test " + strconv.Itoa(i),
+					UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
+					Name:      "test " + strconv.Itoa(i),
 				})
 			}
 
@@ -92,11 +90,9 @@ func BenchmarkGetStyleCompactIndex(b *testing.B) {
 			for i := 1; i <= c.size; i++ {
 				id := strconv.Itoa(i)
 				s = append(s, models.Style{
-					Model: gorm.Model{
-						UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
-					},
-					Name:    "test " + id,
-					Preview: config.App.BaseURL + "/preview/" + id + "/0.webp",
+					UpdatedAt: time.Date(1970, 1, 1, 1, 0, 0, 0, time.UTC),
+					Name:      "test " + id,
+					Preview:   config.App.BaseURL + "/preview/" + id + "/0.webp",
 				})
 			}
 
