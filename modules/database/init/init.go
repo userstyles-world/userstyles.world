@@ -13,6 +13,7 @@ import (
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
 	"userstyles.world/modules/database"
+	"userstyles.world/modules/database/migrator"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/util"
 )
@@ -89,10 +90,8 @@ func Initialize() {
 		shouldSeed = true
 	}
 
-	// Run one-time migrations.
-	if _, ok := os.LookupEnv("MAGIC"); ok {
-		runMigration(conn)
-		os.Exit(0)
+	if err = migrator.Migrate(); err != nil {
+		log.Database.Fatalf("Failed to migrate schema: %s\n", err)
 	}
 
 	// Migrate tables.
