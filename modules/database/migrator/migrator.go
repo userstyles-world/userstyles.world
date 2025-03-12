@@ -2,6 +2,8 @@
 package migrator
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 
 	"userstyles.world/models"
@@ -22,18 +24,29 @@ func Migrate() error {
 		log.Database.Printf("Failed to find last migration: %v\n", err)
 	}
 
-	// TODO: Handle all cases.
+	mx := migrations()
 	if last.Version == 0 {
 		if err := database.Conn.Transaction(func(tx *gorm.DB) error {
-			log.Database.Printf("Adding migrations table.\n")
-			return tx.AutoMigrate(models.Migration{})
+			// Check if migrations table already exists, then assume it already
+			// contains the latest schema and insert the latest migration if so.
+			if tx.Migrator().HasTable(models.Migration{}) {
+				m := mx[len(mx)-1]
+				defer func() { last.Version = m.Version }()
+				return models.CreateMigration(tx, models.Migration{
+					Version: m.Version,
+				})
+			}
+
+			return nil
 		}); err != nil {
 			return err
 		}
 	}
 
-	for _, m := range migrations() {
+	for _, m := range mx {
 		if m.Version > last.Version {
+			t := time.Now()
+
 			if err := database.Conn.Transaction(func(tx *gorm.DB) error {
 				if err := m.Execute(tx); err != nil {
 					return nil
@@ -45,6 +58,9 @@ func Migrate() error {
 			}); err != nil {
 				return err
 			}
+
+			last.Version = m.Version // bump version
+			log.Database.Printf("Migration done in %s.", time.Since(t))
 		}
 	}
 
@@ -53,9 +69,11 @@ func Migrate() error {
 
 // migrations contains all schema migrations.
 func migrations() []migration {
+	m1 := func(db *gorm.DB) error {
+		return database.Conn.AutoMigrate(models.Migration{})
+	}
+
 	return []migration{
-		{Version: 1, Execute: func(db *gorm.DB) error {
-			return nil
-		}},
+		{1, m1},
 	}
 }
