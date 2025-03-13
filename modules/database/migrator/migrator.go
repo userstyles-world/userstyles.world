@@ -15,6 +15,7 @@ import (
 type migration struct {
 	Version int
 	Execute func(db *gorm.DB) error
+	Name    string
 }
 
 // Migrate is the migration engine.
@@ -34,6 +35,7 @@ func Migrate() error {
 				defer func() { last.Version = m.Version }()
 				return models.CreateMigration(tx, models.Migration{
 					Version: m.Version,
+					Name:    m.Name,
 				})
 			}
 
@@ -45,6 +47,7 @@ func Migrate() error {
 
 	for _, m := range mx {
 		if m.Version > last.Version {
+			log.Database.Printf("Executing %q migration.", m.Name)
 			t := time.Now()
 
 			if err := database.Conn.Transaction(func(tx *gorm.DB) error {
@@ -54,6 +57,7 @@ func Migrate() error {
 
 				return models.CreateMigration(tx, models.Migration{
 					Version: m.Version,
+					Name:    m.Name,
 				})
 			}); err != nil {
 				return err
@@ -74,6 +78,6 @@ func migrations() []migration {
 	}
 
 	return []migration{
-		{1, m1},
+		{1, m1, "add migrations table"},
 	}
 }

@@ -10,6 +10,7 @@ import (
 // Migration represents schema for migrations table.
 type Migration struct {
 	Version   int       `gorm:"column:version"`
+	Name      string    `gorm:"column:name"`
 	CreatedAt time.Time `gorm:"column:applied_at"`
 }
 
