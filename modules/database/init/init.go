@@ -90,7 +90,8 @@ func Initialize() {
 		shouldSeed = true
 	}
 
-	if err = migrator.Migrate(); err != nil {
+	// Keep database schema in sync.
+	if err = migrator.Migrate(database.Conn); err != nil {
 		log.Database.Fatalf("Failed to migrate schema: %s\n", err)
 	}
 

@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm"
 
 	"userstyles.world/models"
-	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 )
 
@@ -19,15 +18,15 @@ type migration struct {
 }
 
 // Migrate is the migration engine.
-func Migrate() error {
-	last, err := models.GetLastMigration(database.Conn)
+func Migrate(db *gorm.DB) error {
+	last, err := models.GetLastMigration(db)
 	if err != nil {
 		log.Database.Printf("Failed to find last migration: %v\n", err)
 	}
 
 	mx := migrations()
 	if last.Version == 0 {
-		if err := database.Conn.Transaction(func(tx *gorm.DB) error {
+		if err := db.Transaction(func(tx *gorm.DB) error {
 			// Check if migrations table already exists, then assume it already
 			// contains the latest schema and insert the latest migration if so.
 			if tx.Migrator().HasTable(models.Migration{}) {
@@ -50,7 +49,7 @@ func Migrate() error {
 			log.Database.Printf("Executing %q migration.", m.Name)
 			t := time.Now()
 
-			if err := database.Conn.Transaction(func(tx *gorm.DB) error {
+			if err := db.Transaction(func(tx *gorm.DB) error {
 				if err := m.Execute(tx); err != nil {
 					return nil
 				}
@@ -74,7 +73,7 @@ func Migrate() error {
 // migrations contains all schema migrations.
 func migrations() []migration {
 	m1 := func(db *gorm.DB) error {
-		return database.Conn.AutoMigrate(models.Migration{})
+		return db.AutoMigrate(models.Migration{})
 	}
 
 	return []migration{
