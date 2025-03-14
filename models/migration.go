@@ -12,6 +12,8 @@ type Migration struct {
 	Version   int       `gorm:"column:version"`
 	Name      string    `gorm:"column:name"`
 	CreatedAt time.Time `gorm:"column:applied_at"`
+
+	Execute func(db *gorm.DB) error `gorm:"-"`
 }
 
 // GetLastMigration returns the last migration or an error if it's doesn't exit.

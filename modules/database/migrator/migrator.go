@@ -10,13 +10,6 @@ import (
 	"userstyles.world/modules/log"
 )
 
-// migration is a helper struct.
-type migration struct {
-	Version int
-	Execute func(db *gorm.DB) error
-	Name    string
-}
-
 // Migrate is the migration engine.
 func Migrate(db *gorm.DB) error {
 	last, err := models.GetLastMigration(db)
@@ -31,11 +24,8 @@ func Migrate(db *gorm.DB) error {
 			// contains the latest schema and insert the latest migration if so.
 			if tx.Migrator().HasTable(models.Migration{}) {
 				m := mx[len(mx)-1]
-				defer func() { last.Version = m.Version }()
-				return models.CreateMigration(tx, models.Migration{
-					Version: m.Version,
-					Name:    m.Name,
-				})
+				defer func() { last = m }()
+				return models.CreateMigration(tx, m)
 			}
 
 			return nil
@@ -54,15 +44,12 @@ func Migrate(db *gorm.DB) error {
 					return nil
 				}
 
-				return models.CreateMigration(tx, models.Migration{
-					Version: m.Version,
-					Name:    m.Name,
-				})
+				return models.CreateMigration(tx, m)
 			}); err != nil {
 				return err
 			}
 
-			last.Version = m.Version // bump version
+			last = m // update last migration
 			log.Database.Printf("Migration done in %s.", time.Since(t))
 		}
 	}
@@ -71,12 +58,12 @@ func Migrate(db *gorm.DB) error {
 }
 
 // migrations contains all schema migrations.
-func migrations() []migration {
+func migrations() []models.Migration {
 	m1 := func(db *gorm.DB) error {
 		return db.AutoMigrate(models.Migration{})
 	}
 
-	return []migration{
-		{1, m1, "add migrations table"},
+	return []models.Migration{
+		{Version: 1, Execute: m1, Name: "add migrations table"},
 	}
 }
