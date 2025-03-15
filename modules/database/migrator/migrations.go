@@ -1,17 +1,19 @@
-package init
+package migrator
 
 import (
 	"fmt"
-	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/log"
 )
 
-func migration(db *gorm.DB) error {
+func m1(db *gorm.DB) error {
+	return db.AutoMigrate(models.Migration{})
+}
+
+func m2(db *gorm.DB) error {
 	f := []string{"slug", "code_size", "code_checksum"}
 	for _, f := range []string{"Slug", "CodeSize", "CodeChecksum"} {
 		if err := db.Migrator().AddColumn(models.Style{}, f); err != nil {
@@ -36,18 +38,4 @@ func migration(db *gorm.DB) error {
 	}).Error
 
 	return err
-}
-
-func runMigration(db *gorm.DB) {
-	log.Database.Println("Migration started.")
-	t := time.Now()
-
-	db.Config.Logger = db.Config.Logger.LogMode(logger.Error)
-
-	// Wrap in a transaction to allow rollbacks.
-	if err := db.Transaction(migration); err != nil {
-		log.Database.Fatalf("Migration error: %s\n", err)
-	}
-
-	log.Database.Printf("Done in %s.\n", time.Since(t).Round(time.Microsecond))
 }

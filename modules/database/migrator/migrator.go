@@ -59,11 +59,9 @@ func Migrate(db *gorm.DB) error {
 
 // migrations contains all schema migrations.
 func migrations() []models.Migration {
-	m1 := func(db *gorm.DB) error {
-		return db.AutoMigrate(models.Migration{})
-	}
 
 	return []models.Migration{
 		{Version: 1, Execute: m1, Name: "add migrations table"},
+		{Version: 2, Execute: m2, Name: "add new columns to styles table"},
 	}
 }
