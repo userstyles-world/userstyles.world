@@ -35,6 +35,9 @@ var tables = []struct {
 
 func connect() (*gorm.DB, error) {
 	gormConfig := &gorm.Config{
+		NowFunc: func() time.Time {
+			return time.Now().Round(time.Second)
+		},
 		Logger: logger.New(
 			log.Database,
 			logger.Config{
