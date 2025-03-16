@@ -1,6 +1,8 @@
 package migrator
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 
 	"userstyles.world/models"
@@ -8,8 +10,22 @@ import (
 	"userstyles.world/modules/log"
 )
 
+// deindent removes unneeded control characters from string literals.
+func deindent(s string) string {
+	s = strings.TrimPrefix(s, "\n")
+	s = strings.ReplaceAll(s, "\t\t", "    ")
+	s = strings.ReplaceAll(s, "\t", "")
+	return s
+}
+
 func m1(db *gorm.DB) error {
-	return db.AutoMigrate(models.Migration{})
+	const q = `
+	CREATE TABLE migrations(
+		version INTEGER,
+		name TEXT,
+		applied_at DATETIME
+	);`
+	return db.Exec(deindent(q)).Error
 }
 
 func m2(db *gorm.DB) error {
