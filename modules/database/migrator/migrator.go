@@ -63,5 +63,6 @@ func migrations() []models.Migration {
 	return []models.Migration{
 		{Version: 1, Execute: m1, Name: "add migrations table"},
 		{Version: 2, Execute: m2, Name: "add new columns to styles table"},
+		{Version: 3, Execute: m3, Name: "init changelogs table and index"},
 	}
 }

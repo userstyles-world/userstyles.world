@@ -59,3 +59,20 @@ func m2(db *gorm.DB) error {
 		return nil
 	}).Error
 }
+
+func m3(db *gorm.DB) error {
+	const q = `
+	CREATE TABLE changelogs(
+		id INTEGER,
+		user_id INTEGER,
+		created_at DATETIME,
+		updated_at DATETIME,
+		deleted_at DATETIME,
+		title TEXT,
+		description TEXT,
+		PRIMARY KEY (id),
+		CONSTRAINT fk_changelogs_user FOREIGN KEY (user_id) REFERENCES users(id)
+	);
+	CREATE INDEX idx_changelogs_deleted_at ON changelogs(deleted_at);`
+	return db.Exec(deindent(q)).Error
+}

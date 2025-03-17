@@ -1,0 +1,37 @@
+.changelog article {
+	position: relative;
+	padding-left: 1.5rem;
+
+	&:not(:last-of-type)::before {
+		content: '';
+		width: 1px;
+		height: calc(100% + 1rem);
+		display: block;
+		position: absolute;
+		margin: 1em 0 0 calc(-1rem + 4px);
+		background-color: var(--bg-3);
+	}
+}
+
+.changelog header {
+	time { color: var(--fg-2) }
+
+	> h2 {
+		position: relative;
+		margin-bottom: 0;
+		font-size: 1.2rem;
+
+		&::before {
+			content: '';
+			width: 5px;
+			height: 5px;
+			display: block;
+			position: absolute;
+			margin: 0.5em 0 0 -1rem;
+			border: 2px solid var(--fg-5);
+			background-color: var(--bg-1);
+			box-shadow: 0 0 0 4px var(--bg-1);
+			border-radius: 50%;
+		}
+	}
+}

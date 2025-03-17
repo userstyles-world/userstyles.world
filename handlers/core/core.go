@@ -21,4 +21,5 @@ func Routes(app *fiber.App) {
 	r.Get("/sitemap.xml", GetSiteMap)
 	r.Get("/monitor/*", jwtware.Protected, Monitor)
 	r.Get("/dashboard", jwtware.Protected, Dashboard)
+	r.Get("/changelog", changelogPage)
 }

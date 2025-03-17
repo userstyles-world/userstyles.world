@@ -1,0 +1,21 @@
+<header>
+	<h1>{{ .Title }}</h1>
+	<p>Stay up to date with changes.</p>
+</header>
+
+<section class="mt:m changelog">
+	{{ range .Changelogs }}
+		<article>
+			<header>
+				<h2>{{ .Title }}</h2>
+				<div class="iflex">
+					<time datetime="{{ iso .CreatedAt }}">{{ rel .CreatedAt }}</time>
+				</div>
+			</header>
+			<div class="mt:s">{{ .Description | MarkdownSafe | unescape }}</div>
+		</article>
+	{{ else }}
+		<p>No changes yet. Check back later!</p>
+	{{ end }}
+</section>
+
