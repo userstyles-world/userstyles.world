@@ -1,0 +1,33 @@
+<section class="ta:c">
+	<h1>{{ .Title }}</h1>
+</section>
+
+<section class="limit mt:l mx:a">
+	{{ template "partials/alert" . }}
+
+	<form class="form-wrapper" method="post">
+		<label for="title">Title</label>
+		<input
+			required
+			maxlength="50"
+			type="text"
+			name="title"
+			id="title"
+			value="{{ .Changelog.Title }}"
+			placeholder="Some fancy change">
+
+		<label for="description">Description</label>
+		<textarea
+			type="text"
+			name="description"
+			id="description"
+			maxlength="500"
+			style="min-height: 120px"
+		>{{ .Changelog.Description }}</textarea>
+
+		<div class="mt:m">
+			<button class="btn primary mr:s" type="submit">Confirm</button>
+			<a class="fg:1" href="/changelog">Cancel</a>
+		</div>
+	</form>
+</section>

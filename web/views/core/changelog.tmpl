@@ -4,6 +4,12 @@
 </header>
 
 <section class="mt:m changelog">
+	{{ if .User.IsAdmin }}
+		<div class="iflex">
+			<a class="btn icon" href="/changelog/create">{{ template "icons/plus" }} Add new</a>
+		</div>
+	{{ end }}
+
 	{{ range .Changelogs }}
 		<article>
 			<header>

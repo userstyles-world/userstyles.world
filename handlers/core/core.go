@@ -22,4 +22,6 @@ func Routes(app *fiber.App) {
 	r.Get("/monitor/*", jwtware.Protected, Monitor)
 	r.Get("/dashboard", jwtware.Protected, Dashboard)
 	r.Get("/changelog", changelogPage)
+	r.Get("/changelog/create", createChangelogPage)
+	r.Post("/changelog/create", createChangelogForm)
 }

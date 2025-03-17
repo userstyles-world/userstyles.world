@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type deletedAt = gorm.DeletedAt
@@ -24,4 +25,9 @@ type Changelog struct {
 func GetChangelogs(db *gorm.DB) (clx []Changelog, err error) {
 	err = db.Order("id DESC").Find(&clx).Error
 	return clx, err
+}
+
+// CreateChangelog tries to insert a new changelog and return inserted data.
+func CreateChangelog(db *gorm.DB, cl Changelog) error {
+	return db.Clauses(clause.Returning{}).Create(&cl).Error
 }
