@@ -24,4 +24,6 @@ func Routes(app *fiber.App) {
 	r.Get("/changelog", changelogPage)
 	r.Get("/changelog/create", createChangelogPage)
 	r.Post("/changelog/create", createChangelogForm)
+	r.Get("/changelog/:id/edit", editChangelogPage)
+	r.Post("/changelog/:id/edit", editChangelogForm)
 }

@@ -27,7 +27,19 @@ func GetChangelogs(db *gorm.DB) (clx []Changelog, err error) {
 	return clx, err
 }
 
+// GetChangelog tries to return a changelog with a given id.
+func GetChangelog(db *gorm.DB, id int) (cl Changelog, err error) {
+	err = db.Find(&cl, id).Error
+	return cl, err
+}
+
 // CreateChangelog tries to insert a new changelog and return inserted data.
 func CreateChangelog(db *gorm.DB, cl Changelog) error {
 	return db.Clauses(clause.Returning{}).Create(&cl).Error
 }
+
+// UpdateChangelog tries to update an existing changelog.
+func UpdateChangelog(db *gorm.DB, cl Changelog) error {
+	return db.Updates(cl).Error
+}
+

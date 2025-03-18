@@ -60,3 +60,60 @@ func createChangelogForm(c *fiber.Ctx) error {
 
 	return c.Redirect("/changelog")
 }
+
+func editChangelogPage(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	c.Locals("User", u)
+	c.Locals("Title", "Edit changelog")
+
+	if !u.IsAdmin() {
+		c.Locals("Title", "Unauthorized")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "ID must be a positive number")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	cl, err := models.GetChangelog(database.Conn, i)
+	if err != nil || cl.ID == 0 {
+		c.Locals("Title", "Changelog not found")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
+	}
+	c.Locals("Changelog", cl)
+
+	return c.Render("core/changelog-create", fiber.Map{})
+}
+
+func editChangelogForm(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	c.Locals("User", u)
+
+	if !u.IsAdmin() {
+		c.Locals("Title", "Unauthorized")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	var cl models.Changelog
+	if err := c.BodyParser(&cl); err != nil {
+		c.Locals("Title", "Failed to parse data")
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+	}
+	cl.UserID = int(u.ID)
+
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "ID must be a positive number")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+	cl.ID = i
+
+	if err := models.UpdateChangelog(database.Conn, cl); err != nil {
+		c.Locals("Title", "Failed to update data")
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
+	}
+
+	return c.Redirect("/changelog")
+}

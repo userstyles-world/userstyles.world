@@ -16,6 +16,9 @@
 				<h2>{{ .Title }}</h2>
 				<div class="iflex">
 					<time datetime="{{ iso .CreatedAt }}">{{ rel .CreatedAt }}</time>
+					{{ if $.User.IsAdmin }}
+						<a class="ml:s" href="/changelog/{{ .ID }}/edit">Edit</a>
+					{{ end }}
 				</div>
 			</header>
 			<div class="mt:s">{{ .Description | MarkdownSafe | unescape }}</div>
