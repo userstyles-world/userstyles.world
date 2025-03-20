@@ -43,3 +43,7 @@ func UpdateChangelog(db *gorm.DB, cl Changelog) error {
 	return db.Updates(cl).Error
 }
 
+// DeleteChangelog tries to delete an existing changelog.
+func DeleteChangelog(db *gorm.DB, cl Changelog) error {
+	return db.Delete(&cl).Error
+}

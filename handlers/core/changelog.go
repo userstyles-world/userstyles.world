@@ -117,3 +117,57 @@ func editChangelogForm(c *fiber.Ctx) error {
 
 	return c.Redirect("/changelog")
 }
+
+func deleteChangelogPage(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	c.Locals("User", u)
+
+	if !u.IsAdmin() {
+		c.Locals("Title", "Unauthorized")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "ID must be a positive number")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	cl, err := models.GetChangelog(database.Conn, i)
+	if err != nil || cl.ID == 0 {
+		c.Locals("Title", "Changelog not found")
+		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
+	}
+	c.Locals("Changelog", cl)
+
+	return c.Render("core/changelog-delete", fiber.Map{})
+}
+
+func deleteChangelogForm(c *fiber.Ctx) error {
+	u, _ := jwt.User(c)
+	c.Locals("User", u)
+
+	if !u.IsAdmin() {
+		c.Locals("Title", "Unauthorized")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "ID must be a positive number")
+		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
+	}
+
+	cl, err := models.GetChangelog(database.Conn, i)
+	if err != nil {
+		c.Locals("Title", "Failed to get data")
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
+	}
+
+	if err := models.DeleteChangelog(database.Conn, cl); err != nil {
+		c.Locals("Title", "Failed to delete data")
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
+	}
+
+	return c.Redirect("/changelog")
+}

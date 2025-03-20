@@ -18,6 +18,7 @@
 					<time datetime="{{ iso .CreatedAt }}">{{ rel .CreatedAt }}</time>
 					{{ if $.User.IsAdmin }}
 						<a class="ml:s" href="/changelog/{{ .ID }}/edit">Edit</a>
+						<a class="ml:s" href="/changelog/{{ .ID }}/delete">Delete</a>
 					{{ end }}
 				</div>
 			</header>
