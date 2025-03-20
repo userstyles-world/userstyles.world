@@ -4,6 +4,7 @@ package core
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"userstyles.world/handlers/jwt"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/handlers/middleware"
 )
@@ -22,10 +23,12 @@ func Routes(app *fiber.App) {
 	r.Get("/monitor/*", jwtware.Protected, Monitor)
 	r.Get("/dashboard", jwtware.Protected, Dashboard)
 	r.Get("/changelog", changelogPage)
-	r.Get("/changelog/create", createChangelogPage)
-	r.Post("/changelog/create", createChangelogForm)
-	r.Get("/changelog/:id/edit", editChangelogPage)
-	r.Post("/changelog/:id/edit", editChangelogForm)
-	r.Get("/changelog/:id/delete", deleteChangelogPage)
-	r.Post("/changelog/:id/delete", deleteChangelogForm)
+
+	r = app.Group("/changelog", jwt.Admin)
+	r.Get("/create", createChangelogPage)
+	r.Post("/create", createChangelogForm)
+	r.Get("/:id/edit", editChangelogPage)
+	r.Post("/:id/edit", editChangelogForm)
+	r.Get("/:id/delete", deleteChangelogPage)
+	r.Post("/:id/delete", deleteChangelogForm)
 }

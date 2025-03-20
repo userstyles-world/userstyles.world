@@ -38,8 +38,15 @@ var Admin = func(c *fiber.Ctx) error {
 	}
 
 	u, ok := User(c)
-	if !ok || !u.IsAdmin() {
+	if !ok {
 		return c.Redirect("/signin?r=" + url.QueryEscape(c.Path()))
+	}
+
+	if !u.IsAdmin() {
+		return c.Render("err", fiber.Map{
+			"Title": "Unauthorized access",
+			"User":  u,
+		})
 	}
 
 	return c.Next()

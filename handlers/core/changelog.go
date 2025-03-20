@@ -28,22 +28,12 @@ func createChangelogPage(c *fiber.Ctx) error {
 	c.Locals("User", u)
 	c.Locals("Title", "Create a changelog")
 
-	if !u.IsAdmin() {
-		c.Locals("Title", "Unauthorized")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
 	return c.Render("core/changelog-create", fiber.Map{})
 }
 
 func createChangelogForm(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	c.Locals("User", u)
-
-	if !u.IsAdmin() {
-		c.Locals("Title", "Unauthorized")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
 
 	var cl models.Changelog
 	if err := c.BodyParser(&cl); err != nil {
@@ -66,11 +56,6 @@ func editChangelogPage(c *fiber.Ctx) error {
 	c.Locals("User", u)
 	c.Locals("Title", "Edit changelog")
 
-	if !u.IsAdmin() {
-		c.Locals("Title", "Unauthorized")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
 	i, err := c.ParamsInt("id")
 	if err != nil || i < 1 {
 		c.Locals("Title", "ID must be a positive number")
@@ -90,11 +75,6 @@ func editChangelogPage(c *fiber.Ctx) error {
 func editChangelogForm(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	c.Locals("User", u)
-
-	if !u.IsAdmin() {
-		c.Locals("Title", "Unauthorized")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
 
 	var cl models.Changelog
 	if err := c.BodyParser(&cl); err != nil {
@@ -122,11 +102,6 @@ func deleteChangelogPage(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	c.Locals("User", u)
 
-	if !u.IsAdmin() {
-		c.Locals("Title", "Unauthorized")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
 	i, err := c.ParamsInt("id")
 	if err != nil || i < 1 {
 		c.Locals("Title", "ID must be a positive number")
@@ -146,11 +121,6 @@ func deleteChangelogPage(c *fiber.Ctx) error {
 func deleteChangelogForm(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
 	c.Locals("User", u)
-
-	if !u.IsAdmin() {
-		c.Locals("Title", "Unauthorized")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
 
 	i, err := c.ParamsInt("id")
 	if err != nil || i < 1 {
