@@ -278,9 +278,9 @@ func (s Style) ValidateCode(v *validator.Validate, addPage bool) (string, error)
 func SelectUpdateStyle(s Style) error {
 	s.Prepare()
 
-	const f = "name, description, notes, code, homepage, code_size, " +
-		"license, category, slug, preview, preview_version, code_checksum, " +
-		"mirror_url, mirror_code, mirror_meta, import_private, mirror_private"
+	f := []string{"name", "description", "notes", "code", "homepage", "code_size",
+		"license", "category", "slug", "preview", "preview_version", "code_checksum",
+		"mirror_url", "mirror_code", "mirror_meta", "import_private", "mirror_private"}
 
 	return database.Conn.Select(f).Where("id = ?", s.ID).UpdateColumns(s).Error
 }

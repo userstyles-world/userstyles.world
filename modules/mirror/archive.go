@@ -85,7 +85,7 @@ func mirror(batch models.Style) {
 		}
 		if uc.Version != old.Version {
 			style.Code = util.RemoveUpdateURL(uc.SourceCode)
-			f = append(f, "code")
+			f = append(f, "code", "code_size", "code_checksum")
 			updateReady = true
 		}
 	}
@@ -102,14 +102,14 @@ func mirror(batch models.Style) {
 			}
 
 			if updateArchiveMeta(&batch, s) {
-				f = append(f, "name", "description", "notes")
+				f = append(f, "name", "description", "notes", "slug")
 				style.Name = s.Name
 				style.Description = s.Description
 				style.Notes = s.Notes
 				updateReady = true
 			}
 		} else if updateMeta(&batch, uc) {
-			f = append(f, "name", "description", "homepage")
+			f = append(f, "name", "description", "homepage", "slug")
 			style.Name = uc.Name
 			style.Description = uc.Description
 			style.Homepage = uc.HomepageURL
