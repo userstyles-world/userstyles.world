@@ -49,6 +49,8 @@ var Admin = func(c *fiber.Ctx) error {
 		})
 	}
 
+	c.Locals("User", u)
+
 	return c.Next()
 }
 

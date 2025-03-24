@@ -27,8 +27,21 @@ func Routes(app *fiber.App) {
 	r = app.Group("/changelog", jwt.Admin)
 	r.Get("/create", createChangelogPage)
 	r.Post("/create", createChangelogForm)
-	r.Get("/:id/edit", editChangelogPage)
-	r.Post("/:id/edit", editChangelogForm)
-	r.Get("/:id/delete", deleteChangelogPage)
-	r.Post("/:id/delete", deleteChangelogForm)
+
+	r = app.Group("/changelog/:id", jwt.Admin, parseID)
+	r.Get("/edit", editChangelogPage)
+	r.Post("/edit", editChangelogForm)
+	r.Get("/delete", deleteChangelogPage)
+	r.Post("/delete", deleteChangelogForm)
+}
+
+func parseID(c *fiber.Ctx) error {
+	i, err := c.ParamsInt("id")
+	if err != nil || i < 1 {
+		c.Locals("Title", "ID must be a positive number")
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+	}
+	c.Locals("id", i)
+
+	return c.Next()
 }

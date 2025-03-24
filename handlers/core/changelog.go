@@ -24,24 +24,18 @@ func changelogPage(c *fiber.Ctx) error {
 }
 
 func createChangelogPage(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
 	c.Locals("Title", "Create a changelog")
 
 	return c.Render("core/changelog-create", fiber.Map{})
 }
 
 func createChangelogForm(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
-
-	var cl models.Changelog
+	cl := models.Changelog{UserID: int(c.Locals("User").(*models.APIUser).ID)}
 	if err := c.BodyParser(&cl); err != nil {
 		c.Locals("Error", err)
 		c.Locals("Title", "Failed to parse data")
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
-	cl.UserID = int(u.ID)
 
 	if err := models.CreateChangelog(database.Conn, cl); err != nil {
 		c.Locals("Title", "Failed to insert data")
@@ -52,17 +46,9 @@ func createChangelogForm(c *fiber.Ctx) error {
 }
 
 func editChangelogPage(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
 	c.Locals("Title", "Edit changelog")
 
-	i, err := c.ParamsInt("id")
-	if err != nil || i < 1 {
-		c.Locals("Title", "ID must be a positive number")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
-	cl, err := models.GetChangelog(database.Conn, i)
+	cl, err := models.GetChangelog(database.Conn, c.Locals("id").(int))
 	if err != nil || cl.ID == 0 {
 		c.Locals("Title", "Changelog not found")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
@@ -73,22 +59,15 @@ func editChangelogPage(c *fiber.Ctx) error {
 }
 
 func editChangelogForm(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
+	cl := models.Changelog{
+		UserID: int(c.Locals("User").(*models.APIUser).ID),
+		ID:     c.Locals("id").(int),
+	}
 
-	var cl models.Changelog
 	if err := c.BodyParser(&cl); err != nil {
 		c.Locals("Title", "Failed to parse data")
 		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
 	}
-	cl.UserID = int(u.ID)
-
-	i, err := c.ParamsInt("id")
-	if err != nil || i < 1 {
-		c.Locals("Title", "ID must be a positive number")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-	cl.ID = i
 
 	if err := models.UpdateChangelog(database.Conn, cl); err != nil {
 		c.Locals("Title", "Failed to update data")
@@ -99,16 +78,9 @@ func editChangelogForm(c *fiber.Ctx) error {
 }
 
 func deleteChangelogPage(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
+	c.Locals("Title", "Delete changelog")
 
-	i, err := c.ParamsInt("id")
-	if err != nil || i < 1 {
-		c.Locals("Title", "ID must be a positive number")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
-	cl, err := models.GetChangelog(database.Conn, i)
+	cl, err := models.GetChangelog(database.Conn, c.Locals("id").(int))
 	if err != nil || cl.ID == 0 {
 		c.Locals("Title", "Changelog not found")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
@@ -119,16 +91,7 @@ func deleteChangelogPage(c *fiber.Ctx) error {
 }
 
 func deleteChangelogForm(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
-
-	i, err := c.ParamsInt("id")
-	if err != nil || i < 1 {
-		c.Locals("Title", "ID must be a positive number")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
-	cl, err := models.GetChangelog(database.Conn, i)
+	cl, err := models.GetChangelog(database.Conn, c.Locals("id").(int))
 	if err != nil {
 		c.Locals("Title", "Failed to get data")
 		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{})
