@@ -76,3 +76,23 @@ func m3(db *gorm.DB) error {
 	CREATE INDEX idx_changelogs_deleted_at ON changelogs(deleted_at);`
 	return db.Exec(deindent(q)).Error
 }
+
+func m4(db *gorm.DB) error {
+	const q = `
+	UPDATE reviews
+	SET deleted_at = 'm4 ' || DATETIME('now')
+	WHERE style_id IN(
+		SELECT id FROM styles WHERE deleted_at IS NOT NULL
+	);`
+	return db.Exec(deindent(q)).Error
+}
+
+func m5(db *gorm.DB) error {
+	const q = `
+	UPDATE notifications
+	SET deleted_at = 'm5 ' || DATETIME('now')
+	WHERE kind = 0 AND style_id IN(
+		SELECT id FROM styles WHERE deleted_at IS NOT NULL
+	);`
+	return db.Exec(deindent(q)).Error
+}

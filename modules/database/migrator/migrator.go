@@ -64,5 +64,7 @@ func migrations() []models.Migration {
 		{Version: 1, Execute: m1, Name: "add migrations table"},
 		{Version: 2, Execute: m2, Name: "add new columns to styles table"},
 		{Version: 3, Execute: m3, Name: "init changelogs table and index"},
+		{Version: 4, Execute: m4, Name: "hide reviews for soft-deleted styles"},
+		{Version: 5, Execute: m5, Name: "hide notifications for soft-deleted styles"},
 	}
 }
