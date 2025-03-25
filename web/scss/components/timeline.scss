@@ -1,4 +1,4 @@
-.changelog article {
+.timeline article {
 	position: relative;
 	padding-left: 1.5rem;
 
@@ -13,7 +13,7 @@
 	}
 }
 
-.changelog header {
+.timeline header {
 	time { color: var(--fg-2) }
 
 	> h2 {
