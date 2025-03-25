@@ -93,8 +93,35 @@
 	{{ else }}
 		<p class="fg:3"><i>No styles found.</i></p>
 	{{ end }}
+
+	{{ if .Pagination.Show }}
+		{{ template "partials/pagination" .Pagination }}
+	{{ end }}
 </section>
 
-{{ if .Pagination.Show }}
-	{{ template "partials/pagination" .Pagination }}
+{{ if or .Reviews .User.IsModOrAdmin }}
+<section class="reviews changelog">
+	<h2 class="td:d">Reviews</h2>
+
+	{{ range .Reviews }}
+		<article>
+			<header>
+				<h2>
+					{{ with .Rating }}Rated{{ else }}Commented on{{ end }}
+					<a href="{{ .Style.Permalink }}">{{ .Style.Name }}</a>
+					{{ with .Rating }}{{ . }}/5 ⭐{{ end }}
+				</h2>
+				<div class="iflex">
+					<time datetime="{{ iso .CreatedAt }}">{{ rel .CreatedAt }}</time>
+					<a class="ml:s" href="{{ .Permalink }}">Link</a>
+					<a class="ml:s" href="{{ .Permalink }}/edit">Edit</a>
+					<a class="ml:s" href="{{ .Permalink }}/delete">Delete</a>
+				</div>
+			</header>
+			<div class="md mt:s">{{ .Comment | MarkdownUnsafe | unescape }}</div>
+		</article>
+	{{ else }}
+		<p>No reviews found.</p>
+	{{ end }}
+</section>
 {{ end }}

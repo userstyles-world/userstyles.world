@@ -6,6 +6,7 @@ import (
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
+	"userstyles.world/modules/database"
 	"userstyles.world/modules/log"
 	"userstyles.world/modules/storage"
 )
@@ -58,6 +59,14 @@ func Profile(c *fiber.Ctx) error {
 		return c.Render("err", fiber.Map{})
 	}
 	c.Locals("Styles", styles)
+
+	if u.ID == profile.ID || u.IsModOrAdmin() {
+		r, err := models.GetReviewsForUser(database.Conn, int(profile.ID))
+		if err != nil {
+			return err
+		}
+		c.Locals("Reviews", r)
+	}
 
 	return c.Render("user/profile", fiber.Map{})
 }

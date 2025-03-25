@@ -31,6 +31,12 @@ type Review struct {
 	StyleID uint
 }
 
+// GetReviewsForUser tries to return reviews sorted from most to least recent.
+func GetReviewsForUser(db *gorm.DB, id int) (r []Review, err error) {
+	err = db.Preload("Style").Order("id DESC").Find(&r, "user_id = ?", id).Error
+	return r, err
+}
+
 func FindAllForStyle(id any) (q []Review, err error) {
 	err = db().
 		Preload(clause.Associations).
