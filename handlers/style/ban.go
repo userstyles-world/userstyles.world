@@ -77,6 +77,12 @@ func BanStyle(db *gorm.DB, style *models.Style, u *models.APIUser, user *storage
 	if err := storage.DeleteUserstyle(db, i); err != nil {
 		return nil, err
 	}
+	if err := models.DeleteReviewsForStyle(db, i); err != nil {
+		return nil, err
+	}
+	if err := models.DeleteNotificationsForStyle(db, i); err != nil {
+		return nil, err
+	}
 	if err := models.DeleteStats(db, i); err != nil {
 		return nil, err
 	}

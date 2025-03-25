@@ -33,3 +33,8 @@ type Notification struct {
 func CreateNotification(db *gorm.DB, n *Notification) error {
 	return db.Create(&n).Error
 }
+
+// DeleteNotificationsForStyle tries to delete all notifications for a style.
+func DeleteNotificationsForStyle(db *gorm.DB, id int) (err error) {
+	return db.Delete(&Notification{}, "style_id = ?", id).Error
+}

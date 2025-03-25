@@ -37,6 +37,11 @@ func GetReviewsForUser(db *gorm.DB, id int) (r []Review, err error) {
 	return r, err
 }
 
+// DeleteReviewsForStyle tries to delete all reviews for a specific style.
+func DeleteReviewsForStyle(db *gorm.DB, id int) (err error) {
+	return db.Delete(&Review{}, "style_id = ?", id).Error
+}
+
 func FindAllForStyle(id any) (q []Review, err error) {
 	err = db().
 		Preload(clause.Associations).

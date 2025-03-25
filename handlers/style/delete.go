@@ -77,6 +77,12 @@ func DeletePost(c *fiber.Ctx) error {
 		if err = storage.DeleteUserstyle(tx, i); err != nil {
 			return err
 		}
+		if err = models.DeleteReviewsForStyle(tx, i); err != nil {
+			return err
+		}
+		if err = models.DeleteNotificationsForStyle(tx, i); err != nil {
+			return err
+		}
 		if err = models.DeleteStats(tx, i); err != nil {
 			return err
 		}
