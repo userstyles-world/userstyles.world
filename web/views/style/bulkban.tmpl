@@ -18,7 +18,7 @@
 				<input type="checkbox" name="ids" id="id-{{ .ID }}" value="{{ .ID }}">
 				{{ template "partials/checkboxes" }}
 				<label for="id-{{ .ID }}">
-					{{ .ID }} - {{ .GetSourceCodeCRC32 }} - {{ .Name }}
+					{{ .ID }} - {{ .CodeChecksum }} - {{ .Name }}
 				</label>
 			</div>
 		{{ end }}
