@@ -1,12 +1,10 @@
 package review
 
 import (
-	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/database"
@@ -14,101 +12,48 @@ import (
 )
 
 func createPage(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
-	c.Locals("Title", "Review style")
-
-	i, err := c.ParamsInt("s")
-	if err != nil || i < 1 {
-		c.Locals("Title", "Invalid style ID")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
-	}
-
-	s, err := models.GetStyleByID(i)
-	if err != nil {
-		c.Locals("Title", "Style not found")
-		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
-	}
-	c.Locals("Style", s)
-
-	// Prevent authors reviewing their own userstyles.
-	if u.ID == s.UserID {
-		c.Locals("Title", "Can't review your own style")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
-	// Prevent spamming reviews.
-	dur, ok := models.AbleToReview(u.ID, s.ID)
-	if !ok {
-		c.Locals("Title", "Cannot review style")
-		c.Locals("ErrTitle", "You can review this style again in "+dur)
-		return c.Status(fiber.StatusTooManyRequests).Render("err", fiber.Map{})
-	}
-
-	return c.Render("review/create", fiber.Map{})
+	return c.Render("review/create", fiber.Map{"Title": "Create review"})
 }
 
 func createForm(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
-	c.Locals("Title", "Review style")
+	c.Locals("Title", "Create review")
 
-	i, err := c.ParamsInt("s")
-	if err != nil || i < 1 {
-		c.Locals("Title", "Invalid style ID")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
-	}
-
-	s, err := models.GetStyleByID(i)
-	if err != nil {
-		c.Locals("Title", "Style not found")
-		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
-	}
-	c.Locals("Style", s)
-
-	// Prevent authors reviewing their own userstyles.
-	if u.ID == s.UserID {
-		c.Locals("Title", "Can't review your own style")
-		return c.Status(fiber.StatusForbidden).Render("err", fiber.Map{})
-	}
-
-	// Prevent spamming reviews.
-	dur, ok := models.AbleToReview(u.ID, s.ID)
-	if !ok {
-		c.Locals("Title", "Cannot review style")
-		c.Locals("ErrTitle", "You can review this style again in "+dur)
-		return c.Status(fiber.StatusTooManyRequests).Render("err", fiber.Map{})
-	}
-
+	u := c.Locals("User").(*models.APIUser)
+	s := c.Locals("Style").(*models.Style)
 	r := models.NewReview(u.ID, s.ID, c.FormValue("rating"), c.FormValue("comment"))
 	c.Locals("Review", r)
 
-	if err = r.Validate(); err != nil {
-		c.Locals("Error", strings.ToTitle(err.Error()[:1])+err.Error()[1:]+".")
-		return c.Render("review/create", fiber.Map{})
+	if err := r.Validate(); err != nil {
+		return c.Render("review/create", fiber.Map{
+			"Error": "Validation error: " + err.Error(),
+		})
 	}
 
 	// Add review to database.
-	if err = r.CreateForStyle(); err != nil {
-		log.Warn.Printf("Failed to add review to style %d: %s\n", i, err)
-		c.Locals("Title", "Failed to add your review")
-		return c.Render("err", fiber.Map{})
+	if err := r.CreateForStyle(); err != nil {
+		log.Warn.Printf("Failed to add review to style %d: %s\n", s.ID, err)
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Failed to create your review",
+		})
 	}
 
 	n := models.Notification{
 		Kind:     models.KindReview,
 		TargetID: int(s.UserID),
 		UserID:   int(u.ID),
-		StyleID:  i,
+		StyleID:  int(s.ID),
 		ReviewID: int(r.ID),
 	}
 
-	if err = models.CreateNotification(database.Conn, &n); err != nil {
+	if err := models.CreateNotification(database.Conn, &n); err != nil {
 		log.Warn.Printf("Failed to add notification to review %d: %s\n", r.ID, err)
 	}
 
 	a := models.NewSuccessAlert("Review has been created.")
 	cache.Store.Add("alert "+u.Username, a, time.Minute)
+
+	r.Style = *s      // assign *after* DB queries
+	r.Style.Prepare() // generate slug for permalink
 
 	return c.Redirect(r.Permalink())
 }

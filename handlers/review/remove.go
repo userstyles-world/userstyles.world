@@ -8,7 +8,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
 	"userstyles.world/modules/cache"
 	"userstyles.world/modules/config"
@@ -18,60 +17,15 @@ import (
 )
 
 func removePage(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
-
-	if !u.IsModOrAdmin() {
-		c.Locals("Title", "You are not authorized to perform this action")
-		return c.Status(fiber.StatusUnauthorized).Render("err", fiber.Map{})
-	}
-	c.Locals("Title", "Remove review")
-
-	rid, err := c.ParamsInt("r")
-	if err != nil || rid < 1 {
-		c.Locals("Title", "Invalid review ID")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
-	}
-
-	r, err := models.GetReview(rid)
-	if err != nil {
-		c.Locals("Title", "Failed to find review")
-		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
-	}
-	c.Locals("Review", r)
-
-	return c.Render("review/remove", fiber.Map{})
+	return c.Render("review/remove", fiber.Map{"Title": "Remove review"})
 }
 
 func removeForm(c *fiber.Ctx) error {
-	u, _ := jwt.User(c)
-	c.Locals("User", u)
-
-	if !u.IsModOrAdmin() {
-		c.Locals("Title", "You are not authorized to perform this action")
-		return c.Status(fiber.StatusUnauthorized).Render("err", fiber.Map{})
-	}
+	u := c.Locals("User").(*models.APIUser)
 	c.Locals("Title", "Remove review")
 
-	sid, err := c.ParamsInt("s")
-	if err != nil || sid < 1 {
-		c.Locals("Title", "Invalid style ID")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
-	}
-
-	rid, err := c.ParamsInt("r")
-	if err != nil || rid < 1 {
-		c.Locals("Title", "Invalid review ID")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
-	}
-
-	r, err := models.GetReview(rid)
-	if err != nil {
-		c.Locals("Title", "Failed to find review")
-		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
-	}
-
-	if err = models.DeleteReviewFromUser(int(r.ID), int(r.UserID)); err != nil {
+	r := c.Locals("Review").(*models.Review)
+	if err := models.DeleteReviewFromUser(int(r.ID), int(r.UserID)); err != nil {
 		c.Locals("Title", "Failed to delete review")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
@@ -87,7 +41,7 @@ func removeForm(c *fiber.Ctx) error {
 		Censor:         c.FormValue("censor") == "on",
 	}
 
-	if err = database.Conn.Create(&l).Error; err != nil {
+	if err := database.Conn.Create(&l).Error; err != nil {
 		c.Locals("Title", "Failed to add mod log entry")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
@@ -96,9 +50,9 @@ func removeForm(c *fiber.Ctx) error {
 		Kind:     models.KindRemovedReview,
 		TargetID: int(r.UserID),
 		UserID:   int(u.ID),
-		StyleID:  sid,
+		StyleID:  int(r.StyleID),
 	}
-	if err = models.CreateNotification(database.Conn, &n); err != nil {
+	if err := models.CreateNotification(database.Conn, &n); err != nil {
 		c.Locals("Title", "Failed to add notification")
 		return c.Status(fiber.StatusNotFound).Render("err", fiber.Map{})
 	}
@@ -111,7 +65,7 @@ func removeForm(c *fiber.Ctx) error {
 
 	title := "Your review has been removed"
 	if err := email.Send("review/remove", r.User.Email, title, args); err != nil {
-		log.Warn.Printf("Failed to email author for review %d: %s\n", rid, err)
+		log.Warn.Printf("Failed to email author for review %d: %s\n", r.ID, err)
 	}
 
 	a := models.NewSuccessAlert("Review successfully removed.")

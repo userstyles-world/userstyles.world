@@ -49,7 +49,6 @@ func FindAllForStyle(id any) (q []Review, err error) {
 		Order("id DESC").
 		Find(&q, "style_id = ? ", id).
 		Error
-
 	if err != nil {
 		return nil, err
 	}
@@ -99,15 +98,17 @@ func (r *Review) UpdateFromUser() error {
 		Error
 }
 
-// GetReview returns a specific review, or an error if the review doesn't exist.
-func GetReview(id int) (*Review, error) {
-	var r Review
-	err := database.Conn.Preload(clause.Associations).First(&r, "id = ?", id).Error
+// GetReviewForStyle tries to return a specific review for a specific style.
+func GetReviewForStyle(db *gorm.DB, rid, sid int) (r *Review, err error) {
+	err = db.
+		Preload(clause.Associations).
+		Where("id = ? AND style_id = ?", rid, sid).
+		First(&r).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return &r, nil
+	return r, nil
 }
 
 // DeleteReviewFromUser deletes a review from user, otherwise returns an error.
@@ -127,12 +128,12 @@ func DeleteReviewFromUser(id, uid int) error {
 	})
 }
 
-// MatchReviewUser returns whether or not current user matches review's user.
-func MatchReviewUser(id, uid int) bool {
+// MatchReviewForStyle returns whether or not a review belongs to a style.
+func MatchReviewForStyle(db *gorm.DB, rid, sid int) bool {
 	var i int64
-	err := database.Conn.Debug().
+	err := db.
 		Model(modelReview).
-		Where("id = ? AND user_id = ?", id, uid).
+		Where("id = ? AND style_id = ?", rid, sid).
 		Count(&i).
 		Error
 
@@ -154,18 +155,13 @@ func NewReview(uid, sid uint, rating, comment string) *Review {
 	}
 }
 
-// NewReviewUpdate is a helper for updating a review.
-func NewReviewUpdate(uid, sid, rid uint, rating, comment string) *Review {
+// Prepare is a helper for updating a review.
+func (r *Review) Prepare(rating, comment string) {
 	i, err := strconv.Atoi(rating)
 	if err != nil {
 		i = -1
 	}
 
-	return &Review{
-		UserID:  uid,
-		StyleID: sid,
-		Model:   gorm.Model{ID: rid},
-		Comment: strings.TrimSpace(comment),
-		Rating:  i,
-	}
+	r.Rating = i
+	r.Comment = strings.TrimSpace(comment)
 }
