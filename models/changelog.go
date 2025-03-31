@@ -21,7 +21,7 @@ type Changelog struct {
 	User        *User
 }
 
-// GetChangelogs tries to return changelogs sorted from most to least recent.
+// GetChangelogs tries to return changelogs sorted from newest to oldest.
 func GetChangelogs(db *gorm.DB) (clx []Changelog, err error) {
 	err = db.Order("id DESC").Find(&clx).Error
 	return clx, err
@@ -29,7 +29,7 @@ func GetChangelogs(db *gorm.DB) (clx []Changelog, err error) {
 
 // GetChangelog tries to return a changelog with a given id.
 func GetChangelog(db *gorm.DB, id int) (cl Changelog, err error) {
-	err = db.Find(&cl, id).Error
+	err = db.Find(&cl, "id = ?", id).Error
 	return cl, err
 }
 
@@ -38,12 +38,12 @@ func CreateChangelog(db *gorm.DB, cl Changelog) error {
 	return db.Clauses(clause.Returning{}).Create(&cl).Error
 }
 
-// UpdateChangelog tries to update an existing changelog.
+// UpdateChangelog tries to update a changelog.
 func UpdateChangelog(db *gorm.DB, cl Changelog) error {
 	return db.Updates(cl).Error
 }
 
-// DeleteChangelog tries to delete an existing changelog.
+// DeleteChangelog tries to delete a changelog.
 func DeleteChangelog(db *gorm.DB, cl Changelog) error {
 	return db.Delete(&cl).Error
 }

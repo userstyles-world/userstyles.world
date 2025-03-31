@@ -7,6 +7,8 @@ import (
 	"userstyles.world/handlers/jwt"
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/handlers/middleware"
+	"userstyles.world/models"
+	"userstyles.world/modules/database"
 )
 
 // Routes provides routes for Fiber's router.
@@ -38,10 +40,18 @@ func Routes(app *fiber.App) {
 func parseID(c *fiber.Ctx) error {
 	i, err := c.ParamsInt("id")
 	if err != nil || i < 1 {
-		c.Locals("Title", "ID must be a positive number")
-		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{})
+		return c.Status(fiber.StatusBadRequest).Render("err", fiber.Map{
+			"Title": "ID must be a positive number",
+		})
 	}
-	c.Locals("id", i)
+
+	cl, err := models.GetChangelog(database.Conn, i)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).Render("err", fiber.Map{
+			"Title": "Failed to get the changelog",
+		})
+	}
+	c.Locals("Changelog", cl)
 
 	return c.Next()
 }

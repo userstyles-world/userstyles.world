@@ -3,10 +3,12 @@
 	<p>Stay up to date with changes.</p>
 </header>
 
-<section class="changelog timeline mt:m">
+<section class="changelog timeline">
 	{{ if .User.IsAdmin }}
-		<div class="iflex">
-			<a class="btn icon" href="/changelog/create">{{ template "icons/plus" }} Add new</a>
+		<div class="iflex mt:m">
+			<a class="btn icon" href="/changelog/create">
+				{{ template "icons/plus" }} Create new
+			</a>
 		</div>
 	{{ end }}
 
@@ -28,4 +30,3 @@
 		<p>No changes yet. Check back later!</p>
 	{{ end }}
 </section>
-
