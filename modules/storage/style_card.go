@@ -134,7 +134,7 @@ func FindStyleCardsFeatured() ([]StyleCard, error) {
 
 	err := database.Conn.
 		Select(selectCards).
-		Find(&res, "deleted_at IS NULL AND featured = 1").Error
+		Find(&res, "deleted_at IS NULL AND featured = 1 order by random() limit 16").Error
 	if err != nil {
 		return nil, err
 	}
