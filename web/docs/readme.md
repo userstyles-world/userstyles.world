@@ -12,6 +12,7 @@ Here you can find the index for all of the internal documentation.
 - [Changelog](/docs/changelog "Changelog page")
 - [Privacy Policy](/docs/privacy "Privacy page")
 - [Content Guidelines](/docs/content-guidelines "Content Guidelines")
+- [Markdown Reference](/docs/markdown "Markdown Reference")
 - [Security Policy](/docs/security "Security page")
 - [Cryptographic usage](/docs/crypto "Cryptographic page")
 - [Third-party Licenses](/docs/licenses "Third-party licenses page")
