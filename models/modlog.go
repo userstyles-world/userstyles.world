@@ -4,8 +4,6 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-
-	"userstyles.world/modules/errors"
 )
 
 type LogKind = uint8
@@ -15,6 +13,10 @@ const (
 	LogRemoveStyle
 	LogRemoveReview
 )
+
+func (x LogKind) String() string {
+	return []string{"Remove user", "Remove style", "Remove review"}[x-1]
+}
 
 // Log struct has all the relavant information for a log entry.
 type Log struct {
@@ -50,20 +52,13 @@ func CreateLog(db *gorm.DB, log *Log) (err error) {
 	return db.Model(modelLog).Create(log).Error
 }
 
-// GetLogOfKind returns all the logs of the specified kind and
-// select the correct user Author.
-func GetLogOfKind(kind LogKind) ([]APILog, error) {
-	var q []APILog
-
-	err := db().
+// GetModLogs tries to return all moderation logs.
+func GetModLogs(db *gorm.DB) (l []APILog, err error) {
+	err = db.
 		Model(modelLog).
 		Select("logs.*, (SELECT username FROM users WHERE id = logs.user_id) AS Username").
-		Where("kind = ?", kind).
-		Order("created_at desc").
-		Find(&q).
+		Order("created_at DESC").
+		Find(&l).
 		Error
-	if err != nil {
-		return q, errors.ErrFailedLogRetrieval
-	}
-	return q, nil
+	return
 }

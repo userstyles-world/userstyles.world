@@ -71,9 +71,6 @@ var (
 	// ErrNoStyleStats errors that the given style doesn't have any styles yet.
 	ErrNoStyleStats = errors.New("style doesn't have stats yet")
 
-	// ErrFailedLogRetrieval errors that it couldn't retrieve all the logs.
-	ErrFailedLogRetrieval = errors.New("failed to find all logs")
-
 	// ErrOnlyRemovedStyle errors that this function only allows to remove style kind.
 	ErrOnlyRemovedStyle = errors.New("only remove style kind is allowed")
 

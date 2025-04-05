@@ -5,43 +5,23 @@ import (
 
 	"userstyles.world/handlers/jwt"
 	"userstyles.world/models"
+	"userstyles.world/modules/database"
 )
 
 // GetModLog renders the modlog view.
 // It will pass trough the relevant information from the database.
 func GetModLog(c *fiber.Ctx) error {
 	u, _ := jwt.User(c)
+	c.Locals("User", u)
 
-	bannedUsers, err := models.GetLogOfKind(models.LogBanUser)
+	l, err := models.GetModLogs(database.Conn)
 	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"User":  u,
-		})
-	}
-
-	removedStyles, err := models.GetLogOfKind(models.LogRemoveStyle)
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"User":  u,
-		})
-	}
-
-	reviews, err := models.GetLogOfKind(models.LogRemoveReview)
-	if err != nil {
-		return c.Render("err", fiber.Map{
-			"Title": "Internal server error",
-			"User":  u,
-		})
+		return c.Render("err", fiber.Map{"Title": "Failed to get data"})
 	}
 
 	return c.Render("core/modlog", fiber.Map{
-		"BannedUsers":   bannedUsers,
-		"RemovedStyles": removedStyles,
-		"Reviews":       reviews,
-		"User":          u,
-		"Title":         "Moderation Log",
-		"Canonical":     "modlog",
+		"Logs":      l,
+		"Title":     "Moderation log",
+		"Canonical": "modlog",
 	})
 }
