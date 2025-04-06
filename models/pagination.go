@@ -18,11 +18,12 @@ type Pagination struct {
 	Prev3 int
 	Prev2 int
 	Prev1 int
-	Now   int
+	Now   int `query:"page"`
 	Next1 int
 	Next2 int
 	Next3 int
 	Max   int
+	Kind  int `query:"kind"`
 }
 
 // NewPagination is a convenience function that initializes pagination struct.
@@ -41,6 +42,10 @@ func NewPagination(page, total int, sort, path string) Pagination {
 // URL generates a dynamic path from available items.
 func (p Pagination) URL(page int) string {
 	s := fmt.Sprintf("%s?page=%d", p.Path, page)
+
+	if p.Kind > 0 {
+		s += fmt.Sprintf("&kind=%d", p.Kind)
+	}
 
 	if p.Sort != "" {
 		s += fmt.Sprintf("&sort=%s", p.Sort)
@@ -73,10 +78,6 @@ func IsValidPage(s string) (int, error) {
 
 // calcItems calculates values for pagination fields.
 func (p *Pagination) calcItems(total int) {
-	if p.Now < 1 {
-		p.Now = 1
-	}
-
 	if total == 0 {
 		p.Max = 1
 		return
@@ -144,4 +145,19 @@ func (p *Pagination) SortStyles() string {
 	default:
 		return "styles.id ASC"
 	}
+}
+
+// ModLogCheck is a helper for setting mod log pagination.
+func (p *Pagination) ModLogCheck(total int) (string, bool) {
+	p.calcItems(total)
+
+	if p.OutOfBounds() {
+		s := fmt.Sprintf("/modlog?page=%d", p.Now)
+		if p.Kind != 0 {
+			s += fmt.Sprintf("&kind=%d", p.Kind)
+		}
+		return s, false
+	}
+
+	return "", true
 }

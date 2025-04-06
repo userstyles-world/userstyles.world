@@ -1,15 +1,32 @@
 
 <header>
 	<h1>Moderation log</h1>
-	<p class="fg:3">The list of all moderation actions.</p>
+	<p>Read-only list of all moderation actions.</p>
 </header>
 
-<section class="u-TableScrollX mt:m">
+<section class="u-TableScrollX">
 	{{ template "partials/alert" . }}
 
-	<form class="Form Form-inline jc:c" method="get" action="/explore">
+	<form class="Form Form-inline jc:c" method="get" action="/modlog">
 		<input type="text" name="page" value="1" hidden>
-		{{ template "partials/form-sort" . }}
+		<div class="Form-section Form-row ml:a">
+			<label for="sort">Sort by</label>
+			<div class="Form-menu">
+				<select class="Form-select submit-form" id="sort" name="kind">
+					<option {{ if eq .P.Kind 0 }}selected{{ end }} value="0">Default (show all)</option>
+					<option {{ if eq .P.Kind 1 }}selected{{ end }} value="1">Removed users</option>
+					<option {{ if eq .P.Kind 2 }}selected{{ end }} value="2">Removed styles</option>
+					<option {{ if eq .P.Kind 3 }}selected{{ end }} value="3">Removed reviews</option>
+				</select>
+				{{ template "icons/chevron-down" }}
+			</div>
+		</div>
+
+		<div class="Form-control">
+			<button type="submit" class="btn icon primary">
+				{{ template "icons/search" }} Sort
+			</button>
+		</div>
 	</form>
 
 	<table class="mt:m">
@@ -37,4 +54,18 @@
 			{{ end }}
 		</tbody>
 	</table>
+
+	<style type="text/css">
+		/* TODO: Remove in UI refactor. */
+		@media screen and (min-width: 879px) {
+			main > header + section {
+				margin-top: -3rem;
+				padding-top: 0.5rem;
+			}
+		}
+	</style>
 </section>
+
+{{ if .P.Show }}
+	{{ template "partials/pagination" .P }}
+{{ end }}

@@ -6,12 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type LogKind = uint8
+type LogKind int
 
 const (
 	LogBanUser LogKind = iota + 1
 	LogRemoveStyle
 	LogRemoveReview
+	LogCount
 )
 
 func (x LogKind) String() string {
@@ -53,12 +54,31 @@ func CreateLog(db *gorm.DB, log *Log) (err error) {
 }
 
 // GetModLogs tries to return all moderation logs.
-func GetModLogs(db *gorm.DB) (l []APILog, err error) {
-	err = db.
+func GetModLogs(db *gorm.DB, page, size, order int) (l []APILog, err error) {
+	tx := db.
 		Model(modelLog).
 		Select("logs.*, (SELECT username FROM users WHERE id = logs.user_id) AS Username").
 		Order("created_at DESC").
-		Find(&l).
-		Error
-	return
+		Offset((page - 1) * size).
+		Limit(size)
+
+	if order > 0 {
+		tx.Where("kind = ?", order)
+	}
+
+	err = tx.Find(&l).Error
+
+	return l, err
+}
+
+// GetModLogCount tries to count mod log entries depending on their kind.
+func GetModLogCount(db *gorm.DB, kind int) (i int64, err error) {
+	tx := db.Model(modelLog)
+	if kind > 0 {
+		tx.Where("kind = ?", kind)
+	}
+
+	err = tx.Count(&i).Error
+
+	return i, err
 }
