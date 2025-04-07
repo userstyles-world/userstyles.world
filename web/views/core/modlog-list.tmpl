@@ -31,7 +31,7 @@
 
 	<table class="mt:m">
 		<thead>
-			<th style="min-width: 220px" class="u-TableNum">Date and time</th>
+			<th style="min-width: 240px" class="u-TableNum">Date and time</th>
 			<th style="min-width: 120px">Taken by</th>
 			<th style="min-width: 140px">Action kind</th>
 			<th style="min-width: 120px">Affected user</th>
@@ -42,7 +42,7 @@
 			{{ range .Logs }}
 				<tr id="id-{{ .ID }}" {{ if .Censor }} class="spoiler" {{ end }}>
 					<td class="u-TableMin">
-						<a href="#id-{{ .ID }}">
+						<a href="{{ .Permalink }}">
 							<time datetime="{{ .CreatedAt | iso }}">{{ .CreatedAt | rel }}</time>
 						</a>
 					</td>

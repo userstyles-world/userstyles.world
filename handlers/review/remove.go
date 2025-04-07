@@ -1,7 +1,6 @@
 package review
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -60,7 +59,7 @@ func removeForm(c *fiber.Ctx) error {
 	args := fiber.Map{
 		"User": r.User,
 		"Log":  l,
-		"Link": config.App.BaseURL + "/modlog#id-" + strconv.Itoa(int(l.ID)),
+		"Link": config.App.BaseURL + l.Permalink(),
 	}
 
 	title := "Your review has been removed"
@@ -71,5 +70,5 @@ func removeForm(c *fiber.Ctx) error {
 	a := models.NewSuccessAlert("Review successfully removed.")
 	cache.Store.Add("alert "+u.Username, a, time.Minute)
 
-	return c.Redirect(fmt.Sprintf("/modlog#id-%d", l.ID))
+	return c.Redirect(l.Permalink())
 }

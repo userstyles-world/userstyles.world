@@ -1,0 +1,36 @@
+<header>
+	{{ template "partials/alert" . }}
+
+	<h1>{{ .Title }}</h1>
+</header>
+
+<section class="mt:m">
+	<p>
+		<span>Taken by:</span>
+		<a href="/user/{{ .Log.Username }}">{{ .Log.Username }}</a>
+	</p>
+	<p>
+		<span>Taken on:</span>
+		<time datetime="{{ iso .Log.CreatedAt }}">{{ rel .Log.CreatedAt }}</time>
+	</p>
+	<p>
+		<span>Affected user:</span>
+		{{ if eq .Log.Kind 1 }}
+			{{ .Log.TargetUserName }}
+		{{ else }}
+			<a href="/user/{{ .Log.TargetUserName }}">{{ .Log.TargetUserName }}</a>
+		{{ end }}
+	</p>
+	<p>
+		<span>Action:</span> {{ .Log.Kind.String }} {{ .Log.TargetData }}
+	</p>
+	<p>
+		<span>Reason:</span> {{ .Log.Reason }}
+	</p>
+	{{/* TODO: Rewrite when models.Log is migrated to proper schema. */}}
+	{{ if (or (eq .Log.TargetUserName .User.Username) .User.IsModOrAdmin) }}
+		{{ if .Log.Message }}
+			<p><span>Message:</span> {{ .Log.Message }}</p>
+		{{ end }}
+	{{ end }}
+</section>

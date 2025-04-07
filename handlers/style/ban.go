@@ -162,7 +162,7 @@ func BanPost(c *fiber.Ctx) error {
 
 	go sendRemovalEmail(user, style, event)
 
-	return c.Redirect("/modlog", fiber.StatusSeeOther)
+	return c.Redirect(event.Permalink())
 }
 
 func sendRemovalEmail(user *storage.User, style *models.Style, event *models.Log) {
@@ -170,7 +170,7 @@ func sendRemovalEmail(user *storage.User, style *models.Style, event *models.Log
 		"User":  user,
 		"Style": style,
 		"Log":   event,
-		"Link":  config.App.BaseURL + "/modlog#id-" + strconv.Itoa(int(event.ID)),
+		"Link":  config.App.BaseURL + event.Permalink(),
 	}
 
 	title := "Your style has been removed"

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"time"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -36,16 +36,9 @@ type Log struct {
 	TargetUserName string
 }
 
-type APILog struct {
-	ID             uint
-	CreatedAt      time.Time
-	UserID         uint
-	Username       string
-	Reason         string
-	Censor         bool
-	Kind           LogKind
-	TargetData     string
-	TargetUserName string
+// Permalink returns a link to the mod log page.
+func (l Log) Permalink() string {
+	return fmt.Sprintf("/modlog/%d", l.ID)
 }
 
 // CreateLog inserts a new log entry into the database.
@@ -54,7 +47,7 @@ func CreateLog(db *gorm.DB, log *Log) (err error) {
 }
 
 // GetModLogs tries to return all moderation logs.
-func GetModLogs(db *gorm.DB, page, size, order int) (l []APILog, err error) {
+func GetModLogs(db *gorm.DB, page, size, order int) (l []Log, err error) {
 	tx := db.
 		Model(modelLog).
 		Select("logs.*, (SELECT username FROM users WHERE id = logs.user_id) AS Username").
@@ -67,6 +60,16 @@ func GetModLogs(db *gorm.DB, page, size, order int) (l []APILog, err error) {
 	}
 
 	err = tx.Find(&l).Error
+
+	return l, err
+}
+
+// GetModLog tries to return a specific moderation log.
+func GetModLog(db *gorm.DB, id int) (l Log, err error) {
+	err = db.
+		Model(modelLog).
+		Select("logs.*, (SELECT username FROM users WHERE id = logs.user_id) AS Username").
+		Find(&l, "id = ?", id).Error
 
 	return l, err
 }
