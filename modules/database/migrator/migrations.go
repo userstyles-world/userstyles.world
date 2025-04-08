@@ -21,8 +21,8 @@ func deindent(s string) string {
 func m1(db *gorm.DB) error {
 	const q = `
 	CREATE TABLE migrations(
-		version INTEGER,
-		name TEXT,
+		version    INTEGER,
+		name       TEXT,
 		applied_at DATETIME
 	);`
 	return db.Exec(deindent(q)).Error
@@ -37,7 +37,7 @@ func m2(db *gorm.DB) error {
 			if err := db.Migrator().AddColumn(s, c); err != nil {
 				return err
 			}
-			log.Database.Printf("Added '%s' column to 'styles' table.\n", c)
+			log.Database.Printf("Added %q column to styles table.\n", c)
 		}
 	}
 
@@ -63,12 +63,12 @@ func m2(db *gorm.DB) error {
 func m3(db *gorm.DB) error {
 	const q = `
 	CREATE TABLE changelogs(
-		id INTEGER,
-		user_id INTEGER,
-		created_at DATETIME,
-		updated_at DATETIME,
-		deleted_at DATETIME,
-		title TEXT,
+		id          INTEGER,
+		user_id     INTEGER,
+		created_at  DATETIME,
+		updated_at  DATETIME,
+		deleted_at  DATETIME,
+		title       TEXT,
 		description TEXT,
 		PRIMARY KEY (id),
 		CONSTRAINT fk_changelogs_user FOREIGN KEY (user_id) REFERENCES users(id)
