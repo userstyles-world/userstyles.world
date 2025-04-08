@@ -41,7 +41,7 @@ func Migrate(db *gorm.DB) error {
 
 			if err := db.Transaction(func(tx *gorm.DB) error {
 				if err := m.Execute(tx); err != nil {
-					return nil
+					return err
 				}
 
 				return models.CreateMigration(tx, m)
