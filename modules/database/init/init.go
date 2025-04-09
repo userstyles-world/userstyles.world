@@ -266,21 +266,21 @@ func seed() {
 		},
 	}
 
-	logs := []models.Log{
-		{
-			UserID:         1,
-			Reason:         "I like to abuse powers.",
-			Kind:           models.LogBanUser,
-			TargetUserName: "gusted",
-		},
-		{
-			UserID:         1,
-			Reason:         "My style is superior",
-			Kind:           models.LogRemoveStyle,
-			TargetUserName: "gusted",
-			TargetData:     "Black-Discord",
-		},
-	}
+	// logs := []models.Log{
+	// 	{
+	// 		UserID:         1,
+	// 		Reason:         "I like to abuse powers.",
+	// 		Kind:           models.LogBanUser,
+	// 		TargetUserName: "gusted",
+	// 	},
+	// 	{
+	// 		UserID:         1,
+	// 		Reason:         "My style is superior",
+	// 		Kind:           models.LogRemoveStyle,
+	// 		TargetUserName: "gusted",
+	// 		TargetData:     "Black-Discord",
+	// 	},
+	// }
 
 	if config.Database.RandomData {
 		s, u := generateData(config.Database.RandomDataAmount)
@@ -297,7 +297,7 @@ func seed() {
 	for i := range oauths {
 		database.Conn.Create(&oauths[i])
 	}
-	for i := range logs {
-		database.Conn.Create(&logs[i])
-	}
+	// for i := range logs {
+	// 	database.Conn.Create(&logs[i])
+	// }
 }

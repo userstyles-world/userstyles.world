@@ -1,7 +1,6 @@
 package review
 
 import (
-	"strconv"
 	"strings"
 	"time"
 
@@ -30,14 +29,13 @@ func removeForm(c *fiber.Ctx) error {
 	}
 
 	l := models.Log{
-		UserID:         u.ID,
-		Username:       u.Username,
-		Kind:           models.LogRemoveReview,
-		TargetUserName: r.User.Username,
-		TargetData:     strconv.Itoa(int(r.ID)),
-		Reason:         strings.TrimSpace(c.FormValue("reason")),
-		Message:        strings.TrimSpace(c.FormValue("message")),
-		Censor:         c.FormValue("censor") == "on",
+		ByUserID: u.ID,
+		ToUserID: r.UserID,
+		ReviewID: r.ID,
+		Kind:     models.LogRemoveReview,
+		Reason:   strings.TrimSpace(c.FormValue("reason")),
+		Message:  strings.TrimSpace(c.FormValue("message")),
+		Censor:   c.FormValue("censor") == "on",
 	}
 
 	if err := database.Conn.Create(&l).Error; err != nil {

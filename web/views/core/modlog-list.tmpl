@@ -46,9 +46,9 @@
 							<time datetime="{{ .CreatedAt | iso }}">{{ .CreatedAt | rel }}</time>
 						</a>
 					</td>
-					<td class="u-Truncate"><a href="/user/{{ .Username }}">{{ .Username }}</a></td>
-					<td>{{ .Kind.String }}</td>
-					<td class="u-Truncate">{{ .TargetUserName }}</td>
+					<td class="u-Truncate">{{ .ByUser.Username }}</td>
+					<td>{{ .Kind }}</td>
+					<td class="u-Truncate">{{ .ToUser.Username }}</td>
 					<td class="u-Truncate M">{{ .Reason }}</td>
 				</tr>
 			{{ end }}

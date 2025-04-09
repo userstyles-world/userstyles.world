@@ -56,14 +56,13 @@ func BanGet(c *fiber.Ctx) error {
 
 func BanStyle(db *gorm.DB, style *models.Style, u *models.APIUser, user *storage.User, c *fiber.Ctx) (*models.Log, error) {
 	event := &models.Log{
-		UserID:         u.ID,
-		Username:       u.Username,
-		Kind:           models.LogRemoveStyle,
-		TargetUserName: user.Username,
-		TargetData:     style.Name,
-		Reason:         strings.TrimSpace(c.FormValue("reason")),
-		Message:        strings.TrimSpace(c.FormValue("message")),
-		Censor:         c.FormValue("censor") == "on",
+		ByUserID: u.ID,
+		ToUserID: uint(user.ID),
+		StyleID:  style.ID,
+		Kind:     models.LogRemoveStyle,
+		Reason:   strings.TrimSpace(c.FormValue("reason")),
+		Message:  strings.TrimSpace(c.FormValue("message")),
+		Censor:   c.FormValue("censor") == "on",
 	}
 
 	n := &models.Notification{
