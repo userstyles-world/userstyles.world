@@ -9,7 +9,7 @@
 	<form class="Form Form-inline jc:c" method="get" action="/modlog">
 		<input type="text" name="page" value="1" hidden>
 		<div class="Form-section Form-row ml:a">
-			<label for="sort">Sort by</label>
+			<label for="sort">Action</label>
 			<div class="Form-menu">
 				<select class="Form-select submit-form" id="sort" name="kind">
 					<option {{ if eq .P.Kind 0 }}selected{{ end }} value="0">Default (show all)</option>
@@ -23,7 +23,7 @@
 
 		<div class="Form-control">
 			<button type="submit" class="btn icon primary">
-				{{ template "icons/search" }} Sort
+				{{ template "icons/search" }} Filter
 			</button>
 		</div>
 	</form>
