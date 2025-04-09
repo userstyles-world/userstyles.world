@@ -3,7 +3,7 @@
 	<p class="fg:2">Read-only list of all moderation actions.</p>
 </header>
 
-<section class="u-TableScrollX">
+<section>
 	{{ template "partials/alert" . }}
 
 	<form class="Form Form-inline jc:c" method="get" action="/modlog">
@@ -27,7 +27,9 @@
 			</button>
 		</div>
 	</form>
+</section>
 
+<section class="u-TableScrollX">
 	<table class="mt:m">
 		<thead>
 			<th style="min-width: 240px" class="u-TableNum">Date and time</th>
