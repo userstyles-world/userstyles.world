@@ -23,10 +23,7 @@
 	</p>
 	<p><span>Action:</span> {{ .Log.Kind.String }}</p>
 	<p><span>Reason:</span> {{ .Log.Reason }}</p>
-	{{/* TODO: Rewrite when models.Log is migrated to proper schema. */}}
-	{{ if (or (eq .Log.ToUserID .User.ID) .User.IsModOrAdmin) }}
-		{{ if .Log.Message }}
-			<p><span>Message:</span> {{ .Log.Message }}</p>
-		{{ end }}
+	{{ if .Log.ShowMessage .User }}
+		<p><span>Message:</span> {{ .Log.Message }}</p>
 	{{ end }}
 </section>

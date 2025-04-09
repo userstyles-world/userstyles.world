@@ -51,6 +51,11 @@ func (l Log) Permalink() string {
 	return fmt.Sprintf("/modlog/%d", l.ID)
 }
 
+// ShowMessage returns whether or not to display a private message if it's set.
+func (l Log) ShowMessage(u APIUser) bool {
+	return l.Message != "" && (l.ToUserID == u.ID || u.IsModOrAdmin())
+}
+
 // CreateLog inserts a new log entry into the database.
 func CreateLog(db *gorm.DB, log *Log) (err error) {
 	return db.Model(modelLog).Create(log).Error
