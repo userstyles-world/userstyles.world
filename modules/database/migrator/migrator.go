@@ -59,12 +59,12 @@ func Migrate(db *gorm.DB) error {
 
 // migrations contains all schema migrations.
 func migrations() []models.Migration {
-
 	return []models.Migration{
 		{Version: 1, Execute: m1, Name: "create migrations table"},
 		{Version: 2, Execute: m2, Name: "add new columns to styles table"},
 		{Version: 3, Execute: m3, Name: "create changelogs table and index"},
 		{Version: 4, Execute: m4, Name: "hide reviews for soft-deleted styles"},
 		{Version: 5, Execute: m5, Name: "hide notifications for soft-deleted styles"},
+		{Version: 6, Execute: m6, Name: "create and switch to the new mod logs table"},
 	}
 }
