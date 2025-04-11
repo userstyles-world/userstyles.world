@@ -282,7 +282,7 @@ func SelectUpdateStyle(s Style) error {
 		"license", "category", "slug", "preview", "preview_version", "code_checksum",
 		"mirror_url", "mirror_code", "mirror_meta", "import_private", "mirror_private"}
 
-	return database.Conn.Select(f).Where("id = ?", s.ID).UpdateColumns(s).Error
+	return database.Conn.Select(f).Where("id = ?", s.ID).Updates(s).Error
 }
 
 func SaveStyleCode(id, s string) error {
