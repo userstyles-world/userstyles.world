@@ -7,7 +7,7 @@
 <section class="mt:m">
 	<p>
 		<span>Taken by:</span>
-		<a href="/user/{{ .Log.Username }}">{{ .Log.Username }}</a>
+		<a href="/user/{{ .Log.ByUser.Username }}">{{ .Log.ByUser.Username }}</a>
 	</p>
 	<p>
 		<span>Taken on:</span>
@@ -16,21 +16,14 @@
 	<p>
 		<span>Affected user:</span>
 		{{ if eq .Log.Kind 1 }}
-			{{ .Log.TargetUserName }}
+			{{ .Log.ToUser.Username }}
 		{{ else }}
-			<a href="/user/{{ .Log.TargetUserName }}">{{ .Log.TargetUserName }}</a>
+			<a href="/user/{{ .Log.ToUser.Username }}">{{ .Log.ToUser.Username }}</a>
 		{{ end }}
 	</p>
-	<p>
-		<span>Action:</span> {{ .Log.Kind.String }} {{ .Log.TargetData }}
-	</p>
-	<p>
-		<span>Reason:</span> {{ .Log.Reason }}
-	</p>
-	{{/* TODO: Rewrite when models.Log is migrated to proper schema. */}}
-	{{ if (or (eq .Log.TargetUserName .User.Username) .User.IsModOrAdmin) }}
-		{{ if .Log.Message }}
-			<p><span>Message:</span> {{ .Log.Message }}</p>
-		{{ end }}
+	<p><span>Action:</span> {{ .Log.Kind.String }}</p>
+	<p><span>Reason:</span> {{ .Log.Reason }}</p>
+	{{ if .Log.ShowMessage .User }}
+		<p><span>Message:</span> {{ .Log.Message }}</p>
 	{{ end }}
 </section>

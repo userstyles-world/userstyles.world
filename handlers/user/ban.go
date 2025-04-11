@@ -96,17 +96,16 @@ func ConfirmBan(c *fiber.Ctx) error {
 	}
 
 	// Initialize modlog data.
-	logEntry := models.Log{
-		UserID:         u.ID,
-		Username:       u.Username,
-		Kind:           models.LogBanUser,
-		TargetUserName: targetUser.Username,
-		Reason:         strings.TrimSpace(c.FormValue("reason")),
-		Censor:         c.FormValue("censor") == "on",
+	event := models.Log{
+		ByUserID: u.ID,
+		ToUserID: targetUser.ID,
+		Kind:     models.LogBanUser,
+		Reason:   strings.TrimSpace(c.FormValue("reason")),
+		Censor:   c.FormValue("censor") == "on",
 	}
 
 	// Add banned user log entry.
-	if err := models.CreateLog(database.Conn, &logEntry); err != nil {
+	if err := models.CreateLog(database.Conn, &event); err != nil {
 		log.Warn.Printf("Failed to add user %d to ModLog: %s\n", targetUser.ID, err.Error())
 		return c.Render("err", fiber.Map{
 			"Title": "Internal server error",
@@ -116,13 +115,13 @@ func ConfirmBan(c *fiber.Ctx) error {
 
 	args := fiber.Map{
 		"User":   user,
-		"Reason": logEntry.Reason,
-		"Link":   config.App.BaseURL + logEntry.Permalink(),
+		"Reason": event.Reason,
+		"Link":   config.App.BaseURL + event.Permalink(),
 	}
 	err = email.Send("user/ban", user.Email, "You have been banned", args)
 	if err != nil {
 		log.Warn.Printf("Failed to send an email to user %d: %s\n", user.ID, err)
 	}
 
-	return c.Redirect("/dashboard")
+	return c.Redirect(event.Permalink())
 }

@@ -126,7 +126,7 @@ func BulkBanPost(c *fiber.Ctx) error {
 
 	go sendBulkRemovalEmail(user, styles, lastEvent)
 
-	return c.Redirect("/modlog", fiber.StatusSeeOther)
+	return c.Redirect(lastEvent.Permalink(), fiber.StatusSeeOther)
 }
 
 func sendBulkRemovalEmail(user *storage.User, styles []*models.Style, event *models.Log) {
