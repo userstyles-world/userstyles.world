@@ -12,7 +12,7 @@ require (
 	github.com/gofiber/adaptor/v2 v2.1.32
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/gofiber/template v1.7.1
-	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/jarcoal/httpmock v1.2.0
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/ohler55/ojg v1.14.5

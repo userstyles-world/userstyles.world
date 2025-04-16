@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // Check if we can create a JWT Token and sign it properly.
@@ -122,7 +122,7 @@ func TestMapclaimsVerifyIssuedAtInvalidTypeString(t *testing.T) {
 		"iat": "foo",
 	}
 	want := false
-	got := mapClaims.VerifyIssuedAt(0, false)
+	got := (jwt.NewValidator(jwt.WithIssuedAt()).Validate(mapClaims) == nil)
 	if want != got {
 		t.Fatalf("Failed to verify claims, wanted: %v got %v", want, got)
 	}
@@ -135,7 +135,7 @@ func TestMapclaimsVerifyNotBeforeInvalidTypeString(t *testing.T) {
 		"nbf": "foo",
 	}
 	want := false
-	got := mapClaims.VerifyNotBefore(0, false)
+	got := (jwt.NewValidator().Validate(mapClaims) == nil)
 	if want != got {
 		t.Fatalf("Failed to verify claims, wanted: %v got %v", want, got)
 	}
@@ -148,8 +148,7 @@ func TestMapclaimsVerifyExpiresAtInvalidTypeString(t *testing.T) {
 		"exp": "foo",
 	}
 	want := false
-	got := mapClaims.VerifyExpiresAt(0, false)
-
+	got := (jwt.NewValidator().Validate(mapClaims) == nil)
 	if want != got {
 		t.Fatalf("Failed to verify claims, wanted: %v got %v", want, got)
 	}
