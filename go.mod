@@ -1,6 +1,8 @@
 module userstyles.world
 
-go 1.20
+go 1.23.0
+
+toolchain go1.23.8
 
 require (
 	github.com/dustin/go-humanize v1.0.0
@@ -23,7 +25,7 @@ require (
 	github.com/vednoc/go-usercss-parser v0.10.0
 	github.com/yuin/goldmark v1.5.2
 	github.com/yuin/goldmark-meta v1.1.0
-	golang.org/x/crypto v0.21.0
+	golang.org/x/crypto v0.35.0
 	golang.org/x/net v0.23.0
 	gorm.io/driver/sqlite v1.4.2
 	gorm.io/gorm v1.24.3
@@ -58,9 +60,9 @@ require (
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
