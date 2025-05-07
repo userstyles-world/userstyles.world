@@ -21,12 +21,9 @@
 		<div class="checkbox flex">
 			<input type="checkbox" name="censor" id="censor" aria-describedby="censor-hint">
 			{{ template "partials/checkboxes" }}
-			<label for="censor">Censor style's information</label>
+			<label class="ml:s" for="censor">Censor this action</label>
 		</div>
-		<i class="fg:3" id="censor-hint">
-			This will censor the style's information with a spoiler, use this if
-			the style has an innapropiate name.
-		</i>
+		<i class="fg:3">This will censor the information about this action with a spoiler, use this if the user has an innapropiate name.</i>
 
 		<div class="mt:m">
 			<button class="btn primary mr:s" type="submit">Confirm</button>
