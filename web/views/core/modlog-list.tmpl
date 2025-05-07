@@ -49,7 +49,7 @@
 					</td>
 					<td class="u-Truncate">{{ .ByUser.Username }}</td>
 					<td>{{ .Kind }}</td>
-					<td class="u-Truncate">{{ .ToUser.Username }}</td>
+					<td class="u-Truncate">{{ .BannedDisplayName $.User }}</td>
 					<td class="u-Truncate M">{{ .Reason }}</td>
 				</tr>
 			{{ end }}
