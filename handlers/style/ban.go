@@ -48,7 +48,7 @@ func BanGet(c *fiber.Ctx) error {
 	}
 
 	return c.Render("style/ban", fiber.Map{
-		"Title": "Confirm ban",
+		"Title": "Confirm removal",
 		"User":  u,
 		"Style": s,
 	})
