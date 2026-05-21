@@ -16,7 +16,7 @@
 	<p>
 		<span>Affected user:</span>
 		{{ if eq .Log.Kind 1 }}
-			{{ .Log.ToUser.Username }}
+			{{ .Log.BannedDisplayName .User }}
 		{{ else }}
 			<a href="/user/{{ .Log.ToUser.Username }}">{{ .Log.ToUser.Username }}</a>
 		{{ end }}

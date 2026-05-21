@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 
 	jwtware "userstyles.world/handlers/jwt"
 	"userstyles.world/models"

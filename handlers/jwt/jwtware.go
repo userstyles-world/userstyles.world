@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 
 	"userstyles.world/modules/config"
 )

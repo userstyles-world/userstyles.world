@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -54,6 +55,25 @@ func (l Log) Permalink() string {
 // ShowMessage returns whether or not to display a private message if it's set.
 func (l Log) ShowMessage(u APIUser) bool {
 	return l.Message != "" && (l.ToUserID == u.ID || u.IsModOrAdmin())
+}
+
+// BannedDisplayName shows censored username of banned user to non-moderators,
+// e.g. to not display full usernames of spammers when they contain a domain.
+func (l Log) BannedDisplayName(u APIUser) string {
+	if u.IsModOrAdmin() {
+		return l.ToUser.Username
+	}
+	usernameLen := len(l.ToUser.Username)
+	var usernameKeep int
+	if usernameLen > 5 {
+		usernameKeep = 3
+	} else if usernameLen > 4 {
+		usernameKeep = 2
+	} else {
+		usernameKeep = 1
+	}
+	censoredUsername := l.ToUser.Username[:usernameKeep] + strings.Repeat("*", usernameLen-usernameKeep)
+	return censoredUsername
 }
 
 // CreateLog inserts a new log entry into the database.

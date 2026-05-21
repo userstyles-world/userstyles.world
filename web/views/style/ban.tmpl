@@ -5,15 +5,15 @@
 
 <section class="limit">
 	<form class="form-wrapper" method="post" action="/styles/ban/{{ .Style.ID }}">
-		<label class="mb:m f:b">Are you sure you want to ban {{ .Style.Name }}?</label>
+		<label class="mb:m f:b">Are you sure you want to remove {{ .Style.Name }}?</label>
 
-		<label for="reason">Reason for ban</label>
+		<label for="reason">Reason for removal</label>
 		<i class="fg:3">Be aware that this reason will be made public alongside this action.</i>
 		<input
 		required
 		type="text" name="reason"
-		placeholder="Your reason to ban this style">
-		
+		placeholder="Your reason to remove this style">
+
 		<label for="message">Private message for the author</label>
 		<i class="fg:3">For example, a hint about was done wrong and what can be done now. Will be included in the email.</i>
 		<textarea
@@ -21,11 +21,11 @@
 			placeholder="Your message to the author of this style"></textarea>
 
 		<div class="checkbox flex">
-			<input type="checkbox" name="censor">
+			<input type="checkbox" name="censor" id="censor" aria-describedby="censor-hint">
 			{{ template "partials/checkboxes" }}
-			<label class="ml:s" for="censor">Censor style's information</label>
+			<label for="censor">Censor style's information</label>
 		</div>
-		<i class="fg:3">This will censor the style's information with a spoiler, use this if the style has an innapropiate name.</i>
+		<i class="fg:3" id="censor-hint">This will censor the style's information with a spoiler, use this if the style has an innapropiate name.</i>
 
 		<div class="mt:m">
 			<button class="btn primary mr:s" type="submit">Confirm</button>

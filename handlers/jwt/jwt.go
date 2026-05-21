@@ -4,7 +4,7 @@ import (
 	"net/url"
 
 	"github.com/gofiber/fiber/v2"
-	lib "github.com/golang-jwt/jwt"
+	lib "github.com/golang-jwt/jwt/v5"
 
 	"userstyles.world/models"
 	"userstyles.world/modules/config"
