@@ -151,7 +151,31 @@
 		<h2 class="ta:c">Featured userstyles</h2>
 		<p class="ta:c mb:l fg:2">See more styles on <a href="/explore">Explore</a> page.</p>
 		<div class="grid flex rwrap mx:r mt:m">
-			{{ range .Styles }}
+			{{ range slice .Styles 0 8 }}
+				{{ template "partials/style-card" . }}
+			{{ end }}
+		</div>
+		<div class="flex ai:c">
+			<h2>Recently Updated</h2>
+			<a class="ml:a mt:m" href="/explore?sort=recentlyupdated">More -></a>
+		</div>
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range .UpdatedStyles }}
+				{{ template "partials/style-card" . }}
+			{{ end }}
+		</div>
+		<div class="flex ai:c">
+			<h2>Recently Added</h2>
+			<a class="ml:a mt:m" href="/explore?sort=newest">More -></a>
+		</div>
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range .AddedStyles }}
+				{{ template "partials/style-card" . }}
+			{{ end }}
+		</div>
+		<h2>More Featured</h2>
+		<div class="grid flex rwrap mx:r mt:m">
+			{{ range slice .Styles 8 16 }}
 				{{ template "partials/style-card" . }}
 			{{ end }}
 		</div>
